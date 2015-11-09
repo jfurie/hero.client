@@ -8,7 +8,7 @@
     "test": "eslint src",
     "start-native": "rnws start",
     "start": "node web/dist/server.js",
-    "postinstall": "gulp build"
+    "postinstall": "gulp webpack"
   },
   "repository": {
     "type": "git",
