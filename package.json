@@ -7,7 +7,7 @@
     "bundle": "rnws bundle",
     "test": "eslint src",
     "start-native": "rnws start",
-    "start": "node /web/dist/server.js",
+    "start": "node web/dist/server.js",
     "postinstall": "gulp build"
   },
   "repository": {
