@@ -3,7 +3,6 @@
 var path = require('path');
 var webpack = require('webpack');
 module.exports = {
-  watch:true,
   debug: true,
   devtool: 'source-map',
   entry: {
