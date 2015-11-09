@@ -1,0 +1,48 @@
+{
+  "name": "App",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android-setup-port": "adb reverse tcp:8081 tcp:8080",
+    "bundle": "rnws bundle",
+    "test": "eslint src",
+    "start-native": "rnws start",
+    "start": "node /web/dist/server.js",
+    "postinstall": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jhabdas/react-native-webpack-starter-kit"
+  },
+  "dependencies": {
+    "browser-sync": "^2.9.12",
+    "express": "^4.13.3",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-nodemon": "^2.0.4",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-util": "^3.0.7",
+    "lodash": "^3.10.1",
+    "react": "^0.14.2",
+    "react-dom": "^0.14.2",
+    "react-native": "0.13 - 0.14",
+    "swig": "^1.4.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.1.2",
+    "babel-eslint": "^4.1.3",
+    "babel-loader": "^6.0.0",
+    "babel-preset-es2015": "^6.0.14",
+    "babel-preset-react": "^6.0.14",
+    "babel-preset-stage-1": "^6.1.2",
+    "eslint": "^1.8.0",
+    "eslint-loader": "^1.1.1",
+    "eslint-plugin-react": "^3.6.3",
+    "react-native-webpack-server": "^0.8.1",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.1"
+  },
+  "license": "MIT"
+}
