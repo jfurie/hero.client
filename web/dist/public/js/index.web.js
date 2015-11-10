@@ -69,9 +69,9 @@
 	
 	var _react = __webpack_require__(251);
 	
-	var _Homepage = __webpack_require__(394);
+	var _HomePage = __webpack_require__(394);
 	
-	var _Homepage2 = _interopRequireDefault(_Homepage);
+	var _HomePage2 = _interopRequireDefault(_HomePage);
 	
 	var _Login = __webpack_require__(395);
 	
@@ -112,7 +112,7 @@
 	          React.createElement(
 	            _reduxRouter.ReduxRouter,
 	            null,
-	            React.createElement(_reactRouter.Route, { path: '/', component: _Homepage2.default }),
+	            React.createElement(_reactRouter.Route, { path: '/', component: _HomePage2.default }),
 	            React.createElement(_reactRouter.Route, { path: '/login', component: _Login2.default })
 	          )
 	        ),

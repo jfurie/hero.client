@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var gutil = require("gulp-util");
 var webpack = require("webpack");
 var webpackConf = require('../../webpack.web.config');
-gulp.task("webpack",['build'], function(done) {
+gulp.task("webpack",['build'], function() {
   // run webpack
   return webpack(webpackConf,
     function(err, stats) {
@@ -10,6 +10,5 @@ gulp.task("webpack",['build'], function(done) {
       gutil.log("[webpack]", stats.toString({
         // output options
       }));
-      done();
     });
 });
