@@ -8,7 +8,7 @@ import {reduxReactRouter, routerStateReducer, ReduxRouter} from 'redux-router';
 import {devTools} from 'redux-devtools';
 import {DevTools, DebugPanel, LogMonitor} from 'redux-devtools/lib/react';
 
-import HomePage from './components/web/Homepage';
+import HomePage from './components/web/HomePage';
 import Login from './components/web/Login';
 
 const reducer = combineReducers({router: routerStateReducer});
