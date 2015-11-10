@@ -4,6 +4,7 @@ var path = require('path');
 var webpack = require('webpack');
 module.exports = {
   debug: true,
+  watch:true,
   devtool: 'source-map',
   entry: {
     //'index.ios': ['./src/main.ios.js'],
@@ -28,8 +29,8 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel',
         query: {
-          cacheDirectory: true,
-          presets: ['es2015', 'stage-1', 'react']
+          optional: ['runtime'],
+          stage: 0
         }
       }
     ]
