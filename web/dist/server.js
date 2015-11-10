@@ -30,7 +30,7 @@ function startApp() {
     cache: false
   });
   app.use(_express2.default.static(_config2.default.root + '/public'));
-  app.get('/', function (req, res) {
+  app.get('*', function (req, res) {
     res.render('main', {});
   });
   app.listen(_config2.default.port, function () {});

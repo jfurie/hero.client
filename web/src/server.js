@@ -13,7 +13,7 @@ function startApp() {
     cache: false
   });
   app.use(express.static(config.root + '/public'));
-  app.get('/', function(req, res) {
+  app.get('*', function(req, res) {
     res.render('main', {});
   });
   app.listen(config.port, function() {});

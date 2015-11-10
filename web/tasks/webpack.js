@@ -10,6 +10,5 @@ gulp.task("webpack",['build'], function(done) {
       gutil.log("[webpack]", stats.toString({
         // output options
       }));
-      done();
     });
 });
