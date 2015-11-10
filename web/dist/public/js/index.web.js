@@ -73,16 +73,16 @@
 	
 	var _stores2 = _interopRequireDefault(_stores);
 	
-	var _utilsApiClient = __webpack_require__(321);
+	var _utilsApiClient = __webpack_require__(322);
 	
 	var _utilsApiClient2 = _interopRequireDefault(_utilsApiClient);
 	
-	var _routesWeb = __webpack_require__(344);
+	var _routesWeb = __webpack_require__(345);
 	
 	var _routesWeb2 = _interopRequireDefault(_routesWeb);
 	
 	var React = __webpack_require__(64);
-	var ReactDOM = __webpack_require__(348);
+	var ReactDOM = __webpack_require__(349);
 	
 	var apiClient = new _utilsApiClient2['default']({
 	  baseUrl: 'http://localhost:3000'
@@ -27321,7 +27321,7 @@
 	
 	var _middlewareClientMiddleware2 = _interopRequireDefault(_middlewareClientMiddleware);
 	
-	var _modules = __webpack_require__(350);
+	var _modules = __webpack_require__(317);
 	
 	var _modules2 = _interopRequireDefault(_modules);
 	
@@ -27331,7 +27331,7 @@
 	  var middleware = [_reduxThunk2['default'], (0, _middlewareClientMiddleware2['default'])(client)];
 	  var finalCreateStore = undefined;
 	  if (isDev) {
-	    var _require = __webpack_require__(317);
+	    var _require = __webpack_require__(319);
 	
 	    var persistState = _require.persistState;
 	
@@ -28001,20 +28001,181 @@
 
 	'use strict';
 	
+	var _interopRequireDefault = __webpack_require__(31)['default'];
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _redux = __webpack_require__(225);
+	
+	var _reduxRouter = __webpack_require__(236);
+	
+	var _auth = __webpack_require__(318);
+	
+	var _auth2 = _interopRequireDefault(_auth);
+	
+	exports['default'] = (0, _redux.combineReducers)({
+	  router: _reduxRouter.routerStateReducer,
+	  auth: _auth2['default']
+	});
+	module.exports = exports['default'];
+
+/***/ },
+/* 318 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = __webpack_require__(281)['default'];
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports['default'] = reducer;
+	exports.isLoaded = isLoaded;
+	exports.logout = logout;
+	exports.load = load;
+	exports.login = login;
+	var LOAD = 'hero.client/auth/LOAD';
+	var LOAD_SUCCESS = 'hero.client/auth/LOAD_SUCCESS';
+	var LOAD_FAIL = 'hero.client/auth/LOAD_FAIL';
+	var LOGIN = 'hero.clientauth/LOGIN';
+	var LOGIN_SUCCESS = 'hero.client/auth/LOGIN_SUCCESS';
+	var LOGIN_FAIL = 'hero.client/auth/LOGIN_FAIL';
+	var LOGOUT = 'hero.client/auth/LOGOUT';
+	var LOGOUT_SUCCESS = 'hero.client/auth/LOGOUT_SUCCESS';
+	var LOGOUT_FAIL = 'hero.client/auth/LOGOUT_FAIL';
+	
+	var initialState = {
+	  loaded: false,
+	  auth: {}
+	};
+	
+	function reducer() {
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	  var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+	
+	  switch (action.type) {
+	    case LOAD:
+	      return _extends({}, state, {
+	        loading: true
+	      });
+	    case LOAD_SUCCESS:
+	      return _extends({}, state, {
+	        loading: false,
+	        loaded: true
+	      });
+	    case LOAD_FAIL:
+	      return _extends({}, state, {
+	        loading: false,
+	        loaded: false,
+	        error: action.error
+	      });
+	    case LOGIN:
+	      return _extends({}, state, {
+	        loggingIn: true
+	      });
+	    case LOGIN_SUCCESS:
+	      return _extends({}, state, {
+	        loggingIn: false,
+	        user: action.result.user,
+	        authToken: action.result.authToken
+	      });
+	    case LOGIN_FAIL:
+	      return _extends({}, state, {
+	        loggingIn: false,
+	        user: null,
+	        loginError: action.error
+	      });
+	    case LOGOUT:
+	      return _extends({}, state, {
+	        loggingOut: true
+	      });
+	    case LOGOUT_SUCCESS:
+	      return _extends({}, state, {
+	        loggingOut: false,
+	        user: null
+	      });
+	    case LOGOUT_FAIL:
+	      return _extends({}, state, {
+	        loggingOut: false,
+	        logoutError: action.error
+	      });
+	    default:
+	      return state;
+	  }
+	}
+	
+	function isLoaded(globalState) {
+	  return globalState.auth && globalState.auth.loaded;
+	}
+	
+	function logout() {
+	  return {
+	    types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
+	    promise: function promise(client, authToken) {
+	      return client.get('/logout', {
+	        authToken: authToken
+	      });
+	    }
+	  };
+	}
+	
+	function load() {
+	  return {
+	    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
+	    promise: function promise(client) {
+	      return client.get('/loadAuth');
+	    }
+	  };
+	}
+	
+	function login(email, password) {
+	  return {
+	    types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
+	    promise: function promise(client, authToken) {
+	      return client.post('/users/login', {
+	        data: {
+	          email: email,
+	          password: password
+	        },
+	        authToken: authToken
+	      }).then(function (auth) {
+	        return client.get('/users/' + auth.userId, {
+	          authToken: auth
+	        }).then(function (user) {
+	          auth.user = user.results;
+	          return {
+	            user: user,
+	            authToken: auth
+	          };
+	        });
+	      });
+	    }
+	  };
+	}
+
+/***/ },
+/* 319 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	exports.__esModule = true;
 	
 	function _interopRequire(obj) { return obj && obj.__esModule ? obj['default'] : obj; }
 	
-	var _devTools = __webpack_require__(318);
+	var _devTools = __webpack_require__(320);
 	
 	exports.devTools = _interopRequire(_devTools);
 	
-	var _persistState = __webpack_require__(319);
+	var _persistState = __webpack_require__(321);
 	
 	exports.persistState = _interopRequire(_persistState);
 
 /***/ },
-/* 318 */
+/* 320 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -28315,7 +28476,7 @@
 	}
 
 /***/ },
-/* 319 */
+/* 321 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -28410,15 +28571,14 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 320 */,
-/* 321 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var _classCallCheck = __webpack_require__(30)['default'];
 	
-	var _Promise = __webpack_require__(322)['default'];
+	var _Promise = __webpack_require__(323)['default'];
 	
 	var _interopRequireDefault = __webpack_require__(31)['default'];
 	
@@ -28426,7 +28586,7 @@
 	  value: true
 	});
 	
-	var _superagent = __webpack_require__(341);
+	var _superagent = __webpack_require__(342);
 	
 	var _superagent2 = _interopRequireDefault(_superagent);
 	
@@ -28492,29 +28652,29 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 322 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(323), __esModule: true };
-
-/***/ },
 /* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(324);
-	__webpack_require__(308);
-	__webpack_require__(291);
-	__webpack_require__(325);
-	module.exports = __webpack_require__(14).Promise;
+	module.exports = { "default": __webpack_require__(324), __esModule: true };
 
 /***/ },
 /* 324 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(325);
+	__webpack_require__(308);
+	__webpack_require__(291);
+	__webpack_require__(326);
+	module.exports = __webpack_require__(14).Promise;
+
+/***/ },
+/* 325 */
 /***/ function(module, exports) {
 
 
 
 /***/ },
-/* 325 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28527,13 +28687,13 @@
 	  , isObject   = __webpack_require__(23)
 	  , anObject   = __webpack_require__(24)
 	  , aFunction  = __webpack_require__(16)
-	  , strictNew  = __webpack_require__(326)
-	  , forOf      = __webpack_require__(327)
+	  , strictNew  = __webpack_require__(327)
+	  , forOf      = __webpack_require__(328)
 	  , setProto   = __webpack_require__(22).set
-	  , same       = __webpack_require__(331)
+	  , same       = __webpack_require__(332)
 	  , SPECIES    = __webpack_require__(305)('species')
-	  , speciesConstructor = __webpack_require__(332)
-	  , asap       = __webpack_require__(333)
+	  , speciesConstructor = __webpack_require__(333)
+	  , asap       = __webpack_require__(334)
 	  , PROMISE    = 'Promise'
 	  , process    = global.process
 	  , isNode     = classof(process) == 'process'
@@ -28718,7 +28878,7 @@
 	      $reject.call(record, err);
 	    }
 	  };
-	  __webpack_require__(338)(P.prototype, {
+	  __webpack_require__(339)(P.prototype, {
 	    // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
 	    then: function then(onFulfilled, onRejected){
 	      var reaction = new PromiseCapability(speciesConstructor(this, P))
@@ -28740,7 +28900,7 @@
 	
 	$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: P});
 	__webpack_require__(304)(P, PROMISE);
-	__webpack_require__(339)(PROMISE);
+	__webpack_require__(340)(PROMISE);
 	Wrapper = __webpack_require__(14)[PROMISE];
 	
 	// statics
@@ -28764,7 +28924,7 @@
 	    return capability.promise;
 	  }
 	});
-	$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(340)(function(iter){
+	$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(341)(function(iter){
 	  P.all(iter)['catch'](function(){});
 	})), PROMISE, {
 	  // 25.4.4.1 Promise.all(iterable)
@@ -28808,7 +28968,7 @@
 	});
 
 /***/ },
-/* 326 */
+/* 327 */
 /***/ function(module, exports) {
 
 	module.exports = function(it, Constructor, name){
@@ -28817,14 +28977,14 @@
 	};
 
 /***/ },
-/* 327 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ctx         = __webpack_require__(15)
-	  , call        = __webpack_require__(328)
-	  , isArrayIter = __webpack_require__(329)
+	  , call        = __webpack_require__(329)
+	  , isArrayIter = __webpack_require__(330)
 	  , anObject    = __webpack_require__(24)
-	  , toLength    = __webpack_require__(330)
+	  , toLength    = __webpack_require__(331)
 	  , getIterFn   = __webpack_require__(312);
 	module.exports = function(iterable, entries, fn, that){
 	  var iterFn = getIterFn(iterable)
@@ -28841,7 +29001,7 @@
 	};
 
 /***/ },
-/* 328 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// call something on iterator step with safe closing on error
@@ -28858,7 +29018,7 @@
 	};
 
 /***/ },
-/* 329 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// check on default Array iterator
@@ -28871,7 +29031,7 @@
 	};
 
 /***/ },
-/* 330 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.1.15 ToLength
@@ -28882,7 +29042,7 @@
 	};
 
 /***/ },
-/* 331 */
+/* 332 */
 /***/ function(module, exports) {
 
 	// 7.2.9 SameValue(x, y)
@@ -28891,7 +29051,7 @@
 	};
 
 /***/ },
-/* 332 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.3.20 SpeciesConstructor(O, defaultConstructor)
@@ -28904,11 +29064,11 @@
 	};
 
 /***/ },
-/* 333 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var global    = __webpack_require__(13)
-	  , macrotask = __webpack_require__(334).set
+	  , macrotask = __webpack_require__(335).set
 	  , Observer  = global.MutationObserver || global.WebKitMutationObserver
 	  , process   = global.process
 	  , Promise   = global.Promise
@@ -28973,13 +29133,13 @@
 	};
 
 /***/ },
-/* 334 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ctx                = __webpack_require__(15)
-	  , invoke             = __webpack_require__(335)
-	  , html               = __webpack_require__(336)
-	  , cel                = __webpack_require__(337)
+	  , invoke             = __webpack_require__(336)
+	  , html               = __webpack_require__(337)
+	  , cel                = __webpack_require__(338)
 	  , global             = __webpack_require__(13)
 	  , process            = global.process
 	  , setTask            = global.setImmediate
@@ -29053,7 +29213,7 @@
 	};
 
 /***/ },
-/* 335 */
+/* 336 */
 /***/ function(module, exports) {
 
 	// fast apply, http://jsperf.lnkit.com/fast-apply/5
@@ -29074,13 +29234,13 @@
 	};
 
 /***/ },
-/* 336 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(13).document && document.documentElement;
 
 /***/ },
-/* 337 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(23)
@@ -29092,7 +29252,7 @@
 	};
 
 /***/ },
-/* 338 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var redefine = __webpack_require__(298);
@@ -29102,7 +29262,7 @@
 	};
 
 /***/ },
-/* 339 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29120,7 +29280,7 @@
 	};
 
 /***/ },
-/* 340 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ITERATOR     = __webpack_require__(305)('iterator')
@@ -29146,15 +29306,15 @@
 	};
 
 /***/ },
-/* 341 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 	
-	var Emitter = __webpack_require__(342);
-	var reduce = __webpack_require__(343);
+	var Emitter = __webpack_require__(343);
+	var reduce = __webpack_require__(344);
 	
 	/**
 	 * Root reference for iframes.
@@ -30309,7 +30469,7 @@
 
 
 /***/ },
-/* 342 */
+/* 343 */
 /***/ function(module, exports) {
 
 	
@@ -30479,7 +30639,7 @@
 
 
 /***/ },
-/* 343 */
+/* 344 */
 /***/ function(module, exports) {
 
 	
@@ -30508,7 +30668,7 @@
 	};
 
 /***/ },
-/* 344 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30519,11 +30679,11 @@
 	  value: true
 	});
 	
-	var _containersWebHomeContainer = __webpack_require__(345);
+	var _containersWebHomeContainer = __webpack_require__(346);
 	
 	var _containersWebHomeContainer2 = _interopRequireDefault(_containersWebHomeContainer);
 	
-	var _containersWebLoginContainer = __webpack_require__(346);
+	var _containersWebLoginContainer = __webpack_require__(347);
 	
 	var _reactRouter = __webpack_require__(240);
 	
@@ -30543,7 +30703,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 345 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30604,7 +30764,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 346 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30619,7 +30779,7 @@
 	
 	var _interopRequireDefault = __webpack_require__(31)['default'];
 	
-	var _interopRequireWildcard = __webpack_require__(347)['default'];
+	var _interopRequireWildcard = __webpack_require__(348)['default'];
 	
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
@@ -30629,7 +30789,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _modulesAuth = __webpack_require__(351);
+	var _modulesAuth = __webpack_require__(318);
 	
 	var authActions = _interopRequireWildcard(_modulesAuth);
 	
@@ -30736,7 +30896,7 @@
 	exports.LoginPage = LoginPage;
 
 /***/ },
-/* 347 */
+/* 348 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -30761,175 +30921,13 @@
 	exports.__esModule = true;
 
 /***/ },
-/* 348 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	module.exports = __webpack_require__(66);
 
-
-/***/ },
-/* 349 */,
-/* 350 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _interopRequireDefault = __webpack_require__(31)['default'];
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _redux = __webpack_require__(225);
-	
-	var _reduxRouter = __webpack_require__(236);
-	
-	var _auth = __webpack_require__(351);
-	
-	var _auth2 = _interopRequireDefault(_auth);
-	
-	exports['default'] = (0, _redux.combineReducers)({
-	  router: _reduxRouter.routerStateReducer,
-	  auth: _auth2['default']
-	});
-	module.exports = exports['default'];
-
-/***/ },
-/* 351 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _extends = __webpack_require__(281)['default'];
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports['default'] = reducer;
-	exports.isLoaded = isLoaded;
-	exports.logout = logout;
-	exports.load = load;
-	exports.login = login;
-	var LOAD = 'hero.client/auth/LOAD';
-	var LOAD_SUCCESS = 'hero.client/auth/LOAD_SUCCESS';
-	var LOAD_FAIL = 'hero.client/auth/LOAD_FAIL';
-	var LOGIN = 'hero.clientauth/LOGIN';
-	var LOGIN_SUCCESS = 'hero.client/auth/LOGIN_SUCCESS';
-	var LOGIN_FAIL = 'hero.client/auth/LOGIN_FAIL';
-	var LOGOUT = 'hero.client/auth/LOGOUT';
-	var LOGOUT_SUCCESS = 'hero.client/auth/LOGOUT_SUCCESS';
-	var LOGOUT_FAIL = 'hero.client/auth/LOGOUT_FAIL';
-	
-	var initialState = {
-	  loaded: false,
-	  auth: {}
-	};
-	
-	function reducer() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
-	  var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	
-	  switch (action.type) {
-	    case LOAD:
-	      return _extends({}, state, {
-	        loading: true
-	      });
-	    case LOAD_SUCCESS:
-	      return _extends({}, state, {
-	        loading: false,
-	        loaded: true
-	      });
-	    case LOAD_FAIL:
-	      return _extends({}, state, {
-	        loading: false,
-	        loaded: false,
-	        error: action.error
-	      });
-	    case LOGIN:
-	      return _extends({}, state, {
-	        loggingIn: true
-	      });
-	    case LOGIN_SUCCESS:
-	      return _extends({}, state, {
-	        loggingIn: false,
-	        user: action.result.user,
-	        authToken: action.result.authToken
-	      });
-	    case LOGIN_FAIL:
-	      return _extends({}, state, {
-	        loggingIn: false,
-	        user: null,
-	        loginError: action.error
-	      });
-	    case LOGOUT:
-	      return _extends({}, state, {
-	        loggingOut: true
-	      });
-	    case LOGOUT_SUCCESS:
-	      return _extends({}, state, {
-	        loggingOut: false,
-	        user: null
-	      });
-	    case LOGOUT_FAIL:
-	      return _extends({}, state, {
-	        loggingOut: false,
-	        logoutError: action.error
-	      });
-	    default:
-	      return state;
-	  }
-	}
-	
-	function isLoaded(globalState) {
-	  return globalState.auth && globalState.auth.loaded;
-	}
-	
-	function logout() {
-	  return {
-	    types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
-	    promise: function promise(client, authToken) {
-	      return client.get('/logout', {
-	        authToken: authToken
-	      });
-	    }
-	  };
-	}
-	
-	function load() {
-	  return {
-	    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-	    promise: function promise(client) {
-	      return client.get('/loadAuth');
-	    }
-	  };
-	}
-	
-	function login(email, password) {
-	  return {
-	    types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
-	    promise: function promise(client, authToken) {
-	      return client.post('/users/login', {
-	        data: {
-	          email: email,
-	          password: password
-	        },
-	        authToken: authToken
-	      }).then(function (auth) {
-	        return client.get('/users/' + auth.userId, {
-	          authToken: auth
-	        }).then(function (user) {
-	          auth.user = user.results;
-	          return {
-	            user: user,
-	            authToken: auth
-	          };
-	        });
-	      });
-	    }
-	  };
-	}
 
 /***/ }
 /******/ ]);
