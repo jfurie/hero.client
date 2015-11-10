@@ -1,7 +1,7 @@
 import React, {
   PropTypes
 } from 'react';
-import * as authActions from '../../reducers/auth';
+import * as authActions from '../../modules/auth';
 import {connect} from 'react-redux';
 
 @connect(state => ({

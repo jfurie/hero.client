@@ -27321,9 +27321,9 @@
 	
 	var _middlewareClientMiddleware2 = _interopRequireDefault(_middlewareClientMiddleware);
 	
-	var _reducers = __webpack_require__(320);
+	var _modules = __webpack_require__(350);
 	
-	var _reducers2 = _interopRequireDefault(_reducers);
+	var _modules2 = _interopRequireDefault(_modules);
 	
 	var _redux = __webpack_require__(225);
 	
@@ -27343,7 +27343,7 @@
 	    getRoutes: getRoutes, createHistory: createHistory
 	  })(finalCreateStore);
 	
-	  var store = finalCreateStore(_reducers2['default'], data);
+	  var store = finalCreateStore(_modules2['default'], data);
 	  return store;
 	}
 	
@@ -28410,32 +28410,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 320 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _interopRequireDefault = __webpack_require__(31)['default'];
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _redux = __webpack_require__(225);
-	
-	var _reduxRouter = __webpack_require__(236);
-	
-	var _auth = __webpack_require__(349);
-	
-	var _auth2 = _interopRequireDefault(_auth);
-	
-	exports['default'] = (0, _redux.combineReducers)({
-	  router: _reduxRouter.routerStateReducer,
-	  auth: _auth2['default']
-	});
-	module.exports = exports['default'];
-
-/***/ },
+/* 320 */,
 /* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -30654,9 +30629,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reducersAuth = __webpack_require__(349);
+	var _modulesAuth = __webpack_require__(351);
 	
-	var authActions = _interopRequireWildcard(_reducersAuth);
+	var authActions = _interopRequireWildcard(_modulesAuth);
 	
 	var _reactRedux = __webpack_require__(62);
 	
@@ -30795,7 +30770,34 @@
 
 
 /***/ },
-/* 349 */
+/* 349 */,
+/* 350 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _interopRequireDefault = __webpack_require__(31)['default'];
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _redux = __webpack_require__(225);
+	
+	var _reduxRouter = __webpack_require__(236);
+	
+	var _auth = __webpack_require__(351);
+	
+	var _auth2 = _interopRequireDefault(_auth);
+	
+	exports['default'] = (0, _redux.combineReducers)({
+	  router: _reduxRouter.routerStateReducer,
+	  auth: _auth2['default']
+	});
+	module.exports = exports['default'];
+
+/***/ },
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
