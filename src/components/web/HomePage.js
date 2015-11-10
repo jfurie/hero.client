@@ -8,7 +8,7 @@ class HomePage extends React.Component {
     return (
       <div>
         <h1>Hero.jobs</h1>
-        <Link to='login'>Login</Link>
+        <Link to="login">Login</Link>
       </div>);
   }
 }
