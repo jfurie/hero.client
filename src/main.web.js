@@ -12,6 +12,7 @@ import getRoutes from './routes.web';
 
 let client = {};
 
+
 client.api = new ApiClient({
   baseUrl: 'http://localhost:3000'
 });
