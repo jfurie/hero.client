@@ -3,7 +3,7 @@ let ReactDOM = require('react-dom');
 import {createHistory} from 'history';
 import {Provider} from 'react-redux';
 import {reduxReactRouter, ReduxRouter} from 'redux-router';
-import createStore from './stores';
+import createStore from './stores/main';
 import ApiClient from './utils/apiClient';
 import LocalStorageClient from './utils/localStorageClient';
 import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';

@@ -1,5 +1,5 @@
 import thunk from 'redux-thunk';
-import clientMiddleware from '../middleware/clientMiddleware';
+import clientMiddleware from '../middleware/client-middleware';
 import { devTools, persistState } from 'redux-devtools';
 import reducer from '../modules';
 import {

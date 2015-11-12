@@ -4,6 +4,7 @@ var path = require('path');
 var webpack = require('webpack');
 module.exports = {
   debug: true,
+  watch:true,
   devtool: 'source-map',
   entry: {
     //'index.ios': ['./src/main.ios.js'],
