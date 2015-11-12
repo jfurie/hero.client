@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router';
+//import * as authActions from '../../reducers/auth';
+
 class HomePage extends React.Component {
   constructor() {
     super();
+    //console.log('yo!');
   }
   render() {
     return (
