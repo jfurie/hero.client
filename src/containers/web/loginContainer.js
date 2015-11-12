@@ -1,8 +1,7 @@
 import React, {
   PropTypes
 } from 'react';
-
-import { login, logout } from '../../reducers/auth';
+import { login } from '../../modules/auth';
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
 import { pushState } from 'redux-router';

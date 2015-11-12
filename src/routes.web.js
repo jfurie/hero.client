@@ -4,7 +4,7 @@ import {LogoutPage} from './containers/web/logoutContainer';
 import Restricted from './containers/web/restrictedContainer';
 import {IndexRoute, Route} from 'react-router';
 import React from 'react';
-import * as authActions from './reducers/auth';
+import * as authActions from './modules/auth';
 import LocalStorageClient from './utils/localStorageClient';
 
 const localStorage = new LocalStorageClient('Auth');

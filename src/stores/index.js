@@ -1,7 +1,7 @@
 import thunk from 'redux-thunk';
 import clientMiddleware from '../middleware/clientMiddleware';
-import reducer from '../reducers';
 import { devTools, persistState } from 'redux-devtools';
+import reducer from '../modules';
 import {
   createStore as _createStore, applyMiddleware, compose
 }
