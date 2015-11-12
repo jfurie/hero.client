@@ -126,34 +126,44 @@
 
 	"use strict";
 	
-	var _getOwnPropertyDescriptor = __webpack_require__(3);
+	var _Object$getOwnPropertyDescriptor = __webpack_require__(3)["default"];
 	
-	var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
+	exports["default"] = function get(_x, _x2, _x3) {
+	  var _again = true;
 	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	  _function: while (_again) {
+	    var object = _x,
+	        property = _x2,
+	        receiver = _x3;
+	    _again = false;
+	    if (object === null) object = Function.prototype;
 	
-	exports.default = function get(object, property, receiver) {
-	  if (object === null) object = Function.prototype;
-	  var desc = (0, _getOwnPropertyDescriptor2.default)(object, property);
+	    var desc = _Object$getOwnPropertyDescriptor(object, property);
 	
-	  if (desc === undefined) {
-	    var parent = Object.getPrototypeOf(object);
+	    if (desc === undefined) {
+	      var parent = Object.getPrototypeOf(object);
 	
-	    if (parent === null) {
-	      return undefined;
+	      if (parent === null) {
+	        return undefined;
+	      } else {
+	        _x = parent;
+	        _x2 = property;
+	        _x3 = receiver;
+	        _again = true;
+	        desc = parent = undefined;
+	        continue _function;
+	      }
+	    } else if ("value" in desc) {
+	      return desc.value;
 	    } else {
-	      return get(parent, property, receiver);
-	    }
-	  } else if ("value" in desc) {
-	    return desc.value;
-	  } else {
-	    var getter = desc.get;
+	      var getter = desc.get;
 	
-	    if (getter === undefined) {
-	      return undefined;
-	    }
+	      if (getter === undefined) {
+	        return undefined;
+	      }
 	
-	    return getter.call(receiver);
+	      return getter.call(receiver);
+	    }
 	  }
 	};
 	
@@ -381,24 +391,16 @@
 
 	"use strict";
 	
-	var _setPrototypeOf = __webpack_require__(19);
+	var _Object$create = __webpack_require__(19)["default"];
 	
-	var _setPrototypeOf2 = _interopRequireDefault(_setPrototypeOf);
+	var _Object$setPrototypeOf = __webpack_require__(21)["default"];
 	
-	var _create = __webpack_require__(25);
-	
-	var _create2 = _interopRequireDefault(_create);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _typeof(obj) { return obj && obj.constructor === Symbol ? "symbol" : typeof obj; }
-	
-	exports.default = function (subClass, superClass) {
+	exports["default"] = function (subClass, superClass) {
 	  if (typeof superClass !== "function" && superClass !== null) {
-	    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+	    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
 	  }
 	
-	  subClass.prototype = (0, _create2.default)(superClass && superClass.prototype, {
+	  subClass.prototype = _Object$create(superClass && superClass.prototype, {
 	    constructor: {
 	      value: subClass,
 	      enumerable: false,
@@ -406,7 +408,7 @@
 	      configurable: true
 	    }
 	  });
-	  if (superClass) _setPrototypeOf2.default ? (0, _setPrototypeOf2.default)(subClass, superClass) : subClass.__proto__ = superClass;
+	  if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	};
 	
 	exports.__esModule = true;
@@ -421,26 +423,41 @@
 /* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(21);
-	module.exports = __webpack_require__(14).Object.setPrototypeOf;
+	var $ = __webpack_require__(5);
+	module.exports = function create(P, D){
+	  return $.create(P, D);
+	};
 
 /***/ },
 /* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// 19.1.3.19 Object.setPrototypeOf(O, proto)
-	var $export = __webpack_require__(12);
-	$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(22).set});
+	module.exports = { "default": __webpack_require__(22), __esModule: true };
 
 /***/ },
 /* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
+	__webpack_require__(23);
+	module.exports = __webpack_require__(14).Object.setPrototypeOf;
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.3.19 Object.setPrototypeOf(O, proto)
+	var $export = __webpack_require__(12);
+	$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(24).set});
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// Works with __proto__ only. Old v8 can't work with null proto objects.
 	/* eslint-disable no-proto */
 	var getDesc  = __webpack_require__(5).getDesc
-	  , isObject = __webpack_require__(23)
-	  , anObject = __webpack_require__(24);
+	  , isObject = __webpack_require__(25)
+	  , anObject = __webpack_require__(26);
 	var check = function(O, proto){
 	  anObject(O);
 	  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
@@ -464,7 +481,7 @@
 	};
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports) {
 
 	module.exports = function(it){
@@ -472,28 +489,13 @@
 	};
 
 /***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(23);
-	module.exports = function(it){
-	  if(!isObject(it))throw TypeError(it + ' is not an object!');
-	  return it;
-	};
-
-/***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(26), __esModule: true };
-
-/***/ },
 /* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(5);
-	module.exports = function create(P, D){
-	  return $.create(P, D);
+	var isObject = __webpack_require__(25);
+	module.exports = function(it){
+	  if(!isObject(it))throw TypeError(it + ' is not an object!');
+	  return it;
 	};
 
 /***/ },
@@ -26918,8 +26920,12 @@
 	
 	var pushState = historyAPI('pushState');
 	exports.pushState = pushState;
+	var push = historyAPI('push');
+	exports.push = push;
 	var replaceState = historyAPI('replaceState');
 	exports.replaceState = replaceState;
+	var replace = historyAPI('replace');
+	exports.replace = replace;
 	var setState = historyAPI('setState');
 	exports.setState = setState;
 	var go = historyAPI('go');
@@ -27925,7 +27931,7 @@
 /* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var anObject = __webpack_require__(24)
+	var anObject = __webpack_require__(26)
 	  , get      = __webpack_require__(312);
 	module.exports = __webpack_require__(14).getIterator = function(it){
 	  var iterFn = get(it);
@@ -28684,12 +28690,12 @@
 	  , ctx        = __webpack_require__(15)
 	  , classof    = __webpack_require__(313)
 	  , $export    = __webpack_require__(12)
-	  , isObject   = __webpack_require__(23)
-	  , anObject   = __webpack_require__(24)
+	  , isObject   = __webpack_require__(25)
+	  , anObject   = __webpack_require__(26)
 	  , aFunction  = __webpack_require__(16)
 	  , strictNew  = __webpack_require__(327)
 	  , forOf      = __webpack_require__(328)
-	  , setProto   = __webpack_require__(22).set
+	  , setProto   = __webpack_require__(24).set
 	  , same       = __webpack_require__(332)
 	  , SPECIES    = __webpack_require__(305)('species')
 	  , speciesConstructor = __webpack_require__(333)
@@ -28983,7 +28989,7 @@
 	var ctx         = __webpack_require__(15)
 	  , call        = __webpack_require__(329)
 	  , isArrayIter = __webpack_require__(330)
-	  , anObject    = __webpack_require__(24)
+	  , anObject    = __webpack_require__(26)
 	  , toLength    = __webpack_require__(331)
 	  , getIterFn   = __webpack_require__(312);
 	module.exports = function(iterable, entries, fn, that){
@@ -29005,7 +29011,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// call something on iterator step with safe closing on error
-	var anObject = __webpack_require__(24);
+	var anObject = __webpack_require__(26);
 	module.exports = function(iterator, fn, value, entries){
 	  try {
 	    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
@@ -29055,7 +29061,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.3.20 SpeciesConstructor(O, defaultConstructor)
-	var anObject  = __webpack_require__(24)
+	var anObject  = __webpack_require__(26)
 	  , aFunction = __webpack_require__(16)
 	  , SPECIES   = __webpack_require__(305)('species');
 	module.exports = function(O, D){
@@ -29243,7 +29249,7 @@
 /* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(23)
+	var isObject = __webpack_require__(25)
 	  , document = __webpack_require__(13).document
 	  // in old IE typeof document.createElement is 'object'
 	  , is = isObject(document) && isObject(document.createElement);
