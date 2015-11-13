@@ -1,24 +1,15 @@
-import React, {
-  PropTypes
-} from 'react';
+import React from 'react';
 import { login } from '../../modules/auth';
-import {connect} from 'react-redux';
-import { Link } from 'react-router';
+import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-
+import { Link } from 'react-router';
 
 @connect(state => ({
-  user: state.auth.user
+  user: state.auth.user,
 }), {login, pushState})
-export class LoginPage extends React.Component {
-  static propTypes = {
-    user: PropTypes.object,
-    login: PropTypes.func,
-    onSubmit: PropTypes.func,
-    pushState: PropTypes.func.isRequired
-  }
+class LogoutPage extends React.Component {
 
-  constructor () {
+  constructor() {
     super();
   }
 
@@ -53,11 +44,13 @@ export class LoginPage extends React.Component {
     }
     this.props.login(this.state.email, this.state.password);
   }
+
   handleChange (item, e) {
     let newState = {};
     newState[item] = e.target.value;
     this.setState(newState);
   }
+
   render () {
     return (
       <div>
@@ -67,18 +60,24 @@ export class LoginPage extends React.Component {
             <legend>Login</legend>
             <div>
               <label htmlFor='email'>email</label>
-              <input name='email' onChange={this
-                .handleChange
-                .bind(this, 'email')} type='text' placeholder='user@email.com'></input>
+              <input
+                  name="email"
+                  onChange={this.handleChange.bind(this, 'email')}
+                  placeholder="user@email.com"
+                  type="text">
+              </input>
             </div>
             <div>
-              <label htmlFor='password'>password</label>
-              <input name='password' onChange={this
-                .handleChange
-                .bind(this, 'password')} type='password' placeholder='password1'></input>
+              <label htmlFor="password">password</label>
+              <input
+                  name="password"
+                  onChange={this.handleChange.bind(this, 'password')}
+                  placeholder="password"
+                  type="password">
+              </input>
             </div>
             <div>
-              <input type='submit'></input>
+              <input type="submit"></input>
             </div>
           </fieldset>
         </form>
@@ -87,3 +86,5 @@ export class LoginPage extends React.Component {
     );
   }
 }
+
+export default LogoutPage;

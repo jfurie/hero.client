@@ -22,6 +22,7 @@ class HomePage extends React.Component {
           )}
         <h1>Hero.jobs</h1>
         <Link to="login">Login</Link>
+        <Link to="settings">Settings</Link>
       </div>);
   }
 }

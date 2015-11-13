@@ -1,28 +1,18 @@
-import React, {
-  PropTypes
-} from 'react';
-
+import React from 'react';
 import { logout } from '../../modules/auth';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
 @connect(state => ({
-  user: state.auth.user
+  user: state.auth.user,
 }), {logout, pushState})
-export class LogoutPage extends React.Component {
-  static propTypes = {
-    user: PropTypes.object,
-    logout: PropTypes.func,
-    onSubmit: PropTypes.func,
-    pushState: PropTypes.func.isRequired
-  }
+class LogoutPage extends React.Component {
 
-  constructor () {
+  constructor() {
     super();
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (this.props.user && !nextProps.user) { // logout
       this.props.pushState(null, '/');
     }
@@ -32,11 +22,7 @@ export class LogoutPage extends React.Component {
     e.preventDefault();
     this.props.logout();
   }
-  // handleChange (item, e) {
-  //   let newState = {};
-  //   newState[item] = e.target.value;
-  //   this.setState(newState);
-  // }
+
   render () {
     return (
       <div>
@@ -52,3 +38,5 @@ export class LogoutPage extends React.Component {
     );
   }
 }
+
+export default LogoutPage;
