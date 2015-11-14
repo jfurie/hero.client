@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Header } from '../../components/web';
 
 class RestrictedPage extends React.Component {
   constructor() {
@@ -8,10 +8,9 @@ class RestrictedPage extends React.Component {
   render() {
     return (
       <div>
+        <Header />
         <h1>Restricted Area</h1>
         <img src='https://media.giphy.com/media/3QoWqgKgTYMG4/giphy.gif' />
-        <Link to="login">Login</Link>
-        <Link to="logout">Logout</Link>
       </div>);
   }
 }

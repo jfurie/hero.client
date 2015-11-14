@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { Header } from '../../components/web';
 
 @connect(state => ({ type: state.router.location.query.type }))
 class ErrorPage extends React.Component {
@@ -13,6 +14,7 @@ class ErrorPage extends React.Component {
 
     return (
       <div>
+        <Header />
         <h1>Error!</h1>
         {(type && type == 'access') ? (
           <p>Your doesn't have the suffisent permissions to access this page.</p>

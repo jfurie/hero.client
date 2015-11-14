@@ -2,6 +2,7 @@ import React from 'react';
 import { logout } from '../../modules/auth';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
+import { Header } from '../../components/web';
 
 @connect(state => ({
   user: state.auth.user,
@@ -26,6 +27,7 @@ class LogoutPage extends React.Component {
   render () {
     return (
       <div>
+        <Header />
         <h1>Logout</h1>
         <form onSubmit={this.onSubmit.bind(this)}>
           <fieldset>
