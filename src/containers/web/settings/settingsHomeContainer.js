@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { Header } from '../../../components/web';
 
 @connect(state => ({
   auth: state.auth,
@@ -14,17 +15,15 @@ class SettingsHomePage extends React.Component {
 
     let {auth} = this.props;
 
-    console.log(auth);
-
     return (
       <div>
+        <Header />
         <h1>Your Settings: ({auth.user.email})</h1>
 
         {((auth.authToken.accountInfo.account && auth.authToken.accountInfo.account.name) ? (
-          <p>You're part of the {auth.authToken.accountInfo.account.name} account. (<Link to="settings/account">setting</Link>)</p>
+          <p>You're part of the {auth.authToken.accountInfo.account.name} account. (<Link to="/settings/account">settings</Link>)</p>
         ) : (null))}
 
-        <Link to="/"> back to home</Link>
       </div>);
   }
 }
