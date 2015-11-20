@@ -1,20 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Header } from '../../../components/web';
+import { Header, ContactsList } from '../../../components/web';
+import { getAllContacts } from '../../../modules/contacts';
 
 @connect(state => ({
-  user: state.auth.user,
-}))
+  contacts: state.contacts,
+}), {getAllContacts})
 class ContactListPage extends React.Component {
   constructor() {
     super();
   }
+
+  componentDidMount() {
+    this.props.getAllContacts();
+  }
+
   render() {
+
+    let {contacts} = this.props;
 
     return (
       <div>
         <Header />
-        <h1>Contacts</h1>
+        <h1>Contacts ({contacts.list.count()})</h1>
+        <ContactsList contacts={contacts.list} />
       </div>);
   }
 }
