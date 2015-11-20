@@ -12,7 +12,7 @@ import ErrorPage from './containers/web/errorContainer';
 
 // settings containers
 import SettingsHomePage from './containers/web/settings/settingsHomeContainer';
-import SettingsAccountPage from './containers/web/settings/SettingsAccountContainer';
+import SettingsAccountPage from './containers/web/settings/settingsAccountContainer';
 
 // account containers
 import AccountHomePage from './containers/web/account/accountHomeContainer';
