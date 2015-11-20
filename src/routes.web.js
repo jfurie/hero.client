@@ -8,6 +8,7 @@ import Home from './containers/web/homeContainer';
 import LoginPage from './containers/web/loginContainer';
 import LogoutPage from './containers/web/logoutContainer';
 import Restricted from './containers/web/restrictedContainer';
+import InvitedPage from './containers/web/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
 
 // settings containers
@@ -74,6 +75,8 @@ export default (store) => {
           store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
             cb();
           });
+        } else {
+          cb();
         }
       } else {
         cb();
@@ -110,7 +113,7 @@ export default (store) => {
             <IndexRoute component={AccountHomePage}/>
           </Route>
         </Route>
-
+        <Route path="invited" component={InvitedPage}/>
         { /* Catch all route */ }
         { /*  <Route path="*" component={NotFound} status={404} /> */ }
 

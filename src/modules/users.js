@@ -6,7 +6,9 @@ const GET_USER_FAIL = 'hero.client/users/GET_USER_FAIL';
 const INVITE_USER = 'hero.client/users/INVITE_USER';
 const INVITE_USER_SUCCESS = 'hero.client/users/INVITE_USER_SUCCESS';
 const INVITE_USER_FAIL = 'hero.client/users/INVITE_USER_FAIL';
-
+const GET_ACCOUNT_USERS = 'hero.client/users/GET_ACCOUNT_USERS';
+const GET_ACCOUNT_USERS_SUCCESS = 'hero.client/users/GET_ACCOUNT_USERS_SUCCESS';
+const GET_ACCOUNT_USERS_FAIL = 'hero.client/users/GET_ACCOUNT_USERS_FAIL';
 
 const initialState = {
   users: new Immutable.Map(),
