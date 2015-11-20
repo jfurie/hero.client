@@ -13,10 +13,11 @@ import ErrorPage from './containers/web/errorContainer';
 import SettingsHomePage from './containers/web/settings/settingsHomeContainer';
 import SettingsAccountPage from './containers/web/settings/SettingsAccountContainer';
 
-
 // account containers
 import AccountHomePage from './containers/web/account/accountHomeContainer';
 
+// contacts
+import ConctactsListPage from './containers/web/contacts/contactsListContainer';
 
 const localStorage = new LocalStorageClient('Auth');
 
@@ -106,6 +107,7 @@ export default (store) => {
           { /* Account  */ }
           <Route path="/account" onEnter={requireAccount}>
             <IndexRoute component={AccountHomePage}/>
+            <Route path="/contacts" component={ConctactsListPage}/>
           </Route>
         </Route>
 
