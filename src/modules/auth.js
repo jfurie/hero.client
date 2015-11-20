@@ -10,7 +10,9 @@ const LOGOUT_FAIL = 'hero.client/auth/LOGOUT_FAIL';
 const AUTHLOCALSTORAGE = 'hero.client/auth/AUTHLOCALSTORAGE';
 const AUTHLOCALSTORAGE_SUCCESS = 'hero.client/auth/AUTHLOCALSTORAGE_SUCCESS';
 const AUTHLOCALSTORAGE_FAIL = 'hero.client/auth/AUTHLOCALSTORAGE_FAIL';
-
+const CHANGEPASSWORD = 'hero.client/auth/CHANGEPASSWORD';
+const CHANGEPASSWORD_SUCCESS = 'hero.client/auth/CHANGEPASSWORD_SUCCESS';
+const CHANGEPASSWORD_FAIL = 'hero.client/auth/CHANGEPASSWORD_FAIL';
 
 const initialState = {
   loaded: false,
@@ -91,6 +93,24 @@ export default function reducer(state = initialState, action = {}) {
       loggingOut: false,
       logoutError: action.error
     };
+  case CHANGEPASSWORD:
+    return {
+      ...state,
+      changingPasswordError:null,
+      changingPassword: true,
+    };
+  case CHANGEPASSWORD_SUCCESS:
+    return {
+      ...state,
+      changingPasswordError:null,
+      changingPassword: false,
+    };
+  case CHANGEPASSWORD_FAIL:
+    return {
+      ...state,
+      changingPasswordError: action.error,
+      changingPassword: false,
+    };
   default:
     return state;
   }
@@ -117,6 +137,25 @@ export function load() {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
     promise: (client) => client.api.get('/loadAuth')
+  };
+}
+
+export function changePassword(password, tmpAuthToken) {
+
+  return {
+    types: [CHANGEPASSWORD, CHANGEPASSWORD_SUCCESS, CHANGEPASSWORD_FAIL],
+    promise: (client) => {
+      return client.api.post('/users/changepassword', {
+        data: {
+          password,
+          access_token:tmpAuthToken
+        },
+        params: {
+          access_token:tmpAuthToken
+        },
+        authToken:tmpAuthToken,
+      });
+    }
   };
 }
 
