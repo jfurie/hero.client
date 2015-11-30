@@ -9,7 +9,10 @@ import LocalStorageClient from './utils/localStorageClient';
 //import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import getRoutes from './routes.web';
-
+// needed for 300ms issue  IOS https://github.com/zilverline/react-tap-event-plugin
+// add a onTouchTap={this.handleTouchTap} handler. example on github page
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 let client = {};
 
 

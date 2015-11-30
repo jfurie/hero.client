@@ -8,15 +8,16 @@ gulp.task('develop', ['clean', 'copy', 'build'], function() {
     ext: 'js coffee swig',
     nodeArgs: ['--debug=5878'],
     watch: ['./dist'],
-    delay: 2000
+    delay: 2000,
+    env: {
+      PORT: '5455'
+    }
   }).on('restart', function() {
 
   });
 
 });
 gulp.task('watch', function() {
-  gulp.watch(['./web/src/**/*'], {
-  }, ['build']);
-  gulp.watch(['./web/src/public/**/*'], {
-  }, ['build']);
+  gulp.watch(['./web/src/**/*'], {}, ['build']);
+  gulp.watch(['./web/src/public/**/*'], {}, ['build']);
 });

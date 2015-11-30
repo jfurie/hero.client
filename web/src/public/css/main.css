@@ -1,0 +1,73 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0px;
+}
+
+#app {
+    padding: 8px;
+}
+
+#splash {
+    background-color: #333333;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 500;
+}
+
+#splash .center {
+    width: 80%;
+    position: relative;
+    top: 50%;
+    margin-top: -130px;
+    margin-left: 10%;
+}
+
+#splash .center img {
+    width: 100%;
+}
+
+#splash .center p {
+    color: #FFF;
+    text-align: center;
+    font-weight: 100;
+    font-size: 24px;
+    opacity: 0.5;
+    /*position: relative;*/
+    /*left: -12px;*/
+}
+
+@media (min-width: 1200px) {
+    #splash .center {
+        width: 40%;
+        margin-left: 30%;
+        margin-top: -170px;
+    }
+}
+
+@media (max-width: 47.9999em) {
+  .hidden-xs {
+    display: none !important;
+  }
+}
+
+@media (min-width: 48em) and (max-width: 63.9999em) {
+  .hidden-sm {
+    display: none !important;
+  }
+}
+
+@media (min-width: 64em) and (max-width: 74.9999em) {
+  .hidden-md {
+    display: none !important;
+  }
+}
+
+@media (min-width: 75em) {
+  .hidden-lg {
+    display: none !important;
+  }
+}
