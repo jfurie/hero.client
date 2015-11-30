@@ -1,8 +1,5 @@
 /*eslint-disable no-alert, no-console */
 export default function clientMiddleware(client) {
-
-  console.log('clientMiddleware!!');
-
   return ({dispatch, getState}) => {
     return next => action => {
       if (typeof action === 'function') {

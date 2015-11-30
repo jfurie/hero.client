@@ -81,6 +81,10 @@ export default (store) => {
       } else {
         cb();
       }
+
+      // hide splash if here
+      document.getElementById('splash').style.display = 'none';
+
     }
 
     setTimeout(() => { // TMP
