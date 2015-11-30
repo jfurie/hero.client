@@ -1,0 +1,20 @@
+@media (max-width: 47.9999em) {
+  .hidden-xs {
+    display: none !important;
+  }
+}
+@media (min-width: 48em) and (max-width: 63.9999em) {
+  .hidden-sm {
+    display: none !important;
+  }
+}
+@media (min-width: 64em) and (max-width: 74.9999em) {
+  .hidden-md {
+    display: none !important;
+  }
+}
+@media (min-width: 75em) {
+  .hidden-lg {
+    display: none !important;
+  }
+}
