@@ -1,15 +1,15 @@
 import React from 'react';
-import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {RaisedButton} from 'material-ui';
+import {Header} from '../../components/web';
+
 @connect(state => ({user: state.auth.user}))
+
 class HomePage extends React.Component {
   constructor() {
     super();
   }
-  handleTouchTap(){
-    alert('tapped');
-  }
+  handleTouchTap () {alert('tapped');}
   render () {
 
     let {
@@ -18,6 +18,7 @@ class HomePage extends React.Component {
 
     return (
       <div>
+        <Header/>
         {(user && user.email)
           ? (
             <p>hi
@@ -26,9 +27,8 @@ class HomePage extends React.Component {
           : (
             <p>hi guest</p>
           )}
-        <h1>Hero.jobs</h1>
+        <h1>HOME</h1>
         <RaisedButton onTouchTap={this.handleTouchTap.bind(this)} label="Default"></RaisedButton>
-        <Link to="login">Login</Link>
       </div>
     );
   }

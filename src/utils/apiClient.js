@@ -25,7 +25,8 @@ class _ApiClient {
         if (params) {
           request.query(params);
         }
-        if(authToken){
+
+        if (authToken) {
           request.set('Authorization',authToken.id);
         }
 
