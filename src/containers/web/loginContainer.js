@@ -2,15 +2,43 @@ import React from 'react';
 import { login } from '../../modules/auth';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { Header } from '../../components/web';
+//import { Header } from '../../components/web';
+
+import { RaisedButton, TextField, Styles } from 'material-ui';
+
+let style = {
+  error: {
+    color: Styles.Colors.red400,
+    textAlign: 'left',
+  },
+  loginLogo: {
+    width: '100%',
+    marginTop: '50px',
+    marginBottom: '50px',
+  },
+  signInButton: {
+    width: '100%',
+    marginBottom: '14px',
+    marginTop: '50px',
+    height: '50px',
+  },
+  linkedinButton: {
+    width: '100%',
+    height: '50px',
+  },
+};
 
 @connect(state => ({
   user: state.auth.user,
 }), {login, pushState})
 class LogoutPage extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.state = {
+      loginError: '',
+      passwordError: '',
+    };
   }
 
   getParameterByName(name) {
@@ -42,7 +70,27 @@ class LogoutPage extends React.Component {
     if (this.props.onSubmit) {
       this.props.onSubmit(this.state);
     }
-    this.props.login(this.state.email, this.state.password);
+
+    this.setState({
+      loginError: null,
+      passwordError: null
+    });
+
+    if (!this.state.email) {
+      this.setState({
+        loginError: 'Login is required.',
+      });
+    }
+
+    if (!this.state.password) {
+      this.setState({
+        passwordError: 'Password is required.',
+      });
+    }
+
+    if (this.state.password && this.state.email) {
+      this.props.login(this.state.email, this.state.password);
+    }
   }
 
   handleChange (item, e) {
@@ -54,34 +102,48 @@ class LogoutPage extends React.Component {
   render () {
     return (
       <div>
-        <Header />
-        <h1>Login Form</h1>
-        <form onSubmit={this.onSubmit.bind(this)}>
-          <fieldset>
-            <legend>Login</legend>
-            <div>
-              <label htmlFor='email'>email</label>
-              <input
-                  name="email"
-                  onChange={this.handleChange.bind(this, 'email')}
-                  placeholder="user@email.com"
-                  type="text">
-              </input>
-            </div>
-            <div>
-              <label htmlFor="password">password</label>
-              <input
-                  name="password"
-                  onChange={this.handleChange.bind(this, 'password')}
-                  placeholder="password"
-                  type="password">
-              </input>
-            </div>
-            <div>
-              <input type="submit"></input>
-            </div>
-          </fieldset>
-        </form>
+        <div className="row center-xs center-md">
+          <div className="col-xs-3 col-md-1">
+            <img style={style.loginLogo} src="/img/login-logo.png"  />
+          </div>
+        </div>
+        <div className="row center-xs center-md login-box">
+          <form className="col-xs-10 col-md-4" onSubmit={this.onSubmit.bind(this)}>
+
+            <TextField
+                errorStyle={style.error}
+                errorText={this.state.loginError || ''}
+                fullWidth
+                hintText="Login"
+                onChange={this.handleChange.bind(this, 'email')}
+                underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
+            />
+
+            <TextField
+                errorStyle={style.error}
+                errorText={this.state.passwordError || ''}
+                fullWidth
+                hintText="Password"
+                onChange={this.handleChange.bind(this, 'password')}
+                underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
+                type="password"
+            />
+
+            <RaisedButton
+                label="Sign In"
+                style={style.signInButton}
+                type="submit"
+            />
+
+            <RaisedButton
+                backgroundColor={Styles.Colors.blue800}
+                label="Sign In with Linkedin"
+                labelColor="#FFF"
+                style={style.linkedinButton}
+            />
+
+          </form>
+        </div>
       </div>
     );
   }

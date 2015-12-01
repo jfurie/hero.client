@@ -15,7 +15,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 let client = {};
 
-
 client.api = new ApiClient({
   baseUrl: 'https://core-api-loopback.herokuapp.com'
 });
@@ -24,20 +23,9 @@ client.localStorage = new LocalStorageClient('auth');
 
 const store = createStore(reduxReactRouter, getRoutes, createHistory, client, {},true);
 
-// const component = (
-//   <ReduxRouter routes={getRoutes(store)} />
-// );
-
 class Root extends React.Component {
 
-  // componentDidMount() {
-  //   document.getElementById('splash').style.display = 'none';
-  // }
-
   render () {
-
-    //console.log('ready!');
-
     return (
       <div>
         <Provider store={store}>

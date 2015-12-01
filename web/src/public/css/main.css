@@ -4,10 +4,14 @@ html, body {
 
 body {
     margin: 0px;
+    background-color: #eeeeee;
 }
+
+/* splash screen */
 
 #app {
     padding: 8px;
+    background-color: #eeeeee;
 }
 
 #splash {
@@ -36,8 +40,6 @@ body {
     font-weight: 100;
     font-size: 24px;
     opacity: 0.5;
-    /*position: relative;*/
-    /*left: -12px;*/
 }
 
 @media (min-width: 1200px) {
@@ -47,6 +49,19 @@ body {
         margin-top: -170px;
     }
 }
+
+/* Login box on desktop */
+
+@media (min-width: 64em) {
+    .login-box form {
+        background-color: #FFF;
+        padding: 20px;
+        border-radius: 4px;
+        box-shadow: 1px 2px 9px rgba(0, 0, 0, 0.17);
+    }
+}
+
+/* hidden rules */
 
 @media (max-width: 47.9999em) {
   .hidden-xs {
