@@ -4,8 +4,15 @@ html, body, #app  {
 
 body {
     margin: 0px;
+    background-color: #eeeeee;
 }
 
+/* splash screen */
+
+#app {
+    /*padding: 8px;*/
+    background-color: #eeeeee;
+}
 
 #splash {
     background-color: #333333;
@@ -33,17 +40,84 @@ body {
     font-weight: 100;
     font-size: 24px;
     opacity: 0.5;
-    /*position: relative;*/
-    /*left: -12px;*/
+    font-family: ;
+}
+
+#splash .showbox {
+  z-index: 501;
+  position: relative;
+  margin-top: 30px;
+}
+
+#splash .loader {
+  position: relative;
+  margin: 0px auto;
+  width: 50px;
+  height: 50px;
+  &:before {
+    content:'';
+    display: block;
+    padding-top: 100%;
+  }
+}
+
+#splash .circular {
+  animation: rotate 2s linear infinite;
+  height: 100%;
+  transform-origin: center center;
+  width: 100%;
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  margin: auto;
+}
+
+#splash .path {
+  stroke-dasharray: 1,200;
+  stroke-dashoffset: 0;
+  animation:
+   dash 1.5s ease-in-out infinite,
+   color 6s ease-in-out infinite
+  ;
+  stroke-linecap: round;
+}
+
+@keyframes rotate{
+ 100%{
+  transform: rotate(360deg);
+ }
+}
+@keyframes dash{
+ 0%{
+  stroke-dasharray: 1,200;
+  stroke-dashoffset: 0;
+ }
+ 50%{
+  stroke-dasharray: 89,200;
+  stroke-dashoffset: -35px;
+ }
+ 100%{
+  stroke-dasharray: 89,200;
+  stroke-dashoffset: -124px;
+ }
+}
+@keyframes color{
+  0%, 50% {
+    stroke: #FFF;
+  }
+  51%, 100% {
+    stroke: #e91b62;
+  }
 }
 
 @media (min-width: 1200px) {
     #splash .center {
-        width: 40%;
-        margin-left: 30%;
-        margin-top: -170px;
+        width: 20%;
+        margin-left: 40%;
+        margin-top: -110px;
     }
 }
+
+/* hidden rules */
 
 @media (max-width: 47.9999em) {
   .hidden-xs {
