@@ -20,6 +20,9 @@ import AccountHomePage from './containers/web/account/accountHomeContainer';
 // contacts
 import ConctactsListPage from './containers/web/contacts/contactsListContainer';
 
+// clients
+import ClientsPage from './containers/web/clients/clientsContainer';
+
 const localStorage = new LocalStorageClient('Auth');
 
 export default(store) => {
@@ -109,7 +112,7 @@ export default(store) => {
 
         {/* Routes requiring login  */}
         <Route onEnter={requireLogin}>
-
+          <Route path="clients" component={ClientsPage}/>
           <Route path="logout" component={LogoutPage}/>
 
           {/* Settings  */}
