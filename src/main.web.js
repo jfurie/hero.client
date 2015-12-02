@@ -16,7 +16,7 @@ injectTapEventPlugin();
 let client = {};
 
 client.api = new ApiClient({
-  baseUrl: 'http://localhost:3003'
+  baseUrl: 'http://localhost:3000'
 });
 
 client.localStorage = new LocalStorageClient('auth');

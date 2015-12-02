@@ -9,9 +9,13 @@ class HomePage extends React.Component {
   constructor() {
     super();
   }
-  changePassword (password) {this.props.changePassword(password, this.props.location.query.token);}
+
+  changePassword (password) {
+    this.props.changePassword(password, this.props.location.query.token);
+  }
+
   componentWillReceiveProps (nextProps) {
-    if(this.props.auth.changingPassword == true && nextProps.auth.changingPassword == false && !nextProps.auth.changingPasswordError) {
+    if (this.props.auth.changingPassword == true && nextProps.auth.changingPassword == false && !nextProps.auth.changingPasswordError) {
       this.props.pushState(null, '/');
     }
   }

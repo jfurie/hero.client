@@ -27,12 +27,12 @@ class LogoutPage extends React.Component {
   render () {
     return (
       <div>
-        <Header title='Logout'/>
-        <div id='innerView'>
+        <Header title="Logout"/>
+        <div id="innerView">
           <form onSubmit={this.onSubmit.bind(this)}>
             <fieldset>
               <div>
-                <button type='submit'>Logout</button>
+                <button type="submit">Logout</button>
               </div>
             </fieldset>
           </form>

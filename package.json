@@ -25,7 +25,7 @@
     "browser-sync": "^2.9.12",
     "eslint": "^1.8.0",
     "eslint-loader": "^1.1.1",
-    "eslint-plugin-react": "^3.11.1",
+    "eslint-plugin-react": "^3.11.2",
     "express": "^4.13.3",
     "extract-text-webpack-plugin": "^0.9.1",
     "fbjs": "^0.4.0",
