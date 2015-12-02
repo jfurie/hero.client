@@ -61,8 +61,6 @@ class LogoutPage extends React.Component {
 
     } else if (this.props.user && !nextProps.user) { // logout
       this.props.pushState(null, '/');
-    } else {
-      this.refs.snackbar.show();
     }
   }
 

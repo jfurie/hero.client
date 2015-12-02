@@ -28,21 +28,21 @@ export default(store) => {
   const requireLogin = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const {
-        auth: {
-          user
-        }
-      } = ((store)
-        ? (store.getState())
-        : (null));
+      const { auth: { user } } = ((store) ? (store.getState()) : (null));
 
       if (!user) {
         let auth = localStorage.get('Auth');
-        if (auth && auth.id && auth.ttl && auth.created && auth.userId) {store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
+        if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
+          store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
+            cb();
+          });
+        } else {
+          replaceState(null, '/login?redirect=' + nextState.location.pathname);
           cb();
-        });} else {replaceState(null, '/login?redirect=' + nextState.location.pathname);
-          cb();}
-      } else {cb();}
+        }
+      } else {
+        cb();
+      }
     }
 
     checkAuth();
@@ -51,15 +51,11 @@ export default(store) => {
   const requireAccount = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const {
-        auth: {
-          authToken
-        }
-      } = ((store)
-        ? (store.getState())
-        : (null));
+      const { auth: { authToken } } = ((store) ? (store.getState()) : (null));
 
-      if (!authToken || !authToken.accountInfo || !authToken.accountInfo.account || !authToken.accountInfo.account.id) {replaceState(null, '/error?type=access');}
+      if (!authToken || !authToken.accountInfo || !authToken.accountInfo.account || !authToken.accountInfo.account.id) {
+        replaceState(null, '/error?type=access');
+      }
 
       cb();
     }
@@ -71,20 +67,23 @@ export default(store) => {
   const loadUser = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const {
-        auth: {
-          user
-        }
-      } = ((store)
-        ? (store.getState())
-        : (null));
+      const { auth: { user } } = ((store) ? (store.getState()) : (null));
 
       if (!user) {
         let auth = localStorage.get('Auth');
-        if (auth && auth.id && auth.ttl && auth.created && auth.userId) {store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
+        if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
+          store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
+            if (nextState.location.pathname === '/login') { /* already logged */
+              replaceState(null, '/');
+            }
+            cb();
+          });
+        } else {
           cb();
-        });} else {cb();}
-      } else {cb();}
+        }
+      } else {
+        cb();
+      }
 
       // hide splash if here
       setTimeout(() => {
@@ -102,6 +101,7 @@ export default(store) => {
 
     <Route path="/" onEnter={loadUser}>
       <Route component={Layout}>
+
         {/* Home (main) route */}
         <IndexRoute component={Home}/>
         <Route path="login" component={LoginPage}/>
@@ -109,7 +109,9 @@ export default(store) => {
 
         {/* Routes requiring login  */}
         <Route onEnter={requireLogin}>
+
           <Route path="logout" component={LogoutPage}/>
+
           {/* Settings  */}
           <Route path="settings">
             <IndexRoute component={SettingsHomePage}/>
@@ -121,7 +123,9 @@ export default(store) => {
             <IndexRoute component={AccountHomePage}/>
             <Route path="/contacts" component={ConctactsListPage}/>
           </Route>
+
         </Route>
+
         <Route path="invited" component={InvitedPage}/>
         {/* Catch all route */}
         {/*  <Route path="*" component={NotFound} status={404} /> */}
