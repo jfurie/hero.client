@@ -17,7 +17,7 @@ let client = {};
 
 
 client.api = new ApiClient({
-  baseUrl: 'https://core-api-loopback.herokuapp.com'
+  baseUrl: 'http://localhost:3003'
 });
 
 client.localStorage = new LocalStorageClient('auth');
