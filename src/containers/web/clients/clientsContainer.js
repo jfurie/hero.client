@@ -37,9 +37,9 @@ class ClientPage extends React.Component {
         <ClientsCreateModal open={this.state.createModalOpen}></ClientsCreateModal>
         <Header iconRight={
             <IconMenu iconButtonElement={
-              <IconButton iconClassName="material-icons">more_vert</IconButton>
+              <IconButton  iconClassName="material-icons">more_vert</IconButton>
             }>
-              <MenuItem index={0} primaryText="Add" />
+              <MenuItem index={0} onTouchTap={this.openModal.bind(this)} primaryText="Add" />
             </IconMenu>
         } title='Clients' />
           <Toolbar>
