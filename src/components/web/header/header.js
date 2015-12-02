@@ -1,17 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router';
+import {connect} from 'react-redux';
+var Sticky = require('react-sticky');
+import {AppBar} from 'material-ui';
+import {toggleNav} from '../../../modules/leftNav';
+const Colors = require('material-ui/lib/styles/colors');
 
+@connect(state => ({user: state.auth.user}), { toggleNav})
 class Header extends React.Component {
-
+  menuClicked (e) {console.log(e);
+    this.props.toggleNav();}
   render() {
 
     return (
       <div>
-        <Link to="/">home</Link><span> | </span>
-        <Link to="/login">login</Link><span> | </span>
-        <Link to="/settings">settings</Link><span> | </span>
-        <Link to="/contacts">contacts</Link><span> | </span>
-        <Link to="/logout">logout</Link>
+        <Sticky>
+          <AppBar onLeftIconButtonTouchTap={this.menuClicked.bind(this)} style={{
+            'backgroundColor': Colors. grey700
+          }} title={this.props.title} iconClassNameRight="muidocs-icon-navigation-expand-more"/>
+        </Sticky>
+        <div style={{
+          height: '64px'
+        }}></div>
       </div>
     );
   }

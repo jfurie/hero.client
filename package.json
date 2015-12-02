@@ -43,6 +43,7 @@
     "react-native": "0.13 - 0.14",
     "react-redux": "^4.0.0",
     "react-router": "^1.0.0",
+    "react-sticky": "^3.0.0",
     "react-tap-event-plugin": "^0.2.1",
     "redux": "^3.0.4",
     "redux-devtools": "^2.1.5",
