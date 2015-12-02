@@ -5,7 +5,7 @@ import { pushState } from 'redux-router';
 
 import './loginContainer.scss';
 
-import { RaisedButton, TextField, Styles } from 'material-ui';
+import { RaisedButton, TextField, Styles, Snackbar } from 'material-ui';
 
 let style = {
   error: {
@@ -45,7 +45,10 @@ class LogoutPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.user && nextProps.user) { // login
+
+    if (!this.props.user && !nextProps.user) { // fail to log
+      this.refs.snackbar.show();
+    } else if (!this.props.user && nextProps.user) { // login
       let param = this.getParameterByName('redirect');
 
       if (param) {
@@ -58,6 +61,8 @@ class LogoutPage extends React.Component {
 
     } else if (this.props.user && !nextProps.user) { // logout
       this.props.pushState(null, '/');
+    } else {
+      this.refs.snackbar.show();
     }
   }
 
@@ -69,7 +74,7 @@ class LogoutPage extends React.Component {
 
     this.setState({
       loginError: null,
-      passwordError: null
+      passwordError: null,
     });
 
     if (!this.state.email) {
@@ -141,6 +146,14 @@ class LogoutPage extends React.Component {
 
           </form>
         </div>
+
+        <Snackbar
+            action="ok"
+            autoHideDuration={2500}
+            message="Invalid username or password."
+            ref="snackbar"
+        />
+
       </div>
     );
   }
