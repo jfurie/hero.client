@@ -9,7 +9,7 @@ import LoginPage from './containers/web/loginContainer';
 import LogoutPage from './containers/web/logoutContainer';
 import InvitedPage from './containers/web/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
-
+import Layout from './containers/web/layoutContainer';
 // settings containers
 import SettingsHomePage from './containers/web/settings/settingsHomeContainer';
 import SettingsAccountPage from './containers/web/settings/settingsAccountContainer';
@@ -22,27 +22,27 @@ import ConctactsListPage from './containers/web/contacts/contactsListContainer';
 
 const localStorage = new LocalStorageClient('Auth');
 
-export default (store) => {
+export default(store) => {
 
   /* block access if it's not a user */
   const requireLogin = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const { auth: { user }} = ((store) ? (store.getState()) : (null));
+      const {
+        auth: {
+          user
+        }
+      } = ((store)
+        ? (store.getState())
+        : (null));
 
       if (!user) {
         let auth = localStorage.get('Auth');
-        if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
-          store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
-            cb();
-          });
-        } else {
-          replaceState(null, '/login?redirect=' + nextState.location.pathname);
+        if (auth && auth.id && auth.ttl && auth.created && auth.userId) {store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
           cb();
-        }
-      } else {
-        cb();
-      }
+        });} else {replaceState(null, '/login?redirect=' + nextState.location.pathname);
+          cb();}
+      } else {cb();}
     }
 
     checkAuth();
@@ -51,11 +51,15 @@ export default (store) => {
   const requireAccount = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const { auth: { authToken }} = ((store) ? (store.getState()) : (null));
+      const {
+        auth: {
+          authToken
+        }
+      } = ((store)
+        ? (store.getState())
+        : (null));
 
-      if (!authToken || !authToken.accountInfo || !authToken.accountInfo.account || !authToken.accountInfo.account.id) {
-        replaceState(null, '/error?type=access');
-      }
+      if (!authToken || !authToken.accountInfo || !authToken.accountInfo.account || !authToken.accountInfo.account.id) {replaceState(null, '/error?type=access');}
 
       cb();
     }
@@ -67,20 +71,20 @@ export default (store) => {
   const loadUser = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const { auth: { user }} = ((store) ? (store.getState()) : (null));
+      const {
+        auth: {
+          user
+        }
+      } = ((store)
+        ? (store.getState())
+        : (null));
 
       if (!user) {
         let auth = localStorage.get('Auth');
-        if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
-          store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
-            cb();
-          });
-        } else {
+        if (auth && auth.id && auth.ttl && auth.created && auth.userId) {store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
           cb();
-        }
-      } else {
-        cb();
-      }
+        });} else {cb();}
+      } else {cb();}
 
       // hide splash if here
       setTimeout(() => {
@@ -96,32 +100,33 @@ export default (store) => {
 
   return (
 
-      <Route path="/" onEnter={loadUser}>
-
-        { /* Home (main) route */ }
-        <IndexRoute component={Home} />
+    <Route path="/" onEnter={loadUser}>
+      <Route component={Layout}>
+        {/* Home (main) route */}
+        <IndexRoute component={Home}/>
         <Route path="login" component={LoginPage}/>
         <Route path="error" component={ErrorPage}/>
 
-        { /* Routes requiring login  */ }
+        {/* Routes requiring login  */}
         <Route onEnter={requireLogin}>
           <Route path="logout" component={LogoutPage}/>
-          { /* Settings  */ }
+          {/* Settings  */}
           <Route path="settings">
             <IndexRoute component={SettingsHomePage}/>
             <Route path="account" onEnter={requireAccount} component={SettingsAccountPage}/>
           </Route>
 
-          { /* Account  */ }
+          {/* Account  */}
           <Route path="/account" onEnter={requireAccount}>
             <IndexRoute component={AccountHomePage}/>
             <Route path="/contacts" component={ConctactsListPage}/>
           </Route>
         </Route>
         <Route path="invited" component={InvitedPage}/>
-        { /* Catch all route */ }
-        { /*  <Route path="*" component={NotFound} status={404} /> */ }
+        {/* Catch all route */}
+        {/*  <Route path="*" component={NotFound} status={404} /> */}
 
       </Route>
-    );
+    </Route>
+  );
 };
