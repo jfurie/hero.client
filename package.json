@@ -25,6 +25,7 @@
     "browser-sync": "^2.9.12",
     "eslint": "^1.8.0",
     "eslint-loader": "^1.1.1",
+    "eslint-plugin-react": "^3.11.1",
     "express": "^4.13.3",
     "fbjs": "^0.4.0",
     "gulp": "^3.9.0",
@@ -57,7 +58,6 @@
   "devDependencies": {
     "eslint": "^1.8.0",
     "eslint-loader": "^1.1.1",
-    "eslint-plugin-react": "^3.11.1",
     "react-native-webpack-server": "^0.8.1",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.1"
