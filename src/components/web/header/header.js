@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-var Sticky = require('react-sticky');
 import {AppBar} from 'material-ui';
 import {toggleNav} from '../../../modules/leftNav';
 const Colors = require('material-ui/lib/styles/colors');
@@ -13,11 +12,10 @@ class Header extends React.Component {
 
     return (
       <div>
-        <Sticky>
-          <AppBar onLeftIconButtonTouchTap={this.menuClicked.bind(this)} style={{
-            'backgroundColor': Colors. grey900
-          }} title={this.props.title} iconClassNameRight="muidocs-icon-navigation-expand-more"/>
-        </Sticky>
+        <AppBar onLeftIconButtonTouchTap={this.menuClicked.bind(this)} style={{
+          position:'fixed',
+          'backgroundColor': Colors. grey900
+        }} title={this.props.title} iconClassNameRight="muidocs-icon-navigation-expand-more"/>
         <div style={{
           height: '64px'
         }}></div>
