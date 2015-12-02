@@ -23,7 +23,7 @@ module.exports = {
       {
         test: /\.(js|jsx|es6)$/,
         include: path.resolve(__dirname, 'src'),
-        loader: "eslint-loader"
+        loader: 'eslint-loader',
       },
     ],
     loaders: [
@@ -33,12 +33,8 @@ module.exports = {
         loader: 'babel',
         query: {
           optional: ['runtime'],
-          stage: 0
-        }
-      },
-      {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader'),
+          stage: 0,
+        },
       },
       {
         test: /\.scss$/,
@@ -47,7 +43,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new ExtractTextPlugin('components.css', {
+    new ExtractTextPlugin('../css/components.css', {
       allChunks: true,
     }),
   ],
