@@ -3,6 +3,7 @@ import { routerStateReducer } from 'redux-router';
 import auth from './auth';
 import users from './users';
 import contacts from './contacts';
+import companies from './companies';
 import leftNav from './leftNav';
 export default combineReducers({
   router: routerStateReducer,
@@ -10,4 +11,5 @@ export default combineReducers({
   users,
   contacts,
   leftNav,
+  companies,
 });

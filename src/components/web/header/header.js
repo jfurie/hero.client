@@ -12,7 +12,7 @@ class Header extends React.Component {
 
     return (
       <div>
-        <AppBar onLeftIconButtonTouchTap={this.menuClicked.bind(this)} style={{
+        <AppBar iconElementRight={this.props.iconRight} onLeftIconButtonTouchTap={this.menuClicked.bind(this)} style={{
           position:'fixed',
           'backgroundColor': Colors. grey900
         }} title={this.props.title} iconClassNameRight="muidocs-icon-navigation-expand-more"/>
