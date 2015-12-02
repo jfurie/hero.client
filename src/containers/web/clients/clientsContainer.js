@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Header, ClientsCreateModal } from '../../../components/web';
-import {getAllCompanies} from '../../../modules/companies';
-import {List, ListItem, ListDivider, Avatar, Toolbar, ToolbarGroup, TextField, FontIcon, IconMenu, IconButton } from 'material-ui';
+import { Header, ClientsCreateModal, CompanyAvatar } from '../../../components/web';
+import { getAllCompanies } from '../../../modules/companies';
+import {List, ListItem, ListDivider, Toolbar, ToolbarGroup, TextField, FontIcon, IconMenu, IconButton } from 'material-ui';
 
 let MenuItem = require('material-ui/lib/menus/menu-item');
 const Colors = require('material-ui/lib/styles/colors');
@@ -68,11 +68,11 @@ class ClientPage extends React.Component {
 
           <List subheader={listSubheader}>
             {companies.list.map((company) => {
-              let imageUrl = 'https://logo.clearbit.com/' + company.get('website');
+              //let imageUrl = 'https://logo.clearbit.com/' + company.get('website');
               return (
                 <div>
                   <ListItem
-                    leftAvatar={<Avatar style={{borderRadius:'none'}} src={imageUrl} />}
+                    leftAvatar={<CompanyAvatar url={company.get('website')} />}
                     primaryText={company.get('name')}
                     secondaryText={
                       <p>
