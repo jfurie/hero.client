@@ -1,8 +1,9 @@
 import React from 'react';
-import { login } from '../../modules/auth';
+import { login } from '../../../modules/auth';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-//import { Header } from '../../components/web';
+
+import './loginContainer.scss';
 
 import { RaisedButton, TextField, Styles } from 'material-ui';
 
@@ -10,11 +11,6 @@ let style = {
   error: {
     color: Styles.Colors.red400,
     textAlign: 'left',
-  },
-  loginLogo: {
-    width: '100%',
-    marginTop: '50px',
-    marginBottom: '50px',
   },
   signInButton: {
     width: '100%',
@@ -102,13 +98,14 @@ class LogoutPage extends React.Component {
   render () {
     return (
       <div>
-        <div className="row center-xs center-md">
-          <div className="col-xs-3 col-md-1">
-            <img style={style.loginLogo} src="/img/login-logo.png"  />
-          </div>
-        </div>
-        <div className="row center-xs center-md login-box">
+        <div id="login-box" className="row center-xs center-md">
+
           <form className="col-xs-10 col-md-4" onSubmit={this.onSubmit.bind(this)}>
+
+            <img
+                className="col-xs-4 col-md-3 loginLogo"
+                src="/img/login-logo.png"
+            />
 
             <TextField
                 errorStyle={style.error}

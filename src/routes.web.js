@@ -5,7 +5,7 @@ import LocalStorageClient from './utils/localStorageClient';
 
 // general containers
 import Home from './containers/web/homeContainer';
-import LoginPage from './containers/web/loginContainer';
+import LoginPage from './containers/web/login/loginContainer';
 import LogoutPage from './containers/web/logoutContainer';
 import InvitedPage from './containers/web/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
