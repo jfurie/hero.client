@@ -6,7 +6,7 @@ import {reduxReactRouter, ReduxRouter} from 'redux-router';
 import createStore from './stores/main';
 import ApiClient from './utils/apiClient';
 import LocalStorageClient from './utils/localStorageClient';
-import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
+//import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import getRoutes from './routes.web';
 // needed for 300ms issue  IOS https://github.com/zilverline/react-tap-event-plugin
@@ -29,15 +29,23 @@ const store = createStore(reduxReactRouter, getRoutes, createHistory, client, {}
 // );
 
 class Root extends React.Component {
+
+  // componentDidMount() {
+  //   document.getElementById('splash').style.display = 'none';
+  // }
+
   render () {
+
+    //console.log('ready!');
+
     return (
       <div style={{height:'100%'}}>
         <Provider store={store}>
           <ReduxRouter routes={getRoutes(store)} />
         </Provider>
-        <DebugPanel visibleOnLoad={false} top right bottom>
+        {/* <DebugPanel top right bottom>
           <DevTools store={store} monitor={LogMonitor} />
-        </DebugPanel>
+        </DebugPanel> */ }
       </div>
     );
   }
