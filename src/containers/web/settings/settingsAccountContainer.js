@@ -44,28 +44,44 @@ class SettingsHomePage extends React.Component {
     return (
       <div>
         <Header />
-        <h1>Account Settings: ({accountName})</h1>
+        <div id='innerView'>
 
-        {((isAdmin) ? (
-          <p>You're admin of this account</p>
-        ) : (
-          <p>You're not admin of this account</p>
-        ))}
+          <div className='row'>
+            <div className='col-xs-12'>
+              <h1>Account Settings: ({accountName})</h1>
 
-        <p>Users in this account:</p>
-        <UsersList users={users} controls={isAdmin}/>
-
-        {/* invite user */}
-
-        {((isAdmin) ? (
-          <div>
-            <p>Invite someone to join the {accountName} account:</p>
-            <EmailForm onEmail={this.submitEmail.bind(this)} submitText='Invite'/>
+              {((isAdmin) ? (
+                <p>You're admin of this account</p>
+              ) : (
+                <p>You're not admin of this account</p>
+              ))}
+            </div>
           </div>
 
-        ) : (null))}
+          <div className='row'>
+            <div className='col-xs-12'>
 
-      </div>);
+              <p>Users in this account:</p>
+              <UsersList users={users} controls={isAdmin}/>
+            </div>
+          </div>
+
+          <div className='row'>
+            <div className='col-xs-12'>
+
+              {/* invite user */}
+
+              {((isAdmin) ? (
+                <div>
+                  <p>Invite someone to join the {accountName} account:</p>
+                  <EmailForm onEmail={this.submitEmail.bind(this)} submitText='Invite'/>
+                </div>
+
+              ) : (null))}
+              </div>
+            </div>
+          </div>
+        </div>);
   }
 }
 

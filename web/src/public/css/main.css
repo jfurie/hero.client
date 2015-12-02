@@ -142,3 +142,7 @@ body {
     display: none !important;
   }
 }
+
+#innerView {
+    padding: 8px;
+}

@@ -20,11 +20,13 @@ class HomePage extends React.Component {
     return(
       <div>
         <Header/>
-        <h1>Welcome!</h1>
-        <p>
-          Please Enter a password for your account:
-        </p>
-        <ChangePasswordForm onPassword={this.changePassword.bind(this)}/>
+        <div id='innerView'>
+          <h1>Welcome!</h1>
+          <p>
+            Please Enter a password for your account:
+          </p>
+          <ChangePasswordForm onPassword={this.changePassword.bind(this)}/>
+        </div>
       </div>
     );
   }

@@ -15,13 +15,15 @@ class ErrorPage extends React.Component {
     return (
       <div>
         <Header />
-        <h1>Error!</h1>
-        {(type && type == 'access') ? (
-          <p>Your doesn't have the suffisent permissions to access this page.</p>
-        ) : (
-          <p>An error occured.</p>
-        )}
-        <Link to="/"> back to home</Link>
+        <div id='innerView'>
+          <h1>Error!</h1>
+          {(type && type == 'access') ? (
+            <p>Your doesn't have the suffisent permissions to access this page.</p>
+          ) : (
+            <p>An error occured.</p>
+          )}
+          <Link to="/"> back to home</Link>
+        </div>
       </div>);
   }
 }
