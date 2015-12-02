@@ -26,7 +26,7 @@ class HomePage extends React.Component {
     } = this.props;
     let title = (
       <div style={{
-        'color': Colors. grey700
+        'color': Colors. grey900
       }}>hero</div>
     );
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -44,16 +44,16 @@ class HomePage extends React.Component {
             height: ( clientHeight) + 'px'
           }}>
             <AppBar onLeftIconButtonTouchTap={this.menuClicked.bind(this)} titleStyle={{
-              'color': Colors. grey700
+              'color': Colors. grey900
             }} style={{
-              'backgroundColor': Colors. white, title: { 'color': Colors. grey700
+              'backgroundColor': Colors. white, title: { 'color': Colors. grey900
               }
             }} title={title} iconClassNameRight="muidocs-icon-navigation-expand-more"/>
 
           </div>
         </Dialog>
         <Tabs  tabItemContainerStyle={{
-          'background-color': Colors. grey700
+          'background-color': Colors. grey900
         }}>
           <Tab label="Item One">
             {(user && user.email)

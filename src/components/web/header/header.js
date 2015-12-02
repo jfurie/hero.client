@@ -15,7 +15,7 @@ class Header extends React.Component {
       <div>
         <Sticky>
           <AppBar onLeftIconButtonTouchTap={this.menuClicked.bind(this)} style={{
-            'backgroundColor': Colors. grey700
+            'backgroundColor': Colors. grey900
           }} title={this.props.title} iconClassNameRight="muidocs-icon-navigation-expand-more"/>
         </Sticky>
         <div style={{
