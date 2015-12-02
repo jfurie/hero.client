@@ -39,7 +39,7 @@ class Root extends React.Component {
     //console.log('ready!');
 
     return (
-      <div>
+      <div style={{height:'100%'}}>
         <Provider store={store}>
           <ReduxRouter routes={getRoutes(store)} />
         </Provider>
