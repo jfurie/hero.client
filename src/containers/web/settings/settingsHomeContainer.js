@@ -17,13 +17,16 @@ class SettingsHomePage extends React.Component {
 
     return (
       <div>
-        <Header />
-        <h1>Your Settings: ({auth.user.email})</h1>
-
-        {((auth.authToken.accountInfo.account && auth.authToken.accountInfo.account.name) ? (
-          <p>You're part of the {auth.authToken.accountInfo.account.name} account. (<Link to="/settings/account">settings</Link>)</p>
-        ) : (null))}
-
+        <Header title='Settings'/>
+        <div id='innerView'>
+          <div className='row'>
+            <div className='col-xs-12'>
+              {((auth.authToken.accountInfo.account && auth.authToken.accountInfo.account.name) ? (
+                <p>You're part of the {auth.authToken.accountInfo.account.name} account. (<Link to="/settings/account">settings</Link>)</p>
+              ) : (null))}
+            </div>
+          </div>
+        </div>
       </div>);
   }
 }
