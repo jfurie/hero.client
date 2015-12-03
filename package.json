@@ -53,6 +53,7 @@
     "redux-devtools": "^2.1.5",
     "redux-router": "^1.0.0-beta3",
     "redux-thunk": "^1.0.0",
+    "style-loader": "^0.13.0",
     "superagent": "^1.4.0",
     "swig": "^1.4.2",
     "webpack": "^1.12.3"
