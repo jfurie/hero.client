@@ -6,7 +6,7 @@ import {reduxReactRouter, ReduxRouter} from 'redux-router';
 import createStore from './stores/main';
 import ApiClient from './utils/apiClient';
 import LocalStorageClient from './utils/localStorageClient';
-import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
+//import { DevTools, DebugPanel, LogMonitor } from 'redux-devtools/lib/react';
 
 import getRoutes from './routes.web';
 // needed for 300ms issue  IOS https://github.com/zilverline/react-tap-event-plugin
@@ -16,7 +16,7 @@ injectTapEventPlugin();
 let client = {};
 
 client.api = new ApiClient({
-  baseUrl: 'http://localhost:3000'
+  baseUrl: 'http://localhost:3003'
 });
 
 client.localStorage = new LocalStorageClient('auth');
