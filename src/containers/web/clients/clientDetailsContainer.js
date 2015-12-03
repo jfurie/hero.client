@@ -4,6 +4,7 @@ import { Header } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 
 import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon } from 'material-ui';
+import SwipeableViews from 'react-swipeable-views';
 
 function getCompany(companies, id) {
   return ((companies.list.size > 0) ? (companies.list.get(id)) : (null));
@@ -23,10 +24,26 @@ class ClientDetailsPage extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      slideIndex: 0,
+    };
   }
 
   componentDidMount() {
     this.props.getOneCompany(this.props.params.id);
+  }
+
+  _handleChangeIndex(index) {
+    this.setState({
+      slideIndex: index,
+    });
+  }
+
+  _handleChangeTabs(value) {
+    this.setState({
+      slideIndex: parseInt(value, 10),
+    });
   }
 
   render() {
@@ -37,23 +54,11 @@ class ClientDetailsPage extends React.Component {
       return (
         <div>
           <Header title={company.get('name')}/>
-          <Tabs tabItemContainerStyle={style.tabs}>
-            <Tab label="Details"></Tab>
-            <Tab label="Location"></Tab>
+          <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
+            <Tab label="Details" value="0"></Tab>
+            <Tab label="Location" value="1"></Tab>
           </Tabs>
-          {/* <SwipeableViews index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
-            <div>
-              <h2 style={styles.headline}>Tabs with slide effect</h2>
-              Swipe to see the next slide.<br />
-            </div>
-            <div style={styles.slide}>
-              slide n°2
-            </div>
-            <div style={styles.slide}>
-              slide n°3
-            </div>
-          </SwipeableViews> */}
-
+          <SwipeableViews index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
             <List>
               <div>
                 <ListItem
@@ -78,7 +83,10 @@ class ClientDetailsPage extends React.Component {
                 />
               </div>
             </List>
-
+            <div>
+              slide n°2
+            </div>
+          </SwipeableViews>
         </div>
       );
     } else {
