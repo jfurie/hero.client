@@ -16,7 +16,7 @@ injectTapEventPlugin();
 let client = {};
 
 client.api = new ApiClient({
-  baseUrl: 'http://localhost:3003'
+  baseUrl: 'https://core-api-loopback.herokuapp.com'
 });
 
 client.localStorage = new LocalStorageClient('auth');
@@ -27,13 +27,13 @@ class Root extends React.Component {
 
   render () {
     return (
-      <div style={{height:'100%'}}>
+      <div style={{}}>
         <Provider store={store}>
           <ReduxRouter routes={getRoutes(store)} />
-        </Provider>
-        {/* <DebugPanel top right bottom>
-          <DevTools store={store} monitor={LogMonitor} />
-        </DebugPanel> */ }
+       </Provider>
+      {  /*   <DebugPanel top right bottom>
+           <DevTools store={store} monitor={LogMonitor} />
+        </DebugPanel>*/}
       </div>
     );
   }
