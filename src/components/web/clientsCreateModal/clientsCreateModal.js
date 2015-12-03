@@ -9,7 +9,7 @@ export default class ClientsCreateModal extends React.Component {
       ... props.company,
       nameError:'',
       websiteError:''
-    }
+    };
   }
 
   closeModal(){
