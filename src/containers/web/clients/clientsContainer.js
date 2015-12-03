@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Header, ClientsCreateModal, CompanyAvatar } from '../../../components/web';
 import { getAllCompanies } from '../../../modules/companies';
-import {List, ListItem, ListDivider, Toolbar, ToolbarGroup, TextField, FontIcon, IconMenu, IconButton } from 'material-ui';
+import { List, ListItem, ListDivider, Toolbar, ToolbarGroup, TextField, FontIcon, IconMenu, IconButton } from 'material-ui';
+import { pushState } from 'redux-router';
 
 let MenuItem = require('material-ui/lib/menus/menu-item');
 const Colors = require('material-ui/lib/styles/colors');
@@ -10,7 +11,7 @@ const Colors = require('material-ui/lib/styles/colors');
 @connect(state => ({
   type: state.router.location.query.type,
   companies: state.companies,
-}),{getAllCompanies})
+}),{getAllCompanies, pushState})
 
 class ClientPage extends React.Component {
   constructor(props) {
@@ -33,6 +34,10 @@ class ClientPage extends React.Component {
 
   click() {
     alert('hi');
+  }
+
+  _showClientDetails(id) {
+    this.props.pushState(null, `/clients/${id}`);
   }
 
   render() {
@@ -79,7 +84,8 @@ class ClientPage extends React.Component {
                         <span style={{color: Colors.darkBlack}}>3 Jobs | 20 Candidates</span><br/>
                       </p>
                     }
-                    secondaryTextLines={2} />
+                    secondaryTextLines={2}
+                    onTouchTap={this._showClientDetails.bind(this, company.get('id'))}/>
                   <ListDivider inset />
                 </div>
               );

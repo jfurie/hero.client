@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
 import './loginContainer.scss';
-
 import { RaisedButton, TextField, Styles, Snackbar } from 'material-ui';
 
-let style = {
+const style = {
   error: {
     color: Styles.Colors.red400,
     textAlign: 'left',

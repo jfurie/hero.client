@@ -12,7 +12,7 @@ class ContactListPage extends React.Component {
   }
 
   componentDidMount() {
-    var self = this;
+    let self = this;
     setTimeout(()=>{
       self.props.getAllContacts();
     }, 500);
@@ -24,9 +24,9 @@ class ContactListPage extends React.Component {
 
     return (
       <div>
-        <Header title='Contacts'/>
+        <Header title="Contacts"/>
         {/*<h1>Contacts ({contacts.list.count()})</h1>*/}
-        <div id='innerView'>
+        <div id="innerView">
           <ContactsList contacts={contacts.list} />
         </div>
       </div>);
