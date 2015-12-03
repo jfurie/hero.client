@@ -8,21 +8,21 @@ let MenuItem = require('material-ui/lib/menus/menu-item');
 const Colors = require('material-ui/lib/styles/colors');
 var Infinite = require('react-infinite');
 @connect(state =>
-  {
-    let visibleCompanies = new Immutable.Map();
-    if(state.companies.currentSearch != ''){
-      var current =  state.companies.searches.get(state.companies.currentSearch);
-      visibleCompanies = state.companies.list.filter(x=>{
-        return current.indexOf(x.get('id')) > -1;
-      });
-    } else{
-      visibleCompanies = state.companies.list;
-    }
-    return({
-  type: state.router.location.query.type,
-  companies: state.companies,
-  visibleCompanies:visibleCompanies,
-});}
+{
+  let visibleCompanies = new Immutable.Map();
+  if(state.companies.currentSearch != ''){
+    var current =  state.companies.searches.get(state.companies.currentSearch);
+    visibleCompanies = state.companies.list.filter(x=>{
+      return current.indexOf(x.get('id')) > -1;
+    });
+  } else{
+    visibleCompanies = state.companies.list;
+  }
+  return({
+    type: state.router.location.query.type,
+    companies: state.companies,
+    visibleCompanies,
+  });}
 ,{getAllCompanies, createCompany, searchCompany})
 class ClientPage extends React.Component {
   constructor(props) {
