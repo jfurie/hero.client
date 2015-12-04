@@ -27,7 +27,7 @@ class Root extends React.Component {
 
   render () {
     return (
-      <div style={{height:'100%'}}>
+      <div style={{}}>
         <Provider store={store}>
           <ReduxRouter routes={getRoutes(store)} />
         </Provider>

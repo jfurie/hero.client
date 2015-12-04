@@ -7,8 +7,14 @@ const GET_COMPANY = 'hero.client/clients/GET_COMPANY';
 const GET_COMPANY_SUCCESS = 'hero.client/clients/GET_COMPANY_SUCCESS';
 const GET_COMPANY_FAIL = 'hero.client/clients/GET_COMPANY_FAIL';
 
+const CREATE_COMPANY = 'hero.client/clients/CREATE_COMPANY';
+const CREATE_COMPANY_SUCCESS = 'hero.client/clients/CREATE_COMPANY_SUCCESS';
+const CREATE_COMPANY_FAIL = 'hero.client/clients/CREATE_COMPANY_FAIL';
+const SEARCH_COMPANIES = 'hero.client/clients/SEARCH_COMPANIES';
 const initialState = {
   list: new Immutable.Map(),
+  searches: new Immutable.Map(),
+  currentSearch: ''
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -25,6 +31,7 @@ export default function reducer(state = initialState, action = {}) {
     });
 
     return {
+      ...state,
       list: state.list.mergeDeep(companiesMap),
     };
   }
@@ -45,6 +52,7 @@ export default function reducer(state = initialState, action = {}) {
     company[id] = action.result;
 
     return {
+      ...state,
       list: state.list.mergeDeep(company),
     };
   }
@@ -54,9 +62,52 @@ export default function reducer(state = initialState, action = {}) {
       err: action.err,
     };
   }
+  case CREATE_COMPANY:
+    return {
+      ...state,
+      creating:true,
+      creatingError:''
+    };
+  case CREATE_COMPANY_SUCCESS:
+    let newItem = {};
+    newItem[action.result.id] = action.result;
+    return {
+      ...state,
+      creating:false,
+      creatingError:'',
+      list:state.list.mergeDeep(newItem)
+    };
+  case CREATE_COMPANY_FAIL:
+    return {
+      ...state,
+      creating:false,
+      creatingError:'Failed to create company'
+    };
+  case SEARCH_COMPANIES:
+    return {
+      ...state,
+      searches: state.searches.mergeDeep(action.result),
+      currentSearch: action.query,
+    };
   default:
     return state;
   }
+}
+export function searchCompany(query){
+  return (dispatch, getState) => {
+    let current = getState().companies.list;
+    let results = current.filter(y=>{
+      return y.get('name').toLowerCase().indexOf(query.toLowerCase()) > -1;
+    });
+    let listOfkeys =results.keySeq().toArray();
+    let resultIds = {};
+    resultIds[query] = listOfkeys;
+    dispatch({
+      type:SEARCH_COMPANIES,
+      result: resultIds,
+      query
+    });
+  };
 }
 
 export function getAllCompanies() {
@@ -73,6 +124,16 @@ export function getOneCompany(id) {
     types: [GET_COMPANY, GET_COMPANY_SUCCESS, GET_COMPANY_FAIL],
     promise: (client, auth) => client.api.get(`/companies/${id}`, {
       authToken: auth.authToken,
+    }),
+  };
+}
+
+export function createCompany(company) {
+  return {
+    types: [CREATE_COMPANY, CREATE_COMPANY_SUCCESS, CREATE_COMPANY_FAIL],
+    promise: (client, auth) => client.api.post('/companies', {
+      authToken: auth.authToken,
+      data: company
     }),
   };
 }
