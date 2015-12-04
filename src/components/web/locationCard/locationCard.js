@@ -1,35 +1,12 @@
 import React from 'react';
-import { Card, CardMedia, CardTitle, CardText } from 'material-ui';
+import { Card, CardMedia, CardTitle } from 'material-ui';
 //import {GoogleMap, Marker, GoogleMapLoader} from 'react-google-maps';
 import GoogleMap from 'google-map-react';
 
 class LocationCard extends React.Component {
 
-  // static defaultProps = {
-  //   center: {lat: 59.938043, lng: 30.337157},
-  //   zoom: 9,
-  //   greatPlaceCoords: {lat: 59.724465, lng: 30.080121},
-  // };
-
   constructor(props) {
     super(props);
-
-    //console.log(props);
-
-    //this.state = {
-      // center: {
-      //   lat: props.location.get('geoField').lat,
-      //   lng: props.location.get('geoField').lng,
-      // },
-      //zoom: 9,
-      // markers: [{
-      //   position: {
-      //     lat: props.location.get('geoField').lat,
-      //     lng: props.location.get('geoField').lng,
-      //   },
-      //   defaultAnimation: 2,
-      // }],
-    //};
   }
 
   createMapOptions() {
