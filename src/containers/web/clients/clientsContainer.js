@@ -91,7 +91,6 @@ class ClientPage extends React.Component {
               <FontIcon onTouchTap={this.click.bind(this)} className="material-icons" >search</FontIcon>
             </ToolbarGroup>
             <ToolbarGroup key={1} float="right">
-
             </ToolbarGroup>
           </Toolbar>
           <List style={{backgroundColor:'transparant'}} subheader={listSubheader}>
@@ -103,11 +102,7 @@ class ClientPage extends React.Component {
                     <ListItem
                       leftAvatar={<CompanyAvatar url={company.get('website')} />}
                       primaryText={company.get('name')}
-                      secondaryText={
-                        <p>
-                          <span style={{color: Colors.darkBlack}}>3 Jobs | 20 Candidates</span><br/>
-                        </p>
-                      }
+                      secondaryText={<p>3 Jobs | 20 Candidates</p>}
                       secondaryTextLines={2}
                       onTouchTap={this._showClientDetails.bind(this, company.get('id'))} />
                     <ListDivider inset={true} />
