@@ -10,6 +10,7 @@ import LogoutPage from './containers/web/logoutContainer';
 import InvitedPage from './containers/web/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
 import Layout from './containers/web/layoutContainer';
+
 // settings containers
 import SettingsHomePage from './containers/web/settings/settingsHomeContainer';
 import SettingsAccountPage from './containers/web/settings/settingsAccountContainer';
@@ -22,6 +23,7 @@ import ConctactsListPage from './containers/web/contacts/contactsListContainer';
 
 // clients
 import ClientsPage from './containers/web/clients/clientsContainer';
+import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
 
 const localStorage = new LocalStorageClient('Auth');
 
@@ -40,7 +42,7 @@ export default(store) => {
             cb();
           });
         } else {
-          replaceState(null, '/login?redirect=' + nextState.location.pathname);
+          replaceState(null, `/login?redirect=${nextState.location.pathname}`);
           cb();
         }
       } else {
@@ -112,8 +114,13 @@ export default(store) => {
 
         {/* Routes requiring login  */}
         <Route onEnter={requireLogin}>
-          <Route path="clients" component={ClientsPage}/>
           <Route path="logout" component={LogoutPage}/>
+
+          {/* Clients */}
+          <Route path="clients">
+            <IndexRoute component={ClientsPage}/>
+            <Route path=":id" component={ClientDetailsPage}/>
+          </Route>
 
           {/* Settings  */}
           <Route path="settings">

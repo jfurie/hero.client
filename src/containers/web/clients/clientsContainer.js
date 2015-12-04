@@ -1,9 +1,10 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, ClientsCreateModal } from '../../../components/web';
+import { pushState } from 'redux-router';
+import { Header, ClientsCreateModal, CompanyAvatar } from '../../../components/web';
 import {getAllCompanies, createCompany, searchCompany} from '../../../modules/companies';
-import {List, ListItem, ListDivider, Avatar, Toolbar, ToolbarGroup, TextField, FontIcon, IconMenu, IconButton } from 'material-ui';
+import {List, ListItem, ListDivider, Toolbar, ToolbarGroup, TextField, FontIcon, IconMenu, IconButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
 const Colors = require('material-ui/lib/styles/colors');
 var Infinite = require('react-infinite');
@@ -23,7 +24,7 @@ var Infinite = require('react-infinite');
     companies: state.companies,
     visibleCompanies,
   });}
-,{getAllCompanies, createCompany, searchCompany})
+,{getAllCompanies, createCompany, searchCompany, pushState})
 class ClientPage extends React.Component {
   constructor(props) {
     super(props);
@@ -59,6 +60,11 @@ class ClientPage extends React.Component {
       createModalOpen:false
     });
   }
+
+  _showClientDetails(id) {
+    this.props.pushState(null, `/clients/${id}`);
+  }
+
   render() {
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     let {visibleCompanies} = this.props;
@@ -85,30 +91,25 @@ class ClientPage extends React.Component {
               <FontIcon onTouchTap={this.click.bind(this)} className="material-icons" >search</FontIcon>
             </ToolbarGroup>
             <ToolbarGroup key={1} float="right">
-
             </ToolbarGroup>
           </Toolbar>
           <List style={{backgroundColor:'transparant'}} subheader={listSubheader}>
             <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
               {visibleCompanies.map((company) => {
-                let imageUrl = 'https://logo.clearbit.com/' + company.get('website');
+                //let imageUrl = 'https://logo.clearbit.com/' + company.get('website');
                 return (
                   <div>
                     <ListItem
-                      leftAvatar={<Avatar style={{borderRadius:'none'}} src={imageUrl} />}
+                      leftAvatar={<CompanyAvatar url={company.get('website')} />}
                       primaryText={company.get('name')}
-                      secondaryText={
-                        <p>
-                          <span style={{color: Colors.darkBlack}}>3 Jobs | 20 Candidates</span><br/>
-                        </p>
-                      }
-                      secondaryTextLines={2} />
+                      secondaryText={<p>3 Jobs | 20 Candidates</p>}
+                      secondaryTextLines={2}
+                      onTouchTap={this._showClientDetails.bind(this, company.get('id'))} />
                     <ListDivider inset={true} />
                   </div>
                 );
               })}
             </Infinite>
-
         </List>
       </div>);
   }
