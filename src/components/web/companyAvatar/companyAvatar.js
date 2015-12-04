@@ -12,7 +12,6 @@ class CompanyAvatar extends React.Component {
 
     let imgSrc = `https://logo.clearbit.com/${url}`;
 
-    //console.log(style);
     if (style) {
       style.borderRadius = '0px';
     }
