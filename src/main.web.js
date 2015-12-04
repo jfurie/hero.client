@@ -16,7 +16,7 @@ injectTapEventPlugin();
 let client = {};
 
 client.api = new ApiClient({
-  baseUrl: 'http://localhost:3003'
+  baseUrl: 'https://core-api-loopback.herokuapp.com'
 });
 
 client.localStorage = new LocalStorageClient('auth');
