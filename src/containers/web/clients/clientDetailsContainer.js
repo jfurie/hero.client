@@ -89,7 +89,7 @@ class ClientDetailsPage extends React.Component {
 
     let {company, location} = this.props;
 
-    //console.log(location);
+    //console.log(company, location);
 
     if (company) {
       return (
@@ -97,9 +97,7 @@ class ClientDetailsPage extends React.Component {
           <Header title={company.get('name')}/>
           <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
             <Tab label="Details" value="0"></Tab>
-            {(company.get('location')) ? (
-              <Tab label="Location" value="1"></Tab>
-            ) : (null)}
+            <Tab label="Location" value="1"></Tab>
           </Tabs>
           <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
             <List>
@@ -126,11 +124,11 @@ class ClientDetailsPage extends React.Component {
                 />
               </div>
             </List>
-            {(company.get('location')) ? (
-              <div id="innerView">
-                <LocationCard location={location} />
-              </div>
-            ) : (null)}
+            <div id="innerView">
+              {(company.get('location')) ? (
+                  <LocationCard location={location} />
+              ) : (<p>No location provided.</p>)}
+            </div>
           </SwipeableViews>
         </div>
       );
