@@ -92,6 +92,11 @@ class ClientDetailsPage extends React.Component {
     //console.log(company, location);
 
     if (company) {
+
+      let website = company.get('website');
+      let twitter = company.get('twitterHandle');
+      let indeedId = company.get('indeedId');
+
       return (
         <div>
           <Header title={company.get('name')}/>
@@ -102,26 +107,40 @@ class ClientDetailsPage extends React.Component {
           <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
             <List>
               <div>
-                <ListItem
-                  leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                  primaryText={company.get('website')}
-                  secondaryText={<p>website</p>}
-                  secondaryTextLines={1}
-                />
-                <ListDivider inset />
-                <ListItem
-                  leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                  primaryText={`@${company.get('twitterHandle')}`}
-                  secondaryText={<p>twitter</p>}
-                  secondaryTextLines={1}
-                />
-                <ListDivider inset />
-                <ListItem
-                  leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                  primaryText={company.get('indeedId')}
-                  secondaryText={<p>indeed Id</p>}
-                  secondaryTextLines={1}
-                />
+
+                {(website) ? (
+                  <ListItem
+                    leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                    primaryText={website}
+                    secondaryText={<p>website</p>}
+                    secondaryTextLines={1}
+                  />
+                ) : (null)}
+
+                {(twitter) ? (
+                  <div>
+                    <ListDivider inset />
+                    <ListItem
+                      leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                      primaryText={`@${twitter}`}
+                      secondaryText={<p>twitter</p>}
+                      secondaryTextLines={1}
+                    />
+                  </div>
+                ) : (null)}
+
+                {(indeedId) ? (
+                  <div>
+                    <ListDivider inset />
+                    <ListItem
+                      leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                      primaryText={`@${indeedId}`}
+                      secondaryText={<p>indeed Id</p>}
+                      secondaryTextLines={1}
+                    />
+                  </div>
+                ) : (null)}
+
               </div>
             </List>
             <div id="innerView">
