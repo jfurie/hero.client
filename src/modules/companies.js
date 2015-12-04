@@ -43,7 +43,7 @@ export default function reducer(state = initialState, action = {}) {
     let company = {};
     let id = action.result.id;
     company[id] = action.result;
-
+    
     return {
       list: state.list.mergeDeep(company),
     };

@@ -64,9 +64,7 @@ class Layout extends React.Component {
   render () {
 
     let {leftNav} = this.props;
-
-    console.log(leftNav);
-
+    
     return (
       <div style={{
         height: '100%'

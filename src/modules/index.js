@@ -5,6 +5,8 @@ import users from './users';
 import contacts from './contacts';
 import companies from './companies';
 import leftNav from './leftNav';
+import locations from './locations';
+
 export default combineReducers({
   router: routerStateReducer,
   auth,
@@ -12,4 +14,5 @@ export default combineReducers({
   contacts,
   leftNav,
   companies,
+  locations,
 });

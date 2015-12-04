@@ -2,13 +2,26 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Header, LocationCard } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
+import { getOneLocation } from '../../../modules/locations';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 
 import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon } from 'material-ui';
 import SwipeableViews from 'react-swipeable-views';
 
-function getCompany(companies, id) {
-  return ((companies.list.size > 0) ? (companies.list.get(id)) : (null));
+function getData(state, id) {
+  let company = ((state.companies.list.size > 0) ? (state.companies.list.get(id)) : (null));
+  let location = null;
+
+  if (company && company.get('location')) {
+    location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
+  }
+
+  //console.log('getData', company, location);
+
+  return {
+    company,
+    location,
+  };
 }
 
 const style = {
@@ -17,10 +30,9 @@ const style = {
   },
 };
 
-@connect((state, props) => ({
-  type: state.router.location.query.type,
-  company: getCompany(state.companies, props.params.id)
-}), {getOneCompany, disableSwipeToOpen, enableSwipeToOpen})
+@connect((state, props) => (
+  getData(state, props.params.id)),
+  {getOneCompany, getOneLocation, disableSwipeToOpen, enableSwipeToOpen})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -37,6 +49,12 @@ class ClientDetailsPage extends React.Component {
 
   componentWillUnmount() {
     this.props.enableSwipeToOpen();
+  }
+
+  componentWillUpdate(nextProps) {
+    if (!this.props.location && !nextProps.location && nextProps.company && nextProps.company.get('location')) {
+      this.props.getOneLocation(nextProps.company.get('location'));
+    }
   }
 
   _handleChangeIndex(index) {
@@ -69,7 +87,9 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company} = this.props;
+    let {company, location} = this.props;
+
+    //console.log(location);
 
     if (company) {
       return (
@@ -77,7 +97,9 @@ class ClientDetailsPage extends React.Component {
           <Header title={company.get('name')}/>
           <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
             <Tab label="Details" value="0"></Tab>
-            <Tab label="Location" value="1"></Tab>
+            {(company.get('location')) ? (
+              <Tab label="Location" value="1"></Tab>
+            ) : (null)}
           </Tabs>
           <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
             <List>
@@ -104,9 +126,11 @@ class ClientDetailsPage extends React.Component {
                 />
               </div>
             </List>
-            <div id="innerView">
-              <LocationCard />
-            </div>
+            {(company.get('location')) ? (
+              <div id="innerView">
+                <LocationCard location={location} />
+              </div>
+            ) : (null)}
           </SwipeableViews>
         </div>
       );
