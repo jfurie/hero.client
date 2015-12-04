@@ -3,7 +3,9 @@ import Immutable from 'immutable';
 const GET_CONTACTS = 'hero.client/contacts/GET_CONTACTS';
 const GET_CONTACTS_SUCCESS = 'hero.client/contacts/GET_CONTACTS_SUCCESS';
 const GET_CONTACTS_FAIL = 'hero.client/contacts/GET_CONTACTS_FAIL';
-
+const CREATE_CONTACT = 'hero.client/contacts/CREATE_CONTACT';
+const CREATE_CONTACT_SUCCESS = 'hero.client/contacts/CREATE_CONTACT_SUCCESS';
+const CREATE_CONTACT_FAIL = 'hero.client/contacts/CREATE_CONTACT_FAIL';
 const initialState = {
   list: new Immutable.Map(),
 };
@@ -39,6 +41,15 @@ export function getAllContacts() {
     types: [GET_CONTACTS, GET_CONTACTS_SUCCESS, GET_CONTACTS_FAIL],
     promise: (client, auth) => client.api.get('/contacts', {
       authToken: auth.authToken,
+    }),
+  };
+}
+export function createContact(contact) {
+  return {
+    types: [GET_CONTACTS, GET_CONTACTS_SUCCESS, GET_CONTACTS_FAIL],
+    promise: (client, auth) => client.api.post('/contacts', {
+      authToken: auth.authToken,
+      data:contact
     }),
   };
 }

@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Header } from '../../../components/web';
+import { Header,ClientContactsCreateModal } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
-
-import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon } from 'material-ui';
+import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon, IconMenu, IconButton } from 'material-ui';
+let MenuItem = require('material-ui/lib/menus/menu-item');
 import SwipeableViews from 'react-swipeable-views';
 
 function getCompany(companies, id) {
@@ -24,9 +24,9 @@ class ClientDetailsPage extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       slideIndex: 0,
+      createModalOpen:false
     };
   }
 
@@ -45,6 +45,19 @@ class ClientDetailsPage extends React.Component {
       slideIndex: parseInt(value, 10),
     });
   }
+  createContactModalOpen(){
+    this.setState({
+      createContactModalOpen:true
+    });
+  }
+  createContactModalClose(){
+    this.setState({
+      createContactModalOpen:false
+    });
+  }
+  saveContact(){
+    console.log('save!');
+  }
 
   render() {
 
@@ -53,7 +66,14 @@ class ClientDetailsPage extends React.Component {
     if (company) {
       return (
         <div>
-          <Header title={company.get('name')}/>
+          <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
+          <Header iconRight={
+            <IconMenu iconButtonElement={
+              <IconButton  iconClassName="material-icons">more_vert</IconButton>
+            }>
+              <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
+            </IconMenu>
+          } title={company.get('name')} />
           <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
             <Tab label="Details" value="0"></Tab>
             <Tab label="Location" value="1"></Tab>
