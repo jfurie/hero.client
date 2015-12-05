@@ -73,14 +73,10 @@ export default(store) => {
 
     function checkAuth() {
       const { auth: { user } } = ((store) ? (store.getState()) : (null));
-
       if (!user) {
         let auth = localStorage.get('Auth');
         if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
           store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
-            if (nextState.location.pathname === '/login') { /* already logged */
-              replaceState(null, '/');
-            }
             cb();
           });
         } else {
@@ -102,18 +98,25 @@ export default(store) => {
     }, 0);
   };
 
+  const checkLogin = (nextState, replaceState, cb) => {
+    const { auth: { user } } = ((store) ? (store.getState()) : (null));
+    if (user) { /* already logged */
+      replaceState(null, '/');
+    }
+    cb();
+  };
+
   return (
 
     <Route path="/" onEnter={loadUser}>
       <Route component={Layout}>
 
-        {/* Home (main) route */}
-        <IndexRoute component={Home}/>
-        <Route path="login" component={LoginPage}/>
+        <Route path="login" onEnter={checkLogin} component={LoginPage}/>
         <Route path="error" component={ErrorPage}/>
 
         {/* Routes requiring login  */}
         <Route onEnter={requireLogin}>
+          <IndexRoute component={Home}/>
           <Route path="logout" component={LogoutPage}/>
 
           {/* Clients */}
