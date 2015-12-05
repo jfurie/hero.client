@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Header, LocationCard } from '../../../components/web';
+import { Header, LocationCard, ContactsList } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
+import { getAllContacts } from '../../../modules/contacts';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 
 import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon } from 'material-ui';
@@ -11,16 +12,16 @@ import SwipeableViews from 'react-swipeable-views';
 function getData(state, id) {
   let company = ((state.companies.list.size > 0) ? (state.companies.list.get(id)) : (null));
   let location = null;
+  let contacts = state.contacts; // TMP
 
   if (company && company.get('location')) {
     location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
   }
 
-  //console.log('getData', company, location);
-
   return {
     company,
     location,
+    contacts,
   };
 }
 
@@ -32,7 +33,7 @@ const style = {
 
 @connect((state, props) => (
   getData(state, props.params.id)),
-  {getOneCompany, getOneLocation, disableSwipeToOpen, enableSwipeToOpen})
+  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -45,6 +46,7 @@ class ClientDetailsPage extends React.Component {
 
   componentDidMount() {
     this.props.getOneCompany(this.props.params.id);
+    this.props.getAllContacts();
   }
 
   componentWillUnmount() {
@@ -87,7 +89,7 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company, location} = this.props;
+    let {company, location, contacts} = this.props;
 
     //console.log(company, location);
 
@@ -103,6 +105,7 @@ class ClientDetailsPage extends React.Component {
           <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
             <Tab label="Details" value="0"></Tab>
             <Tab label="Location" value="1"></Tab>
+            <Tab label="Contacts" value="2"></Tab>
           </Tabs>
           <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
             <List>
@@ -148,6 +151,7 @@ class ClientDetailsPage extends React.Component {
                   <LocationCard location={location} />
               ) : (<p>No location provided.</p>)}
             </div>
+            <ContactsList contacts={contacts.list}/>
           </SwipeableViews>
         </div>
       );

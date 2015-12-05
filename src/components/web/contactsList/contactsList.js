@@ -1,22 +1,19 @@
 import React from 'react';
+import { List, ListItem, ListDivider, Avatar } from 'material-ui';
+import Infinite from 'react-infinite';
 
 class ContactsList extends React.Component {
 
   render() {
 
     let { contacts } = this.props;
+    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     return (
-      <table style={{border: '1px solid black'}}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Contact Info</th>
-            <th>Location</th>
-          </tr>
-        </thead>
-        <tbody>
-          {contacts.map((contact, index) => {
+
+      <List style={{backgroundColor:'transparant'}} subheader={`${contacts.count()} Contacts`}>
+        <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
+          {contacts.map((contact) => {
 
             let contactLocation = '';
 
@@ -27,23 +24,33 @@ class ContactsList extends React.Component {
               }
 
               if (contactLocation.length != 0 && contact.get('_address').get('countrySubDivisionCode')) {
-                contactLocation += ', ' + contact.get('_address').get('countrySubDivisionCode');
+                contactLocation += `, ${contact.get('_address').get('countrySubDivisionCode')}`;
               } else {
                 contactLocation = contact.get('_address').get('countrySubDivisionCode');
               }
+            }
 
+            let secondaryText = contact.get('label') | '';
+            if (secondaryText.length && contactLocation) {
+              secondaryText += ' | ${contactLocation}';
+            } else if (!secondaryText.length && contactLocation) {
+              secondaryText = contactLocation;
             }
 
             return (
-              <tr key={index}>
-                <td style={{padding: '14px', border: '1px solid black'}}>{contact.get('displayName')}<br />{contact.get('label')}</td>
-                <td style={{padding: '14px', border: '1px solid black'}}><b>email: </b>{contact.get('email')}<br /><b>phone: </b>{contact.get('phone')}<br /><b>website: </b>{contact.get('website')}</td>
-                <td style={{padding: '14px', border: '1px solid black'}}>{contactLocation}</td>
-              </tr>
+              <div>
+                <ListItem
+                  leftAvatar={<Avatar>{contact.get('displayName').charAt(0)}</Avatar>}
+                  primaryText={contact.get('displayName')}
+                  secondaryText={<p>{secondaryText}</p>}
+                  secondaryTextLines={2}
+                />
+                <ListDivider inset={true} />
+              </div>
             );
           })}
-        </tbody>
-      </table>
+        </Infinite>
+      </List>
     );
   }
 }
