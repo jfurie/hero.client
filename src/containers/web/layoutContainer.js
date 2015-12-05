@@ -63,10 +63,12 @@ class Layout extends React.Component {
   }
   render () {
 
+    let {leftNav} = this.props;
+    
     return (
       <div style={{
       }}>
-      <LeftNav ref="leftNavChildren" onNavClose={this.onNavClose.bind(this)} onNavOpen={this.onNavOpen.bind(this)} docked={false}>
+      <LeftNav ref="leftNavChildren" onNavClose={this.onNavClose.bind(this)} onNavOpen={this.onNavOpen.bind(this)} docked={false} disableSwipeToOpen={leftNav.disableSwipeToOpen}>
         <MenuItem primaryText="Home" leftIcon={<FontIcon className="material-icons">home</FontIcon>} onTouchTap={this.clickHome.bind(this)} index={0} />
         <MenuItem primaryText="Clients" leftIcon={<FontIcon className="material-icons">work</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
         <MenuItem primaryText="Contacts" leftIcon={<FontIcon className="material-icons">people</FontIcon>} onTouchTap={this.clickContacts.bind(this)} index={0} />

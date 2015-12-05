@@ -1,10 +1,11 @@
-import Immutable from 'immutable';
-
 const OPEN_NAV = 'hero.client/leftNav/OPEN_NAV';
 const CLOSE_NAV = 'hero.client/leftNav/CLOSE_NAV';
 const TOGGLE_NAV = 'hero.client/leftNav/TOGGLE_NAV';
+const DISABLE_SWIPE_OPEN = 'hero.client/leftNav/DISABLE_SWIPE_OPEN';
+const ENABLE_SWIPE_OPEN = 'hero.client/leftNav/ENABLE_SWIPE_OPEN';
+
 const initialState = {
-  list: new Immutable.Map(),
+  disableSwipeToOpen: false,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -26,6 +27,18 @@ export default function reducer(state = initialState, action = {}) {
       open:!state.open,
     };
   }
+  case DISABLE_SWIPE_OPEN: {
+    return {
+      ...state,
+      disableSwipeToOpen: true,
+    };
+  }
+  case ENABLE_SWIPE_OPEN: {
+    return {
+      ...state,
+      disableSwipeToOpen: false,
+    };
+  }
   default:
     return state;
   }
@@ -44,5 +57,17 @@ export function onNavClose() {
 export function toggleNav() {
   return {
     type: TOGGLE_NAV,
+  };
+}
+
+export function disableSwipeToOpen() {
+  return {
+    type: DISABLE_SWIPE_OPEN,
+  };
+}
+
+export function enableSwipeToOpen() {
+  return {
+    type: ENABLE_SWIPE_OPEN,
   };
 }
