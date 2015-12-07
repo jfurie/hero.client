@@ -31,6 +31,28 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       err: action.err,
     };
+  case CREATE_CONTACT:
+    return {
+      ...state,
+      creating:true,
+      error:''
+    };
+  case CREATE_CONTACT_SUCCESS:
+    let contactsMap = {};
+    contactsMap[action.result.id] = action.result;
+    return {
+      ...state,
+      creating:false,
+      error:'',
+      currentId:action.result.id,
+      list: state.list.mergeDeep(contactsMap),
+    };
+  case CREATE_CONTACT_FAIL:
+    return {
+      ...state,
+      creating:false,
+      error:'Error Creating Contact'
+    };
   default:
     return state;
   }
@@ -46,7 +68,7 @@ export function getAllContacts() {
 }
 export function createContact(contact) {
   return {
-    types: [GET_CONTACTS, GET_CONTACTS_SUCCESS, GET_CONTACTS_FAIL],
+    types: [CREATE_CONTACT, CREATE_CONTACT_SUCCESS, CREATE_CONTACT_FAIL],
     promise: (client, auth) => client.api.post('/contacts', {
       authToken: auth.authToken,
       data:contact
