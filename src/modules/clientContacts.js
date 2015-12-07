@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+
 const CREATE_CLIENT_CONTACT = 'hero.client/contacts/CREATE_CLIENT_CONTACT';
 const CREATE_CLIENT_CONTACT_SUCCESS = 'hero.client/contacts/CREATE_CLIENT_CONTACT_SUCCESS';
 const CREATE_CLIENT_CONTACT_FAIL = 'hero.client/contacts/CREATE_CLIENT_CONTACT_FAIL';
@@ -24,5 +24,5 @@ export function createClientContact(clientContact) {
       });
 
     })
-  }
+  };
 }

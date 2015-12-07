@@ -69,7 +69,7 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
       list: state.list.mergeDeep(contactsMap),
-    }
+    };
   default:
     return state;
   }
