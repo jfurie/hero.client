@@ -29,6 +29,9 @@ const style = {
   tabs: {
     backgroundColor: Styles.Colors.grey900,
   },
+  slide: {
+    minHeight: `${window.innerHeight - 112}px`,
+  },
 };
 
 @connect((state, props) => (
@@ -104,52 +107,53 @@ class ClientDetailsPage extends React.Component {
           <Header title={company.get('name')}/>
           <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
             <Tab label="Details" value="0"></Tab>
-            <Tab label="Location" value="1"></Tab>
             <Tab label="Contacts" value="2"></Tab>
           </Tabs>
           <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
-            <List>
-              <div>
+            <div style={style.slide}>
+              <List>
+                <div>
 
-                {(website) ? (
-                  <ListItem
-                    leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                    primaryText={website}
-                    secondaryText={<p>website</p>}
-                    secondaryTextLines={1}
-                  />
-                ) : (null)}
-
-                {(twitter) ? (
-                  <div>
-                    <ListDivider inset />
+                  {(website) ? (
                     <ListItem
                       leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                      primaryText={`@${twitter}`}
-                      secondaryText={<p>twitter</p>}
+                      primaryText={website}
+                      secondaryText={<p>website</p>}
                       secondaryTextLines={1}
                     />
-                  </div>
-                ) : (null)}
+                  ) : (null)}
 
-                {(indeedId) ? (
-                  <div>
-                    <ListDivider inset />
-                    <ListItem
-                      leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                      primaryText={`@${indeedId}`}
-                      secondaryText={<p>indeed Id</p>}
-                      secondaryTextLines={1}
-                    />
-                  </div>
-                ) : (null)}
+                  {(twitter) ? (
+                    <div>
+                      <ListDivider inset />
+                      <ListItem
+                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                        primaryText={`@${twitter}`}
+                        secondaryText={<p>twitter</p>}
+                        secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
 
+                  {(indeedId) ? (
+                    <div>
+                      <ListDivider inset />
+                      <ListItem
+                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                        primaryText={`@${indeedId}`}
+                        secondaryText={<p>indeed Id</p>}
+                        secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
+
+                </div>
+              </List>
+              <div id="innerView">
+                {(company.get('location')) ? (
+                    <LocationCard style={{height: '200px'}} location={location} />
+                ) : (<p>No location provided.</p>)}
               </div>
-            </List>
-            <div id="innerView">
-              {(company.get('location')) ? (
-                  <LocationCard location={location} />
-              ) : (<p>No location provided.</p>)}
             </div>
             <ContactsList contacts={contacts.list}/>
           </SwipeableViews>
