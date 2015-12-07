@@ -6,8 +6,8 @@ import { Header, ClientsCreateModal, CompanyAvatar } from '../../../components/w
 import {getAllCompanies, createCompany, searchCompany} from '../../../modules/companies';
 import {List, ListItem, ListDivider, Toolbar, ToolbarGroup, TextField, FontIcon, IconMenu, IconButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
-const Colors = require('material-ui/lib/styles/colors');
 var Infinite = require('react-infinite');
+
 @connect(state =>
 {
   let visibleCompanies = new Immutable.Map();

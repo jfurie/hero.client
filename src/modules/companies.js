@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-
+import {getOneLocation} from './locations';
 const GET_COMPANIES = 'hero.client/clients/GET_COMPANIES';
 const GET_COMPANIES_SUCCESS = 'hero.client/clients/GET_COMPANIES_SUCCESS';
 const GET_COMPANIES_FAIL = 'hero.client/clients/GET_COMPANIES_FAIL';
@@ -50,7 +50,7 @@ export default function reducer(state = initialState, action = {}) {
     let company = {};
     let id = action.result.id;
     company[id] = action.result;
-    
+
     return {
       ...state,
       list: state.list.mergeDeep(company),
@@ -120,11 +120,16 @@ export function getAllCompanies() {
 }
 
 export function getOneCompany(id) {
-  return {
-    types: [GET_COMPANY, GET_COMPANY_SUCCESS, GET_COMPANY_FAIL],
-    promise: (client, auth) => client.api.get(`/companies/${id}`, {
-      authToken: auth.authToken,
-    }),
+  return (dispatch) => {
+    dispatch({
+      types: [GET_COMPANY, GET_COMPANY_SUCCESS, GET_COMPANY_FAIL],
+      promise: (client, auth) =>  client.api.get(`/companies/${id}`, {
+        authToken: auth.authToken,
+      }).then((company)=>{
+        dispatch(getOneLocation(company.location));
+        return company;
+      }),
+    });
   };
 }
 
