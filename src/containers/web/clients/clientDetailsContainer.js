@@ -1,8 +1,10 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, LocationCard, ClientContactsCreateModal } from '../../../components/web';
+import { Header, LocationCard, ContactsList, ClientContactsCreateModal } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
+import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 
 import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon, IconMenu, IconButton } from 'material-ui';
@@ -12,16 +14,24 @@ import SwipeableViews from 'react-swipeable-views';
 function getData(state, id) {
   let company = ((state.companies.list.size > 0) ? (state.companies.list.get(id)) : (null));
   let location = null;
+  let contacts = state.contacts; // TMP
 
   if (company && company.get('location')) {
     location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
   }
-
-  //console.log('getData', company, location);
-
+  let newContacts = {
+    ...contacts,
+    list: new Immutable.Map()};
+  let contactsByCompanyListIds = contacts.byCompanyId.get(id);
+  if(contactsByCompanyListIds){
+    newContacts.list = contacts.list.filter(x=>{
+      return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
+    });
+  }
   return {
     company,
     location,
+    contacts: newContacts,
   };
 }
 
@@ -33,7 +43,7 @@ const style = {
 
 @connect((state, props) => (
   getData(state, props.params.id)),
-  {getOneCompany, getOneLocation, disableSwipeToOpen, enableSwipeToOpen})
+  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen, getContactsByCompany})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -46,6 +56,7 @@ class ClientDetailsPage extends React.Component {
 
   componentDidMount() {
     this.props.getOneCompany(this.props.params.id);
+    this.props.getContactsByCompany(this.props.params.id);
   }
 
   componentWillUnmount() {
@@ -54,7 +65,7 @@ class ClientDetailsPage extends React.Component {
 
   componentWillUpdate(nextProps) {
     if (!this.props.location && !nextProps.location && nextProps.company && nextProps.company.get('location')) {
-      this.props.getOneLocation(nextProps.company.get('location'));
+      //this.props.getOneLocation(nextProps.company.get('location'));
     }
   }
 
@@ -101,7 +112,7 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company, location} = this.props;
+    let {company, location, contacts} = this.props;
 
     //console.log(company, location);
 
@@ -124,6 +135,7 @@ class ClientDetailsPage extends React.Component {
           <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
             <Tab label="Details" value="0"></Tab>
             <Tab label="Location" value="1"></Tab>
+            <Tab label="Contacts" value="2"></Tab>
           </Tabs>
           <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
             <List>
@@ -169,6 +181,7 @@ class ClientDetailsPage extends React.Component {
                   <LocationCard location={location} />
               ) : (<p>No location provided.</p>)}
             </div>
+            <ContactsList contacts={contacts.list}/>
           </SwipeableViews>
         </div>
       );

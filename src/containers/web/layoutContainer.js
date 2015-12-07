@@ -63,8 +63,8 @@ class Layout extends React.Component {
   }
   render () {
 
-    let {leftNav} = this.props;
-    
+    let {leftNav, user} = this.props;
+
     return (
       <div style={{
       }}>
@@ -73,8 +73,11 @@ class Layout extends React.Component {
         <MenuItem primaryText="Clients" leftIcon={<FontIcon className="material-icons">work</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
         <MenuItem primaryText="Contacts" leftIcon={<FontIcon className="material-icons">people</FontIcon>} onTouchTap={this.clickContacts.bind(this)} index={0} />
         <MenuItem primaryText="Settings" leftIcon={<FontIcon className="material-icons">settings</FontIcon>} onTouchTap={this.clickSettings.bind(this)} index={0} />
-        <MenuItem primaryText="Login" leftIcon={<FontIcon className="material-icons">vpn_key</FontIcon>} onTouchTap={this.clickLogin.bind(this)} index={0} />
-        <MenuItem primaryText="Logout" leftIcon={<FontIcon className="material-icons">vpn_key</FontIcon>} onTouchTap={this.clickLogout.bind(this)} index={0} />
+        {(user) ? (
+          <MenuItem primaryText="Logout" leftIcon={<FontIcon className="material-icons">vpn_key</FontIcon>} onTouchTap={this.clickLogout.bind(this)} index={0} />
+        ) : (
+          <MenuItem primaryText="Login" leftIcon={<FontIcon className="material-icons">vpn_key</FontIcon>} onTouchTap={this.clickLogin.bind(this)} index={0} />
+        )}
         <MenuItem index={2}>
         </MenuItem>
       </LeftNav>
