@@ -19,15 +19,19 @@ function getData(state, id) {
   if (company && company.get('location')) {
     location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
   }
+
   let newContacts = {
     ...contacts,
-    list: new Immutable.Map()};
+    list: new Immutable.Map(),
+  };
+
   let contactsByCompanyListIds = contacts.byCompanyId.get(id);
-  if(contactsByCompanyListIds){
-    newContacts.list = contacts.list.filter(x=>{
+  if (contactsByCompanyListIds) {
+    newContacts.list = contacts.list.filter(x=> {
       return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
+
   return {
     company,
     location,
