@@ -6,8 +6,11 @@ const Colors = require('material-ui/lib/styles/colors');
 
 @connect(state => ({user: state.auth.user}), { toggleNav})
 class Header extends React.Component {
-  menuClicked (e) {console.log(e);
-    this.props.toggleNav();}
+
+  menuClicked() {
+    this.props.toggleNav();
+  }
+
   render() {
 
     return (
