@@ -1,13 +1,13 @@
 import React from 'react';
-import { List, ListItem, ListDivider } from 'material-ui';
+import { List, ListItem, ListDivider, FontIcon } from 'material-ui';
 //import Infinite from 'react-infinite';
 import { CompanyAvatar } from '../../../components/web';
 
 const style = {
   ringUser: {
     display: 'inline',
-    width: '32px',
-    height: '32px',
+    width: '28px',
+    height: '28px',
     marginRight: '5px',
     borderRadius: '160px',
   },
@@ -43,11 +43,6 @@ class JobsList extends React.Component {
       ],
     ];
 
-    // let people1 = [];
-    // people[0].forEach(function(p, index) {
-    //   people1.push(<img key={index} style={style.ringUser} src={p} />)
-    // });
-
     // TMP
     let nestedJobsItem = [];
     let index = 0;
@@ -55,8 +50,6 @@ class JobsList extends React.Component {
     jobs.forEach(function(job) {
 
       let peopleList = [];
-
-      //console.log(index, people[index]);
 
       people[index].forEach(function(p, key) {
         peopleList.push(<img key={key} style={style.ringUser} src={p} />)
@@ -68,6 +61,7 @@ class JobsList extends React.Component {
           secondaryText={
             <div style={style.peopleList}>{peopleList}</div>
           }
+          rightIcon={<FontIcon className="material-icons">info</FontIcon>}
           secondaryTextLines={2}
           key={job.get('id')}
         />
