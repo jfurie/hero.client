@@ -57,7 +57,7 @@ class ClientDetailsPage extends React.Component {
     super(props);
     this.state = {
       slideIndex: 0,
-      createModalOpen:false
+      createModalOpen: false,
     };
   }
 
@@ -66,18 +66,17 @@ class ClientDetailsPage extends React.Component {
     this.props.getContactsByCompany(this.props.params.id);
   }
 
-  componentWillUnmount() {
-    this.props.enableSwipeToOpen();
-  }
-
   componentWillUpdate(nextProps) {
     if (!this.props.location && !nextProps.location && nextProps.company && nextProps.company.get('location')) {
       //this.props.getOneLocation(nextProps.company.get('location'));
     }
   }
 
-  _handleChangeIndex(index) {
+  componentWillUnmount() {
+    this.props.enableSwipeToOpen();
+  }
 
+  _handleChangeIndex(index) {
     this.setState({
       slideIndex: index,
     });
@@ -91,7 +90,7 @@ class ClientDetailsPage extends React.Component {
 
   _handleChangeTabs(value) {
 
-    var index = parseInt(value, 10);
+    let index = parseInt(value, 10);
 
     if (index > 0) {
       this.props.disableSwipeToOpen();
@@ -103,6 +102,7 @@ class ClientDetailsPage extends React.Component {
       slideIndex: index,
     });
   }
+
   createContactModalOpen(){
     this.setState({
       createContactModalOpen:true
@@ -132,6 +132,7 @@ class ClientDetailsPage extends React.Component {
       return (
         <div>
           <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
+
           <Header iconRight={
             <IconMenu iconButtonElement={
               <IconButton  iconClassName="material-icons">more_vert</IconButton>
@@ -139,10 +140,12 @@ class ClientDetailsPage extends React.Component {
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
             </IconMenu>
           } title={company.get('name')} />
+
           <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
             <Tab label="Details" value="0"></Tab>
             <Tab label="Contacts" value="2"></Tab>
           </Tabs>
+
           <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
             <div style={style.slide}>
               <List>

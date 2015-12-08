@@ -12,7 +12,7 @@ class ContactListPage extends React.Component {
   }
 
   componentDidMount() {
-    var self = this;
+    let self = this;
     setTimeout(()=>{
       self.props.getAllContacts();
     },500);
