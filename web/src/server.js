@@ -1,11 +1,12 @@
 import express from 'express';
 import swig from 'swig';
 import config from './config/config';
+import compression from 'compression';
 let app = null;
 
 function startApp() {
   var app = express();
-  app.use(express.compress());
+  app.use(compression());
   app.engine('html', swig.renderFile);
   app.set('views', config.root + '/app/views');
   app.set('view engine', 'html');
