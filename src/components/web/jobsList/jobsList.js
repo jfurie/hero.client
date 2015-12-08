@@ -26,12 +26,12 @@ class JobsList extends React.Component {
       [
         'https://lh5.googleusercontent.com/-ZadaXoUTBfs/AAAAAAAAAAI/AAAAAAAAAGA/19US52OmBqc/photo.jpg',
         'http://cdn.devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
-        'http://fe867b.medialib.glogster.com/media/92/92a0862b9fdfca48725ac9df17ea42ffd90f7bb1dcab4cac52b1f417feedd514/profile-20pic.jpg',
-        'http://static4.businessinsider.com/image/52c9702c6bb3f751704f26dd/according-to-science-these-are-the-best-photos-to-use-in-your-dating-profile.jpg',
+        'http://www.biz.uiowa.edu/tippiemba/wp-content/uploads/2010/07/Kim-Hyundong-300x300.jpg',
+        'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
       ],
       [
         'http://cdn.devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
-        'http://fe867b.medialib.glogster.com/media/92/92a0862b9fdfca48725ac9df17ea42ffd90f7bb1dcab4cac52b1f417feedd514/profile-20pic.jpg',
+        'http://www.biz.uiowa.edu/tippiemba/wp-content/uploads/2010/07/Kim-Hyundong-300x300.jpg',
       ],
       [
         'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
