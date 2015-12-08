@@ -53,7 +53,7 @@ class LocationCard extends React.Component {
           <CardMedia>
             <div style={{height: '200px', width: '100%'}}>
               <GoogleMap
-                defaultCenter={geoField}
+                center={geoField}
                 defaultZoom={13}
                 options={this.createMapOptions} />
             </div>

@@ -81,22 +81,39 @@ class ClientDetailsPage extends React.Component {
       slideIndex: index,
     });
 
-    if (index > 0) {
+    if (index === 1) {
       this.props.disableSwipeToOpen();
-    } else {
+    }
+
+    if (index === 0) {
       this.props.enableSwipeToOpen();
     }
+
+    // if (index > 0) {
+    //   this.props.disableSwipeToOpen();
+    // } else {
+    //   this.props.enableSwipeToOpen();
+    // }
   }
 
   _handleChangeTabs(value) {
 
-    let index = parseInt(value, 10);
-
+    let index = ~~(value);
+    //
     if (index > 0) {
       this.props.disableSwipeToOpen();
     } else {
       this.props.enableSwipeToOpen();
     }
+
+    // if (index === 1) {
+    //   this.props.disableSwipeToOpen();
+    // }
+    //
+    // if (index === 0) {
+    //   this.props.enableSwipeToOpen();
+    // }
+
 
     this.setState({
       slideIndex: index,

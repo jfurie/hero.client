@@ -17,10 +17,14 @@ let FAKEJOBS = {};
 
 FAKEJOBS['1a'] = {
   title: 'Android Mobile Engineer',
+  location: 'Santa Monica, CA',
+  id: '1a',
 };
 
 FAKEJOBS['2b'] = {
   title: 'Software Ruby Engineer',
+  location: 'Venice, CA',
+  id: '2b',
 };
 
 export default function reducer(state = initialState, action = {}) {
