@@ -1,9 +1,10 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, LocationCard, ContactsList, ClientContactsCreateModal } from '../../../components/web';
+import { Header, LocationCard, ContactsList, ClientContactsCreateModal, JobsList } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
+import { getAllJobs } from '../../../modules/jobs';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 
@@ -36,6 +37,7 @@ function getData(state, id) {
     company,
     location,
     contacts: newContacts,
+    jobs: state.jobs,
   };
 }
 
@@ -50,7 +52,7 @@ const style = {
 
 @connect((state, props) => (
   getData(state, props.params.id)),
-  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen, getContactsByCompany})
+  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen, getContactsByCompany, getAllJobs})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -64,6 +66,7 @@ class ClientDetailsPage extends React.Component {
   componentDidMount() {
     this.props.getOneCompany(this.props.params.id);
     this.props.getContactsByCompany(this.props.params.id);
+    this.props.getAllJobs();
   }
 
   componentWillUpdate(nextProps) {
@@ -119,7 +122,7 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company, location, contacts} = this.props;
+    let {company, location, contacts, jobs} = this.props;
 
     //console.log(company, location);
 
@@ -139,6 +142,8 @@ class ClientDetailsPage extends React.Component {
               <IconButton  iconClassName="material-icons">more_vert</IconButton>
             }>
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
+              <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Job" />
+              <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Note" />
             </IconMenu>
           } title={company.get('name')} />
 
@@ -205,8 +210,8 @@ class ClientDetailsPage extends React.Component {
                 ) : (null)}
                 </List>
             </div>
-            <div>
-              Jobs
+            <div style={style.slide}>
+              <JobsList jobs={jobs.list}/>
             </div>
             <ContactsList contacts={contacts.list}/>
             <div>
