@@ -5,6 +5,7 @@ let app = null;
 
 function startApp() {
   var app = express();
+  app.use(express.compress());
   app.engine('html', swig.renderFile);
   app.set('views', config.root + '/app/views');
   app.set('view engine', 'html');
