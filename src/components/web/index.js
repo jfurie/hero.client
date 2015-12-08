@@ -10,3 +10,4 @@ export ClientContactsCreateModal from './clientContactsCreateModal/clientContact
 export CompanyAvatar from './companyAvatar/companyAvatar';
 export LocationCard from './locationCard/locationCard';
 export JobsList from './jobsList/jobsList';
+export LeftNavTop from './leftNav/leftNavTop';

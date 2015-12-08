@@ -4,7 +4,7 @@ import { pushState } from 'redux-router';
 import { LeftNav, FontIcon} from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
 import { onNavOpen,onNavClose, toggleNav } from '../../modules/leftNav';
-
+import {LeftNavTop} from '../../components/web';
 @connect(state => ({
   user: state.auth.user,
   leftNav: state.leftNav,
@@ -68,15 +68,17 @@ class Layout extends React.Component {
     return (
       <div style={{
       }}>
-      <LeftNav ref="leftNavChildren" onNavClose={this.onNavClose.bind(this)} onNavOpen={this.onNavOpen.bind(this)} docked={false} disableSwipeToOpen={leftNav.disableSwipeToOpen}>
-        <MenuItem primaryText="Home" leftIcon={<FontIcon className="material-icons">home</FontIcon>} onTouchTap={this.clickHome.bind(this)} index={0} />
-        <MenuItem primaryText="Clients" leftIcon={<FontIcon className="material-icons">work</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
-        <MenuItem primaryText="Contacts" leftIcon={<FontIcon className="material-icons">people</FontIcon>} onTouchTap={this.clickContacts.bind(this)} index={0} />
-        <MenuItem primaryText="Settings" leftIcon={<FontIcon className="material-icons">settings</FontIcon>} onTouchTap={this.clickSettings.bind(this)} index={0} />
+      <LeftNav style={{backgroundColor:'#424242'}} ref="leftNavChildren" onNavClose={this.onNavClose.bind(this)} onNavOpen={this.onNavOpen.bind(this)} docked={false} disableSwipeToOpen={leftNav.disableSwipeToOpen}>
+        <LeftNavTop></LeftNavTop>
+        <MenuItem style={{color:'#e0e0e0'}} primaryText="Home" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">home</FontIcon>} onTouchTap={this.clickHome.bind(this)} index={0} />
+        <MenuItem style={{color:'#e0e0e0'}} primaryText="My Clients" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">work</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
+        <MenuItem style={{color:'#e0e0e0'}} primaryText="My Jobs" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">people</FontIcon>} onTouchTap={this.clickContacts.bind(this)} index={0} />
+        <MenuItem style={{color:'#e0e0e0'}} primaryText="My Candidates" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">people</FontIcon>} onTouchTap={this.clickContacts.bind(this)} index={0} />
+        <MenuItem style={{color:'#e0e0e0'}} primaryText="Settings" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">settings</FontIcon>} onTouchTap={this.clickSettings.bind(this)} index={0} />
         {(user) ? (
-          <MenuItem primaryText="Logout" leftIcon={<FontIcon className="material-icons">vpn_key</FontIcon>} onTouchTap={this.clickLogout.bind(this)} index={0} />
+          <MenuItem style={{color:'#e0e0e0'}} primaryText="Logout" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">vpn_key</FontIcon>} onTouchTap={this.clickLogout.bind(this)} index={0} />
         ) : (
-          <MenuItem primaryText="Login" leftIcon={<FontIcon className="material-icons">vpn_key</FontIcon>} onTouchTap={this.clickLogin.bind(this)} index={0} />
+          <MenuItem style={{color:'#e0e0e0'}} primaryText="Login" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">vpn_key</FontIcon>} onTouchTap={this.clickLogin.bind(this)} index={0} />
         )}
         <MenuItem index={2}>
         </MenuItem>
