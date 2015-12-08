@@ -17,24 +17,21 @@ class LeftNavTop extends React.Component {
           Iwanna Help
         </div>
         <div style={{marginLeft:'.5em', marginRight:'.5em'}} className="container">
-
-
-        <div className="leftNavTop-tabs row">
-          <div className="leftNavTop-tab col-xs">
-            <div>123</div>
+          <div className="leftNavTop-tabs row">
+            <div className="leftNavTop-tab col-xs-4">
+              <div>123</div>
               <div className="leftNavTop-label">Clients</div>
-          </div>
-          <div className="leftNavTop-tab col-xs">
-            <div>123</div>
+            </div>
+            <div className="leftNavTop-tab col-xs-4">
+              <div>123</div>
               <div className="leftNavTop-label">Jobs</div>
-          </div>
-          <div className="leftNavTop-tab col-xs">
-
-            <div>123</div>
-            <div className="leftNavTop-label">Candidates</div>
+            </div>
+            <div className="leftNavTop-tab col-xs-4">
+              <div>123</div>
+              <div className="leftNavTop-label">Candidates</div>
+            </div>
           </div>
         </div>
-              </div>
       </div>
     );
   }
