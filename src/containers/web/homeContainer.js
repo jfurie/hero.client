@@ -77,7 +77,7 @@ class HomePage extends React.Component {
 
         <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
           <Tab label="Clients" value="0"></Tab>
-          <Tab label="Jobs" value="1"></Tab>
+          <Tab label="Active Jobs" value="1"></Tab>
           <Tab label="Contacts" value="2"></Tab>
         </Tabs>
 
