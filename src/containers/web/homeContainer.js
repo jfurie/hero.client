@@ -12,6 +12,9 @@ const style = {
   tabs: {
     'background-color': Styles.Colors.grey900,
   },
+  slide: {
+    minHeight: `${window.innerHeight - 112}px`,
+  },
 };
 
 @connect(state => ({
@@ -82,7 +85,9 @@ class HomePage extends React.Component {
           <div>
             <p>clients</p>
           </div>
-          <JobsList jobs={jobs.list}/>
+          <div style={style.slide}>
+            <JobsList jobs={jobs.list}/>
+          </div>
           <div>
             <p>contacts</p>
           </div>

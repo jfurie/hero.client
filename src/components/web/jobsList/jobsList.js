@@ -1,6 +1,8 @@
 import React from 'react';
 import { List, ListItem, ListDivider } from 'material-ui';
 import Infinite from 'react-infinite';
+import { CompanyAvatar } from '../../../components/web';
+
 
 class JobsList extends React.Component {
 
@@ -18,6 +20,7 @@ class JobsList extends React.Component {
             return (
               <div>
                 <ListItem
+                  leftAvatar={<CompanyAvatar url={'http://ring.com'} />}
                   primaryText={job.get('title')}
                   secondaryText={<p>lorem ipsum</p>}
                   secondaryTextLines={2}
