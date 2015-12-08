@@ -1,13 +1,14 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, LocationCard, ContactsList, ClientContactsCreateModal } from '../../../components/web';
+import { Header, LocationCard, ContactsList, ClientContactsCreateModal, JobsList } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
+import { getAllJobs } from '../../../modules/jobs';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 
-import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon, IconMenu, IconButton } from 'material-ui';
+import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon, IconMenu, IconButton, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
 import SwipeableViews from 'react-swipeable-views';
 
@@ -19,19 +20,24 @@ function getData(state, id) {
   if (company && company.get('location')) {
     location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
   }
+
   let newContacts = {
     ...contacts,
-    list: new Immutable.Map()};
+    list: new Immutable.Map(),
+  };
+
   let contactsByCompanyListIds = contacts.byCompanyId.get(id);
-  if(contactsByCompanyListIds){
-    newContacts.list = contacts.list.filter(x=>{
+  if (contactsByCompanyListIds) {
+    newContacts.list = contacts.list.filter(x=> {
       return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
+
   return {
     company,
     location,
     contacts: newContacts,
+    jobs: state.jobs,
   };
 }
 
@@ -46,24 +52,21 @@ const style = {
 
 @connect((state, props) => (
   getData(state, props.params.id)),
-  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen, getContactsByCompany})
+  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen, getContactsByCompany, getAllJobs})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       slideIndex: 0,
-      createModalOpen:false
+      createModalOpen: false,
     };
   }
 
   componentDidMount() {
     this.props.getOneCompany(this.props.params.id);
     this.props.getContactsByCompany(this.props.params.id);
-  }
-
-  componentWillUnmount() {
-    this.props.enableSwipeToOpen();
+    this.props.getAllJobs();
   }
 
   componentWillUpdate(nextProps) {
@@ -72,8 +75,11 @@ class ClientDetailsPage extends React.Component {
     }
   }
 
-  _handleChangeIndex(index) {
+  componentWillUnmount() {
+    this.props.enableSwipeToOpen();
+  }
 
+  _handleChangeIndex(index) {
     this.setState({
       slideIndex: index,
     });
@@ -87,7 +93,7 @@ class ClientDetailsPage extends React.Component {
 
   _handleChangeTabs(value) {
 
-    var index = parseInt(value, 10);
+    let index = parseInt(value, 10);
 
     if (index > 0) {
       this.props.disableSwipeToOpen();
@@ -99,6 +105,7 @@ class ClientDetailsPage extends React.Component {
       slideIndex: index,
     });
   }
+
   createContactModalOpen(){
     this.setState({
       createContactModalOpen:true
@@ -115,7 +122,7 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company, location, contacts} = this.props;
+    let {company, location, contacts, jobs} = this.props;
 
     //console.log(company, location);
 
@@ -124,21 +131,29 @@ class ClientDetailsPage extends React.Component {
       let website = company.get('website');
       let twitter = company.get('twitterHandle');
       let indeedId = company.get('indeedId');
+      let heroContact = '/img/rameet.jpg';
 
       return (
         <div>
           <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
+
           <Header iconRight={
             <IconMenu iconButtonElement={
               <IconButton  iconClassName="material-icons">more_vert</IconButton>
             }>
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
+              <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Job" />
+              <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Note" />
             </IconMenu>
           } title={company.get('name')} />
+
           <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
             <Tab label="Details" value="0"></Tab>
+            <Tab label="Jobs" value="1"></Tab>
             <Tab label="Contacts" value="2"></Tab>
+            <Tab label="Notes" value="3"></Tab>
           </Tabs>
+
           <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
             <div style={style.slide}>
               <List>
@@ -184,8 +199,57 @@ class ClientDetailsPage extends React.Component {
                     <LocationCard style={{height: '200px'}} location={location} />
                 ) : (<p>No location provided.</p>)}
               </div>
+              <List subheader="Your HERO talent advocate">
+                {(heroContact) ? (
+                  <ListItem
+                    leftAvatar={<Avatar src={heroContact} />}
+                    primaryText={'Rameet Singh'}
+                    secondaryText={<p>Hero Talent Advocate</p>}
+                    secondaryTextLines={1}
+                  />
+                ) : (null)}
+                </List>
+            </div>
+            <div style={style.slide}>
+              <JobsList jobs={jobs.list}/>
             </div>
             <ContactsList contacts={contacts.list}/>
+            <div>
+              <Card initiallyExpanded={true}>
+                <CardHeader
+                  title="Rameet Singh"
+                  subtitle="Private | 59 mins ago"
+                  avatar={<Avatar src={heroContact} />}>
+                </CardHeader>
+                <CardText expandable={true}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                </CardText>
+                <CardActions expandable={true}>
+                  <FlatButton label="Edit"/>
+                  <FlatButton label="Delete"/>
+                </CardActions>
+              </Card>
+              <Card initiallyExpanded={true}>
+                <CardHeader
+                  title="Rameet Singh"
+                  subtitle="Private | 60 mins ago"
+                  avatar={<Avatar src={heroContact} />}>
+                </CardHeader>
+                <CardText expandable={true}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                </CardText>
+                <CardActions expandable={true}>
+                  <FlatButton label="Edit"/>
+                  <FlatButton label="Delete"/>
+                </CardActions>
+              </Card>
+            </div>
           </SwipeableViews>
         </div>
       );
