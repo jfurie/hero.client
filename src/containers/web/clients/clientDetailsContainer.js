@@ -7,7 +7,7 @@ import { getOneLocation } from '../../../modules/locations';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 
-import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon, IconMenu, IconButton } from 'material-ui';
+import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon, IconMenu, IconButton, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
 import SwipeableViews from 'react-swipeable-views';
 
@@ -128,6 +128,7 @@ class ClientDetailsPage extends React.Component {
       let website = company.get('website');
       let twitter = company.get('twitterHandle');
       let indeedId = company.get('indeedId');
+      let heroContact = '/img/rameet.jpg';
 
       return (
         <div>
@@ -141,7 +142,9 @@ class ClientDetailsPage extends React.Component {
           } title={company.get('name')} />
           <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
             <Tab label="Details" value="0"></Tab>
+            <Tab label="Jobs" value="1"></Tab>
             <Tab label="Contacts" value="2"></Tab>
+            <Tab label="Notes" value="3"></Tab>
           </Tabs>
           <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
             <div style={style.slide}>
@@ -188,8 +191,57 @@ class ClientDetailsPage extends React.Component {
                     <LocationCard style={{height: '200px'}} location={location} />
                 ) : (<p>No location provided.</p>)}
               </div>
+              <List subheader="Your HERO talent advocate">
+                {(heroContact) ? (
+                  <ListItem
+                    leftAvatar={<Avatar src={heroContact} />}
+                    primaryText={'Rameet Singh'}
+                    secondaryText={<p>Hero Talent Advocate</p>}
+                    secondaryTextLines={1}
+                  />
+                ) : (null)}
+                </List>
+            </div>
+            <div>
+              Jobs
             </div>
             <ContactsList contacts={contacts.list}/>
+            <div>
+              <Card initiallyExpanded={true}>
+                <CardHeader
+                  title="Rameet Singh"
+                  subtitle="Private | 59 mins ago"
+                  avatar={<Avatar src={heroContact} />}>
+                </CardHeader>
+                <CardText expandable={true}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                </CardText>
+                <CardActions expandable={true}>
+                  <FlatButton label="Edit"/>
+                  <FlatButton label="Delete"/>
+                </CardActions>
+              </Card>
+              <Card initiallyExpanded={true}>
+                <CardHeader
+                  title="Rameet Singh"
+                  subtitle="Private | 60 mins ago"
+                  avatar={<Avatar src={heroContact} />}>
+                </CardHeader>
+                <CardText expandable={true}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                </CardText>
+                <CardActions expandable={true}>
+                  <FlatButton label="Edit"/>
+                  <FlatButton label="Delete"/>
+                </CardActions>
+              </Card>
+            </div>
           </SwipeableViews>
         </div>
       );
