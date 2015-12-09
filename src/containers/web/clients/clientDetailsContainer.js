@@ -127,7 +127,6 @@ class ClientDetailsPage extends React.Component {
   }
 
   contactDetailsModalOpen(contact) {
-    //console.log('eeee', c);
     this.setState({
       contactDetailsModalOpen: true,
       detailsContact: contact,
@@ -135,7 +134,10 @@ class ClientDetailsPage extends React.Component {
   }
 
   contactDetailsModalClose() {
-
+    this.setState({
+      contactDetailsModalOpen: false,
+      detailsContact: null,
+    });
   }
 
   render() {
@@ -152,7 +154,7 @@ class ClientDetailsPage extends React.Component {
       return (
         <div>
           <ClientContactsCreateModal onSubmit={this.saveClient.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
-          <ContactDetailsModal open={this.state.contactDetailsModalOpen} contact={this.state.detailsContact}/>
+          <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
 
           <Header iconRight={
             <IconMenu iconButtonElement={
