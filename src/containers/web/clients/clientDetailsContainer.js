@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList } from '../../../components/web';
+import { Header, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getAllJobs } from '../../../modules/jobs';
@@ -28,7 +28,7 @@ function getData(state, id) {
 
   let contactsByCompanyListIds = contacts.byCompanyId.get(id);
   if (contactsByCompanyListIds) {
-    newContacts.list = contacts.list.filter(x=> {
+    newContacts.list = contacts.list.filter(x => {
       return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
@@ -60,6 +60,7 @@ class ClientDetailsPage extends React.Component {
     this.state = {
       slideIndex: 0,
       createModalOpen: false,
+      contactDetailsModalOpen: false,
     };
   }
 
@@ -69,14 +70,18 @@ class ClientDetailsPage extends React.Component {
     this.props.getAllJobs();
   }
 
-  componentWillUpdate(nextProps) {
-    if (!this.props.location && !nextProps.location && nextProps.company && nextProps.company.get('location')) {
-      //this.props.getOneLocation(nextProps.company.get('location'));
-    }
+  componentWillUpdate() {
+    // if (!this.props.location && !nextProps.location && nextProps.company && nextProps.company.get('location')) {
+    //   //this.props.getOneLocation(nextProps.company.get('location'));
+    // }
   }
 
   componentWillUnmount() {
     this.props.enableSwipeToOpen();
+  }
+
+  saveClient() {
+    console.log('cool!');
   }
 
   _handleChangeIndex(index) {
@@ -92,11 +97,6 @@ class ClientDetailsPage extends React.Component {
       this.props.enableSwipeToOpen();
     }
 
-    // if (index > 0) {
-    //   this.props.disableSwipeToOpen();
-    // } else {
-    //   this.props.enableSwipeToOpen();
-    // }
   }
 
   _handleChangeTabs(value) {
@@ -109,15 +109,6 @@ class ClientDetailsPage extends React.Component {
       this.props.enableSwipeToOpen();
     }
 
-    // if (index === 1) {
-    //   this.props.disableSwipeToOpen();
-    // }
-    //
-    // if (index === 0) {
-    //   this.props.enableSwipeToOpen();
-    // }
-
-
     this.setState({
       slideIndex: index,
     });
@@ -128,20 +119,30 @@ class ClientDetailsPage extends React.Component {
       createContactModalOpen:true
     });
   }
+
   createContactModalClose(){
     this.setState({
       createContactModalOpen:false
     });
   }
-  saveContact(){
-    console.log('save!');
+
+  contactDetailsModalOpen(contact) {
+    this.setState({
+      contactDetailsModalOpen: true,
+      detailsContact: contact,
+    });
+  }
+
+  contactDetailsModalClose() {
+    this.setState({
+      contactDetailsModalOpen: false,
+      detailsContact: null,
+    });
   }
 
   render() {
 
     let {company, location, contacts, jobs} = this.props;
-
-    //console.log(company, location);
 
     if (company) {
 
@@ -152,7 +153,8 @@ class ClientDetailsPage extends React.Component {
 
       return (
         <div>
-          <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
+          <ClientContactsCreateModal onSubmit={this.saveClient.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
+          <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
 
           <Header iconRight={
             <IconMenu iconButtonElement={
@@ -232,38 +234,38 @@ class ClientDetailsPage extends React.Component {
                 <CompanyJobsList company={company} jobs={jobs.list}/>
               </List>
             </div>
-            <ContactsList contacts={contacts.list}/>
+            <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             <div>
-              <Card initiallyExpanded={true}>
+              <Card initiallyExpanded>
                 <CardHeader
                   title="Rameet Singh"
                   subtitle="Private | 59 mins ago"
                   avatar={<Avatar src={heroContact} />}>
                 </CardHeader>
-                <CardText expandable={true}>
+                <CardText expandable>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
                   Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
                   Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
                 </CardText>
-                <CardActions expandable={true}>
+                <CardActions expandable>
                   <FlatButton label="Edit"/>
                   <FlatButton label="Delete"/>
                 </CardActions>
               </Card>
-              <Card initiallyExpanded={true}>
+              <Card initiallyExpanded>
                 <CardHeader
                   title="Rameet Singh"
                   subtitle="Private | 60 mins ago"
                   avatar={<Avatar src={heroContact} />}>
                 </CardHeader>
-                <CardText expandable={true}>
+                <CardText expandable>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
                   Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
                   Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
                 </CardText>
-                <CardActions expandable={true}>
+                <CardActions expandable>
                   <FlatButton label="Edit"/>
                   <FlatButton label="Delete"/>
                 </CardActions>

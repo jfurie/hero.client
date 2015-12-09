@@ -24,8 +24,8 @@ function getData(state, id) {
   return {
     job: state.jobs.list.get(id),
     contacts: state.contacts,
-    location
-  }
+    location,
+  };
 }
 
 @connect((state, props) => (
