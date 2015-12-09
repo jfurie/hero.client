@@ -75,7 +75,7 @@ class InviteSuccessModal extends React.Component {
               <ToolbarTitle style={style.detailsTitle} text={'Invite Success'} />
             </ToolbarGroup>
           </Toolbar>
-          <p>toto</p>
+          <p>success!</p>
         </div>
       </Dialog>
     );
