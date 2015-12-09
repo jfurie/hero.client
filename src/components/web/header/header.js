@@ -6,16 +6,13 @@ const Colors = require('material-ui/lib/styles/colors');
 
 @connect(state => ({user: state.auth.user}), { toggleNav})
 class Header extends React.Component {
-
-  menuClicked() {
-    this.props.toggleNav();
-  }
-
+  menuClicked (e) {console.log(e);
+    this.props.toggleNav();}
   render() {
 
     return (
       <div>
-        <AppBar onLeftIconButtonTouchTap={this.menuClicked.bind(this)} style={{
+        <AppBar iconElementRight={this.props.iconRight} onLeftIconButtonTouchTap={this.menuClicked.bind(this)} style={{
           position:'fixed',
           'backgroundColor': Colors. grey900
         }} title={this.props.title} iconClassNameRight="muidocs-icon-navigation-expand-more"/>
