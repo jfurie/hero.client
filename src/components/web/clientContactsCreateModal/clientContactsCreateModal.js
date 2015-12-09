@@ -83,7 +83,7 @@ export default class ClientContactsCreateModal extends React.Component {
   render(){
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     return (
-      <Dialog modal={false} open={this.props.open} autoDetectWindowHeight={false} autoScrollBodyContent={false} repositionOnUpdate={false} defaultOpen={false} style={{
+      <Dialog open={this.props.open} autoDetectWindowHeight={false} autoScrollBodyContent={false} repositionOnUpdate={false} defaultOpen={false} style={{
         height: '100%', maxHeight: '100%', paddingTop: '0px'
       }} bodyStyle={{
         paddingTop: '0px', height: '100%', padding: '0'

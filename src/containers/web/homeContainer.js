@@ -10,7 +10,7 @@ import SwipeableViews from 'react-swipeable-views';
 
 const style = {
   tabs: {
-    'background-color': Styles.Colors.grey900,
+    'backgroundColor': Styles.Colors.grey900,
   },
   slide: {
     minHeight: `${window.innerHeight - 112}px`,
@@ -32,6 +32,7 @@ class HomePage extends React.Component {
 
   componentDidMount() {
     this.props.getAllJobs();
+    this.props.disableSwipeToOpen();
   }
 
   componentWillUnmount() {
@@ -43,20 +44,24 @@ class HomePage extends React.Component {
       slideIndex: index,
     });
 
-    if (index > 0) {
+    if (index === 1) {
       this.props.disableSwipeToOpen();
-    } else {
+    }
+
+    if (index === 0) {
       this.props.enableSwipeToOpen();
     }
   }
 
   _handleChangeTabs(value) {
 
-    let index = parseInt(value, 10);
+    let index = ~~(value);
 
-    if (index > 0) {
+    if (index === 1) {
       this.props.disableSwipeToOpen();
-    } else {
+    }
+
+    if (index === 0) {
       this.props.enableSwipeToOpen();
     }
 
@@ -81,14 +86,14 @@ class HomePage extends React.Component {
           <Tab label="Contacts" value="2"></Tab>
         </Tabs>
 
-        <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
-          <div>
+        <SwipeableViews index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
+          <div style={style.slide}>
             <p>clients</p>
           </div>
           <div style={style.slide}>
             <JobsList jobs={jobs.list}/>
           </div>
-          <div>
+          <div style={style.slide}>
             <p>contacts</p>
           </div>
         </SwipeableViews>

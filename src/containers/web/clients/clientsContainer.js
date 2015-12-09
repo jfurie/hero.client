@@ -26,39 +26,49 @@ var Infinite = require('react-infinite');
   });}
 ,{getAllCompanies, createCompany, searchCompany, pushState})
 class ClientPage extends React.Component {
+
   constructor(props) {
     super(props);
+    this.state = {
+      createModalOpen:false,
+    };
   }
-  state = {createModalOpen:false};
-  click(){
-    alert('hi');
+
+  componentDidMount() {
+    let self = this;
+    setTimeout(() => {
+      self.props.getAllCompanies();
+    }, 500);
   }
-  searchCompany(e){
-    this.props.searchCompany(e.target.value);
-  }
-  saveCompany(company){
-    this.props.createCompany(company);
-  }
-  openModal(){
-    this.setState({
-      createModalOpen:true
-    });
-  }
+
   componentWillReceiveProps(nextProps){
     if(nextProps.companies.creating == false && this.props.companies.creating == true && nextProps.companies.creatingError ==''){
       this.closeModal();
     }
   }
-  componentDidMount() {
-    var self = this;
-    setTimeout(()=>{
-      self.props.getAllCompanies();
-    },500);
+
+  searchCompany(e){
+    this.props.searchCompany(e.target.value);
   }
+
+  saveCompany(company){
+    this.props.createCompany(company);
+  }
+
+  openModal(){
+    this.setState({
+      createModalOpen: true,
+    });
+  }
+
   closeModal(){
     this.setState({
-      createModalOpen:false
+      createModalOpen: false,
     });
+  }
+
+  click() {
+    console.log('click');
   }
 
   _showClientDetails(id) {
