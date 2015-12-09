@@ -25,6 +25,8 @@ import ConctactsListPage from './containers/web/contacts/contactsListContainer';
 import ClientsPage from './containers/web/clients/clientsContainer';
 import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
 
+//jobs
+import JobsDetailsPage from './containers/web/jobs/JobDetailsContainer';
 const localStorage = new LocalStorageClient('Auth');
 
 export default(store) => {
@@ -122,9 +124,11 @@ export default(store) => {
           {/* Clients */}
           <Route path="clients">
             <IndexRoute component={ClientsPage}/>
-            <Route path=":id" component={ClientDetailsPage}/>
+            <Route path=":id" component={ClientDetailsPage} />
           </Route>
-
+          <Route path="jobs" >
+            <Route path=":id" component={JobsDetailsPage} />
+          </Route>
           {/* Settings  */}
           <Route path="settings">
             <IndexRoute component={SettingsHomePage}/>

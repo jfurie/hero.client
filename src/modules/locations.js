@@ -7,7 +7,6 @@ const GET_LOCATION_FAIL = 'hero.client/clients/GET_LOCATION_FAIL';
 const initialState = {
   list: new Immutable.Map(),
 };
-
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case GET_LOCATION: {
