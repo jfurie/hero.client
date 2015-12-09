@@ -7,7 +7,7 @@ import LocalStorageClient from './utils/localStorageClient';
 import Home from './containers/web/homeContainer';
 import LoginPage from './containers/web/login/loginContainer';
 import LogoutPage from './containers/web/logoutContainer';
-import InvitedPage from './containers/web/invitedContainer';
+//import InvitedPage from './containers/web/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
 import Layout from './containers/web/layoutContainer';
 
@@ -27,6 +27,7 @@ import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
 
 //jobs
 import JobsDetailsPage from './containers/web/jobs/JobDetailsContainer';
+
 const localStorage = new LocalStorageClient('Auth');
 
 export default(store) => {
@@ -129,6 +130,7 @@ export default(store) => {
           <Route path="jobs" >
             <Route path=":id" component={JobsDetailsPage} />
           </Route>
+
           {/* Settings  */}
           <Route path="settings">
             <IndexRoute component={SettingsHomePage}/>
@@ -143,7 +145,7 @@ export default(store) => {
 
         </Route>
 
-        <Route path="invited" component={InvitedPage}/>
+        {/* <Route path="invited" component={InvitedPage}/> */}
         {/* Catch all route */}
         {/*  <Route path="*" component={NotFound} status={404} /> */}
 
