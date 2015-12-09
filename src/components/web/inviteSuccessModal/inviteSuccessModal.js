@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup } from 'material-ui';
+import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, FontIcon, FlatButton } from 'material-ui';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -40,6 +40,24 @@ const style = {
     lineHeight:'64px',
     float:'left',
   },
+  fontIcon: {
+    fontSize: '60px',
+    textShadow: '1px 1px 1px rgba(0, 0, 0, 0.39)',
+    color: '#fff',
+    padding: '20px',
+    backgroundColor: '#40bb3f',
+    borderRadius: '160px',
+    marginTop: '50px',
+    marginBottom: '30px'
+  },
+  centered: {
+    textAlign: 'center',
+  },
+  done: {
+    marginTop:'14px',
+    marginRight:'-16px',
+    marginLeft:'auto',
+  },
 };
 
 // @connect( () => {}
@@ -71,11 +89,20 @@ class InviteSuccessModal extends React.Component {
         <div style={style.content}>
           <Toolbar style={style.toolBar}>
             <ToolbarGroup key={0} float="left">
-              <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
               <ToolbarTitle style={style.detailsTitle} text={'Invite Success'} />
             </ToolbarGroup>
+            <ToolbarGroup key={1} float="right">
+              <FlatButton onTouchTap={this.closeModal.bind(this)} style={style.done}>Done</FlatButton>
+            </ToolbarGroup>
           </Toolbar>
-          <p>success!</p>
+          <div className="row">
+            <div className="col-xs-12" style={style.centered}>
+              <FontIcon style={style.fontIcon} className="material-icons" color={style.fontIcon.color}>done</FontIcon>
+            </div>
+            <div className="col-xs-12" style={style.centered}>
+              <p>We just invited <bold>romain.sylvian@gmail.com</bold>!</p>
+            </div>
+          </div>
         </div>
       </Dialog>
     );
