@@ -26,7 +26,7 @@ import ClientsPage from './containers/web/clients/clientsContainer';
 import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
 
 //jobs
-import JobsDetailsPage from './containers/web/jobs/JobDetailsContainer';
+import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
 
 const localStorage = new LocalStorageClient('Auth');
 
