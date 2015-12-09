@@ -85,7 +85,7 @@ export function getOneJob(id) {
     types: [GET_JOB, GET_JOB_SUCCESS, GET_JOB_FAIL],
     promise: (client) => client.fakeApi.get(`/jobs/${id}`, {
       data: {
-        result: {id},
+        id
       },
     }),
   };
