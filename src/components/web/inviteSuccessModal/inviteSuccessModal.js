@@ -66,17 +66,30 @@ class InviteSuccessModal extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      open: false,
+    };
   }
 
   closeModal() {
-    this.props.closeModal();
+    this.setState({
+      open: false,
+    });
+  }
+
+  show() {
+    //console.log('show!!!!');
+    this.setState({
+      open: true,
+    });
   }
 
   render() {
 
     return (
       <Dialog
-          open={this.props.open}
+          open={this.state.open}
           autoDetectWindowHeight={false}
           autoScrollBodyContent={false}
           repositionOnUpdate={false}
@@ -110,7 +123,7 @@ class InviteSuccessModal extends React.Component {
 }
 
 InviteSuccessModal.propTypes = {
-  open: React.PropTypes.bool.isRequired,
+  //open: React.PropTypes.bool.isRequired,
 };
 
 export default InviteSuccessModal;

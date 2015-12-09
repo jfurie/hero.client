@@ -58,25 +58,28 @@ class ContactDetailsModal extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      succesInviteModalOpen: false,
-    };
+    // this.state = {
+    //   succesInviteModalOpen: false,
+    // };
   }
 
   closeModal() {
     this.props.closeModal();
   }
 
-  inviteSuccessModalClose() {
-    this.setState({
-      succesInviteModalOpen: false,
-    });
-  }
+  // inviteSuccessModalClose() {
+  //   // this.setState({
+  //   //   succesInviteModalOpen: false,
+  //   // });
+  //   this.refs.inviteSuccessModal.close();
+  // }
 
   inviteToHero() {
-    this.setState({
-      succesInviteModalOpen: true,
-    });
+    //console.log('yooooo!', this.refs.inviteSuccessModal);
+    this.refs.inviteSuccessModal.show();
+    // this.setState({
+    //   succesInviteModalOpen: true,
+    // });
   }
 
   render() {
@@ -104,11 +107,7 @@ class ContactDetailsModal extends React.Component {
     return (
       <div>
 
-        <InviteSuccessModal
-            ref="inviteSuccessModal"
-            closeModal={this.inviteSuccessModalClose.bind(this)}
-            open={this.state.succesInviteModalOpen}
-        />
+        <InviteSuccessModal ref="inviteSuccessModal" />
 
         <Dialog
             open={this.props.open}
