@@ -1,20 +1,10 @@
 import React from 'react';
-import { List, ListItem, ListDivider, FontIcon } from 'material-ui';
+import { List } from 'material-ui';
 //import Infinite from 'react-infinite';
-import { CompanyAvatar } from '../../../components/web';
+import { CompanyJobsList } from '../../../components/web';
 
-const style = {
-  ringUser: {
-    display: 'inline',
-    width: '28px',
-    height: '28px',
-    marginRight: '5px',
-    borderRadius: '160px',
-  },
-  peopleList: {
-    marginTop: '7px',
-  },
-};
+// TMP
+import Immutable from 'immutable';
 
 class JobsList extends React.Component {
 
@@ -22,73 +12,28 @@ class JobsList extends React.Component {
 
     let { jobs } = this.props;
 
-    let people = [
-      [
-        'https://lh5.googleusercontent.com/-ZadaXoUTBfs/AAAAAAAAAAI/AAAAAAAAAGA/19US52OmBqc/photo.jpg',
-        'http://cdn.devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
-        'http://www.biz.uiowa.edu/tippiemba/wp-content/uploads/2010/07/Kim-Hyundong-300x300.jpg',
-        'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
-      ],
-      [
-        'http://cdn.devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
-        'http://www.biz.uiowa.edu/tippiemba/wp-content/uploads/2010/07/Kim-Hyundong-300x300.jpg',
-      ],
-      [
-        'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
-        'http://fe867b.medialib.glogster.com/media/92/92a0862b9fdfca48725ac9df17ea42ffd90f7bb1dcab4cac52b1f417feedd514/profile-20pic.jpg',
-        'http://cdn.devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
-      ],
-      [
-        'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
-      ],
-    ];
+    // create 2 fakes companies
+    let companies = new Immutable.Map();
 
-    // TMP
-    let nestedJobsItem = [];
-    let index = 0;
+    let ring = {};
+    ring['ring'] = {
+      'website': 'http://ring.com',
+      'name': 'Ring',
+    };
 
-    jobs.forEach(function(job) {
+    let washio = {};
+    washio['washio'] = {
+      'website': 'http://www.getwashio.com/',
+      'name': 'Washio',
+    };
 
-      let peopleList = [];
-
-      people[index].forEach(function(p, key) {
-        peopleList.push(<img key={key} style={style.ringUser} src={p} />)
-      });
-
-      nestedJobsItem.push(
-        <ListItem
-          primaryText={job.get('title')}
-          secondaryText={
-            <div style={style.peopleList}>{peopleList}</div>
-          }
-          rightIcon={<FontIcon className="material-icons">info</FontIcon>}
-          secondaryTextLines={2}
-          key={job.get('id')}
-        />
-      );
-
-      index += 1;
-    });
+    companies = companies.mergeDeep(ring);
+    companies = companies.mergeDeep(washio);
 
     return (
-
       <List subheader={`${jobs.count() * 2} Jobs`}>
-        <ListItem
-          primaryText="Ring.com"
-          leftAvatar={<CompanyAvatar url={'http://ring.com'} />}
-          secondaryText={<p>Santa Monica, CA</p>}
-          initiallyOpen={true}
-          nestedItems={nestedJobsItem}
-        />
-        <ListDivider inset />
-        <ListItem
-          primaryText="Google"
-          leftAvatar={<CompanyAvatar url={'http://google.com'} />}
-          secondaryText={<p>Los Angeles, CA</p>}
-          initiallyOpen={true}
-          nestedItems={nestedJobsItem}
-        />
-        <ListDivider inset />
+        <CompanyJobsList jobs={jobs} company={companies.get('ring')} />
+        <CompanyJobsList jobs={jobs} company={companies.get('washio')} />
       </List>
     );
   }
