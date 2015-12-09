@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, LocationCard, ContactsList, ClientContactsCreateModal, JobsList } from '../../../components/web';
+import { Header, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getAllJobs } from '../../../modules/jobs';
@@ -228,7 +228,9 @@ class ClientDetailsPage extends React.Component {
                 </List>
             </div>
             <div style={style.slide}>
-              <JobsList jobs={jobs.list}/>
+              <List subheader={`${jobs.list.count()} Jobs`}>
+                <CompanyJobsList company={company} jobs={jobs.list}/>
+              </List>
             </div>
             <ContactsList contacts={contacts.list}/>
             <div>
