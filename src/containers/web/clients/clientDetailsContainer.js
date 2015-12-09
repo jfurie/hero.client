@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList } from '../../../components/web';
+import { Header, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getAllJobs } from '../../../modules/jobs';
@@ -60,6 +60,7 @@ class ClientDetailsPage extends React.Component {
     this.state = {
       slideIndex: 0,
       createModalOpen: false,
+      contactDetailsModalOpen: false,
     };
   }
 
@@ -118,10 +119,23 @@ class ClientDetailsPage extends React.Component {
       createContactModalOpen:true
     });
   }
+
   createContactModalClose(){
     this.setState({
       createContactModalOpen:false
     });
+  }
+
+  contactDetailsModalOpen(contact) {
+    //console.log('eeee', c);
+    this.setState({
+      contactDetailsModalOpen: true,
+      detailsContact: contact,
+    });
+  }
+
+  contactDetailsModalClose() {
+
   }
 
   render() {
@@ -138,6 +152,7 @@ class ClientDetailsPage extends React.Component {
       return (
         <div>
           <ClientContactsCreateModal onSubmit={this.saveClient.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
+          <ContactDetailsModal open={this.state.contactDetailsModalOpen} contact={this.state.detailsContact}/>
 
           <Header iconRight={
             <IconMenu iconButtonElement={
@@ -217,7 +232,7 @@ class ClientDetailsPage extends React.Component {
                 <CompanyJobsList company={company} jobs={jobs.list}/>
               </List>
             </div>
-            <ContactsList contacts={contacts.list}/>
+            <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             <div>
               <Card initiallyExpanded>
                 <CardHeader

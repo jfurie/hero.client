@@ -1,6 +1,6 @@
 import React from 'react';
-import {Dialog, IconButton, ToolbarGroup, FlatButton, TextField, ToolbarTitle} from 'material-ui';
-const ToolBar = require('material-ui/lib/toolbar/toolbar');
+import {Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle} from 'material-ui';
+//const ToolBar = require('material-ui/lib/toolbar/toolbar');
 const websiteRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
 export default class ClientsCreateModal extends React.Component {
   constructor(props){
@@ -63,7 +63,7 @@ export default class ClientsCreateModal extends React.Component {
           height: ( clientHeight) + 'px'
         }}>
 
-        <ToolBar style={{backgroundColor:'#ffffff', height:'64px'}}>
+        <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
           <ToolbarGroup key={0} float="left">
             <IconButton onTouchTap={this.closeModal.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
             <ToolbarTitle style={{lineHeight:'64px', float:'left'}} text="Create Client" />
@@ -71,7 +71,7 @@ export default class ClientsCreateModal extends React.Component {
           <ToolbarGroup key={1} float="right">
             <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={{marginTop:'14px', marginRight:'-16px', marginLeft:'auto'}}>Save</FlatButton>
           </ToolbarGroup>
-        </ToolBar>
+        </Toolbar>
         <div className="row center-xs">
             <div className="col-xs-10 col-md-6">
                 <div className="box">

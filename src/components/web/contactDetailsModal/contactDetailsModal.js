@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, ToolBar, ToolbarTitle, IconButton, ToolbarGroup } from 'material-ui';
+import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, List, ListItem, FontIcon, ListDivider, Avatar } from 'material-ui';
 //import Infinite from 'react-infinite';
 //import { CompanyJobsList } from '../../../components/web';
 
@@ -57,32 +57,24 @@ class ContactDetailsModal extends React.Component {
 
     let { contact } = this.props;
 
-    let dialogTitle = 'Contact Details';
+    let picture = null;
+    let email = null;
+    let phone = null;
+    let address = null;
+    let city = null;
+    let source = null;
+    let displayName = null;
 
-    console.log(contact, this.props.open);
-
-    if (contact && contact.get('displayName')) {
-      dialogTitle = contact.get('displayName');
+    if (contact) {
+      displayName = contact.get('displayName') || null;
+      picture = 'http://www.material-ui.com/images/kerem-128.jpg';
+      email = contact.get('email') || null;
+      phone = contact.get('phone') || null;
+      address = '1316 3rd St #103';
+      city = 'Santa Monica, CA 90401';
+      source = 'facebook.com';
     }
 
-    // return (
-    //   <div>
-    //     <p>{dialogTitle}</p>
-    //     <Dialog
-    //       title="Dialog With Scrollable Content"
-    //       actions={customActions}
-    //       autoDetectWindowHeight={true}
-    //       autoScrollBodyContent={true}
-    //       open={this.state.showDialogScrollable}
-    //       onRequestClose={this._handleRequestClose}>
-    //       <div style={{height: '1000px'}}>
-    //         Really long content
-    //       </div>
-    //     </Dialog>
-    //   </div>
-    // );
-
-    //if (contact) {
     return (
       <Dialog
           open={this.props.open}
@@ -96,20 +88,86 @@ class ContactDetailsModal extends React.Component {
           ref="contactDetailsDialog"
       >
         <div style={style.content}>
-
-          {/*<ToolBar style={style.toolBar}>
+          <Toolbar style={style.toolBar}>
             <ToolbarGroup key={0} float="left">
               <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
-              <ToolbarTitle style={style.detailsTitle} text={dialogTitle} />
+              <ToolbarTitle style={style.detailsTitle} text={'Contact Details'} />
             </ToolbarGroup>
-          </ToolBar>*/}
-          <div className="row center-xs">
-              <p>toto</p>
-          </div>
+          </Toolbar>
+          <List>
+            <div>
+
+              {(displayName) ? (
+                <ListItem
+                  leftAvatar={<Avatar src={picture} />}
+                  primaryText={displayName}
+                  secondaryText={<p>contact</p>}
+                  secondaryTextLines={1}
+                />
+              ) : (null)}
+
+              {(email) ? (
+                <ListItem
+                  leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
+                  primaryText={email}
+                  secondaryText={<p>email</p>}
+                  secondaryTextLines={1}
+                />
+              ) : (null)}
+
+              {(phone) ? (
+                <div>
+                  <ListDivider inset />
+                  <ListItem
+                    leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                    primaryText={phone}
+                    secondaryText={<p>phone</p>}
+                    secondaryTextLines={1}
+                  />
+                </div>
+              ) : (null)}
+
+              {(address) ? (
+                <div>
+                  <ListDivider inset />
+                  <ListItem
+                    leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                    primaryText={address}
+                    secondaryText={<p>address</p>}
+                    secondaryTextLines={1}
+                  />
+                </div>
+              ) : (null)}
+
+              {(city) ? (
+                <div>
+                  <ListDivider inset />
+                  <ListItem
+                    leftIcon={<FontIcon className="material-icons">business</FontIcon>}
+                    primaryText={city}
+                    secondaryText={<p>city</p>}
+                    secondaryTextLines={1}
+                  />
+                </div>
+              ) : (null)}
+
+              {(source) ? (
+                <div>
+                  <ListDivider inset />
+                  <ListItem
+                    leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                    primaryText={source}
+                    secondaryText={<p>source</p>}
+                    secondaryTextLines={1}
+                  />
+                </div>
+              ) : (null)}
+
+            </div>
+          </List>
         </div>
       </Dialog>
     );
-    //}
   }
 }
 

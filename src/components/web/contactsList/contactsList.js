@@ -16,19 +16,22 @@ class ContactsList extends React.Component {
 
   openDetails(contact){
 
+    if (this.props.onOpenContactDetails) {
+      this.props.onOpenContactDetails(contact);
+    }
     //console.log(contact);
 
-    this.setState({
-      detailsContact: contact,
-      detailsModalOpen: true,
-    });
+    // this.setState({
+    //   detailsContact: contact,
+    //   detailsModalOpen: true,
+    // });
   }
 
   closeDetails(){
-    this.setState({
-      detailsContact: null,
-      detailsModalOpen: false,
-    });
+    // this.setState({
+    //   detailsContact: null,
+    //   detailsModalOpen: false,
+    // });
   }
 
   render() {
@@ -87,6 +90,7 @@ class ContactsList extends React.Component {
 
 ContactsList.propTypes = {
   contacts: React.PropTypes.object.isRequired,
+  onOpenContactDetails: React.PropTypes.func,
 };
 
 export default ContactsList;

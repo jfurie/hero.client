@@ -4,7 +4,7 @@ import { getOneJob } from '../../../modules/jobs';
 import { getAllContacts } from '../../../modules/contacts';
 import { getOneLocation } from '../../../modules/locations';
 import { Header, ContactsList, LocationCard} from '../../../components/web';
-import {Styles,  IconMenu, IconButton, Tabs, Tab,List , ListItem, FontIcon, Card, CardHeader, Avatar, CardText, CardTitle} from 'material-ui';
+import {Styles,  IconMenu, IconButton, Tabs, Tab,List , ListItem, FontIcon, Card, Avatar, CardText } from 'material-ui';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 import SwipeableViews from 'react-swipeable-views';
 let MenuItem = require('material-ui/lib/menus/menu-item');
@@ -23,8 +23,8 @@ function getData(state, id) {
   return {
     job: state.jobs.list.get(id),
     contacts: state.contacts,
-    location
-  }
+    location,
+  };
 }
 
 @connect((state, props) => (
