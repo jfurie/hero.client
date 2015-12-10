@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, FontIcon, FlatButton } from 'material-ui';
+import { Dialog, Toolbar, ToolbarTitle, ToolbarGroup, FontIcon, FlatButton } from 'material-ui';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -79,7 +79,6 @@ class InviteSuccessModal extends React.Component {
   }
 
   show() {
-    //console.log('show!!!!');
     this.setState({
       open: true,
     });

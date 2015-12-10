@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal } from '../../../components/web';
+import { Header, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal, NotesCreateModal } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getAllJobs } from '../../../modules/jobs';
@@ -140,6 +140,10 @@ class ClientDetailsPage extends React.Component {
     });
   }
 
+  createNoteModalOpen() {
+    this.refs.notesCreateModal.show();
+  }
+
   render() {
 
     let {company, location, contacts, jobs} = this.props;
@@ -155,6 +159,7 @@ class ClientDetailsPage extends React.Component {
         <div>
           <ClientContactsCreateModal onSubmit={this.saveClient.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
+          <NotesCreateModal ref='notesCreateModal' />
 
           <Header iconRight={
             <IconMenu iconButtonElement={
@@ -162,7 +167,7 @@ class ClientDetailsPage extends React.Component {
             }>
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Job" />
-              <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Note" />
+              <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
             </IconMenu>
           } title={company.get('name')} />
 
