@@ -15,7 +15,7 @@ class JobsList extends React.Component {
   render() {
 
     let { jobs } = this.props;
-
+    
     // create 2 fakes companies
     let companies = new Immutable.Map();
 

@@ -3,17 +3,12 @@ import { connect } from 'react-redux';
 import { getOneJob } from '../../../modules/jobs';
 import { getAllContacts } from '../../../modules/contacts';
 import { getOneLocation } from '../../../modules/locations';
-import { Header, ContactsList, LocationCard, ContactDetailsModal, ClientContactsCreateModal} from '../../../components/web';
-import {Styles,  IconMenu, IconButton, Tabs, Tab,List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions} from 'material-ui';
-import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
-import SwipeableViews from 'react-swipeable-views';
+import { Header, CustomTabsSwipe, ContactsList, LocationCard, ContactDetailsModal, ClientContactsCreateModal } from '../../../components/web';
+import { IconMenu, IconButton, List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions, MenuItem } from 'material-ui';
+
 import './jobDetailsContainer.scss';
-let MenuItem = require('material-ui/lib/menus/menu-item');
 
 const style = {
-  tabs: {
-    backgroundColor: Styles.Colors.grey900,
-  },
   slide: {
     minHeight: `${window.innerHeight - 112}px`,
   },
@@ -30,11 +25,15 @@ function getData(state, id) {
 
 @connect((state, props) => (
   getData(state, props.params.id)),
-  {getOneJob, disableSwipeToOpen, enableSwipeToOpen, getAllContacts, getOneLocation})
+  {getOneJob, getAllContacts, getOneLocation})
 class JobDetailsPage extends React.Component {
+
   constructor(props) {
     super(props);
-    this.state ={slideIndex: 0,createContactModalOpen:false};
+
+    this.state = {
+      createContactModalOpen: false,
+    };
   }
 
   componentDidMount() {
@@ -43,65 +42,34 @@ class JobDetailsPage extends React.Component {
     this.props.getOneLocation('566791aa15d3e38a0cbdecb6');
   }
 
-  _handleChangeTabs(value) {
-
-    let index = ~~(value);
-    //
-    if (index > 0) {
-      this.props.disableSwipeToOpen();
-    } else {
-      this.props.enableSwipeToOpen();
-    }
-
-
-    this.setState({
-      slideIndex: index,
-    });
-  }
-  _handleChangeIndex(index) {
-    this.setState({
-      slideIndex: index,
-    });
-
-    if (index === 1) {
-      this.props.disableSwipeToOpen();
-    }
-
-    if (index === 0) {
-      this.props.enableSwipeToOpen();
-    }
-
-    // if (index > 0) {
-    //   this.props.disableSwipeToOpen();
-    // } else {
-    //   this.props.enableSwipeToOpen();
-    // }
-  }
   contactDetailsModalOpen(contact) {
     this.setState({
       contactDetailsModalOpen: true,
       detailsContact: contact,
     });
   }
+
   contactDetailsModalClose() {
     this.setState({
       contactDetailsModalOpen: false,
       detailsContact: null,
     });
   }
+
   createContactModalOpen(){
     this.setState({
-      createContactModalOpen:true
+      createContactModalOpen: true,
     });
   }
 
   createContactModalClose(){
     this.setState({
-      createContactModalOpen:false
+      createContactModalOpen: false,
     });
   }
-  saveContact(){
 
+  saveContact(){
+    console.log('save contact');
   }
 
   render(){
@@ -119,13 +87,8 @@ class JobDetailsPage extends React.Component {
             <MenuItem index={1} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Candidate" />
           </IconMenu>
         } title={job?job.get('title'):''} />
-        <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
-          <Tab label='Details' value='0'></Tab>
-          <Tab label='Description' value='1'></Tab>
-          <Tab label='Candidates' value='2'></Tab>
-          <Tab label='Notes' value='3'></Tab>
-        </Tabs>
-        <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
+
+        <CustomTabsSwipe tabs={['Details', 'Description', 'Candidates', 'Notes']}>
           <div style={style.slide}>
             <Card>
             {/*  <div className="mediawrap">
@@ -168,19 +131,18 @@ class JobDetailsPage extends React.Component {
                       <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>25 <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>applicants</div></div>
                     </div>
                   </CardText>
-
                 </Card>
               </CardText>
               <CardText >
-                <div className='description'>
-                  <p >
+                <div className="description">
+                  <p>
                     Telecom startup disrupting a $100B industry with free mobile and home internet service. Funded by the founder of Skype. Java/Spring/JPA/Hibernate/Redis; *Now requires experience with a client-side JavaScript MVC framework (Angular, React, Backbone, Ember)
                   </p>
                 </div>
-
               </CardText>
-              <CardText >
-                            <LocationCard style={{height: '200px'}} location={location} />
+
+              <CardText>
+                <LocationCard style={{height: '200px'}} location={location} />
               </CardText>
 
               <CardText>
@@ -217,17 +179,15 @@ class JobDetailsPage extends React.Component {
                   </List>
                 </Card>
               </CardText>
-
-
-            <List subheader='Job Contact'>
-              {(heroContact) ? (
-                <ListItem
-                  leftAvatar={<Avatar>S</Avatar>}
-                  primaryText={'Scott Bendar'}
-                  secondaryText={<p>CTO, FreedomPop</p>}
-                  secondaryTextLines={1}
-                />
-              ) : (null)}
+              <List subheader='Job Contact'>
+                {(heroContact) ? (
+                  <ListItem
+                    leftAvatar={<Avatar>S</Avatar>}
+                    primaryText={'Scott Bendar'}
+                    secondaryText={<p>CTO, FreedomPop</p>}
+                    secondaryTextLines={1}
+                  />
+                ) : (null)}
               </List>
               <List subheader='Your HERO talent advocate'>
                 {(heroContact) ? (
@@ -238,17 +198,15 @@ class JobDetailsPage extends React.Component {
                     secondaryTextLines={1}
                   />
                 ) : (null)}
-                </List>
+              </List>
             </Card>
-
-
           </div>
           <div style={style.slide}>
             <Card>
               <CardText >
                 <div className='description'>
-        <h3 className='c2'><a name='h.2qn7ea1nr273' /><span>Job Description</span></h3><p className='c4'><span className='c0'>Our client is a first-of-its-kind technology startup that is disrupting a multi-billion dollar industry. They have a significant amount of funding, and their backers include founders of companies that have become household names. They are currently hiring for a Senior Software Engineer who has a background building high-traffic, multi-threaded software systems using MVC frameworks like and and has strong relational and ideally database experience.</span></p><h4 className='c2'><a name='h.usesbgd80cl3' /><span>The non-negotiables:</span></h4><ul className='c7 lst-kix_p70ulp80wgsv-0 start'><li className='c4 c5'><span className='c0'>&nbsp;5+ years of Java Development experience</span></li><li className='c4 c5'><span className='c0'>Experience with a client-side JavaScript MVC framework (Angular, React, Backbone, Ember)</span></li><li className='c4 c5'><span className='c0'>Expertise with Spring and Hibernate / JPA</span></li><li className='c4 c5'><span className='c0'>&nbsp;Experience with relational databases like SQL Server, MySQL</span></li><li className='c4 c5'><span className='c0'>Exposure to technologies, i.e. preferred</span></li><li className='c4 c5'><span className='c0'>A Bachelor's degree in Computer Science or greater</span></li></ul><h4 className='c2'><a name='h.1klbg0xnecvg' /><span>The reasons to work there:</span></h4><ul className='c7 lst-kix_ue7i54lkmb8h-0 start'><li className='c4 c5'><span className='c0'>Competitive compensation package with excellent benefits</span></li><li className='c4 c5'><span className='c0'>The chance to put your stamp on a platform that's already used by millions of people and gaining thousands of users every day</span></li><li className='c4 c5'><span className='c0'>The stability of a well-funded company with traction, with the excitement of a startup</span></li><li className='c4 c5'><span className='c0'>Huge growth opportunity</span></li></ul><p className='c1'><span className='c0' /></p><p className='c4'><span className='c0'>If this fits your background and you're ready to make a huge impact at a small company, apply now. We look forward to speaking with you soon.</span></p><p className='c4'><span className='c0'>Local candidates are strongly preferred. Sponsorship is not an option at this time.</span></p><p className='c6'><span /></p>
-      </div>
+                  <h3 className='c2'><a name='h.2qn7ea1nr273' /><span>Job Description</span></h3><p className='c4'><span className='c0'>Our client is a first-of-its-kind technology startup that is disrupting a multi-billion dollar industry. They have a significant amount of funding, and their backers include founders of companies that have become household names. They are currently hiring for a Senior Software Engineer who has a background building high-traffic, multi-threaded software systems using MVC frameworks like and and has strong relational and ideally database experience.</span></p><h4 className='c2'><a name='h.usesbgd80cl3' /><span>The non-negotiables:</span></h4><ul className='c7 lst-kix_p70ulp80wgsv-0 start'><li className='c4 c5'><span className='c0'>&nbsp;5+ years of Java Development experience</span></li><li className='c4 c5'><span className='c0'>Experience with a client-side JavaScript MVC framework (Angular, React, Backbone, Ember)</span></li><li className='c4 c5'><span className='c0'>Expertise with Spring and Hibernate / JPA</span></li><li className='c4 c5'><span className='c0'>&nbsp;Experience with relational databases like SQL Server, MySQL</span></li><li className='c4 c5'><span className='c0'>Exposure to technologies, i.e. preferred</span></li><li className='c4 c5'><span className='c0'>A Bachelor's degree in Computer Science or greater</span></li></ul><h4 className='c2'><a name='h.1klbg0xnecvg' /><span>The reasons to work there:</span></h4><ul className='c7 lst-kix_ue7i54lkmb8h-0 start'><li className='c4 c5'><span className='c0'>Competitive compensation package with excellent benefits</span></li><li className='c4 c5'><span className='c0'>The chance to put your stamp on a platform that's already used by millions of people and gaining thousands of users every day</span></li><li className='c4 c5'><span className='c0'>The stability of a well-funded company with traction, with the excitement of a startup</span></li><li className='c4 c5'><span className='c0'>Huge growth opportunity</span></li></ul><p className='c1'><span className='c0' /></p><p className='c4'><span className='c0'>If this fits your background and you're ready to make a huge impact at a small company, apply now. We look forward to speaking with you soon.</span></p><p className='c4'><span className='c0'>Local candidates are strongly preferred. Sponsorship is not an option at this time.</span></p><p className='c6'><span /></p>
+                </div>
               </CardText>
             </Card>
           </div>
@@ -293,7 +251,7 @@ class JobDetailsPage extends React.Component {
               </Card>
             </div>
           </div>
-        </SwipeableViews>
+        </CustomTabsSwipe>
       </div>
     );
   }

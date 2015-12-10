@@ -54,7 +54,6 @@
     "react-router": "^1.0.0",
     "react-sticky": "^3.0.0",
     "react-swipe": "^3.0.0",
-    "react-swipeable-views": "^0.3.3",
     "react-tap-event-plugin": "^0.2.1",
     "redux": "^3.0.4",
     "redux-devtools": "^2.1.5",
