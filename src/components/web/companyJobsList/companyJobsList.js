@@ -82,6 +82,7 @@ class CompanyJobsList extends React.Component {
 CompanyJobsList.propTypes = {
   company: React.PropTypes.object,
   jobs: React.PropTypes.object.isRequired,
+  onJobClick: React.PropTypes.func,
 };
 
 export default CompanyJobsList;

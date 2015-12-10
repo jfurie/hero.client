@@ -8,10 +8,11 @@ import { getAllJobs } from '../../../modules/jobs';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 import { pushState } from 'redux-router';
+import ReactSwipe from 'react-swipe';
 
 import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon, IconMenu, IconButton, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
-import SwipeableViews from 'react-swipeable-views';
+//import SwipeableViews from 'react-swipeable-views';
 
 function getData(state, id) {
   let company = ((state.companies.list.size > 0) ? (state.companies.list.get(id)) : (null));
@@ -86,33 +87,51 @@ class ClientDetailsPage extends React.Component {
   }
 
   _handleChangeIndex(index) {
-    this.setState({
-      slideIndex: index,
-    });
 
-    if (index === 1) {
-      this.props.disableSwipeToOpen();
+    if (this.state.slideIndex !== index) {
+      this.setState({
+        slideIndex: index,
+      });
+
+      //console.log('_handleChangeIndex');
+
+      if (index === 1) {
+        this.props.disableSwipeToOpen();
+      }
+
+      if (index === 0) {
+        this.props.enableSwipeToOpen();
+      }
     }
-
-    if (index === 0) {
-      this.props.enableSwipeToOpen();
-    }
-
   }
 
   _handleChangeTabs(value) {
 
     let index = ~~(value);
-    //
-    if (index > 0) {
-      this.props.disableSwipeToOpen();
-    } else {
-      this.props.enableSwipeToOpen();
-    }
+    //this.refs.swipeableViews.slide(index);
 
-    this.setState({
-      slideIndex: index,
-    });
+    //console.log(this.refs.swipeableViews);
+    //
+    // if (index > 0) {
+    //   this.props.disableSwipeToOpen();
+    // } else {
+    //   this.props.enableSwipeToOpen();
+    // }
+
+    if (this.state.index !== index) {
+      this.setState({
+        slideIndex: index,
+      });
+      //console.log('_handleChangeTabs');
+
+      if (index === 1) {
+        this.props.disableSwipeToOpen();
+      }
+
+      if (index === 0) {
+        this.props.enableSwipeToOpen();
+      }
+    }
   }
 
   createContactModalOpen(){
@@ -150,6 +169,8 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
+    //console.log('render!');
+
     let {company, location, contacts, jobs} = this.props;
 
     if (company) {
@@ -182,7 +203,8 @@ class ClientDetailsPage extends React.Component {
             <Tab label="Notes" value="3"></Tab>
           </Tabs>
 
-          <SwipeableViews resitance index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>
+          {/* <SwipeableViews index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>*/}
+          <ReactSwipe speed={250} slideToIndex={this.state.slideIndex} transitionEnd={this._handleChangeIndex.bind(this)} ref="swipeableViews" continuous={false}>
             <div style={style.slide}>
               <List>
                 <div>
@@ -243,8 +265,10 @@ class ClientDetailsPage extends React.Component {
                 <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
               </List>
             </div>
-            <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
-            <div>
+            <div style={style.slide}>
+              <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
+            </div>
+            <div style={style.slide}>
               <Card initiallyExpanded>
                 <CardHeader
                   title="Rameet Singh"
@@ -280,7 +304,8 @@ class ClientDetailsPage extends React.Component {
                 </CardActions>
               </Card>
             </div>
-          </SwipeableViews>
+          </ReactSwipe>
+            {/* </SwipeableViews>*/}
         </div>
       );
     } else {
