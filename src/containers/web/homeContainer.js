@@ -69,6 +69,9 @@ class HomePage extends React.Component {
       slideIndex: index,
     });
   }
+  _handleJobClick(){
+    this.props.pushState(null,'/jobs/1a');
+  }
 
   render () {
 
@@ -91,7 +94,7 @@ class HomePage extends React.Component {
             <p>clients</p>
           </div>
           <div style={style.slide}>
-            <JobsList jobs={jobs.list}/>
+            <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
           </div>
           <div style={style.slide}>
             <p>contacts</p>

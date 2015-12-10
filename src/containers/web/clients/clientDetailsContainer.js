@@ -1,12 +1,13 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal } from '../../../components/web';
+import { Header, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal, NotesCreateModal } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getAllJobs } from '../../../modules/jobs';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
+import { pushState } from 'redux-router';
 
 import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon, IconMenu, IconButton, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
@@ -52,7 +53,7 @@ const style = {
 
 @connect((state, props) => (
   getData(state, props.params.id)),
-  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen, getContactsByCompany, getAllJobs})
+  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen, getContactsByCompany, getAllJobs, pushState})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -139,6 +140,13 @@ class ClientDetailsPage extends React.Component {
       detailsContact: null,
     });
   }
+  _handleJobClick(job){
+    this.props.pushState(null,'/jobs/1a');
+  }
+
+  createNoteModalOpen() {
+    this.refs.notesCreateModal.show();
+  }
 
   render() {
 
@@ -155,6 +163,7 @@ class ClientDetailsPage extends React.Component {
         <div>
           <ClientContactsCreateModal onSubmit={this.saveClient.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
+          <NotesCreateModal ref='notesCreateModal' />
 
           <Header iconRight={
             <IconMenu iconButtonElement={
@@ -162,7 +171,7 @@ class ClientDetailsPage extends React.Component {
             }>
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Job" />
-              <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Note" />
+              <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
             </IconMenu>
           } title={company.get('name')} />
 
@@ -231,7 +240,7 @@ class ClientDetailsPage extends React.Component {
             </div>
             <div style={style.slide}>
               <List subheader={`${jobs.list.count()} Jobs`}>
-                <CompanyJobsList company={company} jobs={jobs.list}/>
+                <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
               </List>
             </div>
             <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>

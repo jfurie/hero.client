@@ -7,7 +7,11 @@ import { CompanyJobsList } from '../../../components/web';
 import Immutable from 'immutable';
 
 class JobsList extends React.Component {
-
+  _handleJobClick(job){
+    if(this.props.onJobClick){
+      this.props.onJobClick(job);
+    }
+  }
   render() {
 
     let { jobs } = this.props;
@@ -32,8 +36,8 @@ class JobsList extends React.Component {
 
     return (
       <List subheader={`${jobs.count() * 2} Jobs`}>
-        <CompanyJobsList jobs={jobs} company={companies.get('ring')} />
-        <CompanyJobsList jobs={jobs} company={companies.get('washio')} />
+        <CompanyJobsList jobs={jobs} onJobClick={this._handleJobClick.bind(this)} company={companies.get('ring')} />
+        <CompanyJobsList jobs={jobs} onJobClick={this._handleJobClick.bind(this)} company={companies.get('washio')} />
       </List>
     );
   }

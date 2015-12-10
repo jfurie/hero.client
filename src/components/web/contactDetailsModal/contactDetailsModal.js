@@ -1,7 +1,10 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, List, ListItem, FontIcon, ListDivider, Avatar } from 'material-ui';
+// import { connect } from 'react-redux';
+// import { pushState } from 'redux-router';
+import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
+  List, ListItem, FontIcon, ListDivider, Avatar, FlatButton } from 'material-ui';
 //import Infinite from 'react-infinite';
-//import { CompanyJobsList } from '../../../components/web';
+import { InviteSuccessModal } from '../../../components/web';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -41,16 +44,42 @@ const style = {
     lineHeight:'64px',
     float:'left',
   },
+  invite: {
+    marginTop:'14px',
+    marginRight:'-16px',
+    marginLeft:'auto',
+  },
 };
 
+// @connect( () => {}
+// ,{pushState})
 class ContactDetailsModal extends React.Component {
 
   constructor(props) {
     super(props);
+
+    // this.state = {
+    //   succesInviteModalOpen: false,
+    // };
   }
 
   closeModal() {
     this.props.closeModal();
+  }
+
+  // inviteSuccessModalClose() {
+  //   // this.setState({
+  //   //   succesInviteModalOpen: false,
+  //   // });
+  //   this.refs.inviteSuccessModal.close();
+  // }
+
+  inviteToHero() {
+    //console.log('yooooo!', this.refs.inviteSuccessModal);
+    this.refs.inviteSuccessModal.show();
+    // this.setState({
+    //   succesInviteModalOpen: true,
+    // });
   }
 
   render() {
@@ -76,97 +105,105 @@ class ContactDetailsModal extends React.Component {
     }
 
     return (
-      <Dialog
-          open={this.props.open}
-          autoDetectWindowHeight={false}
-          autoScrollBodyContent={false}
-          repositionOnUpdate={false}
-          defaultOpen={false}
-          style={style.dialog}
-          bodyStyle={style.bodyStyle}
-          contentStyle={style.contentStyle}
-          ref="contactDetailsDialog"
-      >
-        <div style={style.content}>
-          <Toolbar style={style.toolBar}>
-            <ToolbarGroup key={0} float="left">
-              <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
-              <ToolbarTitle style={style.detailsTitle} text={'Contact Details'} />
-            </ToolbarGroup>
-          </Toolbar>
-          <List>
-            <div>
+      <div>
 
-              {(displayName) ? (
-                <ListItem
-                  leftAvatar={<Avatar src={picture} />}
-                  primaryText={displayName}
-                  secondaryText={<p>contact</p>}
-                  secondaryTextLines={1}
-                />
-              ) : (null)}
+        <InviteSuccessModal ref="inviteSuccessModal" />
 
-              {(email) ? (
-                <ListItem
-                  leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
-                  primaryText={email}
-                  secondaryText={<p>email</p>}
-                  secondaryTextLines={1}
-                />
-              ) : (null)}
+        <Dialog
+            open={this.props.open}
+            autoDetectWindowHeight={false}
+            autoScrollBodyContent={false}
+            repositionOnUpdate={false}
+            defaultOpen={false}
+            style={style.dialog}
+            bodyStyle={style.bodyStyle}
+            contentStyle={style.contentStyle}
+            ref="contactDetailsDialog"
+        >
+          <div style={style.content}>
+            <Toolbar style={style.toolBar}>
+              <ToolbarGroup key={0} float="left">
+                <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
+                <ToolbarTitle style={style.detailsTitle} text={'Contact Details'} />
+              </ToolbarGroup>
+              <ToolbarGroup key={1} float="right">
+                <FlatButton onTouchTap={this.inviteToHero.bind(this)} style={style.invite}>Invite</FlatButton>
+              </ToolbarGroup>
+            </Toolbar>
+            <List>
+              <div>
 
-              {(phone) ? (
-                <div>
-                  <ListDivider inset />
+                {(displayName) ? (
                   <ListItem
-                    leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                    primaryText={phone}
-                    secondaryText={<p>phone</p>}
+                    leftAvatar={<Avatar src={picture} />}
+                    primaryText={displayName}
+                    secondaryText={<p>contact</p>}
                     secondaryTextLines={1}
                   />
-                </div>
-              ) : (null)}
+                ) : (null)}
 
-              {(address) ? (
-                <div>
-                  <ListDivider inset />
+                {(email) ? (
                   <ListItem
-                    leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                    primaryText={address}
-                    secondaryText={<p>address</p>}
+                    leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
+                    primaryText={email}
+                    secondaryText={<p>email</p>}
                     secondaryTextLines={1}
                   />
-                </div>
-              ) : (null)}
+                ) : (null)}
 
-              {(city) ? (
-                <div>
-                  <ListDivider inset />
-                  <ListItem
-                    leftIcon={<FontIcon className="material-icons">business</FontIcon>}
-                    primaryText={city}
-                    secondaryText={<p>city</p>}
-                    secondaryTextLines={1}
-                  />
-                </div>
-              ) : (null)}
+                {(phone) ? (
+                  <div>
+                    <ListDivider inset />
+                    <ListItem
+                      leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                      primaryText={phone}
+                      secondaryText={<p>phone</p>}
+                      secondaryTextLines={1}
+                    />
+                  </div>
+                ) : (null)}
 
-              {(source) ? (
-                <div>
-                  <ListDivider inset />
-                  <ListItem
-                    leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
-                    primaryText={source}
-                    secondaryText={<p>source</p>}
-                    secondaryTextLines={1}
-                  />
-                </div>
-              ) : (null)}
+                {(address) ? (
+                  <div>
+                    <ListDivider inset />
+                    <ListItem
+                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                      primaryText={address}
+                      secondaryText={<p>address</p>}
+                      secondaryTextLines={1}
+                    />
+                  </div>
+                ) : (null)}
 
-            </div>
-          </List>
-        </div>
-      </Dialog>
+                {(city) ? (
+                  <div>
+                    <ListDivider inset />
+                    <ListItem
+                      leftIcon={<FontIcon className="material-icons">business</FontIcon>}
+                      primaryText={city}
+                      secondaryText={<p>city</p>}
+                      secondaryTextLines={1}
+                    />
+                  </div>
+                ) : (null)}
+
+                {(source) ? (
+                  <div>
+                    <ListDivider inset />
+                    <ListItem
+                      leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                      primaryText={source}
+                      secondaryText={<p>source</p>}
+                      secondaryTextLines={1}
+                    />
+                  </div>
+                ) : (null)}
+
+              </div>
+            </List>
+          </div>
+        </Dialog>
+      </div>
     );
   }
 }
