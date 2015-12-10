@@ -1,18 +1,15 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal, NotesCreateModal } from '../../../components/web';
+import { Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal, NotesCreateModal } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getAllJobs } from '../../../modules/jobs';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
-import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 import { pushState } from 'redux-router';
-import ReactSwipe from 'react-swipe';
 
-import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon, IconMenu, IconButton, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
+import { List, ListItem, ListDivider, FontIcon, IconMenu, IconButton, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
-//import SwipeableViews from 'react-swipeable-views';
 
 function getData(state, id) {
   let company = ((state.companies.list.size > 0) ? (state.companies.list.get(id)) : (null));
@@ -44,23 +41,19 @@ function getData(state, id) {
 }
 
 const style = {
-  tabs: {
-    backgroundColor: Styles.Colors.grey900,
-  },
   slide: {
     minHeight: `${window.innerHeight - 112}px`,
   },
 };
 
 @connect((state, props) => (
-  getData(state, props.params.id)),
-  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen, getContactsByCompany, getAllJobs, pushState})
+getData(state, props.params.id)),
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getAllJobs, pushState})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      slideIndex: 0,
       createModalOpen: false,
       contactDetailsModalOpen: false,
     };
@@ -73,65 +66,11 @@ class ClientDetailsPage extends React.Component {
   }
 
   componentWillUpdate() {
-    // if (!this.props.location && !nextProps.location && nextProps.company && nextProps.company.get('location')) {
-    //   //this.props.getOneLocation(nextProps.company.get('location'));
-    // }
-  }
 
-  componentWillUnmount() {
-    this.props.enableSwipeToOpen();
   }
 
   saveClient() {
     console.log('cool!');
-  }
-
-  _handleChangeIndex(index) {
-
-    if (this.state.slideIndex !== index) {
-      this.setState({
-        slideIndex: index,
-      });
-
-      //console.log('_handleChangeIndex');
-
-      if (index === 1) {
-        this.props.disableSwipeToOpen();
-      }
-
-      if (index === 0) {
-        this.props.enableSwipeToOpen();
-      }
-    }
-  }
-
-  _handleChangeTabs(value) {
-
-    let index = ~~(value);
-    //this.refs.swipeableViews.slide(index);
-
-    //console.log(this.refs.swipeableViews);
-    //
-    // if (index > 0) {
-    //   this.props.disableSwipeToOpen();
-    // } else {
-    //   this.props.enableSwipeToOpen();
-    // }
-
-    if (this.state.index !== index) {
-      this.setState({
-        slideIndex: index,
-      });
-      //console.log('_handleChangeTabs');
-
-      if (index === 1) {
-        this.props.disableSwipeToOpen();
-      }
-
-      if (index === 0) {
-        this.props.enableSwipeToOpen();
-      }
-    }
   }
 
   createContactModalOpen(){
@@ -159,8 +98,9 @@ class ClientDetailsPage extends React.Component {
       detailsContact: null,
     });
   }
-  _handleJobClick(job){
-    this.props.pushState(null,'/jobs/1a');
+
+  _handleJobClick(){
+    this.props.pushState(null, '/jobs/1a');
   }
 
   createNoteModalOpen() {
@@ -168,8 +108,6 @@ class ClientDetailsPage extends React.Component {
   }
 
   render() {
-
-    //console.log('render!');
 
     let {company, location, contacts, jobs} = this.props;
 
@@ -196,15 +134,7 @@ class ClientDetailsPage extends React.Component {
             </IconMenu>
           } title={company.get('name')} />
 
-          <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
-            <Tab label="Details" value="0"></Tab>
-            <Tab label="Jobs" value="1"></Tab>
-            <Tab label="Contacts" value="2"></Tab>
-            <Tab label="Notes" value="3"></Tab>
-          </Tabs>
-
-          {/* <SwipeableViews index={this.state.slideIndex} onChangeIndex={this._handleChangeIndex.bind(this)}>*/}
-          <ReactSwipe speed={250} slideToIndex={this.state.slideIndex} transitionEnd={this._handleChangeIndex.bind(this)} ref="swipeableViews" continuous={false}>
+          <CustomTabsSwipe tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
             <div style={style.slide}>
               <List>
                 <div>
@@ -304,8 +234,7 @@ class ClientDetailsPage extends React.Component {
                 </CardActions>
               </Card>
             </div>
-          </ReactSwipe>
-            {/* </SwipeableViews>*/}
+          </CustomTabsSwipe>
         </div>
       );
     } else {

@@ -14,9 +14,10 @@ class CompanyJobsList extends React.Component {
 
   _handleJobClick(job){
     if(this.props.onJobClick){
-      this.props.onJobClick(job)
+      this.props.onJobClick(job);
     }
   }
+  
   render() {
 
     let { jobs, company } = this.props;

@@ -11,6 +11,8 @@ export JobsList from './jobsList/jobsList';
 export CompanyJobsList from './companyJobsList/companyJobsList';
 export LeftNavTop from './leftNav/leftNavTop';
 export RingCandidate from './ringCandidate/ringCandidate';
+export CustomTabsSwipe from './customTabsSwipe/customTabsSwipe';
+
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
 export ClientsCreateModal from './clientsCreateModal/clientsCreateModal';
