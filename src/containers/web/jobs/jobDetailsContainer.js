@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { getOneJob } from '../../../modules/jobs';
 import { getAllContacts } from '../../../modules/contacts';
 import { getOneLocation } from '../../../modules/locations';
-import { Header, ContactsList, LocationCard} from '../../../components/web';
-import {Styles,  IconMenu, IconButton, Tabs, Tab,List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton} from 'material-ui';
+import { Header, ContactsList, LocationCard, ContactDetailsModal} from '../../../components/web';
+import {Styles,  IconMenu, IconButton, Tabs, Tab,List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions} from 'material-ui';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 import SwipeableViews from 'react-swipeable-views';
 import './jobDetailsContainer.scss';
@@ -77,12 +77,25 @@ class JobDetailsPage extends React.Component {
     //   this.props.enableSwipeToOpen();
     // }
   }
+  contactDetailsModalOpen(contact) {
+    this.setState({
+      contactDetailsModalOpen: true,
+      detailsContact: contact,
+    });
+  }
+  contactDetailsModalClose() {
+    this.setState({
+      contactDetailsModalOpen: false,
+      detailsContact: null,
+    });
+  }
 
   render(){
     let {job, contacts, location} = this.props;
     let heroContact = '/img/rameet.jpg';
     return (
       <div>
+        <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
         <Header iconRight={
           <IconMenu iconButtonElement={
             <IconButton  iconClassName='material-icons'>more_vert</IconButton>
@@ -224,10 +237,45 @@ class JobDetailsPage extends React.Component {
             </Card>
           </div>
           <div style={style.slide}>
-            <ContactsList contacts={contacts.list} />
+            <ContactsList onOpenContactDetails={this.contactDetailsModalOpen.bind(this)} contacts={contacts.list} />
           </div>
           <div style={style.slide}>
-            3
+            <div>
+              <Card initiallyExpanded>
+                <CardHeader
+                  title="Rameet Singh"
+                  subtitle="Private | 59 mins ago"
+                  avatar={<Avatar src={heroContact} />}>
+                </CardHeader>
+                <CardText expandable>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                </CardText>
+                <CardActions expandable>
+                  <FlatButton label="Edit"/>
+                  <FlatButton label="Delete"/>
+                </CardActions>
+              </Card>
+              <Card initiallyExpanded>
+                <CardHeader
+                  title="Rameet Singh"
+                  subtitle="Private | 60 mins ago"
+                  avatar={<Avatar src={heroContact} />}>
+                </CardHeader>
+                <CardText expandable>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
+                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
+                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
+                </CardText>
+                <CardActions expandable>
+                  <FlatButton label="Edit"/>
+                  <FlatButton label="Delete"/>
+                </CardActions>
+              </Card>
+            </div>
           </div>
         </SwipeableViews>
       </div>

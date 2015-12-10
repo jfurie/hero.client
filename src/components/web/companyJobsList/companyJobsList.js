@@ -12,6 +12,11 @@ const style = {
 
 class CompanyJobsList extends React.Component {
 
+  _handleJobClick(job){
+    if(this.props.onJobClick){
+      this.props.onJobClick(job)
+    }
+  }
   render() {
 
     let { jobs, company } = this.props;
@@ -32,7 +37,7 @@ class CompanyJobsList extends React.Component {
     let nestedJobsItem = [];
     let index = 0;
     let fakeStatus = ['fav', 'vetted', 'rejected', 'vetted', 'none'];
-
+    let self = this;
     jobs.forEach(function(job) {
 
       let peopleList = [];
@@ -44,6 +49,7 @@ class CompanyJobsList extends React.Component {
 
       nestedJobsItem.push(
         <ListItem
+          onTouchTap={self._handleJobClick.bind(self,job)}
           primaryText={job.get('title')}
           secondaryText={
             <div style={style.peopleList}>{peopleList}</div>
