@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getOneJob } from '../../../modules/jobs';
 import { getAllContacts } from '../../../modules/contacts';
 import { getOneLocation } from '../../../modules/locations';
-import { Header, ContactsList, LocationCard, ContactDetailsModal} from '../../../components/web';
+import { Header, ContactsList, LocationCard, ContactDetailsModal, ClientContactsCreateModal} from '../../../components/web';
 import {Styles,  IconMenu, IconButton, Tabs, Tab,List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions} from 'material-ui';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
 import SwipeableViews from 'react-swipeable-views';
@@ -34,7 +34,7 @@ function getData(state, id) {
 class JobDetailsPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state ={slideIndex: 0};
+    this.state ={slideIndex: 0,createContactModalOpen:false};
   }
 
   componentDidMount() {
@@ -89,6 +89,20 @@ class JobDetailsPage extends React.Component {
       detailsContact: null,
     });
   }
+  createContactModalOpen(){
+    this.setState({
+      createContactModalOpen:true
+    });
+  }
+
+  createContactModalClose(){
+    this.setState({
+      createContactModalOpen:false
+    });
+  }
+  saveContact(){
+
+  }
 
   render(){
     let {job, contacts, location} = this.props;
@@ -96,11 +110,13 @@ class JobDetailsPage extends React.Component {
     return (
       <div>
         <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
+        <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
         <Header iconRight={
           <IconMenu iconButtonElement={
             <IconButton  iconClassName='material-icons'>more_vert</IconButton>
           }>
             <MenuItem index={0} primaryText='Find Candidates' />
+            <MenuItem index={1} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Candidate" />
           </IconMenu>
         } title={job?job.get('title'):''} />
         <Tabs tabItemContainerStyle={style.tabs} onChange={this._handleChangeTabs.bind(this)} value={this.state.slideIndex + ''}>
