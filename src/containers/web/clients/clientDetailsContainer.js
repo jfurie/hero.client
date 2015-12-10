@@ -7,6 +7,7 @@ import { getOneLocation } from '../../../modules/locations';
 import { getAllJobs } from '../../../modules/jobs';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav';
+import { pushState } from 'redux-router';
 
 import { Styles, Tabs, Tab, List, ListItem, ListDivider, FontIcon, IconMenu, IconButton, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
@@ -52,7 +53,7 @@ const style = {
 
 @connect((state, props) => (
   getData(state, props.params.id)),
-  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen, getContactsByCompany, getAllJobs})
+  {getOneCompany, getOneLocation, getAllContacts, disableSwipeToOpen, enableSwipeToOpen, getContactsByCompany, getAllJobs, pushState})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -138,6 +139,9 @@ class ClientDetailsPage extends React.Component {
       contactDetailsModalOpen: false,
       detailsContact: null,
     });
+  }
+  _handleJobClick(job){
+    this.props.pushState(null,'/jobs/1a');
   }
 
   render() {
@@ -231,7 +235,7 @@ class ClientDetailsPage extends React.Component {
             </div>
             <div style={style.slide}>
               <List subheader={`${jobs.list.count()} Jobs`}>
-                <CompanyJobsList company={company} jobs={jobs.list}/>
+                <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
               </List>
             </div>
             <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>

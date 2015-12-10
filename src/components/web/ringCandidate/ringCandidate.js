@@ -15,7 +15,7 @@ class RingCandidate extends React.Component {
       picture: {
         width: '28px',
         height: '28px',
-        borderRadius: '160px',
+        borderRadius: '50%',
         border: '2px solid',
         opacity: '1',
       },
@@ -28,12 +28,14 @@ class RingCandidate extends React.Component {
       },
     };
 
-    let { picture, status } = this.props;
+    let { picture, status, size } = this.props;
 
     status = status || 'none';
 
     let font = null;
-
+    if(size == 'large'){
+      style.picture.width = style.picture.height = '40px';
+    }
     switch (status) {
     case 'fav': {
       style.picture.borderColor = '#e91b62';
