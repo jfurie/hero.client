@@ -13,9 +13,9 @@ export LeftNavTop from './leftNav/leftNavTop';
 export RingCandidate from './ringCandidate/ringCandidate';
 export CustomTabsSwipe from './customTabsSwipe/customTabsSwipe';
 
-
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
 export ClientsCreateModal from './clientsCreateModal/clientsCreateModal';
 export ContactDetailsModal from './contactDetailsModal/contactDetailsModal';
 export InviteSuccessModal from './inviteSuccessModal/inviteSuccessModal';
 export NotesCreateModal from './notesCreateModal/notesCreateModal';
+export JobCreateModal from './jobCreateModal/jobCreateModal';

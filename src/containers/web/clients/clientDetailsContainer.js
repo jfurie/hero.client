@@ -1,15 +1,24 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal, NotesCreateModal } from '../../../components/web';
+import { pushState } from 'redux-router';
+
+import {
+  Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
+  CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
+} from '../../../components/web';
+
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getAllJobs } from '../../../modules/jobs';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
-import { pushState } from 'redux-router';
 
-import { List, ListItem, ListDivider, FontIcon, IconMenu, IconButton, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
-let MenuItem = require('material-ui/lib/menus/menu-item');
+import {
+  List, ListItem, ListDivider, FontIcon, IconMenu, IconButton,
+  Avatar, Card, CardHeader, CardText, CardActions, FlatButton,
+} from 'material-ui';
+
+import MenuItem from 'material-ui/lib/menus/menu-item';
 
 function getData(state, id) {
   let company = ((state.companies.list.size > 0) ? (state.companies.list.get(id)) : (null));
@@ -107,6 +116,10 @@ class ClientDetailsPage extends React.Component {
     this.refs.notesCreateModal.show();
   }
 
+  createJobModalOpen() {
+    this.refs.jobCreateModal.show();
+  }
+
   render() {
 
     let {company, location, contacts, jobs} = this.props;
@@ -123,13 +136,14 @@ class ClientDetailsPage extends React.Component {
           <ClientContactsCreateModal onSubmit={this.saveClient.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal ref='notesCreateModal' />
+          <JobCreateModal ref='jobCreateModal'/>
 
           <Header iconRight={
             <IconMenu iconButtonElement={
               <IconButton  iconClassName="material-icons">more_vert</IconButton>
             }>
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
-              <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Job" />
+              <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
               <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
             </IconMenu>
           } title={company.get('name')} />

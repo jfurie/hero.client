@@ -107,7 +107,7 @@ class ContactDetailsModal extends React.Component {
     return (
       <div>
 
-        <InviteSuccessModal ref="inviteSuccessModal" />
+        {/*<InviteSuccessModal ref="inviteSuccessModal" />*/}
 
         <Dialog
             open={this.props.open}

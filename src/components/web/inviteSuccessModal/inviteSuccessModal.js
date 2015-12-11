@@ -8,7 +8,6 @@ const style = {
     height: '100%',
     maxHeight: '100%',
     paddingTop: '0px',
-    zIndex: '50',
   },
   bodyStyle: {
     paddingTop: '0px',
@@ -48,7 +47,7 @@ const style = {
     backgroundColor: '#40bb3f',
     borderRadius: '160px',
     marginTop: '50px',
-    marginBottom: '30px'
+    marginBottom: '30px',
   },
   centered: {
     textAlign: 'center',

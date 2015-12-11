@@ -117,7 +117,7 @@ class NotesCreateModal extends React.Component {
           <Toolbar style={style.toolBar}>
             <ToolbarGroup key={0} float="left">
               <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
-              <ToolbarTitle style={style.detailsTitle} text={'Create a Note'} />
+              <ToolbarTitle style={style.detailsTitle} text={'Create Note'} />
             </ToolbarGroup>
             <ToolbarGroup key={1} float="right">
               <FlatButton onTouchTap={this.saveNote.bind(this)} style={style.save}>Save</FlatButton>

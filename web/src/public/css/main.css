@@ -7,6 +7,12 @@ body {
     background-color: #eeeeee;
 }
 
+@media (max-width: 63.9999em) {
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}
+
 /* splash screen */
 
 #app {
