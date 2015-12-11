@@ -19,3 +19,7 @@ export ClientsCreateModal from './clientsCreateModal/clientsCreateModal';
 export ContactDetailsModal from './contactDetailsModal/contactDetailsModal';
 export InviteSuccessModal from './inviteSuccessModal/inviteSuccessModal';
 export NotesCreateModal from './notesCreateModal/notesCreateModal';
+export JobDetails from './jobDetails/jobDetails';
+export JobDetailsPage from './jobDetails/jobDetailsPage';
+export JobDetailsModal from './jobDetails/jobDetailsModal';
+export Dialog from './dialog/dialog';

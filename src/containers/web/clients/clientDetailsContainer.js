@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal, NotesCreateModal } from '../../../components/web';
+import { Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal, CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobDetailsModal } from '../../../components/web';
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getAllJobs } from '../../../modules/jobs';
@@ -99,8 +99,17 @@ class ClientDetailsPage extends React.Component {
     });
   }
 
-  _handleJobClick(){
-    this.props.pushState(null, '/jobs/1a');
+  _handleJobClick(job){
+    this.setState({
+      detailsJob:job,
+      openJob:true
+    });
+  }
+  closeJobModal(){
+    this.setState({
+      detailsJob:null,
+      openJob:false
+    });
   }
 
   createNoteModalOpen() {
@@ -120,6 +129,7 @@ class ClientDetailsPage extends React.Component {
 
       return (
         <div>
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.state.detailsJob} contacts={contacts} open={this.state.openJob}></JobDetailsModal>
           <ClientContactsCreateModal onSubmit={this.saveClient.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal ref='notesCreateModal' />
