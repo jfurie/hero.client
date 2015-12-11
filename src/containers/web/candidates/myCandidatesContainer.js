@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Header, ContactsList } from '../../../components/web';
+import { Header, CandidatesList } from '../../../components/web';
 import { getAllContacts } from '../../../modules/contacts';
 
 @connect(state => ({
   contacts: state.contacts,
 }), {getAllContacts})
-class ContactListPage extends React.Component {
+class MyCandidatesPage extends React.Component {
   constructor() {
     super();
   }
@@ -24,11 +24,10 @@ class ContactListPage extends React.Component {
 
     return (
       <div>
-        <Header />
-        <h1>Contacts ({contacts.list.count()})</h1>
-        <ContactsList contacts={contacts.list} />
+        <Header title={'Candidates'}/>
+        <CandidatesList candidates={contacts.list} />
       </div>);
   }
 }
 
-export default ContactListPage;
+export default MyCandidatesPage;

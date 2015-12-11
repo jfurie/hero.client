@@ -35,7 +35,7 @@ class MyJobsPage extends React.Component {
 
     return (
       <div>
-        <Header title='My Jobs'></Header>
+        <Header title='Jobs'></Header>
         <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
       </div>
     );

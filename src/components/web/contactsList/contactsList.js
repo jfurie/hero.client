@@ -2,7 +2,7 @@ import React from 'react';
 import { List, ListItem, ListDivider, Avatar } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { ContactDetailsModal, RingCandidate } from '../../../components/web';
+import { ContactDetailsModal } from '../../../components/web';
 
 class ContactsList extends React.Component {
 
@@ -39,9 +39,16 @@ class ContactsList extends React.Component {
     let { contacts } = this.props;
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
+    let count = contacts.count();
+    let ressourceName = 'Contact';
+
+    if (count > 1) {
+      ressourceName += 's';
+    }
+
     return (
       <div>
-        <List style={{backgroundColor:'transparant'}} subheader={`${contacts.count()} Contacts`}>
+        <List style={{backgroundColor:'transparant'}} subheader={`${count} ${ressourceName}`}>
           <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
             {contacts.map((contact, key) => {
 
@@ -66,16 +73,18 @@ class ContactsList extends React.Component {
               } else if (!secondaryText.length && contactLocation) {
                 secondaryText = contactLocation;
               }
+
               let p = 'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square';
-              let status = 'vetted';
+
               return (
                 <div>
                   <ListItem
-                    leftAvatar={<Avatar><RingCandidate key={key} picture={p} status={status} size={'large'}/></Avatar>}
+                    leftAvatar={<Avatar src={p}></Avatar>}
                     primaryText={contact.get('displayName')}
-                    secondaryText={<p>{secondaryText} <br/> vetted</p>}
+                    secondaryText={<p>{secondaryText}</p>}
                     secondaryTextLines={2}
                     onTouchTap={this.openDetails.bind(this, contact)}
+                    key={key}
                   />
                   <ListDivider inset={true} />
                 </div>

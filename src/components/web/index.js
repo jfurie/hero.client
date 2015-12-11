@@ -4,6 +4,7 @@ export Header from './header/header';
 export UsersList from './usersList/usersList';
 export EmailForm from './emailForm/emailForm';
 export ContactsList from './contactsList/contactsList';
+export CandidatesList from './candidatesList/candidatesList';
 export ChangePasswordForm from './changePasswordForm/changePasswordForm';
 export CompanyAvatar from './companyAvatar/companyAvatar';
 export LocationCard from './locationCard/locationCard';
