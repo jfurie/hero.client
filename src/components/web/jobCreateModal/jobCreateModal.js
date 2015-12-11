@@ -8,7 +8,7 @@ const style = {
     height: '100%',
     maxHeight: '100%',
     paddingTop: '0px',
-    zIndex: '50',
+    zIndex: '10',
   },
   bodyStyle: {
     paddingTop: '0px',
@@ -53,7 +53,7 @@ const style = {
     marginTop: '30px',
   },
   formContent: {
-    maxHeight: '80vh',
+    height: (clientHeight - 64) +'px',
     overflowY: 'scroll',
   }
 };
