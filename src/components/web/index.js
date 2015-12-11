@@ -13,6 +13,9 @@ export CompanyJobsList from './companyJobsList/companyJobsList';
 export LeftNavTop from './leftNav/leftNavTop';
 export RingCandidate from './ringCandidate/ringCandidate';
 export CustomTabsSwipe from './customTabsSwipe/customTabsSwipe';
+export JobDetails from './jobDetails/jobDetails';
+export JobDetailsPage from './jobDetails/jobDetailsPage';
+export Dialog from './dialog/dialog';
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
 export ClientsCreateModal from './clientsCreateModal/clientsCreateModal';
@@ -20,3 +23,4 @@ export ContactDetailsModal from './contactDetailsModal/contactDetailsModal';
 export InviteSuccessModal from './inviteSuccessModal/inviteSuccessModal';
 export NotesCreateModal from './notesCreateModal/notesCreateModal';
 export JobCreateModal from './jobCreateModal/jobCreateModal';
+export JobDetailsModal from './jobDetails/jobDetailsModal';

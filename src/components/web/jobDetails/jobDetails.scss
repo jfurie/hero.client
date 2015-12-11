@@ -1,0 +1,42 @@
+.description{
+  font-size: 14px;
+  line-height: 20px;
+  h3{
+    font-size: 20px;
+    line-height: 26px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    font-weight: bold;
+  }
+  h4{
+    font-size: 16px;
+    margin-top: 16px;
+    line-height: 22px;
+    margin-bottom: 16px;
+    font-weight: bold;
+  }
+  ul{
+    list-style-position: outside;
+    list-style-type: disc;
+    margin-left: 16px;
+  }
+  p{
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+
+.mediawrap{
+  position: relative;
+  .button-right-bottom{
+    position: absolute;
+    bottom:16px;
+    right:16px;
+  }
+  .button-left-bottom{
+    position: absolute;
+    bottom:16px;
+    left:16px;
+  }
+}
