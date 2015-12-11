@@ -1,17 +1,17 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { getOneJob } from '../../../modules/jobs';
-import { getAllContacts } from '../../../modules/contacts';
-import { getOneLocation } from '../../../modules/locations';
-import { Header, CustomTabsSwipe, ContactsList, LocationCard, ContactDetailsModal, ClientContactsCreateModal ,JobDetails, Dialog } from '../../../components/web';
-import { IconMenu, IconButton, List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions, Toolbar, ToolbarGroup , ToolbarTitle} from 'material-ui';
+// import { connect } from 'react-redux';
+// import { getOneJob } from '../../../modules/jobs';
+// import { getAllContacts } from '../../../modules/contacts';
+// import { getOneLocation } from '../../../modules/locations';
+import { ClientContactsCreateModal ,JobDetails, Dialog } from '../../../components/web';
+import { IconMenu, IconButton, Toolbar, ToolbarGroup , ToolbarTitle} from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
 
-const style = {
-  slide: {
-    minHeight: `${window.innerHeight - 112}px`,
-  },
-};
+// const style = {
+//   slide: {
+//     minHeight: `${window.innerHeight - 112}px`,
+//   },
+// };
 
 class JobDetailsPage extends React.Component {
 
@@ -57,16 +57,15 @@ class JobDetailsPage extends React.Component {
   }
 
   render(){
-    let {job, contacts, location} = this.props;
-    let heroContact = '/img/rameet.jpg';
+
     return (
       <div>
         <Dialog open={this.props.open}>
           <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
             <div style={{
               position:'fixed',
-              width:'100%'
-              }}>
+              width:'100%',
+            }}>
               <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
                 <ToolbarGroup key={0} float="left">
                   <IconButton onTouchTap={this.closeModal.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
