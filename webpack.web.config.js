@@ -8,7 +8,6 @@ var env = process.env.NODE_ENV || 'development';
 var isDEV =  env = 'development';
 module.exports = {
   debug: true,
-  watch: true,
   devtool: 'source-map',
   entry: {
     //'index.ios': ['./src/main.ios.js'],
