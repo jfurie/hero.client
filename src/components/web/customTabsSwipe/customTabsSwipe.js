@@ -8,6 +8,16 @@ const style = {
   tabs: {
     backgroundColor: Styles.Colors.grey900,
   },
+  tabs2: {
+    backgroundColor: '#ffffff',
+
+  },
+  tab:{
+
+  },
+  tab2:{
+    color:Styles.Colors.grey900
+  }
 };
 
 @connect(() => ({}
@@ -86,19 +96,24 @@ class CustomTabsSwipe extends React.Component {
 
   render() {
 
-    let { tabs, startingTab } = this.props;
+    let { tabs, startingTab, isLight } = this.props;
     let startSlide = startingTab || 0;
-
+    let tabsStyle = style.tabs;
+    let tabStyle = style.tab;
+    if(isLight){
+      tabsStyle = style.tabs2;
+      tabStyle = style.tab2;
+    }
     return (
       <div>
         <Tabs
-            tabItemContainerStyle={style.tabs}
+            tabItemContainerStyle={tabsStyle}
             onChange={this._handleChangeTabs.bind(this)}
             value={`${this.state.slideIndex}`}
         >
           {tabs.map((tab, key) => {
             return (
-              <Tab label={tab} key={key} value={`${key}`}></Tab>
+              <Tab label={tab} key={key} style={tabStyle} value={`${key}`}></Tab>
             );
           })}
         </Tabs>
