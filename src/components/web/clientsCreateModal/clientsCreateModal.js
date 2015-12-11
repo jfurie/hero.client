@@ -4,52 +4,56 @@ import {Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, Toolba
 const websiteRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
 //Blahs
 export default class ClientsCreateModal extends React.Component {
+
   constructor(props){
     super(props);
     this.state = {
       ... props.company,
-      nameError:'',
-      websiteError:''
+      nameError: '',
+      websiteError: '',
     };
   }
 
   closeModal(){
     this.props.closeModal();
   }
+
   _handleWebsiteChange(e){
     var website = new RegExp(websiteRegex);
 
-    if(e.target.value.match(website)){
+    if (e.target.value.match(website)) {
       this.setState({
-        website:e.target.value,
-        websiteError:''
-      });
-    } else{
-      this.setState({
-        websiteError:'This is not a valid url'
-      });
-    }
-
-  }
-  _handleNameChange(e){
-    if(e.target.value != '' && e.target.value !=null){
-      this.setState({
-        name:e.target.value,
-        nameError:''
+        website: e.target.value,
+        websiteError: '',
       });
     } else {
       this.setState({
-        name:e.target.value,
-        nameError:'Name is required'
+        websiteError: 'This is not a valid url',
       });
     }
 
   }
+
+  _handleNameChange(e){
+    if (e.target.value != '' && e.target.value !=null) {
+      this.setState({
+        name: e.target.value,
+        nameError: '',
+      });
+    } else {
+      this.setState({
+        name: e.target.value,
+        nameError: 'Name is required',
+      });
+    }
+  }
+
   _handleSubmit(){
-    if(this.state.nameError == '' && this.state.websiteError == ''){
+    if (this.state.nameError == '' && this.state.websiteError == '') {
       this.props.onSubmit(this.state);
     }
   }
+
   render(){
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     return (
@@ -79,14 +83,14 @@ export default class ClientsCreateModal extends React.Component {
                   <form onSubmit={this._handleSubmit.bind(this)}>
                     <div>
                       <TextField
-                        style={{'width':'100%'}}
+                        fullWidth
                         errorText={this.state.nameError}
                         onChange={this._handleNameChange.bind(this)}
                         floatingLabelText="Company Name" />
                     </div>
                     <div>
                       <TextField
-                        style={{'width':'100%'}}
+                        fullWidth
                         errorText={this.state.websiteError}
                         onChange={this._handleWebsiteChange.bind(this)}
                         floatingLabelText="Company Website" />

@@ -18,8 +18,8 @@ import SettingsAccountPage from './containers/web/settings/settingsAccountContai
 // account containers
 import AccountHomePage from './containers/web/account/accountHomeContainer';
 
-// contacts
-import ConctactsListPage from './containers/web/contacts/contactsListContainer';
+// candidates
+import MyCandidatesPage from './containers/web/candidates/myCandidatesContainer';
 
 // clients
 import ClientsPage from './containers/web/clients/clientsContainer';
@@ -27,6 +27,8 @@ import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
 
 //jobs
 import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
+import MyJobsPage from './containers/web/jobs/myJobsContainer';
+
 
 const localStorage = new LocalStorageClient('Auth');
 
@@ -127,9 +129,14 @@ export default(store) => {
             <IndexRoute component={ClientsPage}/>
             <Route path=":id" component={ClientDetailsPage} />
           </Route>
-          <Route path="jobs" >
+
+          <Route path="jobs">
+            <IndexRoute component={MyJobsPage}/>
             <Route path=":id" component={JobsDetailsPage} />
           </Route>
+
+          {/*<Route path="/myjobs" component={MyJobsPage}/>*/}
+          <Route path="/candidates" component={MyCandidatesPage}/>
 
           {/* Settings  */}
           <Route path="settings">
@@ -140,7 +147,7 @@ export default(store) => {
           {/* Account  */}
           <Route path="/account" onEnter={requireAccount}>
             <IndexRoute component={AccountHomePage}/>
-            <Route path="/contacts" component={ConctactsListPage}/>
+            {/* <Route path="/contacts" component={ConctactsListPage}/> */}
           </Route>
 
         </Route>

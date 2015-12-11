@@ -39,7 +39,7 @@ class HomePage extends React.Component {
       <div>
         <Header title='Dashboard'></Header>
 
-        <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Contacts']} startingTab={1}>
+        <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
           <div style={style.slide}>
             <p>clients</p>
           </div>
