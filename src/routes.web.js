@@ -27,6 +27,8 @@ import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
 
 //jobs
 import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
+import MyJobsPage from './containers/web/jobs/myJobsContainer';
+
 
 const localStorage = new LocalStorageClient('Auth');
 
@@ -127,9 +129,12 @@ export default(store) => {
             <IndexRoute component={ClientsPage}/>
             <Route path=":id" component={ClientDetailsPage} />
           </Route>
+
           <Route path="jobs" >
             <Route path=":id" component={JobsDetailsPage} />
           </Route>
+
+          <Route path="/myjobs" component={MyJobsPage}/>
 
           {/* Settings  */}
           <Route path="settings">

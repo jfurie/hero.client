@@ -61,6 +61,10 @@ class Layout extends React.Component {
     this.props.pushState(null, '/logout');
     this.refs.leftNavChildren.toggle();
   }
+  clickMyJobs (){
+    this.props.pushState(null, '/myjobs');
+    this.refs.leftNavChildren.toggle();
+  }
   render () {
 
     let {leftNav, user} = this.props;
@@ -72,7 +76,7 @@ class Layout extends React.Component {
         <LeftNavTop></LeftNavTop>
         <MenuItem style={{color:'#e0e0e0'}} primaryText="Home" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">home</FontIcon>} onTouchTap={this.clickHome.bind(this)} index={0} />
         <MenuItem style={{color:'#e0e0e0'}} primaryText="My Clients" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">work</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
-        <MenuItem style={{color:'#e0e0e0'}} primaryText="My Jobs" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">people</FontIcon>} onTouchTap={this.clickContacts.bind(this)} index={0} />
+        <MenuItem style={{color:'#e0e0e0'}} primaryText="My Jobs" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">people</FontIcon>} onTouchTap={this.clickMyJobs.bind(this)} index={0} />
         <MenuItem style={{color:'#e0e0e0'}} primaryText="My Candidates" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">people</FontIcon>} onTouchTap={this.clickContacts.bind(this)} index={0} />
         <MenuItem style={{color:'#e0e0e0'}} primaryText="Settings" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">settings</FontIcon>} onTouchTap={this.clickSettings.bind(this)} index={0} />
         {(user) ? (
