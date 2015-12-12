@@ -1,17 +1,13 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { getOneJob } from '../../../modules/jobs';
-import { getAllContacts } from '../../../modules/contacts';
-import { getOneLocation } from '../../../modules/locations';
-import { Header, CustomTabsSwipe, ContactsList, LocationCard, ContactDetailsModal, ClientContactsCreateModal ,JobDetails } from '../../../components/web';
-import { IconMenu, IconButton, List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions } from 'material-ui';
+import { Header, ClientContactsCreateModal, JobDetails } from '../../../components/web';
+import { IconMenu, IconButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
 
-const style = {
-  slide: {
-    minHeight: `${window.innerHeight - 112}px`,
-  },
-};
+// const style = {
+//   slide: {
+//     minHeight: `${window.innerHeight - 112}px`,
+//   },
+// };
 
 class JobDetailsPage extends React.Component {
 
@@ -37,13 +33,13 @@ class JobDetailsPage extends React.Component {
     });
   }
 
-  createContactModalOpen(){
+  createContactModalOpen() {
     this.setState({
       createContactModalOpen: true,
     });
   }
 
-  createContactModalClose(){
+  createContactModalClose() {
     this.setState({
       createContactModalOpen: false,
     });
@@ -53,12 +49,12 @@ class JobDetailsPage extends React.Component {
     console.log('save contact');
   }
 
-  render(){
-    let {job, contacts, location} = this.props;
-    let heroContact = '/img/rameet.jpg';
+  render() {
+
+    let { job } = this.props;
+    //let heroContact = '/img/rameet.jpg';
     return (
       <div>
-
         <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
         <Header iconRight={
           <IconMenu iconButtonElement={
@@ -68,8 +64,7 @@ class JobDetailsPage extends React.Component {
             <MenuItem index={1} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Candidate" />
           </IconMenu>
         } title={job?job.get('title'):''} />
-      <JobDetails {...this.props}></JobDetails>
-
+        <JobDetails {...this.props} />
       </div>
     );
   }

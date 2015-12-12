@@ -1,7 +1,6 @@
 import React from 'react';
 import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
   List, ListItem, FontIcon, ListDivider, Avatar, FlatButton } from 'material-ui';
-import { InviteSuccessModal } from '../../../components/web';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -41,32 +40,44 @@ const style = {
     lineHeight:'64px',
     float:'left',
   },
-  invite: {
-    marginTop:'14px',
-    marginRight:'-16px',
-    marginLeft:'auto',
+  statusButton: {
+    backgroundColor: '#40bb3f',
+    color: '#FFF',
+    margin: '14px 0px',
   },
 };
 
 // @connect( () => {}
 // ,{pushState})
-class ContactDetailsModal extends React.Component {
+class CandidateDetailsModal extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      open: false,
+      candidate: null,
+    };
+  }
+
+  show(candidate) {
+    this.setState({
+      open: true,
+      candidate,
+    });
   }
 
   closeModal() {
-    this.props.closeModal();
-  }
-
-  inviteToHero() {
-    this.refs.inviteSuccessModal.show();
+    // if (this.props.closeModal) {
+    //   this.props.closeModal();
+    // }
+    this.setState({
+      open: false,
+      candidate: null,
+    });
   }
 
   render() {
-
-    let { contact } = this.props;
 
     let picture = null;
     let email = null;
@@ -76,23 +87,22 @@ class ContactDetailsModal extends React.Component {
     let source = null;
     let displayName = null;
 
-    if (contact) {
-      displayName = contact.get('displayName') || null;
+    if (this.state.candidate) {
+      displayName = this.state.candidate.get('displayName') || null;
       picture = 'http://www.material-ui.com/images/kerem-128.jpg';
-      email = contact.get('email') || null;
-      phone = contact.get('phone') || null;
+      email = this.state.candidate.get('email') || null;
+      phone = this.state.candidate.get('phone') || null;
       address = '1316 3rd St #103';
       city = 'Santa Monica, CA 90401';
       source = 'facebook.com';
     }
 
+    //console.log(this.props.open);
+
     return (
       <div>
-
-        <InviteSuccessModal ref="inviteSuccessModal" />
-
         <Dialog
-            open={this.props.open}
+            open={this.state.open}
             autoDetectWindowHeight={false}
             autoScrollBodyContent={false}
             repositionOnUpdate={false}
@@ -106,10 +116,10 @@ class ContactDetailsModal extends React.Component {
             <Toolbar style={style.toolBar}>
               <ToolbarGroup key={0} float="left">
                 <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
-                <ToolbarTitle style={style.detailsTitle} text={'Contact Details'} />
+                <ToolbarTitle style={style.detailsTitle} text={'Candidate Details'} />
               </ToolbarGroup>
               <ToolbarGroup key={1} float="right">
-                <FlatButton onTouchTap={this.inviteToHero.bind(this)} style={style.invite}>Invite</FlatButton>
+                <FlatButton style={style.statusButton} label="Vetted" />
               </ToolbarGroup>
             </Toolbar>
             <List>
@@ -119,7 +129,7 @@ class ContactDetailsModal extends React.Component {
                   <ListItem
                     leftAvatar={<Avatar src={picture} />}
                     primaryText={displayName}
-                    secondaryText={<p>contact</p>}
+                    secondaryText={<p>candidate</p>}
                     secondaryTextLines={1}
                   />
                 ) : (null)}
@@ -190,9 +200,7 @@ class ContactDetailsModal extends React.Component {
   }
 }
 
-ContactDetailsModal.propTypes = {
-  contact: React.PropTypes.object,
-  open: React.PropTypes.bool.isRequired,
+CandidateDetailsModal.propTypes = {
 };
 
-export default ContactDetailsModal;
+export default CandidateDetailsModal;

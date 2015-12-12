@@ -70,15 +70,10 @@ class ClientPage extends React.Component {
     console.log('click');
   }
 
-  // _showClientDetails(id) {
-  //   this.props.pushState(null, `/clients/${id}`);
-  // }
-
   render() {
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let {visibleCompanies} = this.props;
 
-    let listSubheader = visibleCompanies.count() + ' Clients';
+    let { visibleCompanies } = this.props;
+
     return (
       <div>
         <ClientsCreateModal onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen}></ClientsCreateModal>
