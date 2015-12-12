@@ -24,6 +24,7 @@ const style = {
   },
   content: {
     height: `${clientHeight}px`,
+    zIndex: '50',
   },
   toolBar: {
     backgroundColor:'#ffffff',
@@ -78,6 +79,7 @@ class InviteSuccessModal extends React.Component {
   }
 
   show() {
+    console.log('show!');
     this.setState({
       open: true,
     });
@@ -95,7 +97,6 @@ class InviteSuccessModal extends React.Component {
           style={style.dialog}
           bodyStyle={style.bodyStyle}
           contentStyle={style.contentStyle}
-          ref="contactDetailsDialog"
       >
         <div style={style.content}>
           <Toolbar style={style.toolBar}>

@@ -15,25 +15,11 @@ class CandidatesList extends React.Component {
   }
 
   openDetails(candidate){
-
-    // if (this.props.onOpencandidateDetails) {
-    //   this.props.onOpencandidateDetails(candidate);
-    // }
-    //console.log(this.refs.candidateDetailsModal);
-
     this.refs.candidateDetailsModal.show(candidate);
-
-    // this.setState({
-    //   detailsCandidate: candidate,
-    //   detailsModalOpen: true,
-    // });
   }
 
   closeDetails() {
-    // this.setState({
-    //   detailscandidate: null,
-    //   detailsModalOpen: false,
-    // });
+
   }
 
   render() {
