@@ -2,11 +2,10 @@ import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { Header, ClientsCreateModal, CompanyAvatar } from '../../../components/web';
+import { Header, ClientsCreateModal, ClientsList } from '../../../components/web';
 import {getAllCompanies, createCompany, searchCompany} from '../../../modules/companies';
-import {List, ListItem, ListDivider, Toolbar, ToolbarGroup, TextField, FontIcon, IconMenu, IconButton } from 'material-ui';
+import {IconMenu, IconButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
-var Infinite = require('react-infinite');
 
 @connect(state =>
 {
@@ -71,15 +70,10 @@ class ClientPage extends React.Component {
     console.log('click');
   }
 
-  _showClientDetails(id) {
-    this.props.pushState(null, `/clients/${id}`);
-  }
-
   render() {
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let {visibleCompanies} = this.props;
 
-    let listSubheader = visibleCompanies.count() + ' Clients';
+    let { visibleCompanies } = this.props;
+
     return (
       <div>
         <ClientsCreateModal onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen}></ClientsCreateModal>
@@ -90,37 +84,8 @@ class ClientPage extends React.Component {
               <MenuItem index={0} onTouchTap={this.openModal.bind(this)} primaryText="Add" />
             </IconMenu>
         } title='Clients' />
-          <Toolbar>
-            <ToolbarGroup key={0} float="left">
-              <TextField onChange={this.searchCompany.bind(this)}  style={{float:'left', marginTop:'4px'}}
-                hintText="Search"
-                type="search"
-                />
+        <ClientsList clients={visibleCompanies} />
 
-
-              <FontIcon onTouchTap={this.click.bind(this)} className="material-icons" >search</FontIcon>
-            </ToolbarGroup>
-            <ToolbarGroup key={1} float="right">
-            </ToolbarGroup>
-          </Toolbar>
-          <List style={{backgroundColor:'transparant'}} subheader={listSubheader}>
-            <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
-              {visibleCompanies.map((company) => {
-                //let imageUrl = 'https://logo.clearbit.com/' + company.get('website');
-                return (
-                  <div>
-                    <ListItem
-                      leftAvatar={<CompanyAvatar url={company.get('website')} />}
-                      primaryText={company.get('name')}
-                      secondaryText={<p>3 Jobs | 20 Candidates</p>}
-                      secondaryTextLines={2}
-                      onTouchTap={this._showClientDetails.bind(this, company.get('id'))} />
-                    <ListDivider inset={true} />
-                  </div>
-                );
-              })}
-            </Infinite>
-        </List>
       </div>);
   }
 }

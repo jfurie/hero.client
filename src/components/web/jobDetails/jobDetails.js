@@ -1,10 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { getOneJob } from '../../../modules/jobs';
-import { getAllContacts } from '../../../modules/contacts';
-import { getOneLocation } from '../../../modules/locations';
-import { Header, CustomTabsSwipe, ContactsList, LocationCard, ContactDetailsModal, ClientContactsCreateModal } from '../../../components/web';
-import { IconMenu, IconButton, List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions } from 'material-ui';
+import { CustomTabsSwipe, ContactsList, LocationCard, ContactDetailsModal } from '../../../components/web';
+import { List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions } from 'material-ui';
 
 import './jobDetails.scss';
 
@@ -43,7 +39,8 @@ class JobDetails extends React.Component {
   }
 
   render(){
-    let {job, contacts, location, isLight} = this.props;
+    let { contacts, location, isLight } = this.props;
+
     let heroContact = '/img/rameet.jpg';
     return (
       <div>
