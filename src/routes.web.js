@@ -20,7 +20,7 @@ import AccountHomePage from './containers/web/account/accountHomeContainer';
 
 // candidates
 import MyCandidatesPage from './containers/web/candidates/myCandidatesContainer';
-
+import CandidateSearchContainer from './containers/web/candidates/candidateSearchContainer';
 // clients
 import ClientsPage from './containers/web/clients/clientsContainer';
 import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
@@ -136,7 +136,10 @@ export default(store) => {
           </Route>
 
           {/*<Route path="/myjobs" component={MyJobsPage}/>*/}
-          <Route path="/candidates" component={MyCandidatesPage}/>
+          <Route path="candidates">
+            <IndexRoute component={MyCandidatesPage}/>
+            <Route path="search" component={CandidateSearchContainer} />
+          </Route>
 
           {/* Settings  */}
           <Route path="settings">

@@ -27,3 +27,4 @@ export InviteSuccessModal from './inviteSuccessModal/inviteSuccessModal';
 export NotesCreateModal from './notesCreateModal/notesCreateModal';
 export JobCreateModal from './jobCreateModal/jobCreateModal';
 export JobDetailsModal from './jobDetails/jobDetailsModal';
+export CandidateSearch from './candidateSearch/candidateSearch';
