@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomTabsSwipe, ContactsList, LocationCard, ContactDetailsModal } from '../../../components/web';
+import { CustomTabsSwipe, CandidatesList, LocationCard, ContactDetailsModal } from '../../../components/web';
 import { List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions } from 'material-ui';
 
 import './jobDetails.scss';
@@ -168,7 +168,7 @@ class JobDetails extends React.Component {
             </Card>
           </div>
           <div style={style.slide}>
-            <ContactsList onOpenContactDetails={this.contactDetailsModalOpen.bind(this)} contacts={contacts.list} />
+            <CandidatesList candidates={contacts.list} />
           </div>
           <div style={style.slide}>
             <div>
