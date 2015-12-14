@@ -17,6 +17,7 @@ export JobDetails from './jobDetails/jobDetails';
 export JobDetailsPage from './jobDetails/jobDetailsPage';
 export Dialog from './dialog/dialog';
 export ClientsList from './clientsList/clientsList';
+export ResumePDFViewer from './resumePDFViewer/resumePDFViewer';
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
 export ClientsCreateModal from './clientsCreateModal/clientsCreateModal';

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
   List, ListItem, FontIcon, ListDivider, Avatar, FlatButton } from 'material-ui';
+import { CustomTabsSwipe, ResumePDFViewer } from '../../../components/web';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -122,77 +123,90 @@ class CandidateDetailsModal extends React.Component {
                 <FlatButton style={style.statusButton} label="Vetted" />
               </ToolbarGroup>
             </Toolbar>
-            <List>
+            <CustomTabsSwipe tabs={['Details', 'Resume', 'Infos', 'Applications']} isLight>
+              <List>
+                <div>
+
+                  {(displayName) ? (
+                    <ListItem
+                      leftAvatar={<Avatar src={picture} />}
+                      primaryText={displayName}
+                      secondaryText={<p>candidate</p>}
+                      secondaryTextLines={1}
+                    />
+                  ) : (null)}
+
+                  {(email) ? (
+                    <ListItem
+                      leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
+                      primaryText={email}
+                      secondaryText={<p>email</p>}
+                      secondaryTextLines={1}
+                    />
+                  ) : (null)}
+
+                  {(phone) ? (
+                    <div>
+                      <ListDivider inset />
+                      <ListItem
+                        leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                        primaryText={phone}
+                        secondaryText={<p>phone</p>}
+                        secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
+
+                  {(address) ? (
+                    <div>
+                      <ListDivider inset />
+                      <ListItem
+                        leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                        primaryText={address}
+                        secondaryText={<p>address</p>}
+                        secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
+
+                  {(city) ? (
+                    <div>
+                      <ListDivider inset />
+                      <ListItem
+                        leftIcon={<FontIcon className="material-icons">business</FontIcon>}
+                        primaryText={city}
+                        secondaryText={<p>city</p>}
+                        secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
+
+                  {(source) ? (
+                    <div>
+                      <ListDivider inset />
+                      <ListItem
+                        leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                        primaryText={source}
+                        secondaryText={<p>source</p>}
+                        secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
+
+                </div>
+              </List>
               <div>
-
-                {(displayName) ? (
-                  <ListItem
-                    leftAvatar={<Avatar src={picture} />}
-                    primaryText={displayName}
-                    secondaryText={<p>candidate</p>}
-                    secondaryTextLines={1}
-                  />
-                ) : (null)}
-
-                {(email) ? (
-                  <ListItem
-                    leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
-                    primaryText={email}
-                    secondaryText={<p>email</p>}
-                    secondaryTextLines={1}
-                  />
-                ) : (null)}
-
-                {(phone) ? (
-                  <div>
-                    <ListDivider inset />
-                    <ListItem
-                      leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                      primaryText={phone}
-                      secondaryText={<p>phone</p>}
-                      secondaryTextLines={1}
-                    />
-                  </div>
-                ) : (null)}
-
-                {(address) ? (
-                  <div>
-                    <ListDivider inset />
-                    <ListItem
-                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                      primaryText={address}
-                      secondaryText={<p>address</p>}
-                      secondaryTextLines={1}
-                    />
-                  </div>
-                ) : (null)}
-
-                {(city) ? (
-                  <div>
-                    <ListDivider inset />
-                    <ListItem
-                      leftIcon={<FontIcon className="material-icons">business</FontIcon>}
-                      primaryText={city}
-                      secondaryText={<p>city</p>}
-                      secondaryTextLines={1}
-                    />
-                  </div>
-                ) : (null)}
-
-                {(source) ? (
-                  <div>
-                    <ListDivider inset />
-                    <ListItem
-                      leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
-                      primaryText={source}
-                      secondaryText={<p>source</p>}
-                      secondaryTextLines={1}
-                    />
-                  </div>
-                ) : (null)}
-
+                <div class='innerView'>
+                  <ResumePDFViewer file="/sample.pdf" />
+                </div>
               </div>
-            </List>
+              <div>
+                <p>toto</p>
+              </div>
+              <div>
+                <p>toto</p>
+              </div>
+            </CustomTabsSwipe>
           </div>
         </Dialog>
       </div>
