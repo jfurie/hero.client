@@ -27,6 +27,9 @@ export default class CandidateSearch extends React.Component {
   <IconButton iconClassName="material-icons" tooltipPosition="top-center"
 tooltip="View Favorites">favorite</IconButton>
           </div>
+          <div>
+            
+          </div>
         </CardText>
       </Card></div>
 
