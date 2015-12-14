@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomTabsSwipe, CandidatesList, LocationCard, ContactDetailsModal } from '../../../components/web';
+import { CustomTabsSwipe, CandidatesList, LocationCard, ContactDetailsModal, CandidateSearchModal } from '../../../components/web';
 import { List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions } from 'material-ui';
 
 import './jobDetails.scss';
@@ -16,7 +16,7 @@ class JobDetails extends React.Component {
     super(props);
 
     this.state = {
-      createContactModalOpen: false,
+      contactDetailsModalOpen: false,
     };
   }
   contactDetailsModalOpen(contact) {
@@ -32,6 +32,9 @@ class JobDetails extends React.Component {
       detailsContact: null,
     });
   }
+  candidateSearchModalClose(){
+
+  }
 
 
   saveContact(){
@@ -44,7 +47,8 @@ class JobDetails extends React.Component {
     let heroContact = '/img/rameet.jpg';
     return (
       <div>
-          <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
+        <CandidateSearchModal open={this.props.candidateSearchOpen} closeModal={this.candidateSearchModalClose.bind(this)} candidates={this.props.seachCandidates}/>
+        <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
         <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']}>
           <div style={style.slide}>
             <Card>

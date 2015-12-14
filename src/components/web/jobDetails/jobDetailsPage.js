@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, ClientContactsCreateModal, JobDetails } from '../../../components/web';
+import { Header, ClientContactsCreateModal, JobDetails, CandidateSearchModal } from '../../../components/web';
 import { IconMenu, IconButton } from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
 
@@ -16,6 +16,7 @@ class JobDetailsPage extends React.Component {
 
     this.state = {
       createContactModalOpen: false,
+      candidateSearchOpen: false
     };
   }
 
@@ -49,18 +50,30 @@ class JobDetailsPage extends React.Component {
     console.log('save contact');
   }
 
+  candidateSearchModalClose(){
+    this.setState({
+      candidateSearchOpen: false,
+    });
+  }
+  candidateSearchModalOpen(){
+    this.setState({
+      candidateSearchOpen: true,
+    });
+  }
+
   render() {
 
     let { job } = this.props;
     //let heroContact = '/img/rameet.jpg';
     return (
       <div>
+        <CandidateSearchModal open={this.state.candidateSearchOpen} closeModal={this.candidateSearchModalClose.bind(this)} candidates={this.props.contacts.list}/>
         <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
         <Header iconRight={
           <IconMenu iconButtonElement={
             <IconButton  iconClassName='material-icons'>more_vert</IconButton>
           }>
-            <MenuItem index={0} primaryText='Find Candidates' />
+            <MenuItem index={0} onTouchTap={this.candidateSearchModalOpen.bind(this)} primaryText='Find Candidates' />
             <MenuItem index={1} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Candidate" />
           </IconMenu>
         } title={job?job.get('title'):''} />

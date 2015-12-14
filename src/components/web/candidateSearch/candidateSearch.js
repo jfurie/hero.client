@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardText, TextField, IconButton} from 'material-ui';
+import { CandidatesList } from '../../../components/web';
 export default class CandidateSearch extends React.Component {
   constructor(props){
     super(props);
@@ -28,9 +29,10 @@ export default class CandidateSearch extends React.Component {
 tooltip="View Favorites">favorite</IconButton>
           </div>
           <div>
-            
+
           </div>
         </CardText>
+        <CandidatesList candidates={this.props.candidates} ></CandidatesList>
       </Card></div>
 
     );

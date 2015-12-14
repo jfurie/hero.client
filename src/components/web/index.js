@@ -28,3 +28,4 @@ export NotesCreateModal from './notesCreateModal/notesCreateModal';
 export JobCreateModal from './jobCreateModal/jobCreateModal';
 export JobDetailsModal from './jobDetails/jobDetailsModal';
 export CandidateSearch from './candidateSearch/candidateSearch';
+export CandidateSearchModal from './candidateSearch/candidateSearchModal';

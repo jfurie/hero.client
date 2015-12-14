@@ -142,7 +142,7 @@ class ClientDetailsPage extends React.Component {
 
       return (
         <div>
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.state.detailsJob} contacts={contacts} open={this.state.openJob}></JobDetailsModal>
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.state.detailsJob} seachCandidates={contacts.list} contacts={contacts} open={this.state.openJob}></JobDetailsModal>
           <ClientContactsCreateModal onSubmit={this.saveClient.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal ref='notesCreateModal' />
