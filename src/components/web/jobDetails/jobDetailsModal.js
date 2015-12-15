@@ -3,7 +3,7 @@ import React from 'react';
 // import { getOneJob } from '../../../modules/jobs';
 // import { getAllContacts } from '../../../modules/contacts';
 // import { getOneLocation } from '../../../modules/locations';
-import { ClientContactsCreateModal ,JobDetails, Dialog } from '../../../components/web';
+import { ClientContactsCreateModal ,JobDetails, Dialog, CandidateSearchModal } from '../../../components/web';
 import { IconMenu, IconButton, Toolbar, ToolbarGroup , ToolbarTitle} from 'material-ui';
 let MenuItem = require('material-ui/lib/menus/menu-item');
 
@@ -55,12 +55,23 @@ class JobDetailsPage extends React.Component {
   closeModal(){
     this.props.closeModal();
   }
+  candidateSearchModalClose(){
+    this.setState({
+      candidateSearchOpen: false,
+    });
+  }
+  candidateSearchModalOpen(){
+    this.setState({
+      candidateSearchOpen: true,
+    });
+  }
 
   render(){
 
     return (
       <div>
         <Dialog open={this.props.open}>
+          <CandidateSearchModal open={this.state.candidateSearchOpen} closeModal={this.candidateSearchModalClose.bind(this)} candidates={this.props.seachCandidates}/>
           <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
             <div style={{
               position:'fixed',
@@ -75,7 +86,7 @@ class JobDetailsPage extends React.Component {
                   <IconMenu style={{marginTop:'8px',float:'left', marginRight:'-16px', marginLeft:'8px'}} iconButtonElement={
                     <IconButton  iconClassName='material-icons'>more_vert</IconButton>
                   }>
-                    <MenuItem index={0} primaryText='Find Candidates' />
+                    <MenuItem index={0} onTouchTap={this.candidateSearchModalOpen.bind(this)} primaryText='Find Candidates' />
                     <MenuItem index={1} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Candidate" />
                   </IconMenu>
                 </ToolbarGroup>
