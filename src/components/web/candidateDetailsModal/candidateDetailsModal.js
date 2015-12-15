@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
-  List, ListItem, FontIcon, ListDivider, Avatar, FlatButton } from 'material-ui';
+  List, ListItem, FontIcon, ListDivider, Avatar, FlatButton, CardText } from 'material-ui';
 import { CustomTabsSwipe, ResumePDFViewer, JobsList } from '../../../components/web';
 import Immutable from 'immutable';
 
@@ -141,25 +141,28 @@ class CandidateDetailsModal extends React.Component {
                 <FlatButton style={style.statusButton} label="Vetted" />
               </ToolbarGroup>
             </Toolbar>
-            <CustomTabsSwipe tabs={['Details', 'Resume', 'Infos', 'Applications']} isLight>
+            <CustomTabsSwipe
+                tabs={['Details', 'Resume', 'Infos', 'Applications']}
+                isLight
+            >
               <List>
                 <div>
 
                   {(displayName) ? (
                     <ListItem
-                      leftAvatar={<Avatar src={picture} />}
-                      primaryText={displayName}
-                      secondaryText={<p>candidate</p>}
-                      secondaryTextLines={1}
+                        leftAvatar={<Avatar src={picture} />}
+                        primaryText={displayName}
+                        secondaryText={<p>candidate</p>}
+                        secondaryTextLines={1}
                     />
                   ) : (null)}
 
                   {(email) ? (
                     <ListItem
-                      leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
-                      primaryText={email}
-                      secondaryText={<p>email</p>}
-                      secondaryTextLines={1}
+                        leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
+                        primaryText={email}
+                        secondaryText={<p>email</p>}
+                        secondaryTextLines={1}
                     />
                   ) : (null)}
 
@@ -167,10 +170,10 @@ class CandidateDetailsModal extends React.Component {
                     <div>
                       <ListDivider inset />
                       <ListItem
-                        leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                        primaryText={phone}
-                        secondaryText={<p>phone</p>}
-                        secondaryTextLines={1}
+                          leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                          primaryText={phone}
+                          secondaryText={<p>phone</p>}
+                          secondaryTextLines={1}
                       />
                     </div>
                   ) : (null)}
@@ -179,10 +182,10 @@ class CandidateDetailsModal extends React.Component {
                     <div>
                       <ListDivider inset />
                       <ListItem
-                        leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                        primaryText={address}
-                        secondaryText={<p>address</p>}
-                        secondaryTextLines={1}
+                          leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                          primaryText={address}
+                          secondaryText={<p>address</p>}
+                          secondaryTextLines={1}
                       />
                     </div>
                   ) : (null)}
@@ -191,10 +194,10 @@ class CandidateDetailsModal extends React.Component {
                     <div>
                       <ListDivider inset />
                       <ListItem
-                        leftIcon={<FontIcon className="material-icons">business</FontIcon>}
-                        primaryText={city}
-                        secondaryText={<p>city</p>}
-                        secondaryTextLines={1}
+                          leftIcon={<FontIcon className="material-icons">business</FontIcon>}
+                          primaryText={city}
+                          secondaryText={<p>city</p>}
+                          secondaryTextLines={1}
                       />
                     </div>
                   ) : (null)}
@@ -203,26 +206,80 @@ class CandidateDetailsModal extends React.Component {
                     <div>
                       <ListDivider inset />
                       <ListItem
-                        leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
-                        primaryText={source}
-                        secondaryText={<p>source</p>}
-                        secondaryTextLines={1}
+                          leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                          primaryText={source}
+                          secondaryText={<p>source</p>}
+                          secondaryTextLines={1}
                       />
                     </div>
                   ) : (null)}
 
                 </div>
               </List>
-              <div>
-                <div class='innerView'>
-                  <ResumePDFViewer file="/sample.pdf" />
-                </div>
+              <div className="innerView">
+                <ResumePDFViewer file="/sample.pdf" />
               </div>
               <div>
-                <p>toto</p>
+                <CardText>
+                  <div className="description">
+                    <p>Quick Pitch:</p>
+                    <p>Experienced software engineer passionate about creating technology to empower people. Effective communicator able to lead cross-functional teams to achieve innovative results. All challenges considered.</p>
+                  </div>
+                </CardText>
+                <List>
+                  <div>
+
+                    <ListItem
+                        leftAvatar={<FontIcon className="material-icons">attach_money</FontIcon>}
+                        primaryText="$130,000"
+                        secondaryText={<p>curent salary</p>}
+                        secondaryTextLines={1}
+                    />
+
+                    <ListDivider inset />
+
+                    <ListItem
+                        leftIcon={<FontIcon className="material-icons">star_rate</FontIcon>}
+                        primaryText="401k match, free lunch"
+                        secondaryText={<p>bonus</p>}
+                        secondaryTextLines={1}
+                    />
+
+                    <ListDivider inset />
+
+                    <ListItem
+                        leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
+                        primaryText="$140,000"
+                        secondaryText={<p>desired salary</p>}
+                        secondaryTextLines={1}
+                    />
+
+                    <ListDivider inset />
+
+                    <ListItem
+                        leftIcon={<FontIcon className="material-icons">alarm</FontIcon>}
+                        primaryText="$67"
+                        secondaryText={<p>current hourly</p>}
+                        secondaryTextLines={1}
+                    />
+
+                    <ListDivider inset />
+
+                    <ListItem
+                        leftIcon={<FontIcon className="material-icons">alarm_on</FontIcon>}
+                        primaryText="$72"
+                        secondaryText={<p>desired hourly</p>}
+                        secondaryTextLines={1}
+                    />
+                  </div>
+                </List>
               </div>
               <div>
-                <JobsList ressourceName="Application" onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
+                <JobsList
+                    ressourceName="Application"
+                    onJobClick={this._handleJobClick.bind(this)}
+                    jobs={jobs.list}
+                />
               </div>
             </CustomTabsSwipe>
           </div>
