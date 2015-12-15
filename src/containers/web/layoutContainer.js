@@ -8,63 +8,80 @@ import {LeftNavTop} from '../../components/web';
 @connect(state => ({
   user: state.auth.user,
   leftNav: state.leftNav,
-}),{pushState,onNavOpen,onNavClose,toggleNav})
+}),{pushState, onNavOpen, onNavClose, toggleNav})
+
 class Layout extends React.Component {
-  constructor() {
-    super();
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
   }
+
   componentWillReceiveProps(nextProps){
     if(nextProps.leftNav.open != this.props.leftNav.open){
-      if(!this.selfSet){
-        this.refs.leftNavChildren.toggle();
-      } else{
-        this.selfSet = false;
-      }
+      this.setState({
+        open: !this.state.open,
+      });
     }
   }
-  handleTouchTap (e) {e.stopPropagation();
+
+  handleTouchTap (e) {
+    e.stopPropagation();
     this.props.pushState(null, '/test');
   }
 
-  onNavOpen(){
-    this.selfSet = true;
-    this.props.onNavOpen();
-  }
-  onNavClose(){
-    this.selfSet = true;
-    this.props.onNavClose();
-  }
-  onClick(){
+  // onNavOpen(){
+  //   this.selfSet = true;
+  //   this.props.onNavOpen();
+  // }
+  // onNavClose(){
+  //   this.selfSet = true;
+  //   this.props.onNavClose();
+  // }
+  onClick() {
     this.refs.leftNavChildren.toggle();
   }
+
   clickHome () {
     this.props.pushState(null, '');
     this.refs.leftNavChildren.toggle();
   }
+
   clickLogin () {
     this.props.pushState(null, '/login');
     this.refs.leftNavChildren.toggle();
   }
-  clickClients () {
+
+  clickClients() {
     this.props.pushState(null, '/clients');
     this.refs.leftNavChildren.toggle();
   }
-  clickSettings () {
+
+  clickSettings() {
     this.props.pushState(null, '/settings');
     this.refs.leftNavChildren.toggle();
   }
-  clickLogout (){
+  clickLogout() {
     this.props.pushState(null, '/logout');
     this.refs.leftNavChildren.toggle();
   }
-  clickMyJobs (){
+
+  clickMyJobs() {
     this.props.pushState(null, '/jobs');
     this.refs.leftNavChildren.toggle();
   }
-  clickMyCandidates () {
+
+  clickMyCandidates() {
     this.props.pushState(null, '/candidates');
     this.refs.leftNavChildren.toggle();
   }
+
+  _onRequestChange() {
+    console.log('_onRequestChange');
+  }
+
   render () {
 
     let {leftNav, user} = this.props;
@@ -72,7 +89,7 @@ class Layout extends React.Component {
     return (
       <div style={{
       }}>
-      <LeftNav style={{backgroundColor:'#424242'}} ref="leftNavChildren" onNavClose={this.onNavClose.bind(this)} onNavOpen={this.onNavOpen.bind(this)} docked={false} disableSwipeToOpen={leftNav.disableSwipeToOpen}>
+      <LeftNav style={{backgroundColor:'#424242'}} ref="leftNavChildren" open={this.state.open} onRequestChange={open => this.setState({open})} docked={false} disableSwipeToOpen={leftNav.disableSwipeToOpen}>
         <LeftNavTop></LeftNavTop>
         <MenuItem style={{color:'#e0e0e0'}} primaryText="Dashboard" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">view_quilt</FontIcon>} onTouchTap={this.clickHome.bind(this)} index={0} />
         <MenuItem style={{color:'#e0e0e0'}} primaryText="My Clients" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">business</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
