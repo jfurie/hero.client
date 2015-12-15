@@ -32,7 +32,6 @@ class resumePDFViewer extends React.Component {
   }
 
   _onDocumentComplete(pages){
-    console.log(pages);
     this.setState({
       pages,
     });

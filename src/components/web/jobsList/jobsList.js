@@ -14,8 +14,15 @@ class JobsList extends React.Component {
   }
   render() {
 
-    let { jobs } = this.props;
-    
+    let { jobs, ressourceName, ressourceNamePlurial } = this.props;
+
+    ressourceName = ressourceName || 'Job';
+    ressourceNamePlurial = ressourceNamePlurial || 'Jobs';
+
+    if (ressourceName !== 'Job' && ressourceNamePlurial === 'Jobs') {
+      ressourceNamePlurial = `${ressourceName}s`;
+    }
+
     // create 2 fakes companies
     let companies = new Immutable.Map();
 
@@ -34,8 +41,10 @@ class JobsList extends React.Component {
     companies = companies.mergeDeep(ring);
     companies = companies.mergeDeep(washio);
 
+    let subheader = `${jobs.count() * 2} ${ressourceNamePlurial}`;
+
     return (
-      <List subheader={`${jobs.count() * 2} Jobs`}>
+      <List subheader={subheader}>
         <CompanyJobsList jobs={jobs} onJobClick={this._handleJobClick.bind(this)} company={companies.get('ring')} />
         <CompanyJobsList jobs={jobs} onJobClick={this._handleJobClick.bind(this)} company={companies.get('washio')} />
       </List>
@@ -45,6 +54,8 @@ class JobsList extends React.Component {
 
 JobsList.propTypes = {
   jobs: React.PropTypes.object.isRequired,
+  ressourceName: React.PropTypes.string,
+  ressourceNamePlurial: React.PropTypes.string,
 };
 
 export default JobsList;

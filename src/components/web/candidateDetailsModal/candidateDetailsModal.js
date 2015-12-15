@@ -1,7 +1,8 @@
 import React from 'react';
 import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
   List, ListItem, FontIcon, ListDivider, Avatar, FlatButton } from 'material-ui';
-import { CustomTabsSwipe, ResumePDFViewer } from '../../../components/web';
+import { CustomTabsSwipe, ResumePDFViewer, JobsList } from '../../../components/web';
+import Immutable from 'immutable';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -48,8 +49,6 @@ const style = {
   },
 };
 
-// @connect( () => {}
-// ,{pushState})
 class CandidateDetailsModal extends React.Component {
 
   constructor(props) {
@@ -61,6 +60,10 @@ class CandidateDetailsModal extends React.Component {
     };
   }
 
+  componentDidMount() {
+    //this.props.getAllJobs();
+  }
+
   show(candidate) {
     this.setState({
       open: true,
@@ -69,16 +72,31 @@ class CandidateDetailsModal extends React.Component {
   }
 
   closeModal() {
-    // if (this.props.closeModal) {
-    //   this.props.closeModal();
-    // }
     this.setState({
       open: false,
       candidate: null,
     });
   }
 
+  _handleJobClick(){
+    this.props.pushState(null,'/jobs/1a');
+  }
+
   render() {
+
+    //let { jobs } = this.props;
+
+    let jobs = {};
+    jobs.list = new Immutable.Map();
+
+    let job = {};
+    job['1a'] = {
+      title: 'Android Mobile Engineer',
+      location: 'Santa Monica, CA',
+      id: '1a',
+    };
+
+    jobs.list = jobs.list.mergeDeep(job);
 
     let picture = null;
     let email = null;
@@ -204,7 +222,7 @@ class CandidateDetailsModal extends React.Component {
                 <p>toto</p>
               </div>
               <div>
-                <p>toto</p>
+                <JobsList ressourceName="Application" onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
               </div>
             </CustomTabsSwipe>
           </div>
@@ -215,6 +233,7 @@ class CandidateDetailsModal extends React.Component {
 }
 
 CandidateDetailsModal.propTypes = {
+  // jobs: React.PropTypes.object.isRequired,
 };
 
 export default CandidateDetailsModal;
