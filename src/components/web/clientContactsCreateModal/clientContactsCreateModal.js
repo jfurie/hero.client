@@ -1,85 +1,61 @@
 import React from 'react';
-import {Dialog, IconButton, ToolbarGroup, FlatButton, TextField, ToolbarTitle} from 'material-ui';
-const ToolBar = require('material-ui/lib/toolbar/toolbar');
+import {Dialog, IconButton, ToolbarGroup, FlatButton, TextField, ToolbarTitle, Toolbar} from 'material-ui';
+//const ToolBar = require('material-ui/lib/toolbar/toolbar');
+
+import validateContact from '../../../validators/contact';
+
+const style = {
+  error: {
+    float: 'left',
+  },
+  textField: {
+    'width': '100%',
+  },
+};
+
 export default class ClientContactsCreateModal extends React.Component {
+
   constructor(props){
     super(props);
     this.state = {
-      ... props.company,
-      lastNameError:'',
-      emailError:''
+      contact: {},
+      errors: {},
     };
   }
 
   closeModal(){
     this.props.closeModal();
   }
-  _handleFirstNameChange(e){
-    if(e.target.value != '' && e.target.value !=null){
-      this.setState({
-        contact:{
-          ... this.state.contact,
-          firstName:e.target.value,
-        },
-        firstNameError:''
-      });
+
+  _handleChange(e, field) {
+    let newContact = this.state.contact;
+    let value = (e.target.value === '') ? (null) : (e.target.value);
+
+    if (value) {
+      newContact[field] = value;
     } else {
-      this.setState({
-        contact:{
-          ... this.state.contact,
-          firstName:e.target.value,
-        },
-        firstNameError:'First Name is required'
-      });
+      delete newContact[field];
     }
 
+    this.setState({
+      contact: newContact,
+    });
   }
-  _handleLastNameChange(e){
-    if(e.target.value != '' && e.target.value !=null){
-      this.setState({
-        contact:{
-          ... this.state.contact,
-          lastName:e.target.value,
-        },
-        lastNameError:''
-      });
-    } else {
-      this.setState({
-        contact:{
-          ... this.state.contact,
-          lastName:e.target.value,
-        },
-        lastNameError:'Last Name is required'
-      });
-    }
 
-  }
   _handleSubmit(){
-    if(this.state.lastNameError == '' &&
-    this.state.emailError == '' &&
-    this.state.firstNameError == ''){
-      this.props.onSubmit(this.state);
+
+    let errors = validateContact(this.state.contact);
+
+    this.setState({
+      errors,
+    });
+
+    if (errors.validationErrors === 0) {
+      console.log('good!');
     }
   }
-  _handleEmailChange(e){
-    if(e.target.value != '' && e.target.value !=null){
-      this.setState({
-        contact:{
-          ... this.state.contact,
-          email:e.target.value,
-        },
-        emailError:''
-      });
-    } else {
-      this.setState({
-        contact:{
-          ... this.state.contact,
-          email:e.target.value,
-        },
-        emailError:'Email is required'
-      });
-    }
-  }
+
+
   render(){
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     return (
@@ -91,10 +67,10 @@ export default class ClientContactsCreateModal extends React.Component {
         width: '100%', maxWidth: 'none', height: '100%', maxHeight: '100%', paddingTop: '0px', top: '-64px'
       }} ref="addNewDialog">
         <div style={{
-          height: ( clientHeight) + 'px'
+          height: (clientHeight) + 'px'
         }}>
 
-        <ToolBar style={{backgroundColor:'#ffffff', height:'64px'}}>
+        <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
           <ToolbarGroup key={0} float="left">
             <IconButton onTouchTap={this.closeModal.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
             <ToolbarTitle style={{lineHeight:'64px', float:'left'}} text="Create Contact" />
@@ -102,32 +78,43 @@ export default class ClientContactsCreateModal extends React.Component {
           <ToolbarGroup key={1} float="right">
             <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={{marginTop:'14px', marginRight:'-16px', marginLeft:'auto'}}>Save</FlatButton>
           </ToolbarGroup>
-        </ToolBar>
+        </Toolbar>
         <div className="row center-xs">
             <div className="col-xs-10 col-md-6">
                 <div className="box">
                   <form onSubmit={this._handleSubmit.bind(this)}>
                     <div>
                       <TextField
-                        style={{'width':'100%'}}
-                        errorText={this.state.firstNameError}
-                        onChange={this._handleFirstNameChange.bind(this)}
-                        floatingLabelText="First Name" />
+                          style={style.textField}
+                          errorText={this.state.errors['firstName'] || ''}
+                          errorStyle={style.error}
+                          onChange={(e) => this._handleChange.bind(this)(e, 'firstName')}
+                          floatingLabelText="First Name" />
                     </div>
                     <div>
                       <TextField
-                        style={{'width':'100%'}}
-                        errorText={this.state.lastNameError}
-                        onChange={this._handleLastNameChange.bind(this)}
-                        floatingLabelText="Last Name" />
+                          style={style.textField}
+                          errorText={this.state.errors['lastName'] || ''}
+                          errorStyle={style.error}
+                          onChange={(e) => this._handleChange.bind(this)(e, 'lastName')}
+                          floatingLabelText="Last Name" />
                     </div>
                     <div>
                       <TextField
-                        type='email'
-                        style={{'width':'100%'}}
-                        errorText={this.state.emailError}
-                        onChange={this._handleEmailChange.bind(this)}
-                        floatingLabelText="Email" />
+                          type='email'
+                          style={style.textField}
+                          errorText={this.state.errors['email'] || ''}
+                          errorStyle={style.error}
+                          onChange={(e) => this._handleChange.bind(this)(e, 'email')}
+                          floatingLabelText="Email" />
+                    </div>
+                    <div>
+                      <TextField
+                          style={style.textField}
+                          errorText={this.state.errors['phone'] || ''}
+                          errorStyle={style.error}
+                          onChange={(e) => this._handleChange.bind(this)(e, 'phone')}
+                          floatingLabelText="Phone (optional)" />
                     </div>
                   </form>
                 </div>
