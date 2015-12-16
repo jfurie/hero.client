@@ -35,6 +35,9 @@ function getData(state, id) {
   };
 
   let contactsByCompanyListIds = contacts.byCompanyId.get(id);
+
+  //console.log('contactsByCompanyListIds', contactsByCompanyListIds);
+
   if (contactsByCompanyListIds) {
     newContacts.list = contacts.list.filter(x => {
       return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
@@ -78,20 +81,12 @@ class ClientDetailsPage extends React.Component {
 
   }
 
-  saveClient() {
-    console.log('cool!');
-  }
+  // saveClient() {
+  //   console.log('cool!');
+  // }
 
   createContactModalOpen(){
-    this.setState({
-      createContactModalOpen:true
-    });
-  }
-
-  createContactModalClose(){
-    this.setState({
-      createContactModalOpen:false
-    });
+    this.refs.clientContactsCreateModal.getWrappedInstance().show();
   }
 
   contactDetailsModalOpen(contact) {
@@ -142,8 +137,11 @@ class ClientDetailsPage extends React.Component {
 
       return (
         <div>
+
           <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.state.detailsJob} seachCandidates={contacts.list} contacts={contacts} open={this.state.openJob}></JobDetailsModal>
-          <ClientContactsCreateModal onSubmit={this.saveClient.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
+
+          <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
+
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal ref='notesCreateModal' />
           <JobCreateModal ref='jobCreateModal'/>

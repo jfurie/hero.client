@@ -7,7 +7,7 @@ import {
   companies,
   leftNav,
   locations,
-  clientContacts,
+  companyContacts,
   jobs,
 } from './container';
 
@@ -19,6 +19,6 @@ export default combineReducers({
   leftNav,
   companies,
   locations,
-  clientContacts,
+  companyContacts,
   jobs,
 });

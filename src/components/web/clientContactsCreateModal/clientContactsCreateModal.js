@@ -1,5 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {Dialog, IconButton, ToolbarGroup, FlatButton, TextField, ToolbarTitle, Toolbar} from 'material-ui';
+import { createCompanyContact } from '../../../modules/companyContacts';
 //const ToolBar = require('material-ui/lib/toolbar/toolbar');
 
 import validateContact from '../../../validators/contact';
@@ -13,6 +15,8 @@ const style = {
   },
 };
 
+@connect(() => (
+{}), {createCompanyContact}, null, {withRef: true})
 export default class ClientContactsCreateModal extends React.Component {
 
   constructor(props){
@@ -20,11 +24,21 @@ export default class ClientContactsCreateModal extends React.Component {
     this.state = {
       contact: {},
       errors: {},
+      open: false,
     };
   }
 
+  show() {
+    //console.log('show');
+    this.setState({
+      open: true,
+    });
+  }
+
   closeModal(){
-    this.props.closeModal();
+    this.setState({
+      open: false,
+    });
   }
 
   _handleChange(e, field) {
@@ -51,15 +65,34 @@ export default class ClientContactsCreateModal extends React.Component {
     });
 
     if (errors.validationErrors === 0) {
-      console.log('good!');
+      //console.log('good!');
+      let contact = this.state.contact;
+      contact.displayName = `${this.state.contact.firstName} ${this.state.contact.lastName}`;
+
+      // temp for now (will be replaced by location component)
+      contact._address = {
+        addressLine: contact.addressLine,
+        postalCode: contact.postalCode,
+        city: contact.city,
+        countryCode: 'US',
+        countrySubDivisionCode: 'CA',
+      };
+
+      delete contact.addressLine;
+      delete contact.postalCode;
+      delete contact.city;
+      // end temp
+
+      this.props.createCompanyContact(this.props.companyId, contact).then(() => {
+        this.closeModal();
+      });
     }
   }
-
 
   render(){
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     return (
-      <Dialog open={this.props.open} autoDetectWindowHeight={false} autoScrollBodyContent={false} repositionOnUpdate={false} defaultOpen={false} style={{
+      <Dialog open={this.state.open} autoDetectWindowHeight={false} autoScrollBodyContent={false} repositionOnUpdate={false} defaultOpen={false} style={{
         height: '100%', maxHeight: '100%', paddingTop: '0px'
       }} bodyStyle={{
         paddingTop: '0px', height: '100%', padding: '0'
@@ -116,6 +149,30 @@ export default class ClientContactsCreateModal extends React.Component {
                           onChange={(e) => this._handleChange.bind(this)(e, 'phone')}
                           floatingLabelText="Phone (optional)" />
                     </div>
+                    <div>
+                      <TextField
+                          style={style.textField}
+                          errorText={this.state.errors['addressLine'] || ''}
+                          errorStyle={style.error}
+                          onChange={(e) => this._handleChange.bind(this)(e, 'addressLine')}
+                          floatingLabelText="Address (optional)" />
+                    </div>
+                    <div>
+                      <TextField
+                          style={style.textField}
+                          errorText={this.state.errors['postalCode'] || ''}
+                          errorStyle={style.error}
+                          onChange={(e) => this._handleChange.bind(this)(e, 'postalCode')}
+                          floatingLabelText="Postal Code (optional)" />
+                    </div>
+                    <div>
+                      <TextField
+                          style={style.textField}
+                          errorText={this.state.errors['city'] || ''}
+                          errorStyle={style.error}
+                          onChange={(e) => this._handleChange.bind(this)(e, 'city')}
+                          floatingLabelText="City (optional)" />
+                    </div>
                   </form>
                 </div>
             </div>
@@ -125,3 +182,7 @@ export default class ClientContactsCreateModal extends React.Component {
     );
   }
 }
+
+ClientContactsCreateModal.propTypes = {
+  companyId: React.PropTypes.string,
+};

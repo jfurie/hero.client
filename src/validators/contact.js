@@ -26,6 +26,24 @@ const constraints = {
       message: 'must be (XXX) YYY-ZZZZ',
     },
   },
+  'addressLine': {
+    length: {
+      minimum: 2,
+      message: 'must be at least 2 characters',
+    },
+  },
+  'postalCode': {
+    format: {
+      pattern: /^([0-9]{5})$/g,
+      message: 'must be a valid postal code',
+    },
+  },
+  'city': {
+    length: {
+      minimum: 2,
+      message: 'must be at least 2 characters',
+    },
+  },
 };
 
 export default function validateContact(contact) {

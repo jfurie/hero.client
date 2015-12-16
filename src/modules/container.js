@@ -6,5 +6,5 @@ export contacts from './contacts';
 export companies from './companies';
 export leftNav from './leftNav';
 export locations from './locations';
-export clientContacts from './clientContacts';
+export companyContacts from './companyContacts';
 export jobs from './jobs';

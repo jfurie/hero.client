@@ -9,6 +9,7 @@ const GET_CONTACTS_BY_COMPANY_FAIL = 'hero.client/contacts/GET_CONTACTS_BY_COMPA
 const CREATE_CONTACT = 'hero.client/contacts/CREATE_CONTACT';
 const CREATE_CONTACT_SUCCESS = 'hero.client/contacts/CREATE_CONTACT_SUCCESS';
 const CREATE_CONTACT_FAIL = 'hero.client/contacts/CREATE_CONTACT_FAIL';
+const CREATE_COMPANY_CONTACT_SUCCESS = 'hero.client/contacts/CREATE_COMPANY_CONTACT_SUCCESS';
 const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
@@ -58,9 +59,10 @@ export default function reducer(state = initialState, action = {}) {
       creating:false,
       error:'Error Creating Contact'
     };
-  case GET_CONTACTS_BY_COMPANY_SUCCESS:
+  case GET_CONTACTS_BY_COMPANY_SUCCESS: {
     let byCompanyMap = {};
     byCompanyMap[action.result.companyId] = action.result.result.map((contact)=>contact.id);
+    console.log('GET_CONTACTS_BY_COMPANY_SUCCESS', byCompanyMap[action.result.companyId]);
     contactsMap = {};
     action.result.result.map((c) => {
       contactsMap[c.id] = c;
@@ -70,6 +72,20 @@ export default function reducer(state = initialState, action = {}) {
       byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
       list: state.list.mergeDeep(contactsMap),
     };
+  }
+  case CREATE_COMPANY_CONTACT_SUCCESS: {
+    //console.log('CREATE_COMPANY_CONTACT_SUCCESS', action.result, state.byCompanyId.get(action.result.companyId));
+    let byCompanyMap = {};
+
+    let allCompanyContacts = state.byCompanyId.get(action.result.companyId).toJS() || [];
+    allCompanyContacts.push(action.result.contactId);
+    byCompanyMap[action.result.companyId] = allCompanyContacts;
+
+    return {
+      ...state,
+      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
+    };
+  }
   default:
     return state;
   }
