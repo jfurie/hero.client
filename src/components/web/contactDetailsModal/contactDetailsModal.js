@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
-  List, ListItem, FontIcon, ListDivider, Avatar, FlatButton } from 'material-ui';
-import { InviteSuccessModal } from '../../../components/web';
+  List, ListItem, FontIcon, ListDivider, FlatButton } from 'material-ui';
+import { InviteSuccessModal, Gravatar } from '../../../components/web';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -48,8 +48,6 @@ const style = {
   },
 };
 
-// @connect( () => {}
-// ,{pushState})
 class ContactDetailsModal extends React.Component {
 
   constructor(props) {
@@ -68,22 +66,39 @@ class ContactDetailsModal extends React.Component {
 
     let { contact } = this.props;
 
-    let picture = null;
+    //let picture = null;
     let email = null;
     let phone = null;
     let address = null;
     let city = null;
+    let postalCode = null;
+    //let countryCode = null;
+    let countrySubDivisionCode = null;
     let source = null;
     let displayName = null;
 
     if (contact) {
       displayName = contact.get('displayName') || null;
-      picture = 'http://www.material-ui.com/images/kerem-128.jpg';
+      //picture = 'http://www.material-ui.com/images/kerem-128.jpg';
       email = contact.get('email') || null;
       phone = contact.get('phone') || null;
-      address = '1316 3rd St #103';
-      city = 'Santa Monica, CA 90401';
-      source = 'facebook.com';
+      address = contact.get('_address').get('addressLine') || null;
+      city = contact.get('_address').get('city') || null;
+      postalCode = contact.get('_address').get('postalCode') || null;
+      //countryCode = contact.get('_address').countryCode || null;
+      countrySubDivisionCode = contact.get('_address').get('countrySubDivisionCode') || null;
+
+      if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
+        source = contact.get('sourceInfo').get('referrer');
+      }
+    }
+
+    if (city && countrySubDivisionCode) {
+      city += `, ${countrySubDivisionCode}`;
+    }
+
+    if (city && postalCode) {
+      city += ` ${postalCode}`;
     }
 
     return (
@@ -117,7 +132,7 @@ class ContactDetailsModal extends React.Component {
 
                 {(displayName) ? (
                   <ListItem
-                    leftAvatar={<Avatar src={picture} />}
+                    leftAvatar={<Gravatar email={email} />}
                     primaryText={displayName}
                     secondaryText={<p>contact</p>}
                     secondaryTextLines={1}

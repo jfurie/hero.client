@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
-  List, ListItem, FontIcon, ListDivider, Avatar, FlatButton, CardText } from 'material-ui';
-import { CustomTabsSwipe, ResumePDFViewer, JobsList } from '../../../components/web';
+  List, ListItem, FontIcon, ListDivider, FlatButton, CardText } from 'material-ui';
+import { CustomTabsSwipe, ResumePDFViewer, JobsList, Gravatar } from '../../../components/web';
 import Immutable from 'immutable';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -98,7 +98,7 @@ class CandidateDetailsModal extends React.Component {
 
     jobs.list = jobs.list.mergeDeep(job);
 
-    let picture = null;
+    //let picture = null;
     let email = null;
     let phone = null;
     let address = null;
@@ -108,7 +108,7 @@ class CandidateDetailsModal extends React.Component {
 
     if (this.state.candidate) {
       displayName = this.state.candidate.get('displayName') || null;
-      picture = 'http://www.material-ui.com/images/kerem-128.jpg';
+      //picture = 'http://www.material-ui.com/images/kerem-128.jpg';
       email = this.state.candidate.get('email') || null;
       phone = this.state.candidate.get('phone') || null;
       address = '1316 3rd St #103';
@@ -150,7 +150,7 @@ class CandidateDetailsModal extends React.Component {
 
                   {(displayName) ? (
                     <ListItem
-                        leftAvatar={<Avatar src={picture} />}
+                        leftAvatar={<Gravatar email={this.state.candidate.get('email')} status={'vetted'} />}
                         primaryText={displayName}
                         secondaryText={<p>candidate</p>}
                         secondaryTextLines={1}
