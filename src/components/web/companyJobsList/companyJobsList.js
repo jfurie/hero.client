@@ -43,10 +43,10 @@ class CompanyJobsList extends React.Component {
 
       let peopleList = [];
 
-      // people[index].forEach(function(p, key) {
-      //   let status = fakeStatus.shift();
-      //   peopleList.push(<RingCandidate key={key} picture={p} status={status}/>);
-      // });
+      people[0].forEach(function(p, key) {
+        let status = fakeStatus.shift();
+        peopleList.push(<RingCandidate key={key} picture={p} status={status}/>);
+      });
 
       nestedJobsItem.push(
         <ListItem

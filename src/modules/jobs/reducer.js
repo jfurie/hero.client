@@ -103,6 +103,7 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.mergeDeep(jobMap),
       byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
       loading:false,
+      localJob: state.localJob.mergeDeep({success:true}),
     };
   }
   case constants.CREATE_JOB_FAIL:{
