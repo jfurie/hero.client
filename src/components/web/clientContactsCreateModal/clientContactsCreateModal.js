@@ -71,6 +71,10 @@ export default class ClientContactsCreateModal extends React.Component {
       let contact = this.state.contact;
       contact.displayName = `${this.state.contact.firstName} ${this.state.contact.lastName}`;
 
+      contact.sourceInfo = {
+        referrer: 'hero.client',
+      };
+
       // temp for now (will be replaced by location component)
       contact._address = {
         addressLine: contact.addressLine,
