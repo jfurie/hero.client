@@ -87,6 +87,12 @@ class ClientDetailsPage extends React.Component {
   componentWillUpdate() {
 
   }
+  componentWillReceiveProps(nextProps){
+    if(nextProps.localJob.get('success')){
+      this.refs.jobCreateModal.closeModal();
+      this.props.replaceJobLocal({companyId:this.props.params.id});
+    }
+  }
 
   // saveClient() {
   //   console.log('cool!');

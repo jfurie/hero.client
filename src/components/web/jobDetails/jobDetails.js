@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomTabsSwipe, CandidatesList, LocationCard, ContactDetailsModal, CandidateSearchModal } from '../../../components/web';
+import { CustomTabsSwipe, CandidatesList, LocationCard, ContactDetailsModal } from '../../../components/web';
 import { List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions } from 'material-ui';
 
 import './jobDetails.scss';
