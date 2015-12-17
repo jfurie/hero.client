@@ -8,6 +8,7 @@ import leftNav from './leftNav';
 import locations from './locations';
 import companyContacts from './companyContacts';
 import jobs from './jobs';
+import resources from './resources';
 
 export default combineReducers({
   router: routerStateReducer,
@@ -19,4 +20,5 @@ export default combineReducers({
   locations,
   companyContacts,
   jobs,
+  resources,
 });

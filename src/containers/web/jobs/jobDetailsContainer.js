@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getOneJob } from '../../../modules/jobs';
+import { getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts } from '../../../modules/contacts';
 import { getOneLocation } from '../../../modules/locations';
 import { JobDetailsPage } from '../../../components/web';

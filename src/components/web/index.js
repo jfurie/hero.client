@@ -30,3 +30,4 @@ export JobCreateModal from './jobCreateModal/jobCreateModal';
 export JobDetailsModal from './jobDetails/jobDetailsModal';
 export CandidateSearch from './candidateSearch/candidateSearch';
 export CandidateSearchModal from './candidateSearch/candidateSearchModal';
+export FileInput from './fileInput/fileInput'

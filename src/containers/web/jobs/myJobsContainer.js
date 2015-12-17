@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, JobsList } from '../../../components/web';
 import { toggleNav } from '../../../modules/leftNav';
-import { getAllJobs } from '../../../modules/jobs';
+import { getAllJobs } from '../../../modules/jobs/index';
 
 // const style = {
 //   slide: {

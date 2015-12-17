@@ -47,7 +47,7 @@ class JobDetails extends React.Component {
     let heroContact = '/img/rameet.jpg';
     return (
       <div>
-        <CandidateSearchModal open={this.props.candidateSearchOpen} closeModal={this.candidateSearchModalClose.bind(this)} candidates={this.props.seachCandidates}/>
+
         <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
         <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']}>
           <div style={style.slide}>
