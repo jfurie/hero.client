@@ -1,15 +1,13 @@
-import {
-  combineReducers,
-  routerStateReducer,
-  auth,
-  users,
-  contacts,
-  companies,
-  leftNav,
-  locations,
-  clientContacts,
-  jobs,
-} from './container';
+import { combineReducers } from 'redux';
+import { routerStateReducer } from 'redux-router';
+import auth from './auth';
+import users from './users';
+import contacts from './contacts';
+import companies from './companies';
+import leftNav from './leftNav';
+import locations from './locations';
+import companyContacts from './companyContacts';
+import jobs from './jobs';
 
 export default combineReducers({
   router: routerStateReducer,
@@ -19,6 +17,6 @@ export default combineReducers({
   leftNav,
   companies,
   locations,
-  clientContacts,
+  companyContacts,
   jobs,
 });

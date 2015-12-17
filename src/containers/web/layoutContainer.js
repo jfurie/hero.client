@@ -40,46 +40,59 @@ class Layout extends React.Component {
   //   this.selfSet = true;
   //   this.props.onNavClose();
   // }
-  onClick() {
-    this.refs.leftNavChildren.toggle();
-  }
+  // onClick() {
+  //   //this.refs.leftNavChildren.toggle();
+  //   this.setState({
+  //     open: false,
+  //   });
+  // }
 
   clickHome () {
     this.props.pushState(null, '');
-    this.refs.leftNavChildren.toggle();
+    this.setState({
+      open: false,
+    });
   }
 
   clickLogin () {
     this.props.pushState(null, '/login');
-    this.refs.leftNavChildren.toggle();
+    this.setState({
+      open: false,
+    });
   }
 
   clickClients() {
     this.props.pushState(null, '/clients');
-    this.refs.leftNavChildren.toggle();
+    this.setState({
+      open: false,
+    });
   }
 
   clickSettings() {
     this.props.pushState(null, '/settings');
-    this.refs.leftNavChildren.toggle();
+    this.setState({
+      open: false,
+    });
   }
   clickLogout() {
     this.props.pushState(null, '/logout');
-    this.refs.leftNavChildren.toggle();
+    this.setState({
+      open: false,
+    });
   }
 
   clickMyJobs() {
     this.props.pushState(null, '/jobs');
-    this.refs.leftNavChildren.toggle();
+    this.setState({
+      open: false,
+    });
   }
 
   clickMyCandidates() {
     this.props.pushState(null, '/candidates');
-    this.refs.leftNavChildren.toggle();
-  }
-
-  _onRequestChange() {
-    console.log('_onRequestChange');
+    this.setState({
+      open: false,
+    });
   }
 
   render () {

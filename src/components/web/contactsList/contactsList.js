@@ -1,8 +1,8 @@
 import React from 'react';
-import { List, ListItem, ListDivider, Avatar } from 'material-ui';
+import { List, ListItem, ListDivider } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { ContactDetailsModal } from '../../../components/web';
+import { ContactDetailsModal, Gravatar } from '../../../components/web';
 
 class ContactsList extends React.Component {
 
@@ -73,18 +73,16 @@ class ContactsList extends React.Component {
               } else if (!secondaryText.length && contactLocation) {
                 secondaryText = contactLocation;
               }
-
-              let p = 'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square';
-
+              
               return (
                 <div>
                   <ListItem
-                    leftAvatar={<Avatar src={p}></Avatar>}
-                    primaryText={contact.get('displayName')}
-                    secondaryText={<p>{secondaryText}</p>}
-                    secondaryTextLines={2}
-                    onTouchTap={this.openDetails.bind(this, contact)}
-                    key={key}
+                      leftAvatar={<Gravatar src={contact.get('email')} />}
+                      primaryText={contact.get('displayName')}
+                      secondaryText={<p>{secondaryText}</p>}
+                      secondaryTextLines={2}
+                      onTouchTap={this.openDetails.bind(this, contact)}
+                      key={key}
                   />
                   <ListDivider inset={true} />
                 </div>

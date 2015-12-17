@@ -1,8 +1,8 @@
 import React from 'react';
-import { List, ListItem, ListDivider, Avatar } from 'material-ui';
+import { List, ListItem, ListDivider } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { RingCandidate, CandidateDetailsModal } from '../../../components/web';
+import { CandidateDetailsModal, Gravatar } from '../../../components/web';
 
 class CandidatesList extends React.Component {
 
@@ -55,12 +55,12 @@ class CandidatesList extends React.Component {
               } else if (!secondaryText.length && candidateLocation) {
                 secondaryText = candidateLocation;
               }
-              let p = 'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square';
+              //let p = 'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square';
               let status = 'vetted';
               return (
                 <div key={key}>
                   <ListItem
-                    leftAvatar={<Avatar><RingCandidate key={key} picture={p} status={status} size={'large'}/></Avatar>}
+                    leftAvatar={<Gravatar email={candidate.get('email')} status={status}/>}
                     primaryText={candidate.get('displayName')}
                     secondaryText={<p>{secondaryText} <br/> vetted</p>}
                     secondaryTextLines={2}
