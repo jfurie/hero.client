@@ -9,6 +9,7 @@ import {
   locations,
   clientContacts,
   jobs,
+  resources,
 } from './container';
 
 export default combineReducers({
@@ -21,4 +22,5 @@ export default combineReducers({
   locations,
   clientContacts,
   jobs,
+  resources,
 });

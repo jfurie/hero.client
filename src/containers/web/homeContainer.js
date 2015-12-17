@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
-import { getAllJobs } from '../../modules/jobs';
+import { getAllJobs } from '../../modules/jobs/index';
 import { getAllContacts } from '../../modules/contacts';
 import { getAllCompanies } from '../../modules/companies';
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, FlatButton, TextField, DatePicker } from 'material-ui';
+import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, FlatButton, TextField, DatePicker, Card, CardMedia, CardText, LinearProgress,SelectField } from 'material-ui';
+import {FileInput} from '../';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -75,9 +76,7 @@ class JobCreateModal extends React.Component {
 
   saveJob() {
     console.log('save note!');
-    this.setState({
-      open: false,
-    });
+    this.props.saveJob();
   }
 
   show() {
@@ -90,8 +89,17 @@ class JobCreateModal extends React.Component {
     console.log('submit!');
   }
 
-  _handleChange() {
+  _handleChange(type, e) {
+    console.log(type, e.target.value);
+    var change = {};
+    change[type] = e.target.value;
+    this.props.onJobChange(change);
+  }
 
+  _handleStartDateChange(e,value){
+    var change = {};
+    change['startDate'] = value;
+    this.props.onJobChange(change);
   }
 
   _datePickerClose() {
@@ -101,8 +109,24 @@ class JobCreateModal extends React.Component {
   _datePickerOpen() {
     console.log('show!');
   }
-
+  onImageChange(value){
+    this.props.onImageChange(value);
+  }
+  _handleSelectValueChange(e, key, payload){
+    var change = {};
+    change['contactId'] = payload.id;
+    this.props.onJobChange(change);
+  }
   render() {
+    let menuItems = this.props.contacts.list.map((contact)=>{
+      return {
+        id: contact.get('id'),
+        name: contact.get('displayName'),
+        payload: contact.get('id'),
+        text: contact.get('displayName'),
+      };
+    });
+    menuItems = menuItems.toArray();
 
     return (
       <Dialog
@@ -131,11 +155,31 @@ class JobCreateModal extends React.Component {
                   <div className="box">
                     <form onSubmit={this._handleSubmit.bind(this)}>
                       <div>
+                          <Card>
+                            <CardMedia>
+                              {(() => {
+                                if(this.props.jobImage){
+                                  return (<div><img style={{maxWidth:'100%', maxHeight:'300px'}} src={this.props.jobImage.get('item')}></img></div>);
+                                } else {
+                                  return (<div></div>);
+                                }
+                              })()}
+                            </CardMedia>
+                            <CardText>
+                              <LinearProgress mode="determinate" value={this.props.job.get('percentUploaded')} />
+                              <FileInput label={this.props.jobImage?'Change Photo':'Add Photo'} onFileChanged={this.onImageChange.bind(this)}></FileInput>
+                            </CardText>
+                          </Card>
+
+
+                      </div>
+                      <div>
                         <TextField
                             fullWidth
                             errorText={''}
-                            onChange={this._handleChange.bind(this)}
+                            onChange={this._handleChange.bind(this, 'title')}
                             floatingLabelText="Job Title"
+                            value={this.props.job.get('title')}
                         />
                       </div>
                       <div>
@@ -144,22 +188,28 @@ class JobCreateModal extends React.Component {
                             multiLine
                             fullWidth
                             floatingLabelStyle={style.floatLabel}
+                            onChange={this._handleChange.bind(this, 'quickPitch')}
+                            value={this.props.job.get('quickPitch')}
                         />
                       </div>
                       <div>
                         <TextField
                             fullWidth
                             errorText={''}
-                            onChange={this._handleChange.bind(this)}
+                            onChange={this._handleChange.bind(this, 'minSalary')}
                             floatingLabelText="Min Salary"
+                            type="number"
+                            value={this.props.job.get('minSalary')}
                         />
                       </div>
                       <div>
                         <TextField
                             fullWidth
                             errorText={''}
-                            onChange={this._handleChange.bind(this)}
+                            onChange={this._handleChange.bind(this, 'maxSalary')}
                             floatingLabelText="Max Salary"
+                            type="number"
+                            value={this.props.job.get('maxSalary')}
                         />
                       </div>
                       <div>
@@ -168,6 +218,8 @@ class JobCreateModal extends React.Component {
                             multiLine
                             fullWidth
                             floatingLabelStyle={style.floatLabel}
+                            onChange={this._handleChange.bind(this, 'bonusPerks')}
+                            value={this.props.job.get('bonusPerks')}
                         />
                       </div>
                       <div>
@@ -176,6 +228,8 @@ class JobCreateModal extends React.Component {
                             multiLine
                             fullWidth
                             floatingLabelStyle={style.floatLabel}
+                            onChange={this._handleChange.bind(this, 'description')}
+                            value={this.props.job.get('description')}
                         />
                       </div>
                       <div>
@@ -184,15 +238,31 @@ class JobCreateModal extends React.Component {
                             textFieldStyle={style.datePicker}
                             onShow={this._datePickerOpen}
                             onRequestClose={this._datePickerClose}
+                            onChange={this._handleStartDateChange.bind(this)}
+                            value={this.props.job.get('startDate')}
+                            ref="startDate"
                         />
                       </div>
                       <div>
                         <TextField
                             fullWidth
                             errorText={''}
-                            onChange={this._handleChange.bind(this)}
                             floatingLabelText="Fee %"
+                            onChange={this._handleChange.bind(this, 'feePercent')}
+                            type="number"
+                            value={this.props.job.get('feePercent')}
                         />
+                      </div>
+                      <div>
+                        <SelectField
+                          ref='selectValue'
+                          fullWidth
+                          floatingLabelText="Select Primary Contact"
+                          value={this.props.job.get('contactId')}
+                          valueMember='id'
+                          displayMember="name"
+                          onChange={this._handleSelectValueChange.bind(this)}
+                          menuItems={menuItems} />
                       </div>
                     </form>
                   </div>

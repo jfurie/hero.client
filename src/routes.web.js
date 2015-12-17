@@ -128,6 +128,7 @@ export default(store) => {
           <Route path="clients">
             <IndexRoute component={ClientsPage}/>
             <Route path=":id" component={ClientDetailsPage} />
+            <Route path=":id/jobs(/:create)" component={ClientDetailsPage} />
           </Route>
 
           <Route path="jobs">

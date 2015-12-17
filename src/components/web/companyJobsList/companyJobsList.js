@@ -17,7 +17,7 @@ class CompanyJobsList extends React.Component {
       this.props.onJobClick(job);
     }
   }
-  
+
   render() {
 
     let { jobs, company } = this.props;
@@ -43,10 +43,10 @@ class CompanyJobsList extends React.Component {
 
       let peopleList = [];
 
-      people[index].forEach(function(p, key) {
-        let status = fakeStatus.shift();
-        peopleList.push(<RingCandidate key={key} picture={p} status={status}/>);
-      });
+      // people[index].forEach(function(p, key) {
+      //   let status = fakeStatus.shift();
+      //   peopleList.push(<RingCandidate key={key} picture={p} status={status}/>);
+      // });
 
       nestedJobsItem.push(
         <ListItem

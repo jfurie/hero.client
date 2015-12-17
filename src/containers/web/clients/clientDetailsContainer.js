@@ -10,7 +10,7 @@ import {
 
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
-import { getAllJobs } from '../../../modules/jobs';
+import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal } from '../../../modules/jobs/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 
 import {
@@ -20,11 +20,12 @@ import {
 
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
-function getData(state, id) {
+function getData(state, props) {
+  let id = props.params.id;
   let company = ((state.companies.list.size > 0) ? (state.companies.list.get(id)) : (null));
   let location = null;
   let contacts = state.contacts; // TMP
-
+  let localJobResource = null;
   if (company && company.get('location')) {
     location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
   }
@@ -40,12 +41,18 @@ function getData(state, id) {
       return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
+  var imageId = state.jobs.localJob.get('imageId');
+  if(imageId){
+    localJobResource = state.resources.list.get(imageId);
+  }
 
   return {
     company,
     location,
     contacts: newContacts,
     jobs: state.jobs,
+    localJob: state.jobs.localJob,
+    localJobResource,
   };
 }
 
@@ -56,8 +63,8 @@ const style = {
 };
 
 @connect((state, props) => (
-getData(state, props.params.id)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getAllJobs, pushState})
+getData(state, props)),
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -71,7 +78,7 @@ class ClientDetailsPage extends React.Component {
   componentDidMount() {
     this.props.getOneCompany(this.props.params.id);
     this.props.getContactsByCompany(this.props.params.id);
-    this.props.getAllJobs();
+    this.props.getJobsByCompany(this.props.params.id);
   }
 
   componentWillUpdate() {
@@ -126,9 +133,15 @@ class ClientDetailsPage extends React.Component {
   }
 
   createJobModalOpen() {
+    this.props.replaceJobLocal({companyId:this.props.params.id});
     this.refs.jobCreateModal.show();
   }
-
+  onJobCreateChange (job){
+    this.props.updateJobLocal(job);
+  }
+  onJobCreateImageChange(imageArray){
+    this.props.updateJobImageLocal(imageArray);
+  }
   render() {
 
     let {company, location, contacts, jobs} = this.props;
@@ -146,7 +159,7 @@ class ClientDetailsPage extends React.Component {
           <ClientContactsCreateModal onSubmit={this.saveClient.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal ref='notesCreateModal' />
-          <JobCreateModal ref='jobCreateModal'/>
+          <JobCreateModal contacts={contacts} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
           <Header iconRight={
             <IconMenu iconButtonElement={
