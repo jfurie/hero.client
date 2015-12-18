@@ -6,15 +6,18 @@ const GET_COMPANIES_FAIL = 'hero.client/clients/GET_COMPANIES_FAIL';
 const GET_COMPANY = 'hero.client/clients/GET_COMPANY';
 const GET_COMPANY_SUCCESS = 'hero.client/clients/GET_COMPANY_SUCCESS';
 const GET_COMPANY_FAIL = 'hero.client/clients/GET_COMPANY_FAIL';
-
 const CREATE_COMPANY = 'hero.client/clients/CREATE_COMPANY';
 const CREATE_COMPANY_SUCCESS = 'hero.client/clients/CREATE_COMPANY_SUCCESS';
 const CREATE_COMPANY_FAIL = 'hero.client/clients/CREATE_COMPANY_FAIL';
 const SEARCH_COMPANIES = 'hero.client/clients/SEARCH_COMPANIES';
+const EDIT_COMPANY = 'hero.client/clients/EDIT_COMPANY';
+const EDIT_COMPANY_SUCCESS = 'hero.client/clients/EDIT_COMPANY_SUCCESS';
+const EDIT_COMPANY_FAIL = 'hero.client/clients/EDIT_COMPANY_FAIL';
+
 const initialState = {
   list: new Immutable.Map(),
   searches: new Immutable.Map(),
-  currentSearch: ''
+  currentSearch: '',
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -57,6 +60,27 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case GET_COMPANY_FAIL: {
+    return {
+      ...state,
+      err: action.err,
+    };
+  }
+  case EDIT_COMPANY: {
+    return {
+      ...state,
+    };
+  }
+  case EDIT_COMPANY_SUCCESS: {
+    let company = {};
+    let id = action.result.id;
+    company[id] = action.result;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(company),
+    };
+  }
+  case EDIT_COMPANY_FAIL: {
     return {
       ...state,
       err: action.err,
@@ -138,7 +162,17 @@ export function createCompany(company) {
     types: [CREATE_COMPANY, CREATE_COMPANY_SUCCESS, CREATE_COMPANY_FAIL],
     promise: (client, auth) => client.api.post('/companies', {
       authToken: auth.authToken,
-      data: company
+      data: company,
+    }),
+  };
+}
+
+export function editCompany(company) {
+  return {
+    types: [EDIT_COMPANY, EDIT_COMPANY_SUCCESS, EDIT_COMPANY_FAIL],
+    promise: (client, auth) => client.api.put(`/companies/${company.id}`, {
+      authToken: auth.authToken,
+      data: company,
     }),
   };
 }

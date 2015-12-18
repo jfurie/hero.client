@@ -1,6 +1,7 @@
 import React from 'react';
-import {Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle} from 'material-ui';
-
+import { Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle } from 'material-ui';
+import { editCompany } from '../../../modules/companies';
+import { connect } from 'react-redux';
 import validateCompany from '../../../validators/company';
 
 const style = {
@@ -49,18 +50,35 @@ const style = {
   },
 };
 
-export default class ClientsCreateModal extends React.Component {
+@connect(() => (
+{}), { editCompany }, null, {withRef: true})
+export default class ClientsEditModal extends React.Component {
 
   constructor(props){
     super(props);
     this.state = {
-      company: {},
+      company: {
+        id: props.company.get('id'),
+        name: props.company.get('name'),
+        website: props.company.get('website'),
+        facebookHandle: props.company.get('facebookHandle'),
+        twitterHandle: props.company.get('twitterHandle'),
+      },
       errors: {},
+      open: false,
     };
   }
 
+  show() {
+    this.setState({
+      open: true,
+    });
+  }
+
   closeModal(){
-    this.props.closeModal();
+    this.setState({
+      open: false,
+    });
   }
 
   _handleChange(e, field) {
@@ -87,15 +105,19 @@ export default class ClientsCreateModal extends React.Component {
     });
 
     if (errors.validationErrors === 0) {
-      this.props.onSubmit(this.state.company);
+      this.props.editCompany(this.state.company);
+      this.closeModal();
     }
   }
 
   render(){
+
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    let { company } = this.props;
+
     return (
       <Dialog
-          open={this.props.open}
+          open={this.state.open}
           autoDetectWindowHeight={false}
           autoScrollBodyContent={false}
           repositionOnUpdate={false}
@@ -105,11 +127,10 @@ export default class ClientsCreateModal extends React.Component {
           contentStyle={style.contentStyle}
       >
         <div style={{height: `${clientHeight}px`}}>
-
           <Toolbar style={style.toolbar}>
             <ToolbarGroup key={0} float="left">
               <IconButton onTouchTap={this.closeModal.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
-              <ToolbarTitle style={style.toolbarTitle} text="Create Client" />
+              <ToolbarTitle style={style.toolbarTitle} text="Edit Client" />
             </ToolbarGroup>
             <ToolbarGroup key={1} float="right">
               <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
@@ -125,7 +146,8 @@ export default class ClientsCreateModal extends React.Component {
                             errorText={this.state.errors['name'] || ''}
                             errorStyle={style.error}
                             onChange={(e) => this._handleChange.bind(this)(e, 'name')}
-                            floatingLabelText="Company Name" />
+                            floatingLabelText="Company Name"
+                            defaultValue={this.state.company.name} />
                       </div>
                       <div>
                         <TextField
@@ -133,7 +155,8 @@ export default class ClientsCreateModal extends React.Component {
                             errorText={this.state.errors['website'] || ''}
                             errorStyle={style.error}
                             onChange={(e) => this._handleChange.bind(this)(e, 'website')}
-                            floatingLabelText="Company Website" />
+                            floatingLabelText="Company Website"
+                            defaultValue={this.state.company.website} />
                       </div>
                       <div>
                         <TextField
@@ -141,7 +164,8 @@ export default class ClientsCreateModal extends React.Component {
                             errorText={this.state.errors['facebookHandle'] || ''}
                             errorStyle={style.error}
                             onChange={(e) => this._handleChange.bind(this)(e, 'facebookHandle')}
-                            floatingLabelText="Facebook Handle (optional)" />
+                            floatingLabelText="Facebook Handle (optional)"
+                            defaultValue={this.state.company.facebookHandle} />
                       </div>
                       <div>
                         <TextField
@@ -149,7 +173,8 @@ export default class ClientsCreateModal extends React.Component {
                             errorText={this.state.errors['twitterHandle'] || ''}
                             errorStyle={style.error}
                             onChange={(e) => this._handleChange.bind(this)(e, 'twitterHandle')}
-                            floatingLabelText="Twitter Handle (optional)" />
+                            floatingLabelText="Twitter Handle (optional)"
+                            defaultValue={this.state.company.twitterHandle} />
                       </div>
                     </form>
                   </div>
@@ -161,5 +186,6 @@ export default class ClientsCreateModal extends React.Component {
   }
 }
 
-ClientsCreateModal.propTypes = {
+ClientsEditModal.propTypes = {
+  company: React.PropTypes.object.isRequired,
 };
