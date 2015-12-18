@@ -87,7 +87,6 @@ class ClientPage extends React.Component {
             iconRight={<IconButton onTouchTap={this.openModal.bind(this)}
             iconClassName='material-icons'>add</IconButton>}
             title={'Clients'}
-            goBack={this.goBack.bind(this)}
         />
         <ClientsList clients={visibleCompanies} />
 
