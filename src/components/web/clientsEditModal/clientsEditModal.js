@@ -58,6 +58,7 @@ export default class ClientsEditModal extends React.Component {
     super(props);
     this.state = {
       company: {
+        id: props.company.get('id'),
         name: props.company.get('name'),
         website: props.company.get('website'),
         facebookHandle: props.company.get('facebookHandle'),
@@ -104,8 +105,8 @@ export default class ClientsEditModal extends React.Component {
     });
 
     if (errors.validationErrors === 0) {
-      //this.props.onSubmit(this.state.company);
-      console.log('cool!');
+      this.props.editCompany(this.state.company);
+      this.closeModal();
     }
   }
 

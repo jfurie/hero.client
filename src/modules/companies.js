@@ -65,6 +65,27 @@ export default function reducer(state = initialState, action = {}) {
       err: action.err,
     };
   }
+  case EDIT_COMPANY: {
+    return {
+      ...state,
+    };
+  }
+  case EDIT_COMPANY_SUCCESS: {
+    let company = {};
+    let id = action.result.id;
+    company[id] = action.result;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(company),
+    };
+  }
+  case EDIT_COMPANY_FAIL: {
+    return {
+      ...state,
+      err: action.err,
+    };
+  }
   case CREATE_COMPANY:
     return {
       ...state,
