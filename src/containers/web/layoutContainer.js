@@ -20,7 +20,7 @@ class Layout extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps.leftNav.open != this.props.leftNav.open){
+    if (nextProps.leftNav.open != this.props.leftNav.open) {
       this.setState({
         open: !this.state.open,
       });

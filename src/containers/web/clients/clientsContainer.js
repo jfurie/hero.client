@@ -4,14 +4,13 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, ClientsCreateModal, ClientsList } from '../../../components/web';
 import {getAllCompanies, createCompany, searchCompany} from '../../../modules/companies';
-import {IconMenu, IconButton } from 'material-ui';
-let MenuItem = require('material-ui/lib/menus/menu-item');
+import { IconButton } from 'material-ui';
 
 @connect(state =>
 {
   let visibleCompanies = new Immutable.Map();
   if(state.companies.currentSearch != ''){
-    var current =  state.companies.searches.get(state.companies.currentSearch);
+    var current = state.companies.searches.get(state.companies.currentSearch);
     visibleCompanies = state.companies.list.filter(x=>{
       return current.indexOf(x.get('id')) > -1;
     });
@@ -29,7 +28,7 @@ class ClientPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      createModalOpen:false,
+      createModalOpen: false,
     };
   }
 
@@ -54,7 +53,10 @@ class ClientPage extends React.Component {
     this.props.createCompany(company);
   }
 
-  openModal(){
+  openModal() {
+
+    console.log('openModal');
+
     this.setState({
       createModalOpen: true,
     });
@@ -70,20 +72,22 @@ class ClientPage extends React.Component {
     console.log('click');
   }
 
+  goBack() {
+    this.props.history.goBack();
+  }
+
   render() {
 
     let { visibleCompanies } = this.props;
 
     return (
       <div>
-        <ClientsCreateModal onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen}></ClientsCreateModal>
-        <Header iconRight={
-            <IconMenu iconButtonElement={
-              <IconButton  iconClassName="material-icons">more_vert</IconButton>
-            }>
-              <MenuItem index={0} onTouchTap={this.openModal.bind(this)} primaryText="Add" />
-            </IconMenu>
-        } title='Clients' />
+        <ClientsCreateModal onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen} />
+        <Header
+            iconRight={<IconButton onTouchTap={this.openModal.bind(this)}
+            iconClassName='material-icons'>add</IconButton>}
+            title={'Clients'}
+        />
         <ClientsList clients={visibleCompanies} />
 
       </div>);

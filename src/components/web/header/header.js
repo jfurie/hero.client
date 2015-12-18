@@ -1,30 +1,50 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {AppBar} from 'material-ui';
+import {AppBar, IconButton} from 'material-ui';
 import {toggleNav} from '../../../modules/leftNav';
 const Colors = require('material-ui/lib/styles/colors');
 
-@connect(state => ({user: state.auth.user}), { toggleNav})
+@connect(state => ({
+  user: state.auth.user,
+}), { toggleNav })
 class Header extends React.Component {
 
   menuClicked() {
-    this.props.toggleNav();
+
+    if (this.props.goBack) {
+      this.props.goBack();
+    } else {
+      this.props.toggleNav();
+    }
   }
 
   render() {
 
+
+    let leftIconFont = 'menu';
+    if (this.props.goBack) {
+      leftIconFont = 'chevron_left';
+    }
+
+    //console.log(this.props.history);
+
     return (
       <div>
-        <AppBar iconElementRight={this.props.iconRight} onLeftIconButtonTouchTap={this.menuClicked.bind(this)} style={{
-          position:'fixed',
-          'backgroundColor': Colors. grey900
-        }} title={this.props.title} />
-        <div style={{
-          height: '64px'
-        }}></div>
+        <AppBar
+          iconElementRight={this.props.iconRight}
+          style={{position:'fixed', 'backgroundColor': Colors. grey900}}
+          title={this.props.title}
+          iconElementLeft={<IconButton onTouchTap={this.menuClicked.bind(this)} iconClassName='material-icons'>{leftIconFont}</IconButton>}
+        />
+        <div style={{height: '64px'}}></div>
       </div>
     );
   }
 }
+//
+Header.propTypes = {
+  goBack: React.PropTypes.func,
+};
+
 
 export default Header;
