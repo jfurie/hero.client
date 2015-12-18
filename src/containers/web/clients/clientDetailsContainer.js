@@ -143,7 +143,7 @@ class ClientDetailsPage extends React.Component {
 
       let website = company.get('website');
       let twitter = company.get('twitterHandle');
-      let indeedId = company.get('indeedId');
+      let facebook = company.get('facebookHandle');
       let heroContact = '/img/rameet.jpg';
 
       return (
@@ -195,13 +195,13 @@ class ClientDetailsPage extends React.Component {
                     </div>
                   ) : (null)}
 
-                  {(indeedId) ? (
+                  {(facebook) ? (
                     <div>
                       <ListDivider inset />
                       <ListItem
                         leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={`@${indeedId}`}
-                        secondaryText={<p>indeed Id</p>}
+                        primaryText={`facebook.com/${facebook}`}
+                        secondaryText={<p>facebook</p>}
                         secondaryTextLines={1}
                       />
                     </div>
