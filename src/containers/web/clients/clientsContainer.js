@@ -72,6 +72,10 @@ class ClientPage extends React.Component {
     console.log('click');
   }
 
+  goBack() {
+    this.props.history.goBack();
+  }
+
   render() {
 
     let { visibleCompanies } = this.props;
@@ -79,8 +83,12 @@ class ClientPage extends React.Component {
     return (
       <div>
         <ClientsCreateModal onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen} />
-        <Header iconRight={<IconButton onTouchTap={this.openModal.bind(this)} iconClassName='material-icons'>add</IconButton>} title={'Clients'} />
-
+        <Header
+            iconRight={<IconButton onTouchTap={this.openModal.bind(this)}
+            iconClassName='material-icons'>add</IconButton>}
+            title={'Clients'}
+            goBack={this.goBack.bind(this)}
+        />
         <ClientsList clients={visibleCompanies} />
 
       </div>);

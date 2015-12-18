@@ -13,6 +13,18 @@ const constraints = {
     presence: true,
     url: true,
   },
+  'twitterHandle': {
+    length: {
+      minimum: 1,
+      message: 'must be at least 1 characters',
+    },
+  },
+  'facebookHandle': {
+    length: {
+      minimum: 1,
+      message: 'must be at least 1 characters',
+    },
+  },
 };
 
 export default function validateCompany(company) {

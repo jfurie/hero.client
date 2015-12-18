@@ -6,7 +6,7 @@ import { pushState } from 'redux-router';
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
   CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal, JobDetailsModal,
-} from '../../../components/web';
+  ClientsEditModal } from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
@@ -89,6 +89,17 @@ class ClientDetailsPage extends React.Component {
     this.refs.clientContactsCreateModal.getWrappedInstance().show();
   }
 
+  editClientModalOpen() {
+    this.refs.clientEditModal.getWrappedInstance().show();
+  }
+
+  // editClientModalClose() {
+  //   this.setState({
+  //     detailsJob:null,
+  //     openJob:false
+  //   });
+  // }
+
   contactDetailsModalOpen(contact) {
     this.setState({
       contactDetailsModalOpen: true,
@@ -141,6 +152,7 @@ class ClientDetailsPage extends React.Component {
           <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.state.detailsJob} seachCandidates={contacts.list} contacts={contacts} open={this.state.openJob}></JobDetailsModal>
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
+          <ClientsEditModal ref="clientEditModal" company={company}/>
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal ref='notesCreateModal' />
@@ -150,6 +162,7 @@ class ClientDetailsPage extends React.Component {
             <IconMenu iconButtonElement={
               <IconButton  iconClassName="material-icons">more_vert</IconButton>
             }>
+              <MenuItem index={0} onTouchTap={this.editClientModalOpen.bind(this)} primaryText="Edit Client" />
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
               <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
               <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />

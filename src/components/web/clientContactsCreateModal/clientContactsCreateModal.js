@@ -31,7 +31,6 @@ export default class ClientContactsCreateModal extends React.Component {
   }
 
   show() {
-    //console.log('show');
     this.setState({
       open: true,
     });
