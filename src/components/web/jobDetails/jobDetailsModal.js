@@ -76,6 +76,7 @@ class JobDetailsPage extends React.Component {
             <div style={{
               position:'fixed',
               width:'100%',
+              zIndex:10,
             }}>
               <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
                 <ToolbarGroup key={0} float="left">
