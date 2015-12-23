@@ -1,5 +1,8 @@
 import React from 'react';
-import {Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle} from 'material-ui';
+import {
+  Dialog, IconButton, ToolbarGroup, Toolbar,
+  FlatButton, TextField, ToolbarTitle, SelectField,
+} from 'material-ui';
 
 import validateCompany from '../../../validators/company';
 
@@ -47,6 +50,16 @@ const style = {
     lineHeight:'64px',
     float:'left',
   },
+  select: {
+    textAlign: 'left',
+    color: '#000',
+  },
+  floatLabel: {
+    top: '12px',
+    color: 'rgba(0, 0, 0, 0.298039)',
+    fontSize: '12px',
+    transform: 'none',
+  },
 };
 
 export default class ClientsCreateModal extends React.Component {
@@ -56,6 +69,7 @@ export default class ClientsCreateModal extends React.Component {
     this.state = {
       company: {},
       errors: {},
+      clientAdvocateIndex: 0,
     };
   }
 
@@ -87,12 +101,46 @@ export default class ClientsCreateModal extends React.Component {
     });
 
     if (errors.validationErrors === 0) {
+
+      let index = 0;
+      let self = this;
+
+      // assign userId to clientAdvocate
+      this.props.users.forEach(function(u) {
+        if (index === self.state.clientAdvocateIndex) {
+          let company = self.state.company;
+          company.clientAdvocate = u.get('id');
+          self.setState({
+            company,
+          });
+        }
+        index++;
+      });
+
       this.props.onSubmit(this.state.company);
     }
   }
 
-  render(){
+  _handleSelectValueChange(e) {
+    this.setState({
+      clientAdvocateIndex: e.target.value,
+    });
+  }
+
+
+  render() {
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    let menuItems = [];
+    let index = 0;
+
+    this.props.users.forEach(function(u) {
+      menuItems.push({
+        id: index,
+        text: u.get('email'),
+      });
+      index++;
+    });
+
     return (
       <Dialog
           open={this.props.open}
@@ -151,6 +199,20 @@ export default class ClientsCreateModal extends React.Component {
                             onChange={(e) => this._handleChange.bind(this)(e, 'twitterHandle')}
                             floatingLabelText="Twitter Handle (optional)" />
                       </div>
+                      <div>
+                        <SelectField
+                            selectedIndex={this.state.clientAdvocateIndex}
+                            floatingLabelText="Client Advocate"
+                            floatingLabelStyle={style.floatLabel}
+                            menuItems={menuItems}
+                            fullWidth
+                            style={style.select}
+                            valueMember="id"
+                            displayMember="text"
+                            onChange={this._handleSelectValueChange.bind(this)}
+                            hintText={''}
+                        />
+                      </div>
                     </form>
                   </div>
               </div>
@@ -162,4 +224,8 @@ export default class ClientsCreateModal extends React.Component {
 }
 
 ClientsCreateModal.propTypes = {
+  closeModal: React.PropTypes.func.isRequired,
+  onSubmit: React.PropTypes.func,
+  open: React.PropTypes.bool.isRequired,
+  users: React.PropTypes.objects,
 };
