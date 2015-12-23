@@ -3,26 +3,28 @@ import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, ClientsCreateModal, ClientsList } from '../../../components/web';
-import {getAllCompanies, createCompany, searchCompany} from '../../../modules/companies';
+import { getAllCompanies, createCompany, searchCompany } from '../../../modules/companies';
+import { getCurrentAccount } from '../../../modules/currentAccount';
+
 import { IconButton } from 'material-ui';
 
-@connect(state =>
-{
+@connect((state) => {
   let visibleCompanies = new Immutable.Map();
-  if(state.companies.currentSearch != ''){
-    var current = state.companies.searches.get(state.companies.currentSearch);
-    visibleCompanies = state.companies.list.filter(x=>{
+  if (state.companies.currentSearch != '') {
+    let current = state.companies.searches.get(state.companies.currentSearch);
+    visibleCompanies = state.companies.list.filter((x) => {
       return current.indexOf(x.get('id')) > -1;
     });
-  } else{
+  } else {
     visibleCompanies = state.companies.list;
   }
   return({
     type: state.router.location.query.type,
     companies: state.companies,
     visibleCompanies,
-  });}
-,{getAllCompanies, createCompany, searchCompany, pushState})
+    currentAccount: state.currentAccount,
+  });
+}, { getAllCompanies, createCompany, searchCompany, pushState, getCurrentAccount })
 class ClientPage extends React.Component {
 
   constructor(props) {
@@ -33,23 +35,27 @@ class ClientPage extends React.Component {
   }
 
   componentDidMount() {
-    let self = this;
-    setTimeout(() => {
-      self.props.getAllCompanies();
-    }, 500);
+    this.props.getAllCompanies();
+    this.props.getCurrentAccount();
+    // let self = this;
+    // setTimeout(() => {
+    //   self.props.getAllCompanies();
+    // }, 500);
   }
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.companies.creating == false && this.props.companies.creating == true && nextProps.companies.creatingError ==''){
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.companies.creating == false &&
+      this.props.companies.creating == true &&
+      nextProps.companies.creatingError =='') {
       this.closeModal();
     }
   }
 
-  searchCompany(e){
+  searchCompany(e) {
     this.props.searchCompany(e.target.value);
   }
 
-  saveCompany(company){
+  saveCompany(company) {
     this.props.createCompany(company);
   }
 
@@ -62,15 +68,15 @@ class ClientPage extends React.Component {
     });
   }
 
-  closeModal(){
+  closeModal() {
     this.setState({
       createModalOpen: false,
     });
   }
 
-  click() {
-    console.log('click');
-  }
+  // click() {
+  //   console.log('click');
+  // }
 
   goBack() {
     this.props.history.goBack();
@@ -78,11 +84,11 @@ class ClientPage extends React.Component {
 
   render() {
 
-    let { visibleCompanies } = this.props;
+    let { visibleCompanies, currentAccount } = this.props;
 
     return (
       <div>
-        <ClientsCreateModal onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen} />
+        <ClientsCreateModal users={currentAccount.usersList} onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen} />
         <Header
             iconRight={<IconButton onTouchTap={this.openModal.bind(this)}
             iconClassName='material-icons'>add</IconButton>}

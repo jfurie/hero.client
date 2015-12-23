@@ -1,5 +1,8 @@
 import Immutable from 'immutable';
-import {getOneLocation} from './locations';
+
+import { getOneLocation } from './locations';
+import { getOneUser } from './users';
+
 const GET_COMPANIES = 'hero.client/clients/GET_COMPANIES';
 const GET_COMPANIES_SUCCESS = 'hero.client/clients/GET_COMPANIES_SUCCESS';
 const GET_COMPANIES_FAIL = 'hero.client/clients/GET_COMPANIES_FAIL';
@@ -149,8 +152,13 @@ export function getOneCompany(id) {
       types: [GET_COMPANY, GET_COMPANY_SUCCESS, GET_COMPANY_FAIL],
       promise: (client, auth) =>  client.api.get(`/companies/${id}`, {
         authToken: auth.authToken,
-      }).then((company)=>{
-        dispatch(getOneLocation(company.location));
+      }).then((company)=> {
+        if (company.location) {
+          dispatch(getOneLocation(company.location));
+        }
+        // if (company.clientAdvocate) {
+        //   dispatch(getOneUser(company.clientAdvocate));
+        // }
         return company;
       }),
     });

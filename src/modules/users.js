@@ -67,3 +67,12 @@ export function invite(email, redirect) {
     }),
   };
 }
+
+export function getOneUser(id) {
+  return {
+    types: [GET_USER, GET_USER_SUCCESS, GET_USER_FAIL],
+    promise: (client, auth) => client.api.get(`/users/${id}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
