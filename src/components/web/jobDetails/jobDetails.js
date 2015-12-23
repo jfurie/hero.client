@@ -1,6 +1,7 @@
 import React from 'react';
 import { CustomTabsSwipe, CandidatesList, LocationCard, ContactDetailsModal } from '../../../components/web';
 import { List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions } from 'material-ui';
+import marked from 'marked';
 
 import './jobDetails.scss';
 
@@ -44,6 +45,11 @@ class JobDetails extends React.Component {
   render(){
     let { contacts, location, isLight } = this.props;
 
+    let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
+
+    // mardown to html
+    let description = marked(fakeDescription);
+
     let heroContact = '/img/rameet.jpg';
     return (
       <div>
@@ -52,23 +58,6 @@ class JobDetails extends React.Component {
         <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']}>
           <div style={style.slide}>
             <Card>
-            {/*  <div className="mediawrap">
-                <CardMedia overlay={
-                    <div className='row'>
-                      <div className='col-xs-9'>
-                        <CardTitle titleStyle={{color:'rgba(255, 255, 255, 0.87)'}} subtitleStyle={{color:'rgba(255, 255, 255, 0.54)'}} title="Andriod Mobile Engineer" subtitle="FreedomPop"/>
-
-                        </div>
-                      <div className='col-xs-3'>
-                        <div className="button-right-bottom">
-                        <RaisedButton label="Apply" primary={true} />
-                        </div>
-                      </div>
-                    </div>
-                  }>
-                  <img src='https://scontent.cdninstagram.com/hphotos-xft1/t51.2885-15/e15/11378685_847466158664846_945103283_n.jpg'></img>
-                </CardMedia>
-              </div>*/}
                 <div className="mediawrap">
                 <CardMedia>
                   <img src='https://scontent.cdninstagram.com/hphotos-xft1/t51.2885-15/e15/11378685_847466158664846_945103283_n.jpg'></img>
@@ -166,7 +155,8 @@ class JobDetails extends React.Component {
             <Card>
               <CardText >
                 <div className='description'>
-                  <h3 className='c2'><a name='h.2qn7ea1nr273' /><span>Job Description</span></h3><p className='c4'><span className='c0'>Our client is a first-of-its-kind technology startup that is disrupting a multi-billion dollar industry. They have a significant amount of funding, and their backers include founders of companies that have become household names. They are currently hiring for a Senior Software Engineer who has a background building high-traffic, multi-threaded software systems using MVC frameworks like and and has strong relational and ideally database experience.</span></p><h4 className='c2'><a name='h.usesbgd80cl3' /><span>The non-negotiables:</span></h4><ul className='c7 lst-kix_p70ulp80wgsv-0 start'><li className='c4 c5'><span className='c0'>&nbsp;5+ years of Java Development experience</span></li><li className='c4 c5'><span className='c0'>Experience with a client-side JavaScript MVC framework (Angular, React, Backbone, Ember)</span></li><li className='c4 c5'><span className='c0'>Expertise with Spring and Hibernate / JPA</span></li><li className='c4 c5'><span className='c0'>&nbsp;Experience with relational databases like SQL Server, MySQL</span></li><li className='c4 c5'><span className='c0'>Exposure to technologies, i.e. preferred</span></li><li className='c4 c5'><span className='c0'>A Bachelor's degree in Computer Science or greater</span></li></ul><h4 className='c2'><a name='h.1klbg0xnecvg' /><span>The reasons to work there:</span></h4><ul className='c7 lst-kix_ue7i54lkmb8h-0 start'><li className='c4 c5'><span className='c0'>Competitive compensation package with excellent benefits</span></li><li className='c4 c5'><span className='c0'>The chance to put your stamp on a platform that's already used by millions of people and gaining thousands of users every day</span></li><li className='c4 c5'><span className='c0'>The stability of a well-funded company with traction, with the excitement of a startup</span></li><li className='c4 c5'><span className='c0'>Huge growth opportunity</span></li></ul><p className='c1'><span className='c0' /></p><p className='c4'><span className='c0'>If this fits your background and you're ready to make a huge impact at a small company, apply now. We look forward to speaking with you soon.</span></p><p className='c4'><span className='c0'>Local candidates are strongly preferred. Sponsorship is not an option at this time.</span></p><p className='c6'><span /></p>
+                  <h3>Job Description</h3>
+                  <div dangerouslySetInnerHTML={{__html: description}} />
                 </div>
               </CardText>
             </Card>

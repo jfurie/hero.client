@@ -43,6 +43,7 @@
     "history": "^1.13.0",
     "immutable": "^3.7.5",
     "lodash": "^3.10.1",
+    "marked": "^0.3.5",
     "material-ui": "^0.14.0-rc1",
     "md5": "^2.0.0",
     "react": "^0.14.3",
