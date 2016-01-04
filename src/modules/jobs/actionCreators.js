@@ -50,19 +50,19 @@ export function updateJobImageLocal(file) {
         data: {
           name: file.name,
           size: file.size,
-          type: file.type
-        }
+          type: file.type,
+        },
       }).then((signUrlData) => new Promise((resolve, reject) => {
         superagent.put(signUrlData.signed_request)
             .send(file)
             .on('progress', function(e) {
               dispatch({
                 type: constants.UPDATE_JOB_IMAGE_LOCAL_PROGRESS,
-                result:e.percent
+                result: e.percent,
               });
             })
             .end((err, {
-              body
+              body,
             } = {}) => {
               if (err) {
                 return reject(body || err);
@@ -76,8 +76,8 @@ export function updateJobImageLocal(file) {
           authToken: auth.authToken,
           data: {
             resourceType: 'image',
-            item: signUrlData
-          }
+            item: signUrlData,
+          },
         });
       }),
     });
@@ -96,7 +96,7 @@ export function getOneJob(id) {
     promise: (client, auth) => client.api.get(`/jobs/${id}`, {
       authToken: auth.authToken,
       data: {
-        id
+        id,
       },
     }),
   };

@@ -37,7 +37,6 @@ class JobDetails extends React.Component {
 
   }
 
-
   saveContact(){
     console.log('save contact');
   }
