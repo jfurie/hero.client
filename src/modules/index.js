@@ -9,6 +9,7 @@ import locations from './locations';
 import companyContacts from './companyContacts';
 import jobs from './jobs';
 import resources from './resources';
+import currentAccount from './currentAccount';
 
 export default combineReducers({
   router: routerStateReducer,
@@ -21,4 +22,5 @@ export default combineReducers({
   companyContacts,
   jobs,
   resources,
+  currentAccount,
 });

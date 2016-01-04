@@ -6,16 +6,18 @@ import { pushState } from 'redux-router';
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
   CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal, JobDetailsModal,
-  ClientsEditModal } from '../../../components/web';
+  ClientsEditModal, Gravatar,
+} from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
+//import { getCurrentAccount } from '../../../modules/currentAccount';
 
 import {
   List, ListItem, ListDivider, FontIcon, IconMenu, IconButton,
-  Avatar, Card, CardHeader, CardText, CardActions, FlatButton,
+  Card, CardHeader, CardText, CardActions, FlatButton, Avatar,
 } from 'material-ui';
 
 import MenuItem from 'material-ui/lib/menus/menu-item';
@@ -47,15 +49,14 @@ function getData(state, props) {
 
   let contactsByCompanyListIds = contacts.byCompanyId.get(id);
 
-  //console.log('contactsByCompanyListIds', contactsByCompanyListIds);
-
   if (contactsByCompanyListIds) {
     newContacts.list = contacts.list.filter(x => {
       return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
-  var imageId = state.jobs.localJob.get('imageId');
-  if(imageId){
+
+  let imageId = state.jobs.localJob.get('imageId');
+  if (imageId) {
     localJobResource = state.resources.list.get(imageId);
   }
 
@@ -72,6 +73,7 @@ function getData(state, props) {
     jobs: state.jobs,
     localJob: state.jobs.localJob,
     localJobResource,
+    //currentAccount: state.currentAccount,
   };
 }
 
@@ -82,8 +84,11 @@ const style = {
 };
 
 @connect((state, props) => (
-getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob})
+getData(state, props)), {
+  getOneCompany, getOneLocation, getAllContacts, getContactsByCompany,
+  getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal,
+  saveLocalJob, replaceJobLocal, getOneJob,
+})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -101,14 +106,15 @@ class ClientDetailsPage extends React.Component {
     this.props.getOneJob(this.props.params.jobId);
   }
 
-  componentWillUpdate() {
-
-  }
   componentWillReceiveProps(nextProps){
     if(nextProps.localJob.get('success')){
       this.refs.jobCreateModal.closeModal();
       this.props.replaceJobLocal({companyId:this.props.params.id});
     }
+  }
+
+
+  componentWillUpdate() {
   }
 
   // saveClient() {
@@ -258,16 +264,19 @@ class ClientDetailsPage extends React.Component {
                     <LocationCard style={{height: '200px'}} location={location} />
                 ) : (<p>No location provided.</p>)}
               </div>
-              <List subheader="Your HERO talent advocate">
-                {(heroContact) ? (
+
+              {(company.get('clientAdvocate')) ? (
+                <List subheader={`${company.get('name')}'s talents advocate`} >
                   <ListItem
-                    leftAvatar={<Avatar src={heroContact} />}
-                    primaryText={'Rameet Singh'}
-                    secondaryText={<p>Hero Talent Advocate</p>}
+                    leftAvatar={<Gravatar email={company.get('clientAdvocate').get('email')} />}
+                    primaryText={company.get('clientAdvocate').get('email')}
+                    secondaryText={<p>Talents Advocate</p>}
                     secondaryTextLines={1}
                   />
-                ) : (null)}
                 </List>
+              ) : (null)}
+
+
             </div>
             <div style={style.slide}>
               <List subheader={`${jobs.list.count()} Jobs`}>
