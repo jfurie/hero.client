@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
-  List, ListItem, FontIcon, ListDivider, FlatButton, CardText } from 'material-ui';
+  List, ListItem, FontIcon, Divider, FlatButton, CardText } from 'material-ui';
 import { CustomTabsSwipe, ResumePDFViewer, JobsList, Gravatar } from '../../../components/web';
 import Immutable from 'immutable';
 
@@ -168,7 +168,7 @@ class CandidateDetailsModal extends React.Component {
 
                   {(phone) ? (
                     <div>
-                      <ListDivider inset />
+                      <Divider inset />
                       <ListItem
                           leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
                           primaryText={phone}
@@ -180,7 +180,7 @@ class CandidateDetailsModal extends React.Component {
 
                   {(address) ? (
                     <div>
-                      <ListDivider inset />
+                      <Divider inset />
                       <ListItem
                           leftIcon={<FontIcon className="material-icons">place</FontIcon>}
                           primaryText={address}
@@ -192,7 +192,7 @@ class CandidateDetailsModal extends React.Component {
 
                   {(city) ? (
                     <div>
-                      <ListDivider inset />
+                      <Divider inset />
                       <ListItem
                           leftIcon={<FontIcon className="material-icons">business</FontIcon>}
                           primaryText={city}
@@ -204,7 +204,7 @@ class CandidateDetailsModal extends React.Component {
 
                   {(source) ? (
                     <div>
-                      <ListDivider inset />
+                      <Divider inset />
                       <ListItem
                           leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
                           primaryText={source}
@@ -236,7 +236,7 @@ class CandidateDetailsModal extends React.Component {
                         secondaryTextLines={1}
                     />
 
-                    <ListDivider inset />
+                    <Divider inset />
 
                     <ListItem
                         leftIcon={<FontIcon className="material-icons">star_rate</FontIcon>}
@@ -245,7 +245,7 @@ class CandidateDetailsModal extends React.Component {
                         secondaryTextLines={1}
                     />
 
-                    <ListDivider inset />
+                    <Divider inset />
 
                     <ListItem
                         leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
@@ -254,7 +254,7 @@ class CandidateDetailsModal extends React.Component {
                         secondaryTextLines={1}
                     />
 
-                    <ListDivider inset />
+                    <Divider inset />
 
                     <ListItem
                         leftIcon={<FontIcon className="material-icons">alarm</FontIcon>}
@@ -263,7 +263,7 @@ class CandidateDetailsModal extends React.Component {
                         secondaryTextLines={1}
                     />
 
-                    <ListDivider inset />
+                    <Divider inset />
 
                     <ListItem
                         leftIcon={<FontIcon className="material-icons">alarm_on</FontIcon>}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, ListDivider } from 'material-ui';
+import { List, ListItem, Divider } from 'material-ui';
 import Infinite from 'react-infinite';
 
 import { CandidateDetailsModal, Gravatar } from '../../../components/web';
@@ -66,7 +66,7 @@ class CandidatesList extends React.Component {
                     secondaryTextLines={2}
                     onTouchTap={this.openDetails.bind(this, candidate)}
                   />
-                  <ListDivider inset={true} />
+                  <Divider inset={true} />
                 </div>
               );
             })}
