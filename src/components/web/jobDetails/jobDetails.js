@@ -42,7 +42,7 @@ class JobDetails extends React.Component {
   }
 
   render(){
-    let { contacts, location, isLight } = this.props;
+    let { contacts, location, isLight, job, jobImage } = this.props;
 
     let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
 
