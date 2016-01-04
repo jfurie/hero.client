@@ -42,7 +42,7 @@ class JobDetails extends React.Component {
   }
 
   render(){
-    let { contacts, location, isLight } = this.props;
+    let { contacts, location, isLight, job, jobImage } = this.props;
 
     let heroContact = '/img/rameet.jpg';
     return (

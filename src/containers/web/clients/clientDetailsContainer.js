@@ -10,7 +10,7 @@ import {
 
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
-import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal } from '../../../modules/jobs/index';
+import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 
 import {
@@ -22,6 +22,9 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 
 function getData(state, props) {
   let id = props.params.id;
+  let jobId = props.params.jobId;
+  let tab = props.params.tab;
+  let tabId = 0;
   let company = ((state.companies.list.size > 0) ? (state.companies.list.get(id)) : (null));
   let location = null;
   let contacts = state.contacts; // TMP
@@ -30,6 +33,13 @@ function getData(state, props) {
     location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
   }
 
+  switch (tab) {
+    case 'jobs':
+      tabId = 1;
+      break;
+    default:
+      tabId = 0;
+  }
   let newContacts = {
     ...contacts,
     list: new Immutable.Map(),
@@ -49,9 +59,15 @@ function getData(state, props) {
     localJobResource = state.resources.list.get(imageId);
   }
 
+  let job = state.jobs.list.get(jobId);
+  let jobImage = job? state.resources.list.get(job.get('imageId')): new Immutable.Map();
+
   return {
+    tabId,
     company,
     location,
+    job,
+    jobImage,
     contacts: newContacts,
     jobs: state.jobs,
     localJob: state.jobs.localJob,
@@ -67,7 +83,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal})
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -82,6 +98,7 @@ class ClientDetailsPage extends React.Component {
     this.props.getOneCompany(this.props.params.id);
     this.props.getContactsByCompany(this.props.params.id);
     this.props.getJobsByCompany(this.props.params.id);
+    this.props.getOneJob(this.props.params.jobId);
   }
 
   componentWillUpdate() {
@@ -128,10 +145,7 @@ class ClientDetailsPage extends React.Component {
   }
 
   _handleJobClick(job){
-    this.setState({
-      detailsJob:job,
-      openJob:true
-    });
+    this.props.pushState({},'/clients/'+this.props.params.id+'/jobs/'+ job.get('id'));
   }
   closeJobModal(){
     this.setState({
@@ -153,6 +167,17 @@ class ClientDetailsPage extends React.Component {
   }
   onJobCreateImageChange(imageArray){
     this.props.updateJobImageLocal(imageArray);
+  }
+  onSwipe(index){
+    let tab = '';
+    switch (index) {
+    case 1:
+      tab = 'jobs'
+      break;
+    default:
+      tab = '';
+    }
+    this.props.pushState('','/clients/'+this.props.params.id +'/'+tab);
   }
   render() {
 
@@ -188,7 +213,7 @@ class ClientDetailsPage extends React.Component {
             </IconMenu>
           } title={company.get('name')} />
 
-          <CustomTabsSwipe tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
+        <CustomTabsSwipe onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
             <div style={style.slide}>
               <List>
                 <div>
