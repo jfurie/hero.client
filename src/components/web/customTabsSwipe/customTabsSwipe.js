@@ -60,7 +60,7 @@ class CustomTabsSwipe extends React.Component {
 
       // notify parent of a swipe event
       if (this.props.onSwipeEnd) {
-        this.props.onSwipeEnd();
+        this.props.onSwipeEnd(index);
       }
 
     }
@@ -85,7 +85,7 @@ class CustomTabsSwipe extends React.Component {
 
       // notify parent of a swipe event
       if (this.props.onSwipeEnd) {
-        this.props.onSwipeEnd();
+        this.props.onSwipeEnd(index);
       }
     }
   }
