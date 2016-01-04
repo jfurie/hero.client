@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, ListDivider } from 'material-ui';
+import { List, ListItem, Divider } from 'material-ui';
 import Infinite from 'react-infinite';
 
 import { ContactDetailsModal, Gravatar } from '../../../components/web';
@@ -84,7 +84,7 @@ class ContactsList extends React.Component {
                       onTouchTap={this.openDetails.bind(this, contact)}
                       key={key}
                   />
-                  <ListDivider inset={true} />
+                  <Divider inset={true} />
                 </div>
               );
             })}

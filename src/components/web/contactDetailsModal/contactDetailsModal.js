@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
-  List, ListItem, FontIcon, ListDivider, FlatButton } from 'material-ui';
+  List, ListItem, FontIcon, Divider, FlatButton } from 'material-ui';
 import { InviteSuccessModal, Gravatar } from '../../../components/web';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -150,7 +150,7 @@ class ContactDetailsModal extends React.Component {
 
                 {(phone) ? (
                   <div>
-                    <ListDivider inset />
+                    <Divider inset />
                     <ListItem
                       leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
                       primaryText={phone}
@@ -162,7 +162,7 @@ class ContactDetailsModal extends React.Component {
 
                 {(address) ? (
                   <div>
-                    <ListDivider inset />
+                    <Divider inset />
                     <ListItem
                       leftIcon={<FontIcon className="material-icons">place</FontIcon>}
                       primaryText={address}
@@ -174,7 +174,7 @@ class ContactDetailsModal extends React.Component {
 
                 {(city) ? (
                   <div>
-                    <ListDivider inset />
+                    <Divider inset />
                     <ListItem
                       leftIcon={<FontIcon className="material-icons">business</FontIcon>}
                       primaryText={city}
@@ -186,7 +186,7 @@ class ContactDetailsModal extends React.Component {
 
                 {(source) ? (
                   <div>
-                    <ListDivider inset />
+                    <Divider inset />
                     <ListItem
                       leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
                       primaryText={source}
