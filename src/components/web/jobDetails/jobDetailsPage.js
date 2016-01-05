@@ -1,7 +1,9 @@
 import React from 'react';
 import { Header, ClientContactsCreateModal, JobDetails, CandidateSearchModal } from '../../../components/web';
-import { IconMenu, IconButton } from 'material-ui';
-let MenuItem = require('material-ui/lib/menus/menu-item');
+
+import IconButton from 'material-ui/lib/icon-button';
+import IconMenu from 'material-ui/lib/menus/icon-menu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 
 // const style = {
 //   slide: {
@@ -16,7 +18,7 @@ class JobDetailsPage extends React.Component {
 
     this.state = {
       createContactModalOpen: false,
-      candidateSearchOpen: false
+      candidateSearchOpen: false,
     };
   }
 
@@ -76,7 +78,7 @@ class JobDetailsPage extends React.Component {
             <MenuItem index={0} onTouchTap={this.candidateSearchModalOpen.bind(this)} primaryText='Find Candidates' />
             <MenuItem index={1} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Candidate" />
           </IconMenu>
-        } title={job?job.get('title'):''} />
+        } title={job ? job.get('title') : '' } />
         <JobDetails {...this.props} />
       </div>
     );

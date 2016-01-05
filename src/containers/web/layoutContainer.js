@@ -1,10 +1,13 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { LeftNav, FontIcon} from 'material-ui';
-let MenuItem = require('material-ui/lib/menus/menu-item');
-import { onNavOpen,onNavClose, toggleNav } from '../../modules/leftNav';
-import {LeftNavTop} from '../../components/web';
+import { LeftNav, FontIcon, MenuItem} from 'material-ui';
+
+//let MenuItem = require('material-ui/lib/menus/menu-item');
+
+import { onNavOpen, onNavClose, toggleNav } from '../../modules/leftNav';
+import { LeftNavTop } from '../../components/web';
+
 @connect(state => ({
   user: state.auth.user,
   leftNav: state.leftNav,

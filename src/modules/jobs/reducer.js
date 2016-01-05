@@ -8,19 +8,19 @@ const initialState = {
 
 // TMP FAKE JOBS
 
-let FAKEJOBS = {};
+//let FAKEJOBS = {};
 
-FAKEJOBS['1a'] = {
-  title: 'Android Mobile Engineer',
-  location: 'Santa Monica, CA',
-  id: '1a',
-};
-
-FAKEJOBS['2b'] = {
-  title: 'Software Ruby Engineer',
-  location: 'Venice, CA',
-  id: '2b',
-};
+// FAKEJOBS['1a'] = {
+//   title: 'Android Mobile Engineer',
+//   location: 'Santa Monica, CA',
+//   id: '1a',
+// };
+//
+// FAKEJOBS['2b'] = {
+//   title: 'Software Ruby Engineer',
+//   location: 'Venice, CA',
+//   id: '2b',
+// };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -30,10 +30,11 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.GET_JOBS_SUCCESS: {
-    return {
-      ...state,
-      list: state.list.mergeDeep(FAKEJOBS),
-    };
+    return state;
+    // return {
+    //   ...state,
+    //   list: state.list.mergeDeep(FAKEJOBS),
+    // };
   }
   case constants.GET_JOBS_FAIL: {
     return {
@@ -68,16 +69,32 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.GET_JOBS_BY_COMPANY_SUCCESS:{
-    let byCompanyMap = {};
-    byCompanyMap[action.result.companyId] = action.result.map((job)=>job.id);
-    let companyMap = {};
-    action.result.map((c) => {
-      companyMap[c.id] = c;
-    });
+
+    let companyId = null;
+
+    if (action.result.length) {
+      companyId = action.result[0].companyId;
+    }
+
+    if (companyId) {
+      let byCompanyMap = {};
+      byCompanyMap[companyId] = action.result.map((job) => job.id);
+      let companyMap = {};
+      action.result.map((c) => {
+        companyMap[c.id] = c;
+      });
+
+      return {
+        ...state,
+        byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
+        list: state.list.mergeDeep(companyMap),
+        loading:false,
+      };
+
+    }
+
     return {
       ...state,
-      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
-      list: state.list.mergeDeep(companyMap),
       loading:false,
     };
   }

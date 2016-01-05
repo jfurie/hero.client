@@ -1,5 +1,12 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, FlatButton, TextField, DatePicker, Card, CardMedia, CardText, LinearProgress,SelectField } from 'material-ui';
+
+import {
+  Dialog, Toolbar, ToolbarTitle, IconButton,
+  ToolbarGroup, FlatButton, TextField, DatePicker,
+  Card, CardMedia, CardText, LinearProgress, SelectField,
+  MenuItem,
+} from 'material-ui';
+
 import {FileInput} from '../';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -53,9 +60,9 @@ const style = {
     marginTop: '30px',
   },
   formContent: {
-    height: (clientHeight - 64) +'px',
+    height: `${(clientHeight - 64)} px`,
     overflowY: 'scroll',
-  }
+  },
 };
 
 class JobCreateModal extends React.Component {
@@ -74,7 +81,6 @@ class JobCreateModal extends React.Component {
   }
 
   saveJob() {
-    console.log('save note!');
     this.props.saveJob();
   }
 
@@ -89,14 +95,13 @@ class JobCreateModal extends React.Component {
   }
 
   _handleChange(type, e) {
-    console.log(type, e.target.value);
-    var change = {};
+    let change = {};
     change[type] = e.target.value;
     this.props.onJobChange(change);
   }
 
   _handleStartDateChange(e,value){
-    var change = {};
+    let change = {};
     change['startDate'] = value;
     this.props.onJobChange(change);
   }
@@ -108,24 +113,37 @@ class JobCreateModal extends React.Component {
   _datePickerOpen() {
     console.log('show!');
   }
+
   onImageChange(value){
     this.props.onImageChange(value);
   }
-  _handleSelectValueChange(e, key, payload){
-    var change = {};
-    change['contactId'] = payload.id;
+
+  _handleSelectValueChange(event, index, value) {
+    let change = {};
+    change['contactId'] = value;
     this.props.onJobChange(change);
   }
+
+  // _handleSelectValueChange(e, key, payload){
+  //   let change = {};
+  //   change['contactId'] = payload.id;
+  //   this.props.onJobChange(change);
+  // }
+
   render() {
-    let menuItems = this.props.contacts.list.map((contact)=>{
-      return {
-        id: contact.get('id'),
-        name: contact.get('displayName'),
-        payload: contact.get('id'),
-        text: contact.get('displayName'),
-      };
-    });
-    menuItems = menuItems.toArray();
+    // let menuItems = this.props.contacts.list.map((contact) => {
+    //   return {
+    //     id: contact.get('id'),
+    //     name: contact.get('displayName'),
+    //     payload: contact.get('id'),
+    //     text: contact.get('displayName'),
+    //   };
+    // });
+    // menuItems = menuItems.toArray();
+
+    let { contacts } = this.props;
+
+    //console.log(contacts);
 
     return (
       <Dialog
@@ -254,14 +272,23 @@ class JobCreateModal extends React.Component {
                       </div>
                       <div>
                         <SelectField
-                          ref='selectValue'
-                          fullWidth
-                          floatingLabelText="Select Primary Contact"
-                          value={this.props.job.get('contactId')}
-                          valueMember='id'
-                          displayMember="name"
-                          onChange={this._handleSelectValueChange.bind(this)}
-                          menuItems={menuItems} />
+                            ref="selectValue"
+                            fullWidth
+                            floatingLabelText="Select Primary Contact"
+                            value={this.props.job.get('contactId')}
+                            valueMember="id"
+                            displayMember="name"
+                            onChange={this._handleSelectValueChange.bind(this)}
+                        >
+                          {contacts.list.map((contact, index) => {
+                            return (
+                              <MenuItem
+                                  value={index}
+                                  primaryText={contact.get('displayName')}
+                              />
+                            );
+                          })}
+                        </SelectField>
                       </div>
                     </form>
                   </div>
