@@ -165,13 +165,14 @@ class ClientDetailsPage extends React.Component {
     });
   }
 
-  _handleJobClick(job){
-    this.props.pushState({},'/clients/'+this.props.params.id+'/jobs/'+ job.get('id'));
+  _handleJobClick(job) {
+    this.props.pushState({}, `/clients/${this.props.params.id}/jobs/${job.get('id')}`);
   }
+
   closeJobModal(){
     this.setState({
-      detailsJob:null,
-      openJob:false
+      detailsJob: null,
+      openJob: false,
     });
   }
 
