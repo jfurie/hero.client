@@ -124,12 +124,11 @@ class JobCreateModal extends React.Component {
     this.props.onJobChange(change);
   }
 
-  // _handleSelectValueChange(e, key, payload){
-  //   let change = {};
-  //   change['contactId'] = payload.id;
-  //   this.props.onJobChange(change);
-  // }
-
+  _handleEmploymentTypeValueChange(e, key, payload){
+    var change = {};
+    change['employmentType'] = payload;
+    this.props.onJobChange(change);
+  }
   render() {
 
     let { contacts } = this.props;
@@ -189,6 +188,13 @@ class JobCreateModal extends React.Component {
                             floatingLabelText="Job Title"
                             value={this.props.job.get('title')}
                         />
+                      </div>
+                      <div>
+                        <SelectField value={this.props.job.get('employmentType')} floatingLabelText="Employment Type" fullWidth onChange={this._handleEmploymentTypeValueChange.bind(this)}>
+                          <MenuItem value={'Permanent'} primaryText="Permanent"/>
+                          <MenuItem value={'Contract To Hire'}  primaryText="Contract to Hire"/>
+                          <MenuItem value={'Contract'} primaryText="Contract"/>
+                        </SelectField>
                       </div>
                       <div>
                         <TextField

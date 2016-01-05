@@ -5,19 +5,19 @@ import { pushState } from 'redux-router';
 
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
-  CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal, JobDetailsModal,
-  ClientsEditModal, Gravatar, CompanyAvatar,
+  CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
+  JobDetailsModal, ClientsEditModal, CompanyAvatar,
 } from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
+import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
-//import { getCurrentAccount } from '../../../modules/currentAccount';
 
 import {
   List, ListItem, Divider, FontIcon, IconMenu, IconButton,
-  Card, CardHeader, CardText, CardActions, FlatButton, Avatar,
+  Avatar, Card, CardHeader, CardText, CardActions, FlatButton,
 } from 'material-ui';
 
 import MenuItem from 'material-ui/lib/menus/menu-item';
@@ -38,12 +38,13 @@ function getData(state, props) {
   }
 
   switch (tab) {
-    case 'jobs':
-      tabId = 1;
-      break;
-    default:
-      tabId = 0;
+  case 'jobs':
+    tabId = 1;
+    break;
+  default:
+    tabId = 0;
   }
+
   let newContacts = {
     ...contacts,
     list: new Immutable.Map(),
@@ -51,14 +52,15 @@ function getData(state, props) {
 
   let contactsByCompanyListIds = contacts.byCompanyId.get(id);
 
+  //console.log('contactsByCompanyListIds', contactsByCompanyListIds);
+
   if (contactsByCompanyListIds) {
     newContacts.list = contacts.list.filter(x => {
       return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
-
-  let imageId = state.jobs.localJob.get('imageId');
-  if (imageId) {
+  var imageId = state.jobs.localJob.get('imageId');
+  if(imageId){
     localJobResource = state.resources.list.get(imageId);
   }
 
@@ -88,7 +90,6 @@ function getData(state, props) {
     companyJobs,
     localJob: state.jobs.localJob,
     localJobResource,
-    //currentAccount: state.currentAccount,
   };
 }
 
@@ -99,11 +100,8 @@ const style = {
 };
 
 @connect((state, props) => (
-getData(state, props)), {
-  getOneCompany, getOneLocation, getAllContacts, getContactsByCompany,
-  getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal,
-  saveLocalJob, replaceJobLocal, getOneJob,
-})
+getData(state, props)),
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -116,10 +114,14 @@ class ClientDetailsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getOneCompany(this.props.params.id);
-    this.props.getContactsByCompany(this.props.params.id);
-    this.props.getJobsByCompany(this.props.params.id);
-    //this.props.getOneJob(this.props.params.jobId);
+    let self = this;
+    setTimeout(() => {
+      self.props.getOneCompany(self.props.params.id);
+      self.props.getContactsByCompany(self.props.params.id);
+      self.props.getJobsByCompany(self.props.params.id);
+      self.props.getOneJob(self.props.params.jobId);
+      self.props.getImageByJobId(self.props.params.jobId);
+    },500);
   }
 
   componentWillReceiveProps(nextProps){
@@ -129,14 +131,6 @@ class ClientDetailsPage extends React.Component {
     }
   }
 
-
-  componentWillUpdate() {
-  }
-
-  // saveClient() {
-  //   console.log('cool!');
-  // }
-
   createContactModalOpen(){
     this.refs.clientContactsCreateModal.getWrappedInstance().show();
   }
@@ -144,13 +138,6 @@ class ClientDetailsPage extends React.Component {
   editClientModalOpen() {
     this.refs.clientEditModal.getWrappedInstance().show();
   }
-
-  // editClientModalClose() {
-  //   this.setState({
-  //     detailsJob:null,
-  //     openJob:false
-  //   });
-  // }
 
   contactDetailsModalOpen(contact) {
     this.setState({
@@ -171,6 +158,7 @@ class ClientDetailsPage extends React.Component {
   }
 
   closeJobModal(){
+    this.props.pushState('','/clients/'+this.props.params.id +'/jobs');
     this.setState({
       detailsJob: null,
       openJob: false,
@@ -185,23 +173,27 @@ class ClientDetailsPage extends React.Component {
     this.props.replaceJobLocal({companyId:this.props.params.id});
     this.refs.jobCreateModal.show();
   }
+
   onJobCreateChange (job){
     this.props.updateJobLocal(job);
   }
+
   onJobCreateImageChange(imageArray){
     this.props.updateJobImageLocal(imageArray);
   }
+
   onSwipe(index){
     let tab = '';
     switch (index) {
     case 1:
-      tab = 'jobs'
+      tab = 'jobs';
       break;
     default:
       tab = '';
     }
     this.props.pushState('', `/clients/${this.props.params.id}/${tab}`);
   }
+
   render() {
 
     let {company, location, contacts, companyJobs} = this.props;
@@ -215,8 +207,7 @@ class ClientDetailsPage extends React.Component {
 
       return (
         <div>
-
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.state.detailsJob} seachCandidates={contacts.list} contacts={contacts} open={this.state.openJob} />
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} jobImage={this.props.jobImage} job={this.props.job} seachCandidates={contacts.list} contacts={contacts} open={this.props.params.jobId}></JobDetailsModal>
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" company={company}/>
@@ -281,17 +272,16 @@ class ClientDetailsPage extends React.Component {
                     <LocationCard style={{height: '200px'}} location={location} marker={<CompanyAvatar url={company.get('website')} />}/>
                 ) : (null)}
               </div>
-
-              {(company.get('clientAdvocate')) ? (
-                <List subheader={`${company.get('name')}'s talents advocate`} >
+              <List subheader="Your HERO talent advocate">
+                {(heroContact) ? (
                   <ListItem
-                    leftAvatar={<Gravatar email={company.get('clientAdvocate').get('email')} />}
-                    primaryText={company.get('clientAdvocate').get('email')}
-                    secondaryText={<p>Talents Advocate</p>}
+                    leftAvatar={<Avatar src={heroContact} />}
+                    primaryText={'Rameet Singh'}
+                    secondaryText={<p>Hero Talent Advocate</p>}
                     secondaryTextLines={1}
                   />
+                ) : (null)}
                 </List>
-              ) : (null)}
 
             </div>
             <div style={style.slide}>
