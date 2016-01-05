@@ -80,9 +80,6 @@ class NotesCreateModal extends React.Component {
 
   saveNote() {
     console.log('save note!');
-    // this.setState({
-    //   open: false,
-    // });
 
     this.props.saveNote();
   }
@@ -103,10 +100,10 @@ class NotesCreateModal extends React.Component {
     });
   }
 
-  _handleSelectValueChange(event, index, value) {
-    this.setState({
-      privacyValue: value,
-    });
+  _handlePrivacyValueChange(event, index, value) {
+    var change = {};
+    change['privacyValue'] = value;
+    this.props.onNoteChange(change);
   }
 
   render() {
@@ -137,12 +134,12 @@ class NotesCreateModal extends React.Component {
               <div className="col-xs-10 col-md-6">
                   <div className="box">
                     <SelectField
-                        value={this.state.privacyValue}
+                        value={this.props.note.get('privacyValue')}
                         floatingLabelText="Privacy"
                         floatingLabelStyle={style.floatLabel}
                         fullWidth
                         style={style.select}
-                        onChange={this._handleSelectValueChange.bind(this)}
+                        onChange={this._handlePrivacyValueChange.bind(this)}
                         hintText={''}
                     >
                       <MenuItem value={0} primaryText="Only you"/>
@@ -152,6 +149,8 @@ class NotesCreateModal extends React.Component {
                         hintText="Your note"
                         multiLine
                         fullWidth
+                        value={this.props.note.get('noteText')}
+                        onChange={this._handleChange.bind(this, 'noteText')}
                     />
                   </div>
               </div>

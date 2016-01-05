@@ -12,7 +12,7 @@ import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
-import { saveLocalNote, replaceNoteLocal } from '../../../modules/notes/index';
+import { updateNoteLocal, saveLocalNote, replaceNoteLocal } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 
 import {
@@ -87,7 +87,7 @@ function getData(state, props) {
     contacts: newContacts,
     jobs: state.jobs,
     notes: state.notes,
-	localNote: state.notes.localNote,
+    localNote: state.notes.localNote,
     companyJobs,
     localJob: state.jobs.localJob,
     localJobResource,
@@ -102,7 +102,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, saveLocalNote, replaceNoteLocal})
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, updateNoteLocal, saveLocalNote, replaceNoteLocal})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -132,6 +132,11 @@ class ClientDetailsPage extends React.Component {
     if(nextProps.localJob.get('success')){
       this.refs.jobCreateModal.closeModal();
       this.props.replaceJobLocal({companyId:this.props.params.id});
+    }
+
+    if(nextProps.localNote.get('success')){
+      this.refs.notesCreateModal.closeModal();
+      this.props.replaceNoteLocal({companyId:this.props.params.id});
     }
   }
 
@@ -184,7 +189,9 @@ class ClientDetailsPage extends React.Component {
     this.props.replaceNoteLocal({companyId:this.props.params.id});
     this.refs.notesCreateModal.show();
   }
-
+  onNoteCreateChange (note){
+    this.props.updateNoteLocal(note);
+  }
   createJobModalOpen() {
     this.props.replaceJobLocal({companyId:this.props.params.id});
     this.refs.jobCreateModal.show();
@@ -226,7 +233,7 @@ class ClientDetailsPage extends React.Component {
           <ClientsEditModal ref="clientEditModal" company={company}/>
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-          <NotesCreateModal saveNote={this.props.saveLocalNote} note={this.props.localNote} ref='notesCreateModal' />
+          <NotesCreateModal saveNote={this.props.saveLocalNote} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
           <JobCreateModal contacts={contacts} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
           <Header iconRight={
