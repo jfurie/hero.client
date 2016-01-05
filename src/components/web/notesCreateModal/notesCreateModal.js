@@ -8,7 +8,6 @@ const style = {
     height: '100%',
     maxHeight: '100%',
     paddingTop: '0px',
-    zIndex: '50',
   },
   bodyStyle: {
     paddingTop: '0px',
