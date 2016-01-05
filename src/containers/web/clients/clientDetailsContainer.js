@@ -81,7 +81,7 @@ function getData(state, props) {
     tabId,
     company,
     location,
-    //job,
+    job,
     jobImage,
     contacts: newContacts,
     jobs: state.jobs,
@@ -129,6 +129,10 @@ class ClientDetailsPage extends React.Component {
     if(nextProps.localJob.get('success')){
       this.refs.jobCreateModal.closeModal();
       this.props.replaceJobLocal({companyId:this.props.params.id});
+    }
+    if(nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId){
+      this.props.getOneJob(nextProps.params.jobId);
+      this.props.getImageByJobId(nextProps.params.jobId);
     }
   }
 
@@ -204,7 +208,7 @@ class ClientDetailsPage extends React.Component {
   }
   render() {
 
-    let {company, location, contacts, companyJobs} = this.props;
+    let {company, location, contacts, companyJobs, job, jobImage} = this.props;
 
     if (company) {
 

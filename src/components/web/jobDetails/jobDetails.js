@@ -74,8 +74,8 @@ class JobDetails extends React.Component {
                   <CardText>
                     <div className='row center-xs'>
                       <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'><div>${job?job.get('minSalary'):''}</div> <div style={{fontSize:'11px', color:'rgba(0,0,0,0.54)'}}>to</div> <div>${job?job.get('maxSalary'):''}</div> <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>salary</div></div>
-                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>Permanent <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>position</div></div>
-                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>25 <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>applicants</div></div>
+                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>{job?job.get('employmentType'):''} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>position</div></div>
+                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>25 <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>candidates</div></div>
                     </div>
                   </CardText>
                 </Card>
@@ -83,7 +83,7 @@ class JobDetails extends React.Component {
               <CardText >
                 <div className="description">
                   <p>
-                    Telecom startup disrupting a $100B industry with free mobile and home internet service. Funded by the founder of Skype. Java/Spring/JPA/Hibernate/Redis; *Now requires experience with a client-side JavaScript MVC framework (Angular, React, Backbone, Ember)
+                    {job?job.get('quickPitch'):''}
                   </p>
                 </div>
               </CardText>
