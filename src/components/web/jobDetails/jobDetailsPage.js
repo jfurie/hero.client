@@ -16,7 +16,7 @@ class JobDetailsPage extends React.Component {
 
     this.state = {
       createContactModalOpen: false,
-      candidateSearchOpen: false
+      candidateSearchOpen: false,
     };
   }
 

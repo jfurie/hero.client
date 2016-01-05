@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Dialog, IconButton, ToolbarGroup, Toolbar,
   FlatButton, TextField, ToolbarTitle, SelectField,
+  MenuItem,
 } from 'material-ui';
 
 import validateCompany from '../../../validators/company';
@@ -66,11 +67,22 @@ export default class ClientsCreateModal extends React.Component {
 
   constructor(props){
     super(props);
+
+    //console.log(props.users);
+
     this.state = {
       company: {},
       errors: {},
-      clientAdvocateIndex: 0,
+      clientAdvocateId: 0,
     };
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (!this.props.users.size && newProps.users.size > 0) {
+      this.setState({
+        clientAdvocateId: newProps.users.first().get('id'),
+      });
+    }
   }
 
   closeModal(){
@@ -102,44 +114,45 @@ export default class ClientsCreateModal extends React.Component {
 
     if (errors.validationErrors === 0) {
 
-      let index = 0;
-      let self = this;
+      // assign clientAdvocateId to clientAdvocate
+      let company = this.state.company;
+      company.clientAdvocate = this.state.clientAdvocateId;
 
-      // assign userId to clientAdvocate
-      this.props.users.forEach(function(u) {
-        if (index === self.state.clientAdvocateIndex) {
-          let company = self.state.company;
-          company.clientAdvocate = u.get('id');
-          self.setState({
-            company,
-          });
-        }
-        index++;
-      });
-
-      this.props.onSubmit(this.state.company);
+      // and post ...
+      this.props.onSubmit(company);
     }
   }
 
-  _handleSelectValueChange(e) {
+  _handleSelectValueChange(event, index, value) {
+
+    //console.log(e);
+
     this.setState({
-      clientAdvocateIndex: e.target.value,
+      clientAdvocateId: value,
     });
   }
 
 
   render() {
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let menuItems = [];
+    //let menuItems = [];
     let index = 0;
 
-    this.props.users.forEach(function(u) {
-      menuItems.push({
-        id: index,
-        text: u.get('email'),
-      });
-      index++;
-    });
+    let { users } = this.props;
+
+    // if (users) {
+    //   this.setState({
+    //     clientAdvocateId: e.target.value,
+    //   });
+    // }
+
+    // this.props.users.forEach(function(u) {
+    //   menuItems.push({
+    //     id: index,
+    //     text: u.get('email'),
+    //   });
+    //   index++;
+    // });
 
     return (
       <Dialog
@@ -201,17 +214,23 @@ export default class ClientsCreateModal extends React.Component {
                       </div>
                       <div>
                         <SelectField
-                            selectedIndex={this.state.clientAdvocateIndex}
                             floatingLabelText="Client Advocate"
                             floatingLabelStyle={style.floatLabel}
-                            menuItems={menuItems}
                             fullWidth
                             style={style.select}
-                            valueMember="id"
-                            displayMember="text"
                             onChange={this._handleSelectValueChange.bind(this)}
                             hintText={''}
-                        />
+                            value={this.state.clientAdvocateId}
+                        >
+                          {users.map((user, index) => {
+                            return (
+                              <MenuItem
+                                  value={index}
+                                  primaryText={user.get('email')}
+                              />
+                            );
+                          })}
+                        </SelectField>
                       </div>
                     </form>
                   </div>
@@ -227,5 +246,5 @@ ClientsCreateModal.propTypes = {
   closeModal: React.PropTypes.func.isRequired,
   onSubmit: React.PropTypes.func,
   open: React.PropTypes.bool.isRequired,
-  users: React.PropTypes.objects,
+  users: React.PropTypes.object,
 };
