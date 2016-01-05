@@ -7,7 +7,6 @@ import { JobDetailsPage } from '../../../components/web';
 
 import './jobDetailsContainer.scss';
 
-
 function getData(state, id) {
   let location = ((state.locations.list.size > 0) ? (state.locations.list.get('566791aa15d3e38a0cbdecb6')) : (null));
   let job = state.jobs.list.get(id);
@@ -72,7 +71,7 @@ class JobDetailsContainer extends React.Component {
   render(){
     return (
       <div>
-        <JobDetailsPage {...this.props}></JobDetailsPage>
+        <JobDetailsPage {...this.props} />
       </div>
     );
   }

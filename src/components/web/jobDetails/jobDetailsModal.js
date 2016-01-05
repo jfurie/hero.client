@@ -3,9 +3,14 @@ import React from 'react';
 // import { getOneJob } from '../../../modules/jobs';
 // import { getAllContacts } from '../../../modules/contacts';
 // import { getOneLocation } from '../../../modules/locations';
-import { ClientContactsCreateModal ,JobDetails, Dialog, CandidateSearchModal } from '../../../components/web';
-import { IconMenu, IconButton, Toolbar, ToolbarGroup , ToolbarTitle} from 'material-ui';
-let MenuItem = require('material-ui/lib/menus/menu-item');
+import { ClientContactsCreateModal, JobDetails, Dialog, CandidateSearchModal } from '../../../components/web';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui';
+
+import IconButton from 'material-ui/lib/icon-button';
+import IconMenu from 'material-ui/lib/menus/icon-menu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
+
+//let MenuItem = require('material-ui/lib/menus/menu-item');
 
 // const style = {
 //   slide: {
@@ -13,7 +18,7 @@ let MenuItem = require('material-ui/lib/menus/menu-item');
 //   },
 // };
 
-class JobDetailsPage extends React.Component {
+class JobDetailsModal extends React.Component {
 
   constructor(props) {
     super(props);
@@ -101,4 +106,8 @@ class JobDetailsPage extends React.Component {
   }
 }
 
-export default JobDetailsPage;
+JobDetailsModal.propTypes = {
+  open: React.PropTypes.bool.isRequired,
+};
+
+export default JobDetailsModal;

@@ -111,6 +111,7 @@ class ClientDetailsPage extends React.Component {
     this.state = {
       createModalOpen: false,
       contactDetailsModalOpen: false,
+      openJob: false,
     };
   }
 
@@ -215,7 +216,7 @@ class ClientDetailsPage extends React.Component {
       return (
         <div>
 
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.state.detailsJob} seachCandidates={contacts.list} contacts={contacts} open={this.state.openJob}></JobDetailsModal>
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.state.detailsJob} seachCandidates={contacts.list} contacts={contacts} open={this.state.openJob} />
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" company={company}/>
