@@ -6,7 +6,7 @@ import { pushState } from 'redux-router';
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
   CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal, JobDetailsModal,
-  ClientsEditModal, Gravatar,
+  ClientsEditModal, Gravatar, CompanyAvatar,
 } from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies';
@@ -278,8 +278,8 @@ class ClientDetailsPage extends React.Component {
               </List>
               <div id="innerView">
                 {(company.get('location')) ? (
-                    <LocationCard style={{height: '200px'}} location={location} />
-                ) : (<p>No location provided.</p>)}
+                    <LocationCard style={{height: '200px'}} location={location} marker={<CompanyAvatar url={company.get('website')} />}/>
+                ) : (null)}
               </div>
 
               {(company.get('clientAdvocate')) ? (
