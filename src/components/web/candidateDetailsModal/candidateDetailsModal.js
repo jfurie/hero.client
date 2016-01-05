@@ -1,6 +1,9 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
-  List, ListItem, FontIcon, Divider, FlatButton, CardText } from 'material-ui';
+import {
+  Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
+  List, ListItem, FontIcon, Divider, FlatButton, CardText,
+} from 'material-ui';
+
 import { CustomTabsSwipe, ResumePDFViewer, JobsList, Gravatar } from '../../../components/web';
 import Immutable from 'immutable';
 

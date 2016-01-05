@@ -22,6 +22,7 @@ import {
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
 function getData(state, props) {
+
   let id = props.params.id;
   let jobId = props.params.jobId;
   let tab = props.params.tab;
@@ -30,6 +31,7 @@ function getData(state, props) {
   let location = null;
   let contacts = state.contacts; // TMP
   let localJobResource = null;
+
   if (company && company.get('location')) {
     location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
   }
@@ -61,16 +63,29 @@ function getData(state, props) {
   }
 
   let job = state.jobs.list.get(jobId);
-  let jobImage = job? state.resources.list.get(job.get('imageId')): new Immutable.Map();
+  let jobImage = job ? state.resources.list.get(job.get('imageId')) : new Immutable.Map();
+
+
+  // filter down company jobs
+  let jobsByCompanyListIds = state.jobs.byCompanyId.get(id);
+  let companyJobs = new Immutable.Map();
+
+  if (jobsByCompanyListIds) {
+    companyJobs = state.jobs.list.filter(x => {
+      return jobsByCompanyListIds.indexOf(x.get('id')) > -1;
+    });
+  }
+
 
   return {
     tabId,
     company,
     location,
-    job,
+    //job,
     jobImage,
     contacts: newContacts,
     jobs: state.jobs,
+    companyJobs,
     localJob: state.jobs.localJob,
     localJobResource,
   };
@@ -92,6 +107,7 @@ class ClientDetailsPage extends React.Component {
     this.state = {
       createModalOpen: false,
       contactDetailsModalOpen: false,
+      openJob: false,
     };
   }
 
@@ -104,7 +120,6 @@ class ClientDetailsPage extends React.Component {
       self.props.getOneJob(self.props.params.jobId);
       self.props.getImageByJobId(self.props.params.jobId);
     },500);
-
   }
 
   componentWillUpdate() {
@@ -150,14 +165,15 @@ class ClientDetailsPage extends React.Component {
     });
   }
 
-  _handleJobClick(job){
-    this.props.pushState({},'/clients/'+this.props.params.id+'/jobs/'+ job.get('id'));
+  _handleJobClick(job) {
+    this.props.pushState({}, `/clients/${this.props.params.id}/jobs/${job.get('id')}`);
   }
+
   closeJobModal(){
     this.props.pushState('','/clients/'+this.props.params.id +'/jobs');
     this.setState({
-      detailsJob:null,
-      openJob:false
+      detailsJob: null,
+      openJob: false,
     });
   }
 
@@ -184,11 +200,11 @@ class ClientDetailsPage extends React.Component {
     default:
       tab = '';
     }
-    this.props.pushState('','/clients/'+this.props.params.id +'/'+tab);
+    this.props.pushState('', `/clients/${this.props.params.id}/${tab}`);
   }
   render() {
 
-    let {company, location, contacts, jobs} = this.props;
+    let {company, location, contacts, companyJobs} = this.props;
 
     if (company) {
 
@@ -275,10 +291,11 @@ class ClientDetailsPage extends React.Component {
                   />
                 ) : (null)}
                 </List>
+
             </div>
             <div style={style.slide}>
-              <List subheader={`${jobs.list.count()} Jobs`}>
-                <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
+              <List subheader={`${companyJobs.count()} Job${((companyJobs.count() > 1) ? ('s') : (''))}`}>
+                <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={companyJobs}/>
               </List>
             </div>
             <div style={style.slide}>
