@@ -12,6 +12,7 @@ import {
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
+import { saveLocalNote, replaceNoteLocal } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 //import { getCurrentAccount } from '../../../modules/currentAccount';
 
@@ -85,9 +86,11 @@ function getData(state, props) {
     jobImage,
     contacts: newContacts,
     jobs: state.jobs,
+    notes: state.notes,
     companyJobs,
     localJob: state.jobs.localJob,
     localJobResource,
+    localNote: state.notes.localNote,
     //currentAccount: state.currentAccount,
   };
 }
@@ -102,7 +105,7 @@ const style = {
 getData(state, props)), {
   getOneCompany, getOneLocation, getAllContacts, getContactsByCompany,
   getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal,
-  saveLocalJob, replaceJobLocal, getOneJob,
+  saveLocalJob, replaceJobLocal, saveLocalNote, replaceNoteLocal, getOneJob,
 })
 class ClientDetailsPage extends React.Component {
 
@@ -177,6 +180,7 @@ class ClientDetailsPage extends React.Component {
   }
 
   createNoteModalOpen() {
+    this.props.replaceNoteLocal({companyId:this.props.params.id});
     this.refs.notesCreateModal.show();
   }
 
@@ -221,7 +225,7 @@ class ClientDetailsPage extends React.Component {
           <ClientsEditModal ref="clientEditModal" company={company}/>
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-          <NotesCreateModal ref='notesCreateModal' />
+          <NotesCreateModal saveNote={this.props.saveLocalNote} note={this.props.localNote} ref='notesCreateModal' />
           <JobCreateModal contacts={contacts} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
           <Header iconRight={

@@ -8,6 +8,7 @@ import leftNav from './leftNav';
 import locations from './locations';
 import companyContacts from './companyContacts';
 import jobs from './jobs';
+import notes from './notes';
 import resources from './resources';
 import currentAccount from './currentAccount';
 
@@ -21,6 +22,7 @@ export default combineReducers({
   locations,
   companyContacts,
   jobs,
+  notes,
   resources,
   currentAccount,
 });

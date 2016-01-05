@@ -76,9 +76,21 @@ class NotesCreateModal extends React.Component {
 
   saveNote() {
     console.log('save note!');
-    this.setState({
-      open: false,
-    });
+    // this.setState({
+    //   open: false,
+    // });
+
+    this.props.saveNote();
+  }
+
+  _handleSubmit(){
+    console.log('submit!');
+  }
+
+  _handleChange(type, e) {
+    let change = {};
+    change[type] = e.target.value;
+    this.props.onNoteChange(change);
   }
 
   show() {
@@ -126,23 +138,28 @@ class NotesCreateModal extends React.Component {
           <div className="row center-xs">
               <div className="col-xs-10 col-md-6">
                   <div className="box">
-                    <SelectField
-                        selectedIndex={this.state.privacyValue}
-                        floatingLabelText="Privacy"
-                        floatingLabelStyle={style.floatLabel}
-                        menuItems={privacyItems}
-                        fullWidth
-                        style={style.select}
-                        valueMember="id"
-                        displayMember="name"
-                        onChange={this._handleSelectValueChange.bind(this)}
-                        hintText={''}
-                    />
-                    <TextField
-                        hintText="Your note"
-                        multiLine
-                        fullWidth
-                    />
+                    <form onSubmit={this._handleSubmit.bind(this)}>
+                      <SelectField
+                          selectedIndex={this.state.privacyValue}
+                          floatingLabelText="Privacy"
+                          floatingLabelStyle={style.floatLabel}
+                          menuItems={privacyItems}
+                          fullWidth
+                          style={style.select}
+                          valueMember="id"
+                          displayMember="name"
+                          onChange={this._handleSelectValueChange.bind(this)}
+                          hintText={''}
+                      />
+                      <TextField
+                          hintText="Your note"
+                          errorText={''}
+                          multiLine
+                          fullWidth
+                          onChange={this._handleChange.bind(this, 'body')}
+                          value={this.props.note.get('body')}
+                      />
+                    </form>
                   </div>
               </div>
           </div>
