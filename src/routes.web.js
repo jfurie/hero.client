@@ -129,7 +129,7 @@ export default(store) => {
             <IndexRoute component={ClientsPage}/>
             <Route path=":id" component={ClientDetailsPage} />
               <Route path=":id/jobs" component={ClientDetailsPage}
-                onEnter={(nextState, replaceState) =>{
+                onEnter={(nextState, replaceState) => {
                   nextState.params.tab = 'jobs';
                 }} />
             <Route path=":id/jobs/:jobId" component={ClientDetailsPage} />

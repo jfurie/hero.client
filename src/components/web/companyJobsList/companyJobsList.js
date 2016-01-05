@@ -13,7 +13,7 @@ const style = {
 class CompanyJobsList extends React.Component {
 
   _handleJobClick(job){
-    if(this.props.onJobClick){
+    if (this.props.onJobClick) {
       this.props.onJobClick(job);
     }
   }
@@ -50,7 +50,7 @@ class CompanyJobsList extends React.Component {
 
       nestedJobsItem.push(
         <ListItem
-          onTouchTap={self._handleJobClick.bind(self,job)}
+          onTouchTap={self._handleJobClick.bind(self, job)}
           primaryText={job.get('title')}
           secondaryText={
             <div style={style.peopleList}>{peopleList}</div>
