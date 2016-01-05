@@ -10,8 +10,11 @@ import './jobDetailsContainer.scss';
 
 function getData(state, id) {
   let location = ((state.locations.list.size > 0) ? (state.locations.list.get('566791aa15d3e38a0cbdecb6')) : (null));
+  let job = state.jobs.list.get(id);
+  let jobImage = state.resources.list.get(job.imageId);
   return {
-    job: state.jobs.list.get(id),
+    job,
+    jobImage,
     contacts: state.contacts,
     location,
   };
