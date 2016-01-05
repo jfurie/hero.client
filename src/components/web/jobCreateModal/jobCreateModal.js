@@ -131,15 +131,6 @@ class JobCreateModal extends React.Component {
   // }
 
   render() {
-    // let menuItems = this.props.contacts.list.map((contact) => {
-    //   return {
-    //     id: contact.get('id'),
-    //     name: contact.get('displayName'),
-    //     payload: contact.get('id'),
-    //     text: contact.get('displayName'),
-    //   };
-    // });
-    // menuItems = menuItems.toArray();
 
     let { contacts } = this.props;
 
@@ -276,8 +267,6 @@ class JobCreateModal extends React.Component {
                             fullWidth
                             floatingLabelText="Select Primary Contact"
                             value={this.props.job.get('contactId')}
-                            valueMember="id"
-                            displayMember="name"
                             onChange={this._handleSelectValueChange.bind(this)}
                         >
                           {contacts.list.map((contact, index) => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dialog as DialogUI } from 'material-ui';
 
-export default class Dialog extends React.Component {
+class Dialog extends React.Component {
   constructor(props){
     super(props);
   }
@@ -29,3 +29,9 @@ export default class Dialog extends React.Component {
     );
   }
 }
+
+Dialog.propTypes = {
+  open: React.PropTypes.bool.isRequired,
+};
+
+export default Dialog;

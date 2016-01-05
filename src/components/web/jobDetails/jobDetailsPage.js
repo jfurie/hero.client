@@ -5,6 +5,9 @@ import IconButton from 'material-ui/lib/icon-button';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
+//import { IconMenu, IconButton, MenuItem } from 'material-ui';
+//let MenuItem = require('material-ui/lib/menus/menu-item');
+
 // const style = {
 //   slide: {
 //     minHeight: `${window.innerHeight - 112}px`,
