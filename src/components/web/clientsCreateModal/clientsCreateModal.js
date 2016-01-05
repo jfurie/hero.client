@@ -67,9 +67,6 @@ export default class ClientsCreateModal extends React.Component {
 
   constructor(props){
     super(props);
-
-    //console.log(props.users);
-
     this.state = {
       company: {},
       errors: {},
@@ -124,9 +121,6 @@ export default class ClientsCreateModal extends React.Component {
   }
 
   _handleSelectValueChange(event, index, value) {
-
-    //console.log(e);
-
     this.setState({
       clientAdvocateId: value,
     });
@@ -134,25 +128,9 @@ export default class ClientsCreateModal extends React.Component {
 
 
   render() {
+
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    //let menuItems = [];
-    let index = 0;
-
     let { users } = this.props;
-
-    // if (users) {
-    //   this.setState({
-    //     clientAdvocateId: e.target.value,
-    //   });
-    // }
-
-    // this.props.users.forEach(function(u) {
-    //   menuItems.push({
-    //     id: index,
-    //     text: u.get('email'),
-    //   });
-    //   index++;
-    // });
 
     return (
       <Dialog

@@ -1,5 +1,12 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, FlatButton, TextField, DatePicker, Card, CardMedia, CardText, LinearProgress,SelectField } from 'material-ui';
+
+import {
+  Dialog, Toolbar, ToolbarTitle, IconButton,
+  ToolbarGroup, FlatButton, TextField, DatePicker,
+  Card, CardMedia, CardText, LinearProgress, SelectField,
+  MenuItem,
+} from 'material-ui';
+
 import {FileInput} from '../';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -111,22 +118,32 @@ class JobCreateModal extends React.Component {
     this.props.onImageChange(value);
   }
 
-  _handleSelectValueChange(e, key, payload){
+  _handleSelectValueChange(event, index, value) {
     let change = {};
-    change['contactId'] = payload.id;
+    change['contactId'] = value;
     this.props.onJobChange(change);
   }
 
+  // _handleSelectValueChange(e, key, payload){
+  //   let change = {};
+  //   change['contactId'] = payload.id;
+  //   this.props.onJobChange(change);
+  // }
+
   render() {
-    let menuItems = this.props.contacts.list.map((contact) => {
-      return {
-        id: contact.get('id'),
-        name: contact.get('displayName'),
-        payload: contact.get('id'),
-        text: contact.get('displayName'),
-      };
-    });
-    menuItems = menuItems.toArray();
+    // let menuItems = this.props.contacts.list.map((contact) => {
+    //   return {
+    //     id: contact.get('id'),
+    //     name: contact.get('displayName'),
+    //     payload: contact.get('id'),
+    //     text: contact.get('displayName'),
+    //   };
+    // });
+    // menuItems = menuItems.toArray();
+
+    let { contacts } = this.props;
+
+    //console.log(contacts);
 
     return (
       <Dialog
@@ -262,8 +279,16 @@ class JobCreateModal extends React.Component {
                             valueMember="id"
                             displayMember="name"
                             onChange={this._handleSelectValueChange.bind(this)}
-                            menuItems={menuItems}
-                        />
+                        >
+                          {contacts.list.map((contact, index) => {
+                            return (
+                              <MenuItem
+                                  value={index}
+                                  primaryText={contact.get('displayName')}
+                              />
+                            );
+                          })}
+                        </SelectField>
                       </div>
                     </form>
                   </div>
