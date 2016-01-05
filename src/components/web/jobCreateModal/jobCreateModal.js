@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, FlatButton, TextField, DatePicker, Card, CardMedia, CardText, LinearProgress,SelectField } from 'material-ui';
+import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, FlatButton, TextField, DatePicker, Card, CardMedia, CardText, LinearProgress,SelectField, MenuItem } from 'material-ui';
 import {FileInput} from '../';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -116,6 +116,11 @@ class JobCreateModal extends React.Component {
     change['contactId'] = payload.id;
     this.props.onJobChange(change);
   }
+  _handleEmploymentTypeValueChange(e, key, payload){
+    var change = {};
+    change['employmentType'] = payload;
+    this.props.onJobChange(change);
+  }
   render() {
     let menuItems = this.props.contacts.list.map((contact)=>{
       return {
@@ -180,6 +185,13 @@ class JobCreateModal extends React.Component {
                             floatingLabelText="Job Title"
                             value={this.props.job.get('title')}
                         />
+                      </div>
+                      <div>
+                        <SelectField value={this.props.job.get('employmentType')} floatingLabelText="Employment Type" fullWidth onChange={this._handleEmploymentTypeValueChange.bind(this)}>
+                          <MenuItem value={'Permanent'} primaryText="Permanent"/>
+                          <MenuItem value={'Contract To Hire'}  primaryText="Contract to Hire"/>
+                          <MenuItem value={'Contract'} primaryText="Contract"/>
+                        </SelectField>
                       </div>
                       <div>
                         <TextField

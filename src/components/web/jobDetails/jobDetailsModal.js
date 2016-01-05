@@ -76,12 +76,14 @@ class JobDetailsPage extends React.Component {
             <div style={{
               position:'fixed',
               width:'100%',
-              zIndex:10,
+              zIndex:1100,
             }}>
               <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
                 <ToolbarGroup key={0} float="left">
                   <IconButton onTouchTap={this.closeModal.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
-                  <ToolbarTitle style={{lineHeight:'64px', float:'left'}} text="Job Details" />
+                  <ToolbarTitle style={{lineHeight:'64px', fontSize:'15px',  float:'left'}}
+                      text={this.props.job?this.props.job.get('title'):''}
+                  />
                 </ToolbarGroup>
                 <ToolbarGroup key={1} float="right">
                   <IconMenu style={{marginTop:'8px',float:'left', marginRight:'-16px', marginLeft:'8px'}} iconButtonElement={

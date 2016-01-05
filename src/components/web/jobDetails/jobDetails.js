@@ -60,14 +60,12 @@ class JobDetails extends React.Component {
             <Card>
                 <div className="mediawrap">
                 <CardMedia>
-                  <img src='https://scontent.cdninstagram.com/hphotos-xft1/t51.2885-15/e15/11378685_847466158664846_945103283_n.jpg'></img>
+                  <img src={jobImage?jobImage.get('item'):'https://scontent.cdninstagram.com/hphotos-xft1/t51.2885-15/e15/11378685_847466158664846_945103283_n.jpg'}></img>
                 </CardMedia>
                 <div className="button-right-bottom">
-
                   <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}} label="Apply" />
                 </div>
                 <div className="button-left-bottom">
-
                   <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}}  label="Share">
                   </FlatButton>
                 </div>
@@ -76,7 +74,7 @@ class JobDetails extends React.Component {
                 <Card>
                   <CardText>
                     <div className='row center-xs'>
-                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>140k <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>salary</div></div>
+                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'><div>${job?job.get('minSalary'):''}</div> <div style={{fontSize:'11px', color:'rgba(0,0,0,0.54)'}}>to</div> <div>${job?job.get('maxSalary'):''}</div> <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>salary</div></div>
                       <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>Permanent <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>position</div></div>
                       <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>25 <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>applicants</div></div>
                     </div>
