@@ -3,7 +3,7 @@ import * as constants from './constants';
 export function getJobsByCompany(companyId){
   return {
     types: [constants.GET_JOBS_BY_COMPANY, constants.GET_JOBS_BY_COMPANY_SUCCESS, constants.GET_JOBS_BY_COMPANY_FAIL],
-    promise: (client, auth) => client.api.get(`/jobs?filter[where][companyId]=${companyId}`, {
+    promise: (client, auth) => client.api.get(`/companies/${companyId}/jobs`, {
       authToken: auth.authToken,
     }),
   };

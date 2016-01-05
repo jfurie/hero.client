@@ -60,7 +60,7 @@ export default function reducer(state = initialState, action = {}) {
 function getCurrentAccountUsers(account) {
   return {
     types: [GET_CURRENT_ACCOUNT_USERS, GET_CURRENT_ACCOUNT_USERS_SUCCESS, GET_CURRENT_ACCOUNT_USERS_FAIL],
-    promise: (client, auth) => client.api.get(`/accounts/${account.id}/accountUsers`, {
+    promise: (client, auth) => client.api.get(`/accounts/${account.id}/accountUsers?filter={"include": "user"}`, {
       authToken: auth.authToken,
     }),
   };
