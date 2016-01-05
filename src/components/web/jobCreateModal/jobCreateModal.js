@@ -9,7 +9,6 @@ const style = {
     height: '100%',
     maxHeight: '100%',
     paddingTop: '0px',
-    zIndex: '10',
   },
   bodyStyle: {
     paddingTop: '0px',

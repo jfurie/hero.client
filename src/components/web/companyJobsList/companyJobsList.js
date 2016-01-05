@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItem, ListDivider, FontIcon } from 'material-ui';
+import { ListItem, Divider, FontIcon } from 'material-ui';
 //import Infinite from 'react-infinite';
 import { CompanyAvatar } from '../../../components/web';
 import { RingCandidate } from '../../../components/web';
@@ -74,7 +74,7 @@ class CompanyJobsList extends React.Component {
           initiallyOpen={true}
           nestedItems={nestedJobsItem}
         />
-        <ListDivider inset />
+        <Divider inset />
       </div>
     );
   }

@@ -16,7 +16,7 @@ import { getAllContacts, getContactsByCompany } from '../../../modules/contacts'
 //import { getCurrentAccount } from '../../../modules/currentAccount';
 
 import {
-  List, ListItem, ListDivider, FontIcon, IconMenu, IconButton,
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton,
   Card, CardHeader, CardText, CardActions, FlatButton, Avatar,
 } from 'material-ui';
 
@@ -251,7 +251,7 @@ class ClientDetailsPage extends React.Component {
 
                   {(twitter) ? (
                     <div>
-                      <ListDivider inset />
+                      <Divider inset />
                       <ListItem
                         leftIcon={<FontIcon className="material-icons">public</FontIcon>}
                         primaryText={`@${twitter}`}
@@ -263,7 +263,7 @@ class ClientDetailsPage extends React.Component {
 
                   {(facebook) ? (
                     <div>
-                      <ListDivider inset />
+                      <Divider inset />
                       <ListItem
                         leftIcon={<FontIcon className="material-icons">public</FontIcon>}
                         primaryText={`facebook.com/${facebook}`}
