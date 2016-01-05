@@ -124,22 +124,12 @@ class JobCreateModal extends React.Component {
     this.props.onJobChange(change);
   }
 
-  // _handleSelectValueChange(e, key, payload){
-  //   let change = {};
-  //   change['contactId'] = payload.id;
-  //   this.props.onJobChange(change);
-  // }
-
+  _handleEmploymentTypeValueChange(e, key, payload){
+    var change = {};
+    change['employmentType'] = payload;
+    this.props.onJobChange(change);
+  }
   render() {
-    // let menuItems = this.props.contacts.list.map((contact) => {
-    //   return {
-    //     id: contact.get('id'),
-    //     name: contact.get('displayName'),
-    //     payload: contact.get('id'),
-    //     text: contact.get('displayName'),
-    //   };
-    // });
-    // menuItems = menuItems.toArray();
 
     let { contacts } = this.props;
 
@@ -198,6 +188,13 @@ class JobCreateModal extends React.Component {
                             floatingLabelText="Job Title"
                             value={this.props.job.get('title')}
                         />
+                      </div>
+                      <div>
+                        <SelectField value={this.props.job.get('employmentType')} floatingLabelText="Employment Type" fullWidth onChange={this._handleEmploymentTypeValueChange.bind(this)}>
+                          <MenuItem value={'Permanent'} primaryText="Permanent"/>
+                          <MenuItem value={'Contract To Hire'}  primaryText="Contract to Hire"/>
+                          <MenuItem value={'Contract'} primaryText="Contract"/>
+                        </SelectField>
                       </div>
                       <div>
                         <TextField
@@ -276,8 +273,6 @@ class JobCreateModal extends React.Component {
                             fullWidth
                             floatingLabelText="Select Primary Contact"
                             value={this.props.job.get('contactId')}
-                            valueMember="id"
-                            displayMember="name"
                             onChange={this._handleSelectValueChange.bind(this)}
                         >
                           {contacts.list.map((contact, index) => {

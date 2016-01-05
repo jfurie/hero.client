@@ -1,5 +1,9 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, FlatButton, SelectField, TextField } from 'material-ui';
+import {
+  Dialog, Toolbar, ToolbarTitle, IconButton,
+  ToolbarGroup, FlatButton, SelectField, TextField,
+  MenuItem,
+} from 'material-ui';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -64,7 +68,7 @@ class NotesCreateModal extends React.Component {
 
     this.state = {
       open: false,
-      privacyValue: 0
+      privacyValue: 0,
     };
   }
 
@@ -99,19 +103,13 @@ class NotesCreateModal extends React.Component {
     });
   }
 
-  _handleSelectValueChange(e) {
-    //e.target.value;
+  _handleSelectValueChange(event, index, value) {
     this.setState({
-      privacyValue: e.target.value,
+      privacyValue: value,
     });
   }
 
   render() {
-
-    let privacyItems = [
-       { id: 0, name: 'Only you' },
-       { id: 1, name: 'Within the Organization' },
-    ];
 
     return (
       <Dialog
@@ -138,28 +136,23 @@ class NotesCreateModal extends React.Component {
           <div className="row center-xs">
               <div className="col-xs-10 col-md-6">
                   <div className="box">
-                    <form onSubmit={this._handleSubmit.bind(this)}>
-                      <SelectField
-                          selectedIndex={this.state.privacyValue}
-                          floatingLabelText="Privacy"
-                          floatingLabelStyle={style.floatLabel}
-                          menuItems={privacyItems}
-                          fullWidth
-                          style={style.select}
-                          valueMember="id"
-                          displayMember="name"
-                          onChange={this._handleSelectValueChange.bind(this)}
-                          hintText={''}
-                      />
-                      <TextField
-                          hintText="Your note"
-                          errorText={''}
-                          multiLine
-                          fullWidth
-                          onChange={this._handleChange.bind(this, 'body')}
-                          value={this.props.note.get('body')}
-                      />
-                    </form>
+                    <SelectField
+                        value={this.state.privacyValue}
+                        floatingLabelText="Privacy"
+                        floatingLabelStyle={style.floatLabel}
+                        fullWidth
+                        style={style.select}
+                        onChange={this._handleSelectValueChange.bind(this)}
+                        hintText={''}
+                    >
+                      <MenuItem value={0} primaryText="Only you"/>
+                      <MenuItem value={1} primaryText="Within the Organization"/>
+                    </SelectField>
+                    <TextField
+                        hintText="Your note"
+                        multiLine
+                        fullWidth
+                    />
                   </div>
               </div>
           </div>

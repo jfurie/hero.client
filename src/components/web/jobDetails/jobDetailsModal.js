@@ -3,9 +3,14 @@ import React from 'react';
 // import { getOneJob } from '../../../modules/jobs';
 // import { getAllContacts } from '../../../modules/contacts';
 // import { getOneLocation } from '../../../modules/locations';
-import { ClientContactsCreateModal ,JobDetails, Dialog, CandidateSearchModal } from '../../../components/web';
-import { IconMenu, IconButton, Toolbar, ToolbarGroup , ToolbarTitle} from 'material-ui';
-let MenuItem = require('material-ui/lib/menus/menu-item');
+import { ClientContactsCreateModal, JobDetails, Dialog, CandidateSearchModal } from '../../../components/web';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui';
+
+import IconButton from 'material-ui/lib/icon-button';
+import IconMenu from 'material-ui/lib/menus/icon-menu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
+
+//let MenuItem = require('material-ui/lib/menus/menu-item');
 
 // const style = {
 //   slide: {
@@ -13,7 +18,7 @@ let MenuItem = require('material-ui/lib/menus/menu-item');
 //   },
 // };
 
-class JobDetailsPage extends React.Component {
+class JobDetailsModal extends React.Component {
 
   constructor(props) {
     super(props);
@@ -76,12 +81,14 @@ class JobDetailsPage extends React.Component {
             <div style={{
               position:'fixed',
               width:'100%',
-              zIndex:10,
+              zIndex:1100,
             }}>
               <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
                 <ToolbarGroup key={0} float="left">
                   <IconButton onTouchTap={this.closeModal.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
-                  <ToolbarTitle style={{lineHeight:'64px', float:'left'}} text="Job Details" />
+                  <ToolbarTitle style={{lineHeight:'64px', fontSize:'15px',  float:'left'}}
+                      text={this.props.job?this.props.job.get('title'):''}
+                  />
                 </ToolbarGroup>
                 <ToolbarGroup key={1} float="right">
                   <IconMenu style={{marginTop:'8px',float:'left', marginRight:'-16px', marginLeft:'8px'}} iconButtonElement={
@@ -101,4 +108,8 @@ class JobDetailsPage extends React.Component {
   }
 }
 
-export default JobDetailsPage;
+JobDetailsModal.propTypes = {
+  open: React.PropTypes.bool.isRequired,
+};
+
+export default JobDetailsModal;
