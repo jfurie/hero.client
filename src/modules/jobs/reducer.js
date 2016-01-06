@@ -137,11 +137,17 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.UPDATE_JOB_LOCAL:{
-
-    return {
-      ...state,
-      localJob: state.localJob.mergeDeep(action.result),
-    };
+    if(action.dontMergeDeep){
+      return {
+        ...state,
+        localJob: state.localJob.merge(action.result),
+      };
+    } else {
+      return {
+        ...state,
+        localJob: state.localJob.mergeDeep(action.result),
+      };
+    }
   }
   case constants.REPLACE_JOB_LOCAL:{
     return {

@@ -189,8 +189,8 @@ class ClientDetailsPage extends React.Component {
     this.props.replaceJobLocal({companyId:this.props.params.id});
     this.refs.jobCreateModal.show();
   }
-  onJobCreateChange (job){
-    this.props.updateJobLocal(job);
+  onJobCreateChange (job, dontMergeDeep){
+    this.props.updateJobLocal(job, dontMergeDeep);
   }
   onJobCreateImageChange(imageArray){
     this.props.updateJobImageLocal(imageArray);
