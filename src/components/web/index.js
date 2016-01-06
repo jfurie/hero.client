@@ -33,3 +33,4 @@ export CandidateSearch from './candidateSearch/candidateSearch';
 export CandidateSearchModal from './candidateSearch/candidateSearchModal';
 export CandidateCreateModal from './candidateCreateModal/candidateCreateModal';
 export FileInput from './fileInput/fileInput';
+export TagsInput from './tagsInput/tagsInput';

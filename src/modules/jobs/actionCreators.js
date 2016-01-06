@@ -28,10 +28,11 @@ export function createJob(job){
   };
 }
 
-export function updateJobLocal(job){
+export function updateJobLocal(job,dontMergeDeep){
   return {
     type: constants.UPDATE_JOB_LOCAL,
     result: job,
+    dontMergeDeep
   };
 }
 export function replaceJobLocal(job){

@@ -81,7 +81,7 @@ function getData(state, props) {
     tabId,
     company,
     location,
-    //job,
+    job,
     jobImage,
     contacts: newContacts,
     jobs: state.jobs,
@@ -126,6 +126,10 @@ class ClientDetailsPage extends React.Component {
     if(nextProps.localJob.get('success')){
       this.refs.jobCreateModal.closeModal();
       this.props.replaceJobLocal({companyId:this.props.params.id});
+    }
+    if(nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId){
+      this.props.getOneJob(nextProps.params.jobId);
+      this.props.getImageByJobId(nextProps.params.jobId);
     }
   }
 
@@ -172,8 +176,8 @@ class ClientDetailsPage extends React.Component {
     this.refs.jobCreateModal.show();
   }
 
-  onJobCreateChange (job){
-    this.props.updateJobLocal(job);
+  onJobCreateChange (job, dontMergeDeep){
+    this.props.updateJobLocal(job, dontMergeDeep);
   }
 
   onJobCreateImageChange(imageArray){
