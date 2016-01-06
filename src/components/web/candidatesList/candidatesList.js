@@ -30,7 +30,7 @@ class CandidatesList extends React.Component {
     return (
       <div>
         <CandidateDetailsModal ref="candidateDetailsModal"/>
-        <List style={{backgroundColor:'transparant'}} subheader={`${candidates.count()} Candidates`}>
+        <List style={{backgroundColor:'transparant'}} subheader={`${candidates.count()} Candidate${(candidates.count() > 1) ? ('s') : ('')}`}>
           <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
             {candidates.map((candidate, key) => {
 
