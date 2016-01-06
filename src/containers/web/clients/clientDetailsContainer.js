@@ -5,19 +5,18 @@ import { pushState } from 'redux-router';
 
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
-  CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal, JobDetailsModal,
+  CompanyJobsList, CompanyNotesList, ContactDetailsModal, NotesCreateModal, JobCreateModal, JobDetailsModal,
   ClientsEditModal } from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
-import { updateNoteLocal, saveLocalNote, replaceNoteLocal } from '../../../modules/notes/index';
+import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton,
-  Avatar, Card, CardHeader, CardText, CardActions, FlatButton,
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Avatar,
 } from 'material-ui';
 
 import MenuItem from 'material-ui/lib/menus/menu-item';
@@ -77,6 +76,16 @@ function getData(state, props) {
     });
   }
 
+  // filter down company notes
+  let notesByCompanyListIds = state.notes.byCompanyId.get(id);
+  let companyNotes = new Immutable.Map();
+
+  if (notesByCompanyListIds) {
+    companyNotes = state.notes.list.filter(x => {
+      return notesByCompanyListIds.indexOf(x.get('id')) > -1;
+    });
+  }
+
 
   return {
     tabId,
@@ -89,6 +98,7 @@ function getData(state, props) {
     notes: state.notes,
     localNote: state.notes.localNote,
     companyJobs,
+    companyNotes,
     localJob: state.jobs.localJob,
     localJobResource,
   };
@@ -102,7 +112,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, updateNoteLocal, saveLocalNote, replaceNoteLocal})
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -120,6 +130,7 @@ class ClientDetailsPage extends React.Component {
       self.props.getOneCompany(self.props.params.id);
       self.props.getContactsByCompany(self.props.params.id);
       self.props.getJobsByCompany(self.props.params.id);
+      self.props.getNotesByCompany(self.props.params.id);
       self.props.getOneJob(self.props.params.jobId);
       self.props.getImageByJobId(self.props.params.jobId);
     },500);
@@ -192,6 +203,10 @@ class ClientDetailsPage extends React.Component {
   onNoteCreateChange (note){
     this.props.updateNoteLocal(note);
   }
+  _handleEditNote(note) {
+    this.props.replaceNoteLocal(note);
+    this.refs.notesCreateModal.show();
+  }
   createJobModalOpen() {
     this.props.replaceJobLocal({companyId:this.props.params.id});
     this.refs.jobCreateModal.show();
@@ -215,7 +230,7 @@ class ClientDetailsPage extends React.Component {
   }
   render() {
 
-    let {company, location, contacts, companyJobs} = this.props;
+    let {company, location, contacts, companyJobs, companyNotes } = this.props;
 
     if (company) {
 
@@ -313,40 +328,7 @@ class ClientDetailsPage extends React.Component {
               <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             </div>
             <div style={style.slide}>
-              <Card initiallyExpanded>
-                <CardHeader
-                  title="Rameet Singh"
-                  subtitle="Private | 59 mins ago"
-                  avatar={<Avatar src={heroContact} />}>
-                </CardHeader>
-                <CardText expandable>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                </CardText>
-                <CardActions expandable>
-                  <FlatButton label="Edit"/>
-                  <FlatButton label="Delete"/>
-                </CardActions>
-              </Card>
-              <Card initiallyExpanded>
-                <CardHeader
-                  title="Rameet Singh"
-                  subtitle="Private | 60 mins ago"
-                  avatar={<Avatar src={heroContact} />}>
-                </CardHeader>
-                <CardText expandable>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                </CardText>
-                <CardActions expandable>
-                  <FlatButton label="Edit"/>
-                  <FlatButton label="Delete"/>
-                </CardActions>
-              </Card>
+              <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} notes={companyNotes}/>
             </div>
           </CustomTabsSwipe>
         </div>

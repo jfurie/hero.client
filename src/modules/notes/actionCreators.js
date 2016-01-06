@@ -28,6 +28,16 @@ export function createNote(note){
   };
 }
 
+export function updateNote(note){
+  return {
+    types: [constants.UPDATE_NOTE, constants.UPDATE_NOTE_SUCCESS, constants.UPDATE_NOTE_FAIL],
+    promise: (client, auth) => client.api.put('/notes', {
+      authToken: auth.authToken,
+      data:note,
+    }),
+  };
+}
+
 export function updateNoteLocal(note){
   return {
     type: constants.UPDATE_NOTE_LOCAL,
@@ -86,7 +96,12 @@ export function updateNoteImageLocal(file) {
 export function saveLocalNote(){
   return (dispatch, getState) => {
     let current = getState().notes.localNote;
-    dispatch(createNote(current));
+    if (current.get('id')) {
+      dispatch(updateNote(current));
+    }
+    else {
+      dispatch(createNote(current));
+    }
   };
 }
 
