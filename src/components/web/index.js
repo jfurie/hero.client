@@ -11,7 +11,7 @@ export LocationCard from './locationCard/locationCard';
 export JobsList from './jobsList/jobsList';
 export CompanyJobsList from './companyJobsList/companyJobsList';
 export LeftNavTop from './leftNav/leftNavTop';
-export RingCandidate from './ringCandidate/ringCandidate';
+export CandidateAvatar from './candidateAvatar/candidateAvatar';
 export CustomTabsSwipe from './customTabsSwipe/customTabsSwipe';
 export JobDetails from './jobDetails/jobDetails';
 export JobDetailsPage from './jobDetails/jobDetailsPage';

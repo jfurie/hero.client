@@ -2,7 +2,7 @@ import React from 'react';
 import { FontIcon } from 'material-ui';
 
 
-class RingCandidate extends React.Component {
+class CandidateAvatar extends React.Component {
 
   render() {
 
@@ -28,28 +28,19 @@ class RingCandidate extends React.Component {
       },
     };
 
-    let { picture, status, size } = this.props;
-
-    status = status || 'none';
-
+    let { picture, status } = this.props;
     let font = null;
-    if(size == 'large'){
-      style.picture.width = style.picture.height = '40px';
-    }
+
+    status = status || 'new';
+
     switch (status) {
-    case 'fav': {
-      style.picture.borderColor = '#e91b62';
-      style.fontIcon.color = '#e91b62';
-      font = 'favorite';
-      break;
-    }
-    case 'vetted': {
+    case 'active': {
       style.picture.borderColor = '#40bb3f';
       style.fontIcon.color = '#40bb3f';
       font = 'done';
       break;
     }
-    case 'rejected': {
+    case 'inactive': {
       style.picture.borderColor = '#959494';
       style.picture.opacity = '0.5';
       style.fontIcon.color = '#959494';
@@ -61,7 +52,7 @@ class RingCandidate extends React.Component {
     }
 
     return (
-      <div className='ringCandidateContainer' style={style.container}>
+      <div className='candidateAvatarContainer' style={style.container}>
         <img style={style.picture} src={picture} />
         {(font) ? (
           <FontIcon style={style.fontIcon} className="material-icons" color={style.fontIcon.color}>{font}</FontIcon>
@@ -71,9 +62,9 @@ class RingCandidate extends React.Component {
   }
 }
 
-RingCandidate.propTypes = {
+CandidateAvatar.propTypes = {
   picture: React.PropTypes.string.isRequired,
   status: React.PropTypes.string,
 };
 
-export default RingCandidate;
+export default CandidateAvatar;
