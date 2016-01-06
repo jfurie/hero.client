@@ -1,19 +1,14 @@
 import React from 'react';
-import { ListItem, Divider, FontIcon, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
-//import Infinite from 'react-infinite';
-import { CompanyAvatar } from '../../../components/web';
-import { RingCandidate } from '../../../components/web';
-
-const style = {
-  peopleList: {
-    marginTop: '7px',
-  },
-};
+import { Divider, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 
 class CompanyNotesList extends React.Component {
 
   editNote(note, e) {
     this.props.editNote(note);
+  }
+
+  deleteNote(note, e) {
+    this.props.deleteNote(note);
   }
 
   render() {
@@ -36,8 +31,8 @@ class CompanyNotesList extends React.Component {
               {note.get('noteText')}
             </CardText>
             <CardActions expandable>
-              <FlatButton label="Edit" onTouchTap={this.editNote.bind(this, note)}/>
-              <FlatButton label="Delete"/>
+              <FlatButton label="Edit" onTouchTap={this.editNote.bind(this, note)} />
+              <FlatButton label="Delete" onTouchTap={this.deleteNote.bind(this, note)} />
             </CardActions>
           </Card>
             <Divider inset />

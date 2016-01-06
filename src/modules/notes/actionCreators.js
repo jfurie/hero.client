@@ -1,4 +1,3 @@
-import superagent from 'superagent';
 import * as constants from './constants';
 export function getNotesByCompany(companyId){
   return {
@@ -38,6 +37,15 @@ export function updateNote(note){
   };
 }
 
+export function deleteNote(id){
+  return {
+    types: [constants.DELETE_NOTE, constants.DELETE_NOTE_SUCCESS, constants.DELETE_NOTE_FAIL],
+    promise: (client, auth) => client.api.del(`/notes/${id}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
 export function updateNoteLocal(note){
   return {
     type: constants.UPDATE_NOTE_LOCAL,
@@ -51,48 +59,6 @@ export function replaceNoteLocal(note){
   };
 }
 
-export function updateNoteImageLocal(file) {
-  return (dispatch) => {
-    dispatch({
-      types: [constants.UPDATE_NOTE_IMAGE_LOCAL, constants.UPDATE_NOTE_IMAGE_LOCAL_SUCCESS, constants.UPDATE_NOTE_IMAGE_LOCAL_FAIL],
-      promise: (client, auth) => client.api.post('/resources/signUrl', {
-        authToken: auth.authToken,
-        data: {
-          name: file.name,
-          size: file.size,
-          type: file.type,
-        },
-      }).then((signUrlData) => new Promise((resolve, reject) => {
-        superagent.put(signUrlData.signed_request)
-            .send(file)
-            .on('progress', function(e) {
-              dispatch({
-                type: constants.UPDATE_NOTE_IMAGE_LOCAL_PROGRESS,
-                result: e.percent,
-              });
-            })
-            .end((err, {
-              body,
-            } = {}) => {
-              if (err) {
-                return reject(body || err);
-              } else {
-                return resolve(signUrlData.url);
-              }
-            });
-      })).then((signUrlData) => {
-        console.log(signUrlData);
-        return client.api.post('/resources', {
-          authToken: auth.authToken,
-          data: {
-            resourceType: 'image',
-            item: signUrlData,
-          },
-        });
-      }),
-    });
-  };
-}
 export function saveLocalNote(){
   return (dispatch, getState) => {
     let current = getState().notes.localNote;

@@ -12,7 +12,7 @@ import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
-import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal } from '../../../modules/notes/index';
+import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 
 import {
@@ -37,11 +37,11 @@ function getData(state, props) {
   }
 
   switch (tab) {
-    case 'jobs':
-      tabId = 1;
-      break;
-    default:
-      tabId = 0;
+  case 'jobs':
+    tabId = 1;
+    break;
+  default:
+    tabId = 0;
   }
   let newContacts = {
     ...contacts,
@@ -86,7 +86,8 @@ function getData(state, props) {
     });
   }
 
-
+  companyNotes = companyNotes.reverse();
+  
   return {
     tabId,
     company,
@@ -112,7 +113,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal})
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -207,6 +208,10 @@ class ClientDetailsPage extends React.Component {
     this.props.replaceNoteLocal(note);
     this.refs.notesCreateModal.show();
   }
+  _handleDeleteNote(note) {
+    this.props.replaceNoteLocal(note);
+    this.props.deleteNote(note.get('id'));
+  }
   createJobModalOpen() {
     this.props.replaceJobLocal({companyId:this.props.params.id});
     this.refs.jobCreateModal.show();
@@ -221,7 +226,7 @@ class ClientDetailsPage extends React.Component {
     let tab = '';
     switch (index) {
     case 1:
-      tab = 'jobs'
+      tab = 'jobs';
       break;
     default:
       tab = '';
@@ -328,7 +333,7 @@ class ClientDetailsPage extends React.Component {
               <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             </div>
             <div style={style.slide}>
-              <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} notes={companyNotes}/>
+              <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={companyNotes}/>
             </div>
           </CustomTabsSwipe>
         </div>
