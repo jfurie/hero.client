@@ -67,7 +67,6 @@ function getData(state, props) {
   let job = state.jobs.list.get(jobId);
   let jobImage = job ? state.resources.list.get(job.get('imageId')) : new Immutable.Map();
 
-
   // filter down company jobs
   let jobsByCompanyListIds = state.jobs.byCompanyId.get(id);
   let companyJobs = new Immutable.Map();
@@ -77,7 +76,6 @@ function getData(state, props) {
       return jobsByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
-
 
   return {
     tabId,
@@ -157,7 +155,7 @@ class ClientDetailsPage extends React.Component {
     this.props.pushState({}, `/clients/${this.props.params.id}/jobs/${job.get('id')}`);
   }
 
-  closeJobModal(){
+  closeJobModal() {
     this.props.pushState('','/clients/'+this.props.params.id +'/jobs');
     this.setState({
       detailsJob: null,
@@ -207,7 +205,7 @@ class ClientDetailsPage extends React.Component {
 
       return (
         <div>
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} jobImage={this.props.jobImage} job={this.props.job} seachCandidates={contacts.list} contacts={contacts} open={this.props.params.jobId}></JobDetailsModal>
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} jobImage={this.props.jobImage} job={this.props.job} seachCandidates={contacts.list} contacts={contacts} open={(this.props.params.jobId)?(true):(false)} />
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" company={company}/>
