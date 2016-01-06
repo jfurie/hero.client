@@ -44,6 +44,8 @@ class JobDetails extends React.Component {
   render(){
     let { contacts, location, isLight, job, jobImage } = this.props;
 
+    console.log(this.props, 'jobDetails');
+
     let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
 
     // mardown to html
@@ -52,7 +54,6 @@ class JobDetails extends React.Component {
     let heroContact = '/img/rameet.jpg';
     return (
       <div>
-
         <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
         <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']}>
           <div style={style.slide}>
@@ -95,34 +96,34 @@ class JobDetails extends React.Component {
               <CardText>
                 <Card>
                   <List subheader='Compensation Details'>
-                      <ListItem
+                    <ListItem
                         leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
                         primaryText={'$150,000'}
                         secondaryText={<p>salary</p>}
                         secondaryTextLines={1}
-                        disabled={true}
-                      />
-                      <ListItem
+                        disabled
+                    />
+                    <ListItem
                         leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
                         primaryText={'20%'}
                         secondaryText={<p>fee</p>}
                         secondaryTextLines={1}
-                        disabled={true}
-                      />
-                      <ListItem
+                        disabled
+                    />
+                    <ListItem
                         leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
                         primaryText={'$30,000'}
                         secondaryText={<p>estimated fee</p>}
                         secondaryTextLines={1}
-                        disabled={true}
-                      />
-                      <ListItem
+                        disabled
+                    />
+                    <ListItem
                         leftIcon={<FontIcon className='material-icons'>person</FontIcon>}
                         primaryText={'Permanent'}
                         secondaryText={<p>position type</p>}
                         secondaryTextLines={1}
-                        disabled={true}
-                      />
+                        disabled
+                    />
                   </List>
                 </Card>
               </CardText>
