@@ -46,7 +46,6 @@ class JobDetailsModal extends React.Component {
   }
 
   createCandidateModalOpen() {
-    //console.log(this.refs);
     this.refs.candidateCreateModal.getWrappedInstance().show();
   }
 
@@ -68,8 +67,10 @@ class JobDetailsModal extends React.Component {
 
   render() {
 
-    let jobId = ((this.props.job) ? (this.props.job.get('id')) : (null));
-    let jobTitle = ((this.props.job) ? (this.props.job.get('title')) : (''));
+    let { job } = this.props;
+
+    let jobId = ((job) ? (job.get('id')) : (null));
+    let jobTitle = ((job) ? (job.get('title')) : (''));
 
     return (
       <div>

@@ -42,11 +42,13 @@ class JobDetails extends React.Component {
   }
 
   render(){
-    let { contacts, location, isLight, job, jobImage } = this.props;
+    let { location, isLight, job } = this.props;
+    let jobImage = ((job) ? (job.get('image')) : (null));
 
-    let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
+    //console.log(jobImage);
 
     // mardown to html
+    let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
     let description = marked(fakeDescription);
 
     let heroContact = '/img/rameet.jpg';
@@ -56,17 +58,19 @@ class JobDetails extends React.Component {
         <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']}>
           <div style={style.slide}>
             <Card>
-              <div className="mediawrap">
-                <CardMedia>
-                  <img src={jobImage?jobImage.get('item'):'https://scontent.cdninstagram.com/hphotos-xft1/t51.2885-15/e15/11378685_847466158664846_945103283_n.jpg'}></img>
-                </CardMedia>
-                <div className="button-right-bottom">
-                  <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}} label="Apply" />
+              {(jobImage) ? (
+                <div className="mediawrap">
+                  <CardMedia>
+                    <img src={jobImage.get('item')} />
+                  </CardMedia>
+                  <div className="button-right-bottom">
+                    <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}} label="Apply" />
+                  </div>
+                  <div className="button-left-bottom">
+                    <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}}  label="Share" />
+                  </div>
                 </div>
-                <div className="button-left-bottom">
-                  <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}}  label="Share" />
-                </div>
-              </div>
+              ) : (null)}
               <CardText>
                 <Card>
                   <CardText>
@@ -129,7 +133,7 @@ class JobDetails extends React.Component {
                   <ListItem
                     leftAvatar={<Avatar>S</Avatar>}
                     primaryText={'Scott Bendar'}
-                    secondaryText={<p>CTO, FreedomPop</p>}
+                    secondaryText={<p>CTO, FreedomPop!!!</p>}
                     secondaryTextLines={1}
                   />
                 ) : (null)}
@@ -157,7 +161,8 @@ class JobDetails extends React.Component {
             </Card>
           </div>
           <div style={style.slide}>
-            <CandidatesList candidates={contacts.list} />
+            <p>Candidate list comming soon ...</p>
+            {/* <CandidatesList candidates={contacts.list} /> */}
           </div>
           <div style={style.slide}>
             <div>

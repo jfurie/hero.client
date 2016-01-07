@@ -3,6 +3,9 @@ import Immutable from 'immutable';
 const CREATE_CANDIDATE = 'hero.client/candidates/CREATE_CANDIDATE';
 const CREATE_CANDIDATE_SUCCESS = 'hero.client/candidates/CREATE_CANDIDATE_SUCCESS';
 const CREATE_CANDIDATE_FAIL = 'hero.client/candidates/CREATE_CANDIDATE_FAIL';
+const GET_CANDIDATES = 'hero.client/candidates/GET_CANDIDATES';
+const GET_CANDIDATES_SUCCESS = 'hero.client/candidates/GET_CANDIDATES_SUCCESS';
+const GET_CANDIDATES_FAIL = 'hero.client/candidates/GET_CANDIDATES_FAIL';
 
 const initialState = {
   list: new Immutable.Map(),
@@ -38,11 +41,17 @@ export default function reducer(state = initialState, action = {}) {
       //byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
     };
   }
+  case GET_CANDIDATES: {
+    return state;
+  }
+  case GET_CANDIDATES_SUCCESS: {
+    console.log(action.result);
+    return state;
+  }
   default:
     return state;
   }
 }
-
 
 export function createCandidate(candidateData, jobId) {
   return {
@@ -54,5 +63,30 @@ export function createCandidate(candidateData, jobId) {
         jobId,
       },
     }),
+  };
+}
+
+export function getAllCandidates(jobId) {
+
+  console.log('getAllCandidates', jobId);
+
+  return (dispatch) => {
+    dispatch({
+      types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
+      promise: (client, auth) => new Promise(function(resolve, reject){
+        let accountPromise = client.api.get(`/candidates?filter={"where": {"jobId": "${jobId}"}}`, {
+          authToken: auth.authToken,
+        });
+
+        accountPromise.then((res) => {
+          resolve(res);
+        }).catch((ex) => {
+          reject(ex);
+        });
+      }).then((account)=>{
+        //dispatch(getCurrentAccountUsers(account));
+        return account;
+      }),
+    });
   };
 }

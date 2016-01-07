@@ -15,6 +15,8 @@ import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 
+import getJobDataFromState from '../../../dataHelpers/job';
+
 import {
   List, ListItem, Divider, FontIcon, IconMenu, IconButton,
   Avatar, Card, CardHeader, CardText, CardActions, FlatButton,
@@ -59,13 +61,14 @@ function getData(state, props) {
       return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
-  var imageId = state.jobs.localJob.get('imageId');
-  if(imageId){
+
+  let imageId = state.jobs.localJob.get('imageId');
+  if (imageId) {
     localJobResource = state.resources.list.get(imageId);
   }
 
-  let job = state.jobs.list.get(jobId);
-  let jobImage = job ? state.resources.list.get(job.get('imageId')) : new Immutable.Map();
+  // let job = state.jobs.list.get(jobId);
+  // let jobImage = job ? state.resources.list.get(job.get('imageId')) : new Immutable.Map();
 
   // filter down company jobs
   let jobsByCompanyListIds = state.jobs.byCompanyId.get(id);
@@ -81,8 +84,8 @@ function getData(state, props) {
     tabId,
     company,
     location,
-    job,
-    jobImage,
+    job: getJobDataFromState(state, jobId),
+    // jobImage,
     contacts: newContacts,
     jobs: state.jobs,
     companyJobs,
@@ -112,22 +115,29 @@ class ClientDetailsPage extends React.Component {
   }
 
   componentDidMount() {
+
     let self = this;
+
     setTimeout(() => {
       self.props.getOneCompany(self.props.params.id);
       self.props.getContactsByCompany(self.props.params.id);
       self.props.getJobsByCompany(self.props.params.id);
-      self.props.getOneJob(self.props.params.jobId);
-      self.props.getImageByJobId(self.props.params.jobId);
-    },500);
+
+      if (self.props.params.jobId) {
+        self.props.getOneJob(self.props.params.jobId);
+        self.props.getImageByJobId(self.props.params.jobId);
+      }
+    }, 500);
   }
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.localJob.get('success')){
+  componentWillReceiveProps(nextProps) {
+
+    if (nextProps.localJob.get('success')) {
       this.refs.jobCreateModal.closeModal();
       this.props.replaceJobLocal({companyId:this.props.params.id});
     }
-    if(nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId){
+
+    if (nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId) {
       this.props.getOneJob(nextProps.params.jobId);
       this.props.getImageByJobId(nextProps.params.jobId);
     }
@@ -209,7 +219,7 @@ class ClientDetailsPage extends React.Component {
 
       return (
         <div>
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} jobImage={this.props.jobImage} job={this.props.job} seachCandidates={contacts.list} contacts={contacts} open={(this.props.params.jobId)?(true):(false)} />
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} open={(this.props.params.jobId)?(true):(false)} />
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" company={company}/>
