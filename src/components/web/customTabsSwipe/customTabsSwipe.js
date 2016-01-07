@@ -21,7 +21,7 @@ const style = {
 };
 
 @connect(() => ({}
-), { disableSwipeToOpen, enableSwipeToOpen })
+), { disableSwipeToOpen, enableSwipeToOpen }, null, {withRef: true})
 class CustomTabsSwipe extends React.Component {
 
   constructor(props) {

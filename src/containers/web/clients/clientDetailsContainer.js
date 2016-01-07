@@ -88,8 +88,10 @@ function getData(state, props) {
       return notesByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
-
-  companyNotes = companyNotes.reverse();
+  
+  companyNotes = companyNotes.sort((a, b) => {
+    return new Date(b.get('created')) - new Date(a.get('created'));
+  });
 
   return {
     tabId,
@@ -152,6 +154,10 @@ class ClientDetailsPage extends React.Component {
     if(nextProps.localNote.get('success')){
       this.refs.notesCreateModal.closeModal();
       this.props.replaceNoteLocal({companyId:this.props.params.id});
+
+      if (this.props.tabId != 3) {
+        this.refs.customTabsSwipe.getWrappedInstance()._handleChangeIndex(3);
+      }
     }
   }
 
@@ -273,7 +279,7 @@ class ClientDetailsPage extends React.Component {
             </IconMenu>
           } title={company.get('name')} />
 
-        <CustomTabsSwipe onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
+        <CustomTabsSwipe ref='customTabsSwipe' onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
             <div style={style.slide}>
               <List>
                 <div>
