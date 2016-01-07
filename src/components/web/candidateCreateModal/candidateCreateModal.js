@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dialog, IconButton, FlatButton, TextField } from 'material-ui';
 
+import { createCandidate } from '../../../modules/candidates';
+
 import Toolbar from 'material-ui/lib/toolbar/toolbar';
 import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
 import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
@@ -18,7 +20,7 @@ const style = {
 };
 
 @connect(() => (
-{}), {/*createCandidate*/}, null, {withRef: true})
+{}), {createCandidate}, null, {withRef: true})
 export default class CandidateCreateModal extends React.Component {
 
   constructor(props){
@@ -66,9 +68,8 @@ export default class CandidateCreateModal extends React.Component {
     });
 
     if (errors.validationErrors === 0) {
-      //console.log('good!');
+
       let candidate = this.state.candidate;
-      //candidate.displayName = `${this.state.contact.firstName} ${this.state.contact.lastName}`;
 
       // temp for now (will be replaced by location component)
       candidate._address = {
@@ -84,9 +85,9 @@ export default class CandidateCreateModal extends React.Component {
       delete candidate.city;
       // end temp
 
-      console.log(candidate, this.props.jobId);
+      //console.log(candidate, this.props.jobId);
 
-      //this.props.createCandidate(this.props.jobId, candidate);
+      this.props.createCandidate(candidate, this.props.jobId);
       this.closeModal();
     }
   }

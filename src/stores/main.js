@@ -1,7 +1,9 @@
 import thunk from 'redux-thunk';
 import clientMiddleware from '../middleware/client-middleware';
-import { devTools, persistState } from 'redux-devtools';
+import { persistState } from 'redux-devtools';
 import reducer from '../modules';
+import DevTools from '../utils/devTools';
+
 import {
   createStore as _createStore, applyMiddleware, compose
 }
@@ -14,9 +16,8 @@ export default function createStore(reduxReactRouter, getRoutes, createHistory, 
 
     finalCreateStore = compose(
       applyMiddleware(...middleware),
-      devTools(),
+      DevTools.instrument(),
       persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/)),
-      //window.devToolsExtension ? window.devToolsExtension() : f => f,
     )(_createStore);
   } else {
     finalCreateStore = applyMiddleware(...middleware)(_createStore);

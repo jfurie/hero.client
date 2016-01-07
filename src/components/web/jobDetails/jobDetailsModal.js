@@ -71,8 +71,6 @@ class JobDetailsModal extends React.Component {
     let jobId = ((this.props.job) ? (this.props.job.get('id')) : (null));
     let jobTitle = ((this.props.job) ? (this.props.job.get('title')) : (''));
 
-    console.log(this.props);
-
     return (
       <div>
         <Dialog open={this.props.open}>
