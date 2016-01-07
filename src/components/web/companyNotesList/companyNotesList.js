@@ -3,15 +3,17 @@ import { Divider, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } 
 
 class CompanyNotesList extends React.Component {
 
-  editNote(note, e) {
+  editNote(note) {
     this.props.editNote(note);
   }
 
-  deleteNote(note, e) {
+  deleteNote(note) {
     this.props.deleteNote(note);
   }
 
   render() {
+    let self = this;
+
     let { notes } = this.props;
     let heroContact = '/img/rameet.jpg';
 
@@ -31,8 +33,8 @@ class CompanyNotesList extends React.Component {
               {note.get('noteText')}
             </CardText>
             <CardActions expandable>
-              <FlatButton label="Edit" onTouchTap={this.editNote.bind(this, note)} />
-              <FlatButton label="Delete" onTouchTap={this.deleteNote.bind(this, note)} />
+              <FlatButton label="Edit" onTouchTap={self.editNote.bind(self, note)} />
+              <FlatButton label="Delete" onTouchTap={self.deleteNote.bind(self, note)} />
             </CardActions>
           </Card>
             <Divider inset />

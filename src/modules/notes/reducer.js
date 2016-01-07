@@ -98,7 +98,8 @@ export default function reducer(state = initialState, action = {}) {
     let noteMap = {};
     noteMap[action.result.id] = action.result;
     let byCompanyMap ={};
-    byCompanyMap[action.result.companyId] = [action.result.id];
+    byCompanyMap[action.result.companyId] = state.byCompanyId.get(action.result.companyId).push(action.result.id);
+
     return {
       ...state,
       list: state.list.mergeDeep(noteMap),
@@ -116,12 +117,10 @@ export default function reducer(state = initialState, action = {}) {
   case constants.UPDATE_NOTE_SUCCESS:{
     let noteMap = {};
     noteMap[action.result.id] = action.result;
-    let byCompanyMap ={};
-    byCompanyMap[action.result.companyId] = [action.result.id];
+
     return {
       ...state,
       list: state.list.mergeDeep(noteMap),
-      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
       loading:false,
       localNote: state.localNote.mergeDeep({success:true}),
     };

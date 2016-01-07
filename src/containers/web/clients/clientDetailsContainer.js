@@ -87,7 +87,7 @@ function getData(state, props) {
   }
 
   companyNotes = companyNotes.reverse();
-  
+
   return {
     tabId,
     company,
@@ -333,7 +333,9 @@ class ClientDetailsPage extends React.Component {
               <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             </div>
             <div style={style.slide}>
-              <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={companyNotes}/>
+              <List subheader={`${companyNotes.count()} Note${((companyNotes.count() > 1) ? ('s') : (''))}`}>
+                <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={companyNotes}/>
+              </List>
             </div>
           </CustomTabsSwipe>
         </div>
