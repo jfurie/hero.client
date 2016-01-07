@@ -16,12 +16,15 @@ export default function reducer(state = initialState, action = {}) {
   }
   case CREATE_CANDIDATE_SUCCESS: {
 
-    let byJobId = {};
-    byJobId[action.result.jobId] = action.result.contactId;
+    let jobId = action.result.jobId;
+    let byJobIdNew = {};
+
+    byJobIdNew[jobId] = (state.byJobId.get(jobId)) ? (state.byJobId.get(jobId).get()) : ([]);
+    byJobIdNew[jobId].push(action.result.contactId);
 
     return {
       ...state,
-      byJobId: state.byJobId.mergeDeep(byJobId),
+      byJobId: state.byJobId.mergeDeep(byJobIdNew),
     };
   }
   case CREATE_CANDIDATE_FAIL: {
