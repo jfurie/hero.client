@@ -40,6 +40,9 @@ function getData(state, props) {
   case 'jobs':
     tabId = 1;
     break;
+  case 'notes':
+    tabId = 3;
+    break;
   default:
     tabId = 0;
   }
@@ -227,6 +230,9 @@ class ClientDetailsPage extends React.Component {
     switch (index) {
     case 1:
       tab = 'jobs';
+      break;
+    case 3:
+      tab = 'notes';
       break;
     default:
       tab = '';
