@@ -113,7 +113,7 @@ export default class ClientsEditModal extends React.Component {
   render(){
 
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let { company } = this.props;
+    //let { company } = this.props;
 
     return (
       <Dialog

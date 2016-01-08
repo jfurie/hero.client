@@ -5,8 +5,9 @@ import { pushState } from 'redux-router';
 
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
-  CompanyJobsList, CompanyNotesList, ContactDetailsModal, NotesCreateModal, JobCreateModal, JobDetailsModal,
-  ClientsEditModal } from '../../../components/web';
+  CompanyJobsList, CompanyNotesList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
+  JobDetailsModal, ClientsEditModal, CompanyAvatar,
+} from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies';
 import { getOneLocation } from '../../../modules/locations';
@@ -14,6 +15,9 @@ import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
+import { getAllCandidates } from '../../../modules/candidates';
+
+import getJobDataFromState from '../../../dataHelpers/job';
 
 import {
   List, ListItem, Divider, FontIcon, IconMenu, IconButton, Avatar,
@@ -46,6 +50,7 @@ function getData(state, props) {
   default:
     tabId = 0;
   }
+
   let newContacts = {
     ...contacts,
     list: new Immutable.Map(),
@@ -53,21 +58,16 @@ function getData(state, props) {
 
   let contactsByCompanyListIds = contacts.byCompanyId.get(id);
 
-  //console.log('contactsByCompanyListIds', contactsByCompanyListIds);
-
   if (contactsByCompanyListIds) {
     newContacts.list = contacts.list.filter(x => {
       return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
-  var imageId = state.jobs.localJob.get('imageId');
-  if(imageId){
+
+  let imageId = state.jobs.localJob.get('imageId');
+  if (imageId) {
     localJobResource = state.resources.list.get(imageId);
   }
-
-  let job = state.jobs.list.get(jobId);
-  let jobImage = job ? state.resources.list.get(job.get('imageId')) : new Immutable.Map();
-
 
   // filter down company jobs
   let jobsByCompanyListIds = state.jobs.byCompanyId.get(id);
@@ -97,8 +97,7 @@ function getData(state, props) {
     tabId,
     company,
     location,
-    //job,
-    jobImage,
+    job: getJobDataFromState(state, jobId),
     contacts: newContacts,
     jobs: state.jobs,
     notes: state.notes,
@@ -118,7 +117,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal})
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, getAllCandidates})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -131,24 +130,34 @@ class ClientDetailsPage extends React.Component {
   }
 
   componentDidMount() {
+
     let self = this;
+
     setTimeout(() => {
       self.props.getOneCompany(self.props.params.id);
       self.props.getContactsByCompany(self.props.params.id);
       self.props.getJobsByCompany(self.props.params.id);
       self.props.getNotesByCompany(self.props.params.id);
-      self.props.getOneJob(self.props.params.jobId);
-      self.props.getImageByJobId(self.props.params.jobId);
-    },500);
+
+      if (self.props.params.jobId) {
+        self.props.getOneJob(self.props.params.jobId);
+        self.props.getImageByJobId(self.props.params.jobId);
+        self.props.getAllCandidates(self.props.params.jobId);
+      }
+    }, 500);
   }
 
-  componentWillUpdate() {
+  componentWillReceiveProps(nextProps) {
 
-  }
-  componentWillReceiveProps(nextProps){
-    if(nextProps.localJob.get('success')){
+    if (nextProps.localJob.get('success')) {
       this.refs.jobCreateModal.closeModal();
       this.props.replaceJobLocal({companyId:this.props.params.id});
+    }
+
+    if (nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId) {
+      this.props.getOneJob(nextProps.params.jobId);
+      this.props.getImageByJobId(nextProps.params.jobId);
+      this.props.getAllCandidates(nextProps.params.jobId);
     }
 
     if(nextProps.localNote.get('success')){
@@ -161,10 +170,6 @@ class ClientDetailsPage extends React.Component {
     }
   }
 
-  // saveClient() {
-  //   console.log('cool!');
-  // }
-
   createContactModalOpen(){
     this.refs.clientContactsCreateModal.getWrappedInstance().show();
   }
@@ -172,13 +177,6 @@ class ClientDetailsPage extends React.Component {
   editClientModalOpen() {
     this.refs.clientEditModal.getWrappedInstance().show();
   }
-
-  // editClientModalClose() {
-  //   this.setState({
-  //     detailsJob:null,
-  //     openJob:false
-  //   });
-  // }
 
   contactDetailsModalOpen(contact) {
     this.setState({
@@ -198,8 +196,8 @@ class ClientDetailsPage extends React.Component {
     this.props.pushState({}, `/clients/${this.props.params.id}/jobs/${job.get('id')}`);
   }
 
-  closeJobModal(){
-    this.props.pushState('','/clients/'+this.props.params.id +'/jobs');
+  closeJobModal() {
+    this.props.pushState('', `/clients/${this.props.params.id}/jobs`);
     this.setState({
       detailsJob: null,
       openJob: false,
@@ -228,12 +226,15 @@ class ClientDetailsPage extends React.Component {
     this.props.replaceJobLocal({companyId:this.props.params.id});
     this.refs.jobCreateModal.show();
   }
-  onJobCreateChange (job){
-    this.props.updateJobLocal(job);
+
+  onJobCreateChange (job, dontMergeDeep){
+    this.props.updateJobLocal(job, dontMergeDeep);
   }
+
   onJobCreateImageChange(imageArray){
     this.props.updateJobImageLocal(imageArray);
   }
+
   onSwipe(index){
     let tab = '';
     switch (index) {
@@ -248,6 +249,7 @@ class ClientDetailsPage extends React.Component {
     }
     this.props.pushState('', `/clients/${this.props.params.id}/${tab}`);
   }
+
   render() {
 
     let {company, location, contacts, companyJobs, companyNotes } = this.props;
@@ -261,8 +263,7 @@ class ClientDetailsPage extends React.Component {
 
       return (
         <div>
-
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} jobImage={this.props.jobImage} job={this.props.job} seachCandidates={contacts.list} contacts={contacts} open={this.props.params.jobId}></JobDetailsModal>
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} open={(this.props.params.jobId)?(true):(false)} />
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" company={company}/>
@@ -280,7 +281,8 @@ class ClientDetailsPage extends React.Component {
               <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
               <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
             </IconMenu>
-          } title={company.get('name')} />
+          } title={company.get('name')}
+          />
 
         <CustomTabsSwipe ref='customTabsSwipe' onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
             <div style={style.slide}>
@@ -289,10 +291,10 @@ class ClientDetailsPage extends React.Component {
 
                   {(website) ? (
                     <ListItem
-                      leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                      primaryText={website}
-                      secondaryText={<p>website</p>}
-                      secondaryTextLines={1}
+                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                        primaryText={website}
+                        secondaryText={<p>website</p>}
+                        secondaryTextLines={1}
                     />
                   ) : (null)}
 
@@ -300,10 +302,10 @@ class ClientDetailsPage extends React.Component {
                     <div>
                       <Divider inset />
                       <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={`@${twitter}`}
-                        secondaryText={<p>twitter</p>}
-                        secondaryTextLines={1}
+                          leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                          primaryText={`@${twitter}`}
+                          secondaryText={<p>twitter</p>}
+                          secondaryTextLines={1}
                       />
                     </div>
                   ) : (null)}
@@ -312,10 +314,10 @@ class ClientDetailsPage extends React.Component {
                     <div>
                       <Divider inset />
                       <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={`facebook.com/${facebook}`}
-                        secondaryText={<p>facebook</p>}
-                        secondaryTextLines={1}
+                          leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                          primaryText={`facebook.com/${facebook}`}
+                          secondaryText={<p>facebook</p>}
+                          secondaryTextLines={1}
                       />
                     </div>
                   ) : (null)}
@@ -324,16 +326,16 @@ class ClientDetailsPage extends React.Component {
               </List>
               <div id="innerView">
                 {(company.get('location')) ? (
-                    <LocationCard style={{height: '200px'}} location={location} />
-                ) : (<p>No location provided.</p>)}
+                    <LocationCard style={{height: '200px'}} location={location} marker={<CompanyAvatar url={company.get('website')} />}/>
+                ) : (null)}
               </div>
               <List subheader="Your HERO talent advocate">
                 {(heroContact) ? (
                   <ListItem
-                    leftAvatar={<Avatar src={heroContact} />}
-                    primaryText={'Rameet Singh'}
-                    secondaryText={<p>Hero Talent Advocate</p>}
-                    secondaryTextLines={1}
+                      leftAvatar={<Avatar src={heroContact} />}
+                      primaryText={'Rameet Singh'}
+                      secondaryText={<p>Hero Talent Advocate</p>}
+                      secondaryTextLines={1}
                   />
                 ) : (null)}
                 </List>

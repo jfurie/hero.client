@@ -6,22 +6,6 @@ const initialState = {
   localJob: new Immutable.Map(),
 };
 
-// TMP FAKE JOBS
-
-//let FAKEJOBS = {};
-
-// FAKEJOBS['1a'] = {
-//   title: 'Android Mobile Engineer',
-//   location: 'Santa Monica, CA',
-//   id: '1a',
-// };
-//
-// FAKEJOBS['2b'] = {
-//   title: 'Software Ruby Engineer',
-//   location: 'Venice, CA',
-//   id: '2b',
-// };
-
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case constants.GET_JOBS: {
@@ -113,12 +97,17 @@ export default function reducer(state = initialState, action = {}) {
   case constants.CREATE_JOB_SUCCESS:{
     let jobMap = {};
     jobMap[action.result.id] = action.result;
-    let byCompanyMap ={};
-    byCompanyMap[action.result.companyId] = [action.result.id];
+
+    let companyId = action.result.companyId;
+    let byCompanyMapNew = {};
+
+    byCompanyMapNew[companyId] = state.byCompanyId.get(companyId) || new Immutable.List();
+    byCompanyMapNew[companyId] = byCompanyMapNew[companyId].push(action.result.id);
+
     return {
       ...state,
       list: state.list.mergeDeep(jobMap),
-      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
+      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMapNew),
       loading:false,
       localJob: state.localJob.mergeDeep({success:true}),
     };
@@ -137,11 +126,17 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.UPDATE_JOB_LOCAL:{
-
-    return {
-      ...state,
-      localJob: state.localJob.mergeDeep(action.result),
-    };
+    if(action.dontMergeDeep){
+      return {
+        ...state,
+        localJob: state.localJob.merge(action.result),
+      };
+    } else {
+      return {
+        ...state,
+        localJob: state.localJob.mergeDeep(action.result),
+      };
+    }
   }
   case constants.REPLACE_JOB_LOCAL:{
     return {

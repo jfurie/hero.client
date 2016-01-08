@@ -7,9 +7,9 @@ const GET_IMAGE_BY_JOB_FAIL = 'hero.client/resources/GET_IMAGE_BY_JOB_FAIL';
 
 const initialState = {
   list: new Immutable.Map(),
-  byJobId: new Immutable.Map()
+  byJobId: new Immutable.Map(),
 };
-console.log(jobConstants);
+
 export default function reducer(state = initialState, action = {}) {
 
   switch (action.type) {

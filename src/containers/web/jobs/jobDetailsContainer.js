@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts } from '../../../modules/contacts';
+import { getAllCandidates } from '../../../modules/candidates';
 import { getOneLocation } from '../../../modules/locations';
 import { JobDetailsPage } from '../../../components/web';
 
@@ -15,13 +16,14 @@ function getData(state, id) {
     job,
     jobImage,
     contacts: state.contacts,
+    candidates: state.candidates,
     location,
   };
 }
 
 @connect((state, props) => (
   getData(state, props.params.id)),
-  {getOneJob, getAllContacts, getOneLocation})
+  {getOneJob, getAllContacts, getOneLocation, getAllCandidates})
 class JobDetailsContainer extends React.Component {
 
   constructor(props) {
@@ -35,7 +37,8 @@ class JobDetailsContainer extends React.Component {
   componentDidMount() {
     this.props.getOneJob(this.props.params.id);
     this.props.getAllContacts();
-    this.props.getOneLocation('566791aa15d3e38a0cbdecb6');
+    //this.props.getOneLocation('566791aa15d3e38a0cbdecb6');
+    this.props.getAllCandidates(this.props.params.id);
   }
 
   contactDetailsModalOpen(contact) {

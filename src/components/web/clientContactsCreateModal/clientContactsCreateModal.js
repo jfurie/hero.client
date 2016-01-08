@@ -1,10 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {Dialog, IconButton, ToolbarGroup, FlatButton, TextField, ToolbarTitle, Toolbar} from 'material-ui';
+import { Dialog, IconButton, ToolbarGroup, FlatButton, TextField, ToolbarTitle, Toolbar } from 'material-ui';
 import { createCompanyContact } from '../../../modules/companyContacts';
-//import { createCompanyContact } from '../../../modules/companyContacts';
-
-//const ToolBar = require('material-ui/lib/toolbar/toolbar');
 
 import validateContact from '../../../validators/contact';
 
