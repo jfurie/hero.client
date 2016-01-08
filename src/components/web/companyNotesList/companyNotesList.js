@@ -2,6 +2,12 @@ import React from 'react';
 import { Divider, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 import { Gravatar } from '../../../components/web';
 
+const style = {
+  gravatar: {
+    display: 'inline-block'
+  }
+};
+
 class CompanyNotesList extends React.Component {
 
   editNote(note) {
@@ -28,7 +34,7 @@ class CompanyNotesList extends React.Component {
             <CardHeader
               title="Rameet Singh"
               subtitle={(note.get('privacyValue') ? 'Public' : 'Private') + ' | ' + note.get('updated')}
-              avatar={<Gravatar email='thiensly@gmail.com' />}>
+              avatar={<Gravatar style={style.gravatar} email='thiensly@gmail.com' />}>
             </CardHeader>
             <CardText expandable>
               {note.get('noteText')}
