@@ -88,7 +88,7 @@ function getData(state, props) {
       return notesByCompanyListIds.indexOf(x.get('id')) > -1;
     });
   }
-  
+
   companyNotes = companyNotes.sort((a, b) => {
     return new Date(b.get('created')) - new Date(a.get('created'));
   });
@@ -153,7 +153,7 @@ class ClientDetailsPage extends React.Component {
 
     if(nextProps.localNote.get('success')){
       this.refs.notesCreateModal.closeModal();
-      this.props.replaceNoteLocal({companyId:this.props.params.id});
+      this.props.replaceNoteLocal({});
 
       if (this.props.tabId != 3) {
         this.refs.customTabsSwipe.getWrappedInstance()._handleChangeIndex(3);
@@ -207,11 +207,14 @@ class ClientDetailsPage extends React.Component {
   }
 
   createNoteModalOpen() {
-    this.props.replaceNoteLocal({companyId:this.props.params.id});
+    this.props.replaceNoteLocal({});
     this.refs.notesCreateModal.show();
   }
   onNoteCreateChange (note){
     this.props.updateNoteLocal(note);
+  }
+  _handleSaveNote() {
+    this.props.saveLocalNote(this.props.params.id, 'company');
   }
   _handleEditNote(note) {
     this.props.replaceNoteLocal(note);
@@ -265,7 +268,7 @@ class ClientDetailsPage extends React.Component {
           <ClientsEditModal ref="clientEditModal" company={company}/>
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-          <NotesCreateModal saveNote={this.props.saveLocalNote} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
+          <NotesCreateModal saveNote={this._handleSaveNote.bind(this)} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
           <JobCreateModal contacts={contacts} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
           <Header iconRight={

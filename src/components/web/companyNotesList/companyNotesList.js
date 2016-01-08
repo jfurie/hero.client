@@ -1,5 +1,6 @@
 import React from 'react';
 import { Divider, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
+import { Gravatar } from '../../../components/web';
 
 class CompanyNotesList extends React.Component {
 
@@ -27,7 +28,7 @@ class CompanyNotesList extends React.Component {
             <CardHeader
               title="Rameet Singh"
               subtitle={(note.get('privacyValue') ? 'Public' : 'Private') + ' | ' + note.get('updated')}
-              avatar={<Avatar src={heroContact} />}>
+              avatar={<Gravatar email='thiensly@gmail.com' />}>
             </CardHeader>
             <CardText expandable>
               {note.get('noteText')}

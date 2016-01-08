@@ -17,10 +17,10 @@ export function getAllNotes() {
   };
 }
 
-export function createNote(note){
+export function createCompanyNote(companyId, note){
   return {
     types: [constants.CREATE_NOTE, constants.CREATE_NOTE_SUCCESS, constants.CREATE_NOTE_FAIL],
-    promise: (client, auth) => client.api.post('/notes', {
+    promise: (client, auth) => client.api.post(`/companies/${companyId}/notes`, {
       authToken: auth.authToken,
       data:note,
     }),
@@ -59,14 +59,19 @@ export function replaceNoteLocal(note){
   };
 }
 
-export function saveLocalNote(){
+export function saveLocalNote(notableId, notableType){
   return (dispatch, getState) => {
     let current = getState().notes.localNote;
     if (current.get('id')) {
       dispatch(updateNote(current));
     }
     else {
-      dispatch(createNote(current));
+      switch (notableType) {
+      case 'company':
+        dispatch(createCompanyNote(notableId, current));
+        break;
+      default:
+      }
     }
   };
 }

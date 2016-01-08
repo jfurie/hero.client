@@ -57,7 +57,7 @@ export default function reducer(state = initialState, action = {}) {
     let companyId = null;
 
     if (action.result.length) {
-      companyId = action.result[0].companyId;
+      companyId = action.result[0].notableId;
     }
 
     if (companyId) {
@@ -98,7 +98,13 @@ export default function reducer(state = initialState, action = {}) {
     let noteMap = {};
     noteMap[action.result.id] = action.result;
     let byCompanyMap ={};
-    byCompanyMap[action.result.companyId] = state.byCompanyId.get(action.result.companyId).push(action.result.id);
+
+    if (state.byCompanyId.size > 0) {
+      byCompanyMap[action.result.notableId] = state.byCompanyId.get(action.result.notableId).push(action.result.id);
+    }
+    else {
+      byCompanyMap[action.result.notableId] = [action.result.id];
+    }
 
     return {
       ...state,
