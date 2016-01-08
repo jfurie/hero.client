@@ -13,7 +13,7 @@ import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
-
+import { invite } from '../../../modules/users';
 import {
   List, ListItem, Divider, FontIcon, IconMenu, IconButton,
   Avatar, Card, CardHeader, CardText, CardActions, FlatButton,
@@ -99,7 +99,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId})
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId,invite})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -180,6 +180,10 @@ class ClientDetailsPage extends React.Component {
       openJob: false,
     });
   }
+  _inviteHandler(){
+    var email = this.state.detailsContact.get('email');
+    this.props.invite(email, window.location.origin + '/invited');
+  }
 
   createNoteModalOpen() {
     this.refs.notesCreateModal.show();
@@ -225,7 +229,7 @@ class ClientDetailsPage extends React.Component {
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" company={company}/>
 
-          <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
+          <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal ref='notesCreateModal' />
           <JobCreateModal contacts={contacts} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
