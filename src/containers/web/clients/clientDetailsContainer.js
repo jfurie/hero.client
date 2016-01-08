@@ -14,7 +14,7 @@ import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
-import { getAllCandidates } from '../../../modules/candidates';
+import { getAllJobCandidates } from '../../../modules/candidates';
 
 import getCompanyDataFromState from '../../../dataHelpers/company';
 import getJobDataFromState from '../../../dataHelpers/job';
@@ -64,7 +64,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{ getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllCandidates })
+{ getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates })
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -88,7 +88,7 @@ class ClientDetailsPage extends React.Component {
       if (self.props.params.jobId) {
         self.props.getOneJob(self.props.params.jobId);
         self.props.getImageByJobId(self.props.params.jobId);
-        self.props.getAllCandidates(self.props.params.jobId);
+        self.props.getAllJobCandidates(self.props.params.jobId);
       }
     }, 500);
   }
@@ -103,7 +103,7 @@ class ClientDetailsPage extends React.Component {
     if (nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId) {
       this.props.getOneJob(nextProps.params.jobId);
       this.props.getImageByJobId(nextProps.params.jobId);
-      this.props.getAllCandidates(nextProps.params.jobId);
+      this.props.getAllJobCandidates(nextProps.params.jobId);
     }
   }
 

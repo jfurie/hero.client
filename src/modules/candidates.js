@@ -129,7 +129,7 @@ export function createCandidate(candidateData, jobId) {
   };
 }
 
-export function getAllCandidates(jobId) {
+export function getAllJobCandidates(jobId) {
   return {
     types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
     promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"jobId": "${jobId}"}, "include": "contact"}`, {
