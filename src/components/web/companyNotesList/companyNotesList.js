@@ -1,6 +1,7 @@
 import React from 'react';
 import { Divider, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 import { Gravatar } from '../../../components/web';
+import TimeAgo from 'react-timeago';
 
 const style = {
   gravatar: {
@@ -33,17 +34,19 @@ class CompanyNotesList extends React.Component {
           <Card initiallyExpanded>
             <CardHeader
               title="Rameet Singh"
-              subtitle={(note.get('privacyValue') ? 'Public' : 'Private') + ' | ' + note.get('updated')}
+              subtitle={<div>{(note.get('privacyValue') ? 'Public' : 'Private')} | <TimeAgo live={true} date={note.get('updated')} /></div>}
               avatar={<Gravatar style={style.gravatar} email='thiensly@gmail.com' />}>
             </CardHeader>
             <CardText expandable>
               {note.get('noteText')}
+
             </CardText>
             <CardActions expandable>
               <FlatButton label="Edit" onTouchTap={self.editNote.bind(self, note)} />
               <FlatButton label="Delete" onTouchTap={self.deleteNote.bind(self, note)} />
             </CardActions>
           </Card>
+
             <Divider inset />
           </div>
         );
