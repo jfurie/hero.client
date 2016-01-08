@@ -1,6 +1,7 @@
 import React from 'react';
-import { Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle } from 'material-ui';
-import { editCompany } from '../../../modules/companies';
+import Immutable from 'immutable';
+import { Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle,SelectField,MenuItem } from 'material-ui';
+import { editCompany } from '../../../modules/companies/index';
 import { connect } from 'react-redux';
 import validateCompany from '../../../validators/company';
 
@@ -57,6 +58,7 @@ export default class ClientsEditModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      clientAdvocateId:0,
       company: {
         id: props.company.get('id'),
         name: props.company.get('name'),
@@ -67,6 +69,13 @@ export default class ClientsEditModal extends React.Component {
       errors: {},
       open: false,
     };
+  }
+  componentWillReceiveProps(newProps) {
+    if (this.props.heroContacts && !this.props.heroContacts.size && newProps.heroContacts.size > 0) {
+      this.setState({
+        clientAdvocateId: newProps.heroContacts.first().get('id'),
+      });
+    }
   }
 
   show() {
@@ -96,6 +105,11 @@ export default class ClientsEditModal extends React.Component {
     });
   }
 
+  _handleSelectValueChange(event, index, value) {
+    this.setState({
+      clientAdvocateId: value,
+    });
+  }
   _handleSubmit(){
 
     let errors = validateCompany(this.state.company);
@@ -105,7 +119,9 @@ export default class ClientsEditModal extends React.Component {
     });
 
     if (errors.validationErrors === 0) {
-      this.props.editCompany(this.state.company);
+      let company = this.state.company;
+      company.clientAdvocateId = this.state.clientAdvocateId;
+      this.props.editCompany(company);
       this.closeModal();
     }
   }
@@ -113,8 +129,10 @@ export default class ClientsEditModal extends React.Component {
   render(){
 
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let { company } = this.props;
-
+    let { company, heroContacts } = this.props;
+    if(!heroContacts){
+      heroContacts = new Immutable.Map();
+    }
     return (
       <Dialog
           open={this.state.open}
@@ -175,6 +193,26 @@ export default class ClientsEditModal extends React.Component {
                             onChange={(e) => this._handleChange.bind(this)(e, 'twitterHandle')}
                             floatingLabelText="Twitter Handle (optional)"
                             defaultValue={this.state.company.twitterHandle} />
+                      </div>
+                      <div>
+                        <SelectField
+                            floatingLabelText="Client Advocate"
+                            floatingLabelStyle={style.floatLabel}
+                            fullWidth
+                            style={style.select}
+                            onChange={this._handleSelectValueChange.bind(this)}
+                            hintText={''}
+                            value={this.state.clientAdvocateId}
+                        >
+                          {heroContacts.map((heroContact, index) => {
+                            return (
+                              <MenuItem
+                                  value={index}
+                                  primaryText={heroContact.get('displayName')}
+                              />
+                            );
+                          })}
+                        </SelectField>
                       </div>
                     </form>
                   </div>

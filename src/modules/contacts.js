@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-
+import * as companyConstants from './companies/constants';
 const GET_CONTACTS = 'hero.client/contacts/GET_CONTACTS';
 const GET_CONTACTS_SUCCESS = 'hero.client/contacts/GET_CONTACTS_SUCCESS';
 const GET_CONTACTS_FAIL = 'hero.client/contacts/GET_CONTACTS_FAIL';
@@ -104,6 +104,18 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
     };
+  }
+  case companyConstants.GET_COMPANY_SUCCESS:{
+    let contactsMap = {};
+    if(action.result.clientAdvocate){
+      let id = action.result.clientAdvocate.id;
+      contactsMap[id] = action.result.clientAdvocate;
+    }
+    return {
+      ...state,
+      list: state.list.merge(contactsMap),
+    };
+
   }
   default:
     return state;

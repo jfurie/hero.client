@@ -6,9 +6,9 @@ import { pushState } from 'redux-router';
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
   CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal, JobDetailsModal,
-  ClientsEditModal } from '../../../components/web';
+  ClientsEditModal, Gravatar } from '../../../components/web';
 
-import { getOneCompany } from '../../../modules/companies';
+import { getOneCompany } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
@@ -18,7 +18,7 @@ import {
   List, ListItem, Divider, FontIcon, IconMenu, IconButton,
   Avatar, Card, CardHeader, CardText, CardActions, FlatButton,
 } from 'material-ui';
-
+const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
 function getData(state, props) {
@@ -31,9 +31,17 @@ function getData(state, props) {
   let location = null;
   let contacts = state.contacts; // TMP
   let localJobResource = null;
-
+  let talentAdvocate = null;
   if (company && company.get('location')) {
     location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
+  }
+
+  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+  let heroContacts = null;
+  if(heroContactIds){
+    heroContacts = state.contacts.list.filter(x =>{
+      return heroContactIds.indexOf(x.get('id')) > -1;
+    });
   }
 
   switch (tab) {
@@ -47,7 +55,9 @@ function getData(state, props) {
     ...contacts,
     list: new Immutable.Map(),
   };
-
+  if(company){
+    talentAdvocate = contacts.list.get(company.get('clientAdvocateId'));
+  }
   let contactsByCompanyListIds = contacts.byCompanyId.get(id);
 
   //console.log('contactsByCompanyListIds', contactsByCompanyListIds);
@@ -88,6 +98,8 @@ function getData(state, props) {
     companyJobs,
     localJob: state.jobs.localJob,
     localJobResource,
+    talentAdvocate,
+    heroContacts,
   };
 }
 
@@ -119,6 +131,7 @@ class ClientDetailsPage extends React.Component {
       self.props.getJobsByCompany(self.props.params.id);
       self.props.getOneJob(self.props.params.jobId);
       self.props.getImageByJobId(self.props.params.jobId);
+      self.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
     },500);
   }
 
@@ -212,7 +225,7 @@ class ClientDetailsPage extends React.Component {
   }
   render() {
 
-    let {company, location, contacts, companyJobs, job, jobImage} = this.props;
+    let {company, location, contacts, companyJobs, job, jobImage, talentAdvocate, heroContacts} = this.props;
 
     if (company) {
 
@@ -220,14 +233,13 @@ class ClientDetailsPage extends React.Component {
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
       let heroContact = '/img/rameet.jpg';
-
       return (
         <div>
 
           <JobDetailsModal closeModal={this.closeJobModal.bind(this)} jobImage={this.props.jobImage} job={this.props.job} seachCandidates={contacts.list} contacts={contacts} open={this.props.params.jobId}></JobDetailsModal>
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
-          <ClientsEditModal ref="clientEditModal" company={company}/>
+          <ClientsEditModal ref="clientEditModal" heroContacts={heroContacts} company={company}/>
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal ref='notesCreateModal' />
@@ -290,10 +302,10 @@ class ClientDetailsPage extends React.Component {
                 ) : (<p>No location provided.</p>)}
               </div>
               <List subheader="Your HERO talent advocate">
-                {(heroContact) ? (
+                {(talentAdvocate) ? (
                   <ListItem
-                    leftAvatar={<Avatar src={heroContact} />}
-                    primaryText={'Rameet Singh'}
+                    leftAvatar={<Gravatar email={talentAdvocate.get('email')} status={'vetted'} />}
+                    primaryText={talentAdvocate.get('displayName')}
                     secondaryText={<p>Hero Talent Advocate</p>}
                     secondaryTextLines={1}
                   />
