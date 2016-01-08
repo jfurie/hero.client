@@ -15,17 +15,18 @@ class MyCandidatesPage extends React.Component {
     let self = this;
     setTimeout(()=>{
       self.props.getAllContacts();
-    },500);
+    }, 500);
   }
 
   render() {
 
-    let {contacts} = this.props;
+    //let {contacts} = this.props;
 
     return (
       <div>
         <Header title={'Candidates'}/>
-        <CandidatesList candidates={contacts.list} />
+        <p>soon ...</p>
+        {/* <CandidatesList candidates={contacts.list} /> */}
       </div>);
   }
 }
