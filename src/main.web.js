@@ -9,7 +9,8 @@ import FakeApiClient from './utils/fakeApiClient';
 import LocalStorageClient from './utils/localStorageClient';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import getRoutes from './routes.web';
-import DevTools from './utils/devTools';
+
+//import DevTools from './utils/devTools';
 
 injectTapEventPlugin();
 
@@ -32,7 +33,7 @@ class Root extends React.Component {
         <Provider store={store}>
           <div>
             <ReduxRouter routes={getRoutes(store)} />
-            <DevTools />
+            {/* <DevTools /> */}
           </div>
         </Provider>
       </div>
