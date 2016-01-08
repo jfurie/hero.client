@@ -17,6 +17,7 @@ import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, de
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { getAllCandidates } from '../../../modules/candidates';
 
+import getCompanyDataFromState from '../../../dataHelpers/company';
 import getJobDataFromState from '../../../dataHelpers/job';
 
 import {
@@ -27,18 +28,11 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 
 function getData(state, props) {
 
-  let id = props.params.id;
+  let companyId = props.params.id;
   let jobId = props.params.jobId;
   let tab = props.params.tab;
   let tabId = 0;
-  let company = ((state.companies.list.size > 0) ? (state.companies.list.get(id)) : (null));
-  let location = null;
-  let contacts = state.contacts; // TMP
   let localJobResource = null;
-
-  if (company && company.get('location')) {
-    location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
-  }
 
   switch (tab) {
   case 'jobs':
@@ -51,36 +45,13 @@ function getData(state, props) {
     tabId = 0;
   }
 
-  let newContacts = {
-    ...contacts,
-    list: new Immutable.Map(),
-  };
-
-  let contactsByCompanyListIds = contacts.byCompanyId.get(id);
-
-  if (contactsByCompanyListIds) {
-    newContacts.list = contacts.list.filter(x => {
-      return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
-    });
-  }
-
   let imageId = state.jobs.localJob.get('imageId');
   if (imageId) {
     localJobResource = state.resources.list.get(imageId);
   }
 
-  // filter down company jobs
-  let jobsByCompanyListIds = state.jobs.byCompanyId.get(id);
-  let companyJobs = new Immutable.Map();
-
-  if (jobsByCompanyListIds) {
-    companyJobs = state.jobs.list.filter(x => {
-      return jobsByCompanyListIds.indexOf(x.get('id')) > -1;
-    });
-  }
-
   // filter down company notes
-  let notesByCompanyListIds = state.notes.byCompanyId.get(id);
+  let notesByCompanyListIds = state.notes.byCompanyId.get(companyId);
   let companyNotes = new Immutable.Map();
 
   if (notesByCompanyListIds) {
@@ -95,14 +66,10 @@ function getData(state, props) {
 
   return {
     tabId,
-    company,
-    location,
+    company: getCompanyDataFromState(state, companyId),
     job: getJobDataFromState(state, jobId),
-    contacts: newContacts,
-    jobs: state.jobs,
     notes: state.notes,
     localNote: state.notes.localNote,
-    companyJobs,
     companyNotes,
     localJob: state.jobs.localJob,
     localJobResource,
@@ -252,7 +219,7 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company, location, contacts, companyJobs, companyNotes } = this.props;
+    let {company, companyNotes} = this.props;
 
     if (company) {
 
@@ -270,7 +237,7 @@ class ClientDetailsPage extends React.Component {
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal saveNote={this._handleSaveNote.bind(this)} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
-          <JobCreateModal contacts={contacts} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
+          <JobCreateModal contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
           <Header iconRight={
             <IconMenu iconButtonElement={
@@ -288,7 +255,6 @@ class ClientDetailsPage extends React.Component {
             <div style={style.slide}>
               <List>
                 <div>
-
                   {(website) ? (
                     <ListItem
                         leftIcon={<FontIcon className="material-icons">public</FontIcon>}
@@ -326,7 +292,7 @@ class ClientDetailsPage extends React.Component {
               </List>
               <div id="innerView">
                 {(company.get('location')) ? (
-                    <LocationCard style={{height: '200px'}} location={location} marker={<CompanyAvatar url={company.get('website')} />}/>
+                    <LocationCard style={{height: '200px'}} location={company.get('location')} marker={<CompanyAvatar url={company.get('website')} />}/>
                 ) : (null)}
               </div>
               <List subheader="Your HERO talent advocate">
@@ -342,12 +308,12 @@ class ClientDetailsPage extends React.Component {
 
             </div>
             <div style={style.slide}>
-              <List subheader={`${companyJobs.count()} Job${((companyJobs.count() > 1) ? ('s') : (''))}`}>
-                <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={companyJobs}/>
+              <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() > 1) ? ('s') : (''))}`}>
+                <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
               </List>
             </div>
             <div style={style.slide}>
-              <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
+              <ContactsList contacts={company.get('contacts')} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             </div>
             <div style={style.slide}>
               <List subheader={`${companyNotes.count()} Note${((companyNotes.count() > 1) ? ('s') : (''))}`}>

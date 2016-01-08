@@ -320,7 +320,7 @@ class JobCreateModal extends React.Component {
                             value={this.props.job.get('contactId')}
                             onChange={this._handleSelectValueChange.bind(this)}
                         >
-                          {contacts.list.map((contact, index) => {
+                          {contacts.map((contact, index) => {
                             return (
                               <MenuItem
                                   value={index}
