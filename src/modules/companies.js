@@ -1,7 +1,6 @@
 import Immutable from 'immutable';
 
 import { getOneLocation } from './locations';
-import { getOneUser } from './users';
 
 const GET_COMPANIES = 'hero.client/clients/GET_COMPANIES';
 const GET_COMPANIES_SUCCESS = 'hero.client/clients/GET_COMPANIES_SUCCESS';
@@ -156,9 +155,6 @@ export function getOneCompany(id) {
         if (company.location) {
           dispatch(getOneLocation(company.location));
         }
-        // if (company.clientAdvocate) {
-        //   dispatch(getOneUser(company.clientAdvocate));
-        // }
         return company;
       }),
     });

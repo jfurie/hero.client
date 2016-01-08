@@ -2,7 +2,7 @@ import React from 'react';
 import { ListItem, Divider, FontIcon } from 'material-ui';
 //import Infinite from 'react-infinite';
 import { CompanyAvatar } from '../../../components/web';
-import { RingCandidate } from '../../../components/web';
+import { CandidateAvatar } from '../../../components/web';
 
 const style = {
   peopleList: {
@@ -45,7 +45,7 @@ class CompanyJobsList extends React.Component {
 
       people[0].forEach(function(p, key) {
         let status = fakeStatus.shift();
-        peopleList.push(<RingCandidate key={key} picture={p} status={status}/>);
+        peopleList.push(<CandidateAvatar key={key} picture={p} status={status}/>);
       });
 
       nestedJobsItem.push(

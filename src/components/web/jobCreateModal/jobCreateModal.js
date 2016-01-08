@@ -1,14 +1,14 @@
 import React from 'react';
-
+import _ from 'lodash';
 import {
   Dialog, Toolbar, ToolbarTitle, IconButton,
   ToolbarGroup, FlatButton, TextField, DatePicker,
   Card, CardMedia, CardText, LinearProgress, SelectField,
   MenuItem,
 } from 'material-ui';
-
-import {FileInput} from '../';
-
+import {geoCode} from '../../../utils/geoCoding';
+import {FileInput, TagsInput} from '../';
+//import GoogleMap from 'google-map-react';
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 const style = {
@@ -60,7 +60,7 @@ const style = {
     marginTop: '30px',
   },
   formContent: {
-    height: `${(clientHeight - 64)} px`,
+    height: `${(clientHeight - 64)}px`,
     overflowY: 'scroll',
   },
 };
@@ -71,7 +71,10 @@ class JobCreateModal extends React.Component {
     super(props);
     this.state = {
       open: false,
+      address:null,
     };
+    //this._handleLocationChangeDebounce = this._handleLocationChangeDebounce.bind(this);
+    //this._handleLocationChangeDebounce = _.debounce(this._handleLocationChangeDebounce,1000);
   }
 
   closeModal() {
@@ -129,10 +132,28 @@ class JobCreateModal extends React.Component {
     change['employmentType'] = payload;
     this.props.onJobChange(change);
   }
+  _handleSkillsChange(skills){
+    var change = {};
+    change['skills'] = skills;
+    this.props.onJobChange(change,true);
+  }
+  // _handleLocationChange(e){
+  //   var change = {};
+  //   change['location'] = e.target.value;
+  //   this.setState({address:e.target.value});
+  //   this._handleLocationChangeDebounce(e.target.value);
+  // }
+  //  _handleLocationChangeDebounce(location){
+  //    let self = this;
+  //    geoCode(location).then(function(results){
+  //      if(results && results.length > 0){
+  //        self.setState({location:results[0]});
+  //      }
+  //    });
+  //  }
   render() {
-
     let { contacts } = this.props;
-
+    let location = this.state.location?{lat:this.state.location.geometry.location.lat(),lng:this.state.location.geometry.location.lng()}: {lat:34,lng:118};
     //console.log(contacts);
 
     return (
@@ -206,8 +227,27 @@ class JobCreateModal extends React.Component {
                             value={this.props.job.get('quickPitch')}
                         />
                       </div>
+                      {/*
+                        //TODO: Refactor to a component to search for locations
+                        <div>
+                        <TextField
+                            floatingLabelText="Address"
+                            multiLine
+                            fullWidth
+                            floatingLabelStyle={style.floatLabel}
+                            onChange={this._handleLocationChange.bind(this)}
+                            value={this.state.address}
+                        />
+                        <div style={{height: '200px', width: '100%'}}>
+                          <GoogleMap
+                            center={location}
+                            defaultZoom={13}
+                             />
+                        </div>
+                      </div>*/}
                       <div>
                         <TextField
+                            pattern="[0-9]*"
                             fullWidth
                             errorText={''}
                             onChange={this._handleChange.bind(this, 'minSalary')}
@@ -218,6 +258,7 @@ class JobCreateModal extends React.Component {
                       </div>
                       <div>
                         <TextField
+                            pattern="[0-9]*"
                             fullWidth
                             errorText={''}
                             onChange={this._handleChange.bind(this, 'maxSalary')}
@@ -259,6 +300,7 @@ class JobCreateModal extends React.Component {
                       </div>
                       <div>
                         <TextField
+                            pattern="[0-9]*"
                             fullWidth
                             errorText={''}
                             floatingLabelText="Fee %"
@@ -266,6 +308,9 @@ class JobCreateModal extends React.Component {
                             type="number"
                             value={this.props.job.get('feePercent')}
                         />
+                      </div>
+                      <div>
+                        <TagsInput value={this.props.job.get('skills')} onChange={this._handleSkillsChange.bind(this)} title="Skills"></TagsInput>
                       </div>
                       <div>
                         <SelectField
