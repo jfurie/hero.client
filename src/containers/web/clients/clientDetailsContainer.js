@@ -136,6 +136,7 @@ class ClientDetailsPage extends React.Component {
     if (nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId) {
       this.props.getOneJob(nextProps.params.jobId);
       this.props.getImageByJobId(nextProps.params.jobId);
+      this.props.getAllCandidates(nextProps.params.jobId);
     }
   }
 
