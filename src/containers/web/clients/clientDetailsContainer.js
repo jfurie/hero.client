@@ -14,6 +14,7 @@ import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
+import { getAllCandidates } from '../../../modules/candidates';
 
 import getJobDataFromState from '../../../dataHelpers/job';
 
@@ -54,8 +55,6 @@ function getData(state, props) {
 
   let contactsByCompanyListIds = contacts.byCompanyId.get(id);
 
-  //console.log('contactsByCompanyListIds', contactsByCompanyListIds);
-
   if (contactsByCompanyListIds) {
     newContacts.list = contacts.list.filter(x => {
       return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
@@ -66,9 +65,6 @@ function getData(state, props) {
   if (imageId) {
     localJobResource = state.resources.list.get(imageId);
   }
-
-  // let job = state.jobs.list.get(jobId);
-  // let jobImage = job ? state.resources.list.get(job.get('imageId')) : new Immutable.Map();
 
   // filter down company jobs
   let jobsByCompanyListIds = state.jobs.byCompanyId.get(id);
@@ -85,7 +81,6 @@ function getData(state, props) {
     company,
     location,
     job: getJobDataFromState(state, jobId),
-    // jobImage,
     contacts: newContacts,
     jobs: state.jobs,
     companyJobs,
@@ -102,7 +97,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId})
+{ getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllCandidates })
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -126,6 +121,7 @@ class ClientDetailsPage extends React.Component {
       if (self.props.params.jobId) {
         self.props.getOneJob(self.props.params.jobId);
         self.props.getImageByJobId(self.props.params.jobId);
+        self.props.getAllCandidates(self.props.params.jobId);
       }
     }, 500);
   }
@@ -170,7 +166,7 @@ class ClientDetailsPage extends React.Component {
   }
 
   closeJobModal() {
-    this.props.pushState('','/clients/'+this.props.params.id +'/jobs');
+    this.props.pushState('', `/clients/${this.props.params.id}/jobs`);
     this.setState({
       detailsJob: null,
       openJob: false,
@@ -237,7 +233,8 @@ class ClientDetailsPage extends React.Component {
               <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
               <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
             </IconMenu>
-          } title={company.get('name')} />
+          } title={company.get('name')}
+          />
 
         <CustomTabsSwipe onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
             <div style={style.slide}>
@@ -246,10 +243,10 @@ class ClientDetailsPage extends React.Component {
 
                   {(website) ? (
                     <ListItem
-                      leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                      primaryText={website}
-                      secondaryText={<p>website</p>}
-                      secondaryTextLines={1}
+                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                        primaryText={website}
+                        secondaryText={<p>website</p>}
+                        secondaryTextLines={1}
                     />
                   ) : (null)}
 
@@ -257,10 +254,10 @@ class ClientDetailsPage extends React.Component {
                     <div>
                       <Divider inset />
                       <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={`@${twitter}`}
-                        secondaryText={<p>twitter</p>}
-                        secondaryTextLines={1}
+                          leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                          primaryText={`@${twitter}`}
+                          secondaryText={<p>twitter</p>}
+                          secondaryTextLines={1}
                       />
                     </div>
                   ) : (null)}
@@ -269,10 +266,10 @@ class ClientDetailsPage extends React.Component {
                     <div>
                       <Divider inset />
                       <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={`facebook.com/${facebook}`}
-                        secondaryText={<p>facebook</p>}
-                        secondaryTextLines={1}
+                          leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                          primaryText={`facebook.com/${facebook}`}
+                          secondaryText={<p>facebook</p>}
+                          secondaryTextLines={1}
                       />
                     </div>
                   ) : (null)}
@@ -287,10 +284,10 @@ class ClientDetailsPage extends React.Component {
               <List subheader="Your HERO talent advocate">
                 {(heroContact) ? (
                   <ListItem
-                    leftAvatar={<Avatar src={heroContact} />}
-                    primaryText={'Rameet Singh'}
-                    secondaryText={<p>Hero Talent Advocate</p>}
-                    secondaryTextLines={1}
+                      leftAvatar={<Avatar src={heroContact} />}
+                      primaryText={'Rameet Singh'}
+                      secondaryText={<p>Hero Talent Advocate</p>}
+                      secondaryTextLines={1}
                   />
                 ) : (null)}
                 </List>
@@ -307,10 +304,10 @@ class ClientDetailsPage extends React.Component {
             <div style={style.slide}>
               <Card initiallyExpanded>
                 <CardHeader
-                  title="Rameet Singh"
-                  subtitle="Private | 59 mins ago"
-                  avatar={<Avatar src={heroContact} />}>
-                </CardHeader>
+                    title="Rameet Singh"
+                    subtitle="Private | 59 mins ago"
+                    avatar={<Avatar src={heroContact} />}
+                />
                 <CardText expandable>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
@@ -324,10 +321,10 @@ class ClientDetailsPage extends React.Component {
               </Card>
               <Card initiallyExpanded>
                 <CardHeader
-                  title="Rameet Singh"
-                  subtitle="Private | 60 mins ago"
-                  avatar={<Avatar src={heroContact} />}>
-                </CardHeader>
+                    title="Rameet Singh"
+                    subtitle="Private | 60 mins ago"
+                    avatar={<Avatar src={heroContact} />}
+                />
                 <CardText expandable>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.

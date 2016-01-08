@@ -41,11 +41,11 @@ class JobDetails extends React.Component {
     console.log('save contact');
   }
 
-  render(){
+  render() {
+
     let { location, isLight, job } = this.props;
     let jobImage = ((job) ? (job.get('image')) : (null));
-
-    //console.log(jobImage);
+    let jobCandidates = ((job) ? (job.get('candidates')) : ([]));
 
     // mardown to html
     let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
@@ -161,8 +161,7 @@ class JobDetails extends React.Component {
             </Card>
           </div>
           <div style={style.slide}>
-            <p>Candidate list comming soon ...</p>
-            {/* <CandidatesList candidates={contacts.list} /> */}
+            <CandidatesList candidates={jobCandidates} />
           </div>
           <div style={style.slide}>
             <div>
