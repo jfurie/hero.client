@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
@@ -50,27 +49,12 @@ function getData(state, props) {
     localJobResource = state.resources.list.get(imageId);
   }
 
-  // filter down company notes
-  let notesByCompanyListIds = state.notes.byCompanyId.get(companyId);
-  let companyNotes = new Immutable.Map();
-
-  if (notesByCompanyListIds) {
-    companyNotes = state.notes.list.filter(x => {
-      return notesByCompanyListIds.indexOf(x.get('id')) > -1;
-    });
-  }
-
-  companyNotes = companyNotes.sort((a, b) => {
-    return new Date(b.get('created')) - new Date(a.get('created'));
-  });
-
   return {
     tabId,
     company: getCompanyDataFromState(state, companyId),
     job: getJobDataFromState(state, jobId),
     notes: state.notes,
     localNote: state.notes.localNote,
-    companyNotes,
     localJob: state.jobs.localJob,
     localJobResource,
   };
@@ -219,7 +203,7 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company, companyNotes} = this.props;
+    let {company} = this.props;
 
     if (company) {
 
@@ -316,8 +300,8 @@ class ClientDetailsPage extends React.Component {
               <ContactsList contacts={company.get('contacts')} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             </div>
             <div style={style.slide}>
-              <List subheader={`${companyNotes.count()} Note${((companyNotes.count() > 1) ? ('s') : (''))}`}>
-                <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={companyNotes}/>
+              <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() > 1) ? ('s') : (''))}`}>
+                <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={company.get('notes')}/>
               </List>
             </div>
           </CustomTabsSwipe>
