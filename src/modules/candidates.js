@@ -13,6 +13,7 @@ const GET_ONE_CANDIDATE_FAIL = 'hero.client/candidates/GET_ONE_CANDIDATE_FAIL';
 const initialState = {
   list: new Immutable.Map(),
   byJobId: new Immutable.Map(),
+  byUserId: new Immutable.Map(),
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -23,11 +24,17 @@ export default function reducer(state = initialState, action = {}) {
   case CREATE_CANDIDATE_SUCCESS: {
 
     let jobId = action.result.jobId;
+    let userId = action.result.createdBy;
     let byJobIdNew = {};
+    let byUserIdNew = {};
 
     // add candidate Id to the byJobId list
     byJobIdNew[jobId] = state.byJobId.get(jobId) || new Immutable.List();
     byJobIdNew[jobId] = byJobIdNew[jobId].push(action.result.id);
+
+    // add candidate Id to the byUserId list
+    byUserIdNew[userId] = state.byUserIdNew.get(userId) || new Immutable.List();
+    byUserIdNew[userId] = byUserIdNew[userId].push(action.result.createdBy);
 
     // // add candidate to the global list
     // let listNew = {};
@@ -36,6 +43,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       byJobId: state.byJobId.mergeDeep(byJobIdNew),
+      byUserId: state.byUserId.mergeDeep(byUserIdNew),
       // list: state.list.mergeDeep(listNew),
     };
   }
@@ -65,11 +73,19 @@ export default function reducer(state = initialState, action = {}) {
 
     if (action.result.length) {
       let jobId = action.result[0].jobId;
+      let userId = action.result[0].createdBy;
 
       // add contact Ids to the byJobId list
       let byJobIdNew = {};
       byJobIdNew[jobId] = state.byJobId.get(jobId) || new Immutable.List();
       byJobIdNew[jobId] = byJobIdNew[jobId].concat(action.result.map((c) => {
+        return c.id;
+      }));
+
+      // add contact Ids to the byUserId list
+      let byUserIdNew = {};
+      byUserIdNew[userId] = state.byUserId.get(userId) || new Immutable.List();
+      byUserIdNew[userId] = byUserIdNew[userId].concat(action.result.map((c) => {
         return c.id;
       }));
 
@@ -82,6 +98,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         byJobId: state.byJobId.mergeDeep(byJobIdNew),
+        byUserId: state.byUserId.mergeDeep(byUserIdNew),
         list: state.list.mergeDeep(listNew),
       };
     }
@@ -133,6 +150,18 @@ export function getAllJobCandidates(jobId) {
   return {
     types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
     promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"jobId": "${jobId}"}, "include": "contact"}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function getAllUserCandidates(userId) {
+
+  console.log('getAllUserCandidates', userId);
+
+  return {
+    types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
+    promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"createdBy": "${userId}"}, "include": "contact"}`, {
       authToken: auth.authToken,
     }),
   };
