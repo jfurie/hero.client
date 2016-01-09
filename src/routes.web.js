@@ -133,7 +133,11 @@ export default(store) => {
             }} />
             <Route path=":id/jobs/:jobId" component={ClientDetailsPage} />
             <Route path=":id/jobs(/:create)" component={ClientDetailsPage} />
-
+            <Route path=":id" component={ClientDetailsPage} />
+              <Route path=":id/notes" component={ClientDetailsPage}
+                onEnter={(nextState, replaceState) => {
+                  nextState.params.tab = 'notes';
+                }} />
           </Route>
 
           <Route path="jobs">

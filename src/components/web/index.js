@@ -10,6 +10,7 @@ export CompanyAvatar from './companyAvatar/companyAvatar';
 export LocationCard from './locationCard/locationCard';
 export JobsList from './jobsList/jobsList';
 export CompanyJobsList from './companyJobsList/companyJobsList';
+export CompanyNotesList from './companyNotesList/companyNotesList';
 export LeftNavTop from './leftNav/leftNavTop';
 export CandidateAvatar from './candidateAvatar/candidateAvatar';
 export CustomTabsSwipe from './customTabsSwipe/customTabsSwipe';
