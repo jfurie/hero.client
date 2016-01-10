@@ -15,7 +15,7 @@ import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { getAllCandidates } from '../../../modules/candidates';
-
+import { invite } from '../../../modules/users';
 import getCompanyDataFromState from '../../../dataHelpers/company';
 import getJobDataFromState from '../../../dataHelpers/job';
 
@@ -33,10 +33,7 @@ function getData(state, props) {
   let tab = props.params.tab;
   let tabId = 0;
   let localJobResource = null;
-  let talentAdvocate = null;
-  if (company && company.get('location')) {
-    location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
-  }
+
 
   let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
   let heroContacts = null;
@@ -53,22 +50,8 @@ function getData(state, props) {
   default:
     tabId = 0;
   }
-  let newContacts = {
-    ...contacts,
-    list: new Immutable.Map(),
-  };
-  if(company){
-    talentAdvocate = contacts.list.get(company.get('clientAdvocateId'));
-  }
-  let contactsByCompanyListIds = contacts.byCompanyId.get(id);
 
-  //console.log('contactsByCompanyListIds', contactsByCompanyListIds);
 
-  if (contactsByCompanyListIds) {
-    newContacts.list = contacts.list.filter(x => {
-      return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
-    });
-  }
   var imageId = state.jobs.localJob.get('imageId');
   if(imageId){
     localJobResource = state.resources.list.get(imageId);
@@ -80,8 +63,6 @@ function getData(state, props) {
     job: getJobDataFromState(state, jobId),
     localJob: state.jobs.localJob,
     localJobResource,
-    talentAdvocate,
-    heroContacts,
   };
 }
 
@@ -119,7 +100,7 @@ class ClientDetailsPage extends React.Component {
         self.props.getImageByJobId(self.props.params.jobId);
         self.props.getAllCandidates(self.props.params.jobId);
       }
- 	  self.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
+      self.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
     }, 500);
   }
 
@@ -206,7 +187,7 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company, talentAdvocate, heroContacts} = this.props;
+    let {company} = this.props;
 
     if (company) {
 
@@ -219,7 +200,7 @@ class ClientDetailsPage extends React.Component {
           <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} open={(this.props.params.jobId)?(true):(false)} />
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
-          <ClientsEditModal ref="clientEditModal" heroContacts={heroContacts} company={company}/>
+          <ClientsEditModal ref="clientEditModal" company={company}/>
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal ref='notesCreateModal' />
@@ -282,10 +263,10 @@ class ClientDetailsPage extends React.Component {
                 ) : (null)}
               </div>
               <List subheader="Your HERO talent advocate">
-                {(talentAdvocate) ? (
+                {(company.get('clientAdvocate')) ? (
                   <ListItem
-                    leftAvatar={<Gravatar email={talentAdvocate.get('email')} status={'vetted'} />}
-                    primaryText={talentAdvocate.get('displayName')}
+                    leftAvatar={<Gravatar email={company.get('clientAdvocate').get('email')} status={'vetted'} />}
+                    primaryText={company.get('clientAdvocate').get('displayName')}
                     secondaryText={<p>Hero Talent Advocate</p>}
                     secondaryTextLines={1}
                   />
