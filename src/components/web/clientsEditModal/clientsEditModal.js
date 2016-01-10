@@ -129,7 +129,7 @@ export default class ClientsEditModal extends React.Component {
   render(){
 
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let { company, heroContacts } = this.props;
+    let {heroContacts } = this.props;
     if(!heroContacts){
       heroContacts = new Immutable.Map();
     }

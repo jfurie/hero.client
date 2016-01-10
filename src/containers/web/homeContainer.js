@@ -51,7 +51,8 @@ class HomePage extends React.Component {
             <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
           </div>
           <div style={style.slide}>
-            <CandidatesList candidates={contacts.list}/>
+            <p>soon ...</p>
+            {/* <CandidatesList candidates={contacts.list}/> */}
           </div>
         </CustomTabsSwipe>
 

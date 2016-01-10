@@ -41,34 +41,36 @@ class JobDetails extends React.Component {
     console.log('save contact');
   }
 
-  render(){
-    let { contacts, location, isLight, job, jobImage } = this.props;
+  render() {
 
-    let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
+    let { location, isLight, job } = this.props;
+    let jobImage = ((job) ? (job.get('image')) : (null));
+    let jobCandidates = ((job) ? (job.get('candidates')) : ([]));
 
     // mardown to html
+    let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
     let description = marked(fakeDescription);
 
     let heroContact = '/img/rameet.jpg';
     return (
       <div>
-
         <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
         <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']}>
           <div style={style.slide}>
             <Card>
+              {(jobImage) ? (
                 <div className="mediawrap">
-                <CardMedia>
-                  <img src={jobImage?jobImage.get('item'):'https://scontent.cdninstagram.com/hphotos-xft1/t51.2885-15/e15/11378685_847466158664846_945103283_n.jpg'}></img>
-                </CardMedia>
-                <div className="button-right-bottom">
-                  <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}} label="Apply" />
+                  <CardMedia>
+                    <img src={jobImage.get('item')} />
+                  </CardMedia>
+                  <div className="button-right-bottom">
+                    <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}} label="Apply" />
+                  </div>
+                  <div className="button-left-bottom">
+                    <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}}  label="Share" />
+                  </div>
                 </div>
-                <div className="button-left-bottom">
-                  <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}}  label="Share">
-                  </FlatButton>
-                </div>
-              </div>
+              ) : (null)}
               <CardText>
                 <Card>
                   <CardText>
@@ -95,34 +97,34 @@ class JobDetails extends React.Component {
               <CardText>
                 <Card>
                   <List subheader='Compensation Details'>
-                      <ListItem
+                    <ListItem
                         leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
                         primaryText={'$150,000'}
                         secondaryText={<p>salary</p>}
                         secondaryTextLines={1}
-                        disabled={true}
-                      />
-                      <ListItem
+                        disabled
+                    />
+                    <ListItem
                         leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
                         primaryText={'20%'}
                         secondaryText={<p>fee</p>}
                         secondaryTextLines={1}
-                        disabled={true}
-                      />
-                      <ListItem
+                        disabled
+                    />
+                    <ListItem
                         leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
                         primaryText={'$30,000'}
                         secondaryText={<p>estimated fee</p>}
                         secondaryTextLines={1}
-                        disabled={true}
-                      />
-                      <ListItem
+                        disabled
+                    />
+                    <ListItem
                         leftIcon={<FontIcon className='material-icons'>person</FontIcon>}
                         primaryText={'Permanent'}
                         secondaryText={<p>position type</p>}
                         secondaryTextLines={1}
-                        disabled={true}
-                      />
+                        disabled
+                    />
                   </List>
                 </Card>
               </CardText>
@@ -131,7 +133,7 @@ class JobDetails extends React.Component {
                   <ListItem
                     leftAvatar={<Avatar>S</Avatar>}
                     primaryText={'Scott Bendar'}
-                    secondaryText={<p>CTO, FreedomPop</p>}
+                    secondaryText={<p>CTO, FreedomPop!!!</p>}
                     secondaryTextLines={1}
                   />
                 ) : (null)}
@@ -159,7 +161,7 @@ class JobDetails extends React.Component {
             </Card>
           </div>
           <div style={style.slide}>
-            <CandidatesList candidates={contacts.list} />
+            <CandidatesList candidates={jobCandidates} />
           </div>
           <div style={style.slide}>
             <div>

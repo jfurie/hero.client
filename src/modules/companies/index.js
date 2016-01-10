@@ -143,9 +143,6 @@ export function getOneCompany(id) {
         if (company.location) {
           dispatch(getOneLocation(company.location));
         }
-        // if (company.clientAdvocate) {
-        //   dispatch(getOneUser(company.clientAdvocate));
-        // }
         return company;
       }),
     });

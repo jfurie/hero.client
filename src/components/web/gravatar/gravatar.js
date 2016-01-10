@@ -32,23 +32,17 @@ class Gravatar extends React.Component {
       textShadow: '1px 1px 1px rgba(0, 0, 0, 0.39)',
     };
 
-    status = status || 'none';
+    status = status || 'new';
     let font = null;
 
     switch (status) {
-    case 'fav': {
-      style.picture.borderColor = '#e91b62';
-      style.fontIcon.color = '#e91b62';
-      font = 'favorite';
-      break;
-    }
-    case 'vetted': {
+    case 'active': {
       style.picture.borderColor = '#40bb3f';
       style.fontIcon.color = '#40bb3f';
       font = 'done';
       break;
     }
-    case 'rejected': {
+    case 'inactive': {
       style.picture.borderColor = '#959494';
       style.picture.opacity = '0.5';
       style.fontIcon.color = '#959494';

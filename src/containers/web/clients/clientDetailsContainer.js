@@ -5,15 +5,20 @@ import { pushState } from 'redux-router';
 
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
-  CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal, JobDetailsModal,
-  ClientsEditModal, Gravatar } from '../../../components/web';
+  CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
+  JobDetailsModal, ClientsEditModal, CompanyAvatar, Gravatar
+} from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
-import { invite } from '../../../modules/users';
+import { getAllCandidates } from '../../../modules/candidates';
+
+import getCompanyDataFromState from '../../../dataHelpers/company';
+import getJobDataFromState from '../../../dataHelpers/job';
+
 import {
   List, ListItem, Divider, FontIcon, IconMenu, IconButton,
   Avatar, Card, CardHeader, CardText, CardActions, FlatButton,
@@ -23,13 +28,10 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 
 function getData(state, props) {
 
-  let id = props.params.id;
+  let companyId = props.params.id;
   let jobId = props.params.jobId;
   let tab = props.params.tab;
   let tabId = 0;
-  let company = ((state.companies.list.size > 0) ? (state.companies.list.get(id)) : (null));
-  let location = null;
-  let contacts = state.contacts; // TMP
   let localJobResource = null;
   let talentAdvocate = null;
   if (company && company.get('location')) {
@@ -45,11 +47,11 @@ function getData(state, props) {
   }
 
   switch (tab) {
-    case 'jobs':
-      tabId = 1;
-      break;
-    default:
-      tabId = 0;
+  case 'jobs':
+    tabId = 1;
+    break;
+  default:
+    tabId = 0;
   }
   let newContacts = {
     ...contacts,
@@ -72,30 +74,10 @@ function getData(state, props) {
     localJobResource = state.resources.list.get(imageId);
   }
 
-  let job = state.jobs.list.get(jobId);
-  let jobImage = job ? state.resources.list.get(job.get('imageId')) : new Immutable.Map();
-
-
-  // filter down company jobs
-  let jobsByCompanyListIds = state.jobs.byCompanyId.get(id);
-  let companyJobs = new Immutable.Map();
-
-  if (jobsByCompanyListIds) {
-    companyJobs = state.jobs.list.filter(x => {
-      return jobsByCompanyListIds.indexOf(x.get('id')) > -1;
-    });
-  }
-
-
   return {
     tabId,
-    company,
-    location,
-    job,
-    jobImage,
-    contacts: newContacts,
-    jobs: state.jobs,
-    companyJobs,
+    company: getCompanyDataFromState(state, companyId),
+    job: getJobDataFromState(state, jobId),
     localJob: state.jobs.localJob,
     localJobResource,
     talentAdvocate,
@@ -111,7 +93,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId,invite})
+{ getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, invite, getAllCandidates })
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -124,34 +106,36 @@ class ClientDetailsPage extends React.Component {
   }
 
   componentDidMount() {
+
     let self = this;
+
     setTimeout(() => {
       self.props.getOneCompany(self.props.params.id);
       self.props.getContactsByCompany(self.props.params.id);
       self.props.getJobsByCompany(self.props.params.id);
-      self.props.getOneJob(self.props.params.jobId);
-      self.props.getImageByJobId(self.props.params.jobId);
-      self.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
-    },500);
+
+      if (self.props.params.jobId) {
+        self.props.getOneJob(self.props.params.jobId);
+        self.props.getImageByJobId(self.props.params.jobId);
+        self.props.getAllCandidates(self.props.params.jobId);
+      }
+ 	  self.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
+    }, 500);
   }
 
-  componentWillUpdate() {
+  componentWillReceiveProps(nextProps) {
 
-  }
-  componentWillReceiveProps(nextProps){
-    if(nextProps.localJob.get('success')){
+    if (nextProps.localJob.get('success')) {
       this.refs.jobCreateModal.closeModal();
       this.props.replaceJobLocal({companyId:this.props.params.id});
     }
-    if(nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId){
+
+    if (nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId) {
       this.props.getOneJob(nextProps.params.jobId);
       this.props.getImageByJobId(nextProps.params.jobId);
+      this.props.getAllCandidates(nextProps.params.jobId);
     }
   }
-
-  // saveClient() {
-  //   console.log('cool!');
-  // }
 
   createContactModalOpen(){
     this.refs.clientContactsCreateModal.getWrappedInstance().show();
@@ -160,13 +144,6 @@ class ClientDetailsPage extends React.Component {
   editClientModalOpen() {
     this.refs.clientEditModal.getWrappedInstance().show();
   }
-
-  // editClientModalClose() {
-  //   this.setState({
-  //     detailsJob:null,
-  //     openJob:false
-  //   });
-  // }
 
   contactDetailsModalOpen(contact) {
     this.setState({
@@ -186,8 +163,8 @@ class ClientDetailsPage extends React.Component {
     this.props.pushState({}, `/clients/${this.props.params.id}/jobs/${job.get('id')}`);
   }
 
-  closeJobModal(){
-    this.props.pushState('','/clients/'+this.props.params.id +'/jobs');
+  closeJobModal() {
+    this.props.pushState('', `/clients/${this.props.params.id}/jobs`);
     this.setState({
       detailsJob: null,
       openJob: false,
@@ -206,26 +183,30 @@ class ClientDetailsPage extends React.Component {
     this.props.replaceJobLocal({companyId:this.props.params.id});
     this.refs.jobCreateModal.show();
   }
+
   onJobCreateChange (job, dontMergeDeep){
     this.props.updateJobLocal(job, dontMergeDeep);
   }
+
   onJobCreateImageChange(imageArray){
     this.props.updateJobImageLocal(imageArray);
   }
+
   onSwipe(index){
     let tab = '';
     switch (index) {
     case 1:
-      tab = 'jobs'
+      tab = 'jobs';
       break;
     default:
       tab = '';
     }
     this.props.pushState('', `/clients/${this.props.params.id}/${tab}`);
   }
+
   render() {
 
-    let {company, location, contacts, companyJobs, job, jobImage, talentAdvocate, heroContacts} = this.props;
+    let {company, talentAdvocate, heroContacts} = this.props;
 
     if (company) {
 
@@ -235,15 +216,14 @@ class ClientDetailsPage extends React.Component {
       let heroContact = '/img/rameet.jpg';
       return (
         <div>
-
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} jobImage={this.props.jobImage} job={this.props.job} seachCandidates={contacts.list} contacts={contacts} open={this.props.params.jobId}></JobDetailsModal>
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} open={(this.props.params.jobId)?(true):(false)} />
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" heroContacts={heroContacts} company={company}/>
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal ref='notesCreateModal' />
-          <JobCreateModal contacts={contacts} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
+          <JobCreateModal contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
           <Header iconRight={
             <IconMenu iconButtonElement={
@@ -254,19 +234,19 @@ class ClientDetailsPage extends React.Component {
               <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
               <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
             </IconMenu>
-          } title={company.get('name')} />
+          } title={company.get('name')}
+          />
 
         <CustomTabsSwipe onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
             <div style={style.slide}>
               <List>
                 <div>
-
                   {(website) ? (
                     <ListItem
-                      leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                      primaryText={website}
-                      secondaryText={<p>website</p>}
-                      secondaryTextLines={1}
+                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                        primaryText={website}
+                        secondaryText={<p>website</p>}
+                        secondaryTextLines={1}
                     />
                   ) : (null)}
 
@@ -274,10 +254,10 @@ class ClientDetailsPage extends React.Component {
                     <div>
                       <Divider inset />
                       <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={`@${twitter}`}
-                        secondaryText={<p>twitter</p>}
-                        secondaryTextLines={1}
+                          leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                          primaryText={`@${twitter}`}
+                          secondaryText={<p>twitter</p>}
+                          secondaryTextLines={1}
                       />
                     </div>
                   ) : (null)}
@@ -286,10 +266,10 @@ class ClientDetailsPage extends React.Component {
                     <div>
                       <Divider inset />
                       <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={`facebook.com/${facebook}`}
-                        secondaryText={<p>facebook</p>}
-                        secondaryTextLines={1}
+                          leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                          primaryText={`facebook.com/${facebook}`}
+                          secondaryText={<p>facebook</p>}
+                          secondaryTextLines={1}
                       />
                     </div>
                   ) : (null)}
@@ -298,8 +278,8 @@ class ClientDetailsPage extends React.Component {
               </List>
               <div id="innerView">
                 {(company.get('location')) ? (
-                    <LocationCard style={{height: '200px'}} location={location} />
-                ) : (<p>No location provided.</p>)}
+                    <LocationCard style={{height: '200px'}} location={company.get('location')} marker={<CompanyAvatar url={company.get('website')} />}/>
+                ) : (null)}
               </div>
               <List subheader="Your HERO talent advocate">
                 {(talentAdvocate) ? (
@@ -314,20 +294,20 @@ class ClientDetailsPage extends React.Component {
 
             </div>
             <div style={style.slide}>
-              <List subheader={`${companyJobs.count()} Job${((companyJobs.count() > 1) ? ('s') : (''))}`}>
-                <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={companyJobs}/>
+              <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() > 1) ? ('s') : (''))}`}>
+                <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
               </List>
             </div>
             <div style={style.slide}>
-              <ContactsList contacts={contacts.list} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
+              <ContactsList contacts={company.get('contacts')} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             </div>
             <div style={style.slide}>
               <Card initiallyExpanded>
                 <CardHeader
-                  title="Rameet Singh"
-                  subtitle="Private | 59 mins ago"
-                  avatar={<Avatar src={heroContact} />}>
-                </CardHeader>
+                    title="Rameet Singh"
+                    subtitle="Private | 59 mins ago"
+                    avatar={<Avatar src={heroContact} />}
+                />
                 <CardText expandable>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
@@ -341,10 +321,10 @@ class ClientDetailsPage extends React.Component {
               </Card>
               <Card initiallyExpanded>
                 <CardHeader
-                  title="Rameet Singh"
-                  subtitle="Private | 60 mins ago"
-                  avatar={<Avatar src={heroContact} />}>
-                </CardHeader>
+                    title="Rameet Singh"
+                    subtitle="Private | 60 mins ago"
+                    avatar={<Avatar src={heroContact} />}
+                />
                 <CardText expandable>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
