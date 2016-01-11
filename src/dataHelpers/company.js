@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 export default function getCompanyDataFromState(state, companyId) {
 
@@ -10,14 +11,29 @@ export default function getCompanyDataFromState(state, companyId) {
 
     let jobsByCompanyListIds = state.jobs.byCompanyId.get(companyId);
     let companyJobs = new Immutable.Map();
-
+    let talentAdvocate = null;
     if (jobsByCompanyListIds) {
       companyJobs = state.jobs.list.filter(x => {
         return jobsByCompanyListIds.indexOf(x.get('id')) > -1;
       });
     }
 
+
     company = company.set('jobs', companyJobs);
+    //filter clientAdvocate
+    if(company){
+      talentAdvocate = state.contacts.list.get(company.get('clientAdvocateId'));
+      company = company.set('clientAdvocate',talentAdvocate);
+    }
+    //filter hero contacts
+    let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+    let heroContacts = null;
+    if(heroContactIds){
+      heroContacts = state.contacts.list.filter(x =>{
+        return heroContactIds.indexOf(x.get('id')) > -1;
+      });
+    }
+    company = company.set('heroContacts',heroContacts);
 
     // filter down company notes
     let notesByCompanyListIds = state.notes.byCompanyId.get(companyId);
@@ -40,7 +56,7 @@ export default function getCompanyDataFromState(state, companyId) {
     let contactsByCompanyListIds = state.contacts.byCompanyId.get(companyId);
     let companyContacts = new Immutable.Map();
 
-    if (jobsByCompanyListIds) {
+    if (contactsByCompanyListIds) {
       companyContacts = state.contacts.list.filter(x => {
         return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
       });

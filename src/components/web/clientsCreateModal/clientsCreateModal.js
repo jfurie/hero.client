@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'immutable';
 import {
   Dialog, IconButton, ToolbarGroup, Toolbar,
   FlatButton, TextField, ToolbarTitle, SelectField,
@@ -75,9 +76,9 @@ export default class ClientsCreateModal extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (!this.props.users.size && newProps.users.size > 0) {
+    if (this.props.heroContacts && !this.props.heroContacts.size && newProps.heroContacts.size > 0) {
       this.setState({
-        clientAdvocateId: newProps.users.first().get('id'),
+        clientAdvocateId: newProps.heroContacts.first().get('id'),
       });
     }
   }
@@ -113,7 +114,7 @@ export default class ClientsCreateModal extends React.Component {
 
       // assign clientAdvocateId to clientAdvocate
       let company = this.state.company;
-      company.clientAdvocate = this.state.clientAdvocateId;
+      company.clientAdvocateId = this.state.clientAdvocateId;
 
       // and post ...
       this.props.onSubmit(company);
@@ -130,8 +131,10 @@ export default class ClientsCreateModal extends React.Component {
   render() {
 
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let { users } = this.props;
-
+    let {heroContacts } = this.props;
+    if(!heroContacts){
+      heroContacts = new Immutable.Map();
+    }
     return (
       <Dialog
           open={this.props.open}
@@ -200,11 +203,11 @@ export default class ClientsCreateModal extends React.Component {
                             hintText={''}
                             value={this.state.clientAdvocateId}
                         >
-                          {users.map((user, index) => {
+                          {heroContacts.map((heroContact, index) => {
                             return (
                               <MenuItem
                                   value={index}
-                                  primaryText={user.get('email')}
+                                  primaryText={heroContact.get('displayName')}
                               />
                             );
                           })}
@@ -224,5 +227,5 @@ ClientsCreateModal.propTypes = {
   closeModal: React.PropTypes.func.isRequired,
   onSubmit: React.PropTypes.func,
   open: React.PropTypes.bool.isRequired,
-  users: React.PropTypes.object,
+  heroContacts: React.PropTypes.object,
 };

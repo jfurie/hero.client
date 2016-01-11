@@ -1,6 +1,7 @@
 import React from 'react';
-import { Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle } from 'material-ui';
-import { editCompany } from '../../../modules/companies';
+import Immutable from 'immutable';
+import { Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle,SelectField,MenuItem } from 'material-ui';
+import { editCompany } from '../../../modules/companies/index';
 import { connect } from 'react-redux';
 import validateCompany from '../../../validators/company';
 
@@ -57,16 +58,35 @@ export default class ClientsEditModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      clientAdvocateId:0,
       company: {
         id: props.company.get('id'),
         name: props.company.get('name'),
         website: props.company.get('website'),
         facebookHandle: props.company.get('facebookHandle'),
         twitterHandle: props.company.get('twitterHandle'),
+        heroContacts: props.company.get('heroContacts'),
       },
       errors: {},
       open: false,
     };
+  }
+  componentWillReceiveProps(newProps) {
+    let heroContacts = newProps.company.get('heroContacts');
+    let clientAdvocateId = 0;
+    if(heroContacts){
+      clientAdvocateId = newProps.company.get('clientAdvocateId');
+    }
+    if (this.props.company.heroContacts && !this.props.company.heroContacts.length && heroContacts.company.size > 0) {
+      clientAdvocateId = clientAdvocateId || heroContacts.first().get('id');
+    }
+    if(heroContacts && heroContacts.size && heroContacts.size > 0){
+      this.state.company.heroContacts = heroContacts;
+      this.setState({
+        company:this.state.company,
+        clientAdvocateId,
+      });
+    }
   }
 
   show() {
@@ -96,6 +116,11 @@ export default class ClientsEditModal extends React.Component {
     });
   }
 
+  _handleSelectValueChange(event, index, value) {
+    this.setState({
+      clientAdvocateId: value,
+    });
+  }
   _handleSubmit(){
 
     let errors = validateCompany(this.state.company);
@@ -105,7 +130,9 @@ export default class ClientsEditModal extends React.Component {
     });
 
     if (errors.validationErrors === 0) {
-      this.props.editCompany(this.state.company);
+      let company = this.state.company;
+      company.clientAdvocateId = this.state.clientAdvocateId;
+      this.props.editCompany(company);
       this.closeModal();
     }
   }
@@ -113,8 +140,9 @@ export default class ClientsEditModal extends React.Component {
   render(){
 
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    //let { company } = this.props;
-
+    if(!this.state.company.heroContacts){
+      this.state.company.heroContacts = [];
+    }
     return (
       <Dialog
           open={this.state.open}
@@ -175,6 +203,26 @@ export default class ClientsEditModal extends React.Component {
                             onChange={(e) => this._handleChange.bind(this)(e, 'twitterHandle')}
                             floatingLabelText="Twitter Handle (optional)"
                             defaultValue={this.state.company.twitterHandle} />
+                      </div>
+                      <div>
+                        <SelectField
+                            floatingLabelText="Client Advocate"
+                            floatingLabelStyle={style.floatLabel}
+                            fullWidth
+                            style={style.select}
+                            onChange={this._handleSelectValueChange.bind(this)}
+                            hintText={''}
+                            value={this.state.clientAdvocateId}
+                        >
+                          {this.state.company.heroContacts.map((heroContact, index) => {
+                            return (
+                              <MenuItem
+                                  value={index}
+                                  primaryText={heroContact.get('displayName')}
+                              />
+                            );
+                          })}
+                        </SelectField>
                       </div>
                     </form>
                   </div>
