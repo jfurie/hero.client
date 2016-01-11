@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import * as companyConstants from './companies/constants';
+import * as jobConstants from './jobs/constants';
 const GET_CONTACTS = 'hero.client/contacts/GET_CONTACTS';
 const GET_CONTACTS_SUCCESS = 'hero.client/contacts/GET_CONTACTS_SUCCESS';
 const GET_CONTACTS_FAIL = 'hero.client/contacts/GET_CONTACTS_FAIL';
@@ -116,6 +117,21 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.merge(contactsMap),
     };
 
+  }
+  case jobConstants.GET_JOB_SUCCESS:{
+    let contactsMap = {};
+    if(action.result.talentAdvocate){
+      let id = action.result.talentAdvocate.id;
+      contactsMap[id] = action.result.talentAdvocate;
+    }
+    if(action.result.contact){
+      let id = action.result.contact.id;
+      contactsMap[id] = action.result.contact;
+    }
+    return {
+      ...state,
+      list: state.list.merge(contactsMap),
+    };
   }
   default:
     return state;
