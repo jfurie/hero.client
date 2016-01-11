@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import Immutable from 'immutable';
 import {
   Dialog, Toolbar, ToolbarTitle, IconButton,
   ToolbarGroup, FlatButton, TextField, DatePicker,
@@ -126,6 +127,11 @@ class JobCreateModal extends React.Component {
     change['contactId'] = value;
     this.props.onJobChange(change);
   }
+  _handleHeroValueChange(event, index, value) {
+    let change = {};
+    change['talentAdvocateId'] = value;
+    this.props.onJobChange(change);
+  }
 
   _handleEmploymentTypeValueChange(e, key, payload){
     var change = {};
@@ -152,10 +158,10 @@ class JobCreateModal extends React.Component {
   //    });
   //  }
   render() {
-    let { contacts } = this.props;
+    let { contacts, heroContacts } = this.props;
     let location = this.state.location?{lat:this.state.location.geometry.location.lat(),lng:this.state.location.geometry.location.lng()}: {lat:34,lng:118};
     //console.log(contacts);
-
+    heroContacts = heroContacts || new Immutable.Map();
     return (
       <Dialog
           open={this.state.open}
@@ -321,6 +327,24 @@ class JobCreateModal extends React.Component {
                             onChange={this._handleSelectValueChange.bind(this)}
                         >
                           {contacts.map((contact, index) => {
+                            return (
+                              <MenuItem
+                                  value={index}
+                                  primaryText={contact.get('displayName')}
+                              />
+                            );
+                          })}
+                        </SelectField>
+                      </div>
+                      <div>
+                        <SelectField
+                            ref="selectValue"
+                            fullWidth
+                            floatingLabelText="Select Talent Advocate"
+                            value={this.props.job.get('talentAdvocateId')}
+                            onChange={this._handleHeroValueChange.bind(this)}
+                        >
+                          {heroContacts.map((contact, index) => {
                             return (
                               <MenuItem
                                   value={index}
