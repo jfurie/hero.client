@@ -35,6 +35,22 @@ export default function getCompanyDataFromState(state, companyId) {
     }
     company = company.set('heroContacts',heroContacts);
 
+    // filter down company notes
+    let notesByCompanyListIds = state.notes.byCompanyId.get(companyId);
+    let companyNotes = new Immutable.Map();
+
+    if (notesByCompanyListIds) {
+      companyNotes = state.notes.list.filter(x => {
+        return notesByCompanyListIds.indexOf(x.get('id')) > -1;
+      });
+    }
+
+    companyNotes = companyNotes.sort((a, b) => {
+      return new Date(b.get('created')) - new Date(a.get('created'));
+    });
+
+    company = company.set('notes', companyNotes);
+
     //filter down company contacts
 
     let contactsByCompanyListIds = state.contacts.byCompanyId.get(companyId);

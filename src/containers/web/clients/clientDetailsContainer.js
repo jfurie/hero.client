@@ -1,11 +1,10 @@
 import React from 'react';
-import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
-  CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
+  CompanyJobsList, CompanyNotesList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
   JobDetailsModal, ClientsEditModal, CompanyAvatar, Gravatar
 } from '../../../components/web';
 
@@ -13,15 +12,15 @@ import { getOneCompany } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
+import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
-import { getAllCandidates } from '../../../modules/candidates';
+import { getAllJobCandidates } from '../../../modules/candidates';
 import { invite } from '../../../modules/users';
 import getCompanyDataFromState from '../../../dataHelpers/company';
 import getJobDataFromState from '../../../dataHelpers/job';
 
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton,
-  Avatar, Card, CardHeader, CardText, CardActions, FlatButton,
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Avatar,
 } from 'material-ui';
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 import MenuItem from 'material-ui/lib/menus/menu-item';
@@ -47,6 +46,9 @@ function getData(state, props) {
   case 'jobs':
     tabId = 1;
     break;
+  case 'notes':
+    tabId = 3;
+    break;
   default:
     tabId = 0;
   }
@@ -61,6 +63,8 @@ function getData(state, props) {
     tabId,
     company: getCompanyDataFromState(state, companyId),
     job: getJobDataFromState(state, jobId),
+    notes: state.notes,
+    localNote: state.notes.localNote,
     localJob: state.jobs.localJob,
     localJobResource,
   };
@@ -74,7 +78,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{ getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, invite, getAllCandidates })
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite })
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -94,11 +98,12 @@ class ClientDetailsPage extends React.Component {
       self.props.getOneCompany(self.props.params.id);
       self.props.getContactsByCompany(self.props.params.id);
       self.props.getJobsByCompany(self.props.params.id);
+      self.props.getNotesByCompany(self.props.params.id);
 
       if (self.props.params.jobId) {
         self.props.getOneJob(self.props.params.jobId);
         self.props.getImageByJobId(self.props.params.jobId);
-        self.props.getAllCandidates(self.props.params.jobId);
+        self.props.getAllJobCandidates(self.props.params.jobId);
       }
       self.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
     }, 500);
@@ -114,7 +119,16 @@ class ClientDetailsPage extends React.Component {
     if (nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId) {
       this.props.getOneJob(nextProps.params.jobId);
       this.props.getImageByJobId(nextProps.params.jobId);
-      this.props.getAllCandidates(nextProps.params.jobId);
+      this.props.getAllJobCandidates(nextProps.params.jobId);
+    }
+
+    if(nextProps.localNote.get('success')){
+      this.refs.notesCreateModal.closeModal();
+      this.props.replaceNoteLocal({});
+
+      if (this.props.tabId != 3) {
+        this.refs.customTabsSwipe.getWrappedInstance()._handleChangeIndex(3);
+      }
     }
   }
 
@@ -157,9 +171,23 @@ class ClientDetailsPage extends React.Component {
   }
 
   createNoteModalOpen() {
+    this.props.replaceNoteLocal({});
     this.refs.notesCreateModal.show();
   }
-
+  onNoteCreateChange (note){
+    this.props.updateNoteLocal(note);
+  }
+  _handleSaveNote() {
+    this.props.saveLocalNote(this.props.params.id, 'company');
+  }
+  _handleEditNote(note) {
+    this.props.replaceNoteLocal(note);
+    this.refs.notesCreateModal.show();
+  }
+  _handleDeleteNote(note) {
+    this.props.replaceNoteLocal(note);
+    this.props.deleteNote(note.get('id'));
+  }
   createJobModalOpen() {
     this.props.replaceJobLocal({companyId:this.props.params.id});
     this.refs.jobCreateModal.show();
@@ -178,6 +206,9 @@ class ClientDetailsPage extends React.Component {
     switch (index) {
     case 1:
       tab = 'jobs';
+      break;
+    case 3:
+      tab = 'notes';
       break;
     default:
       tab = '';
@@ -203,7 +234,7 @@ class ClientDetailsPage extends React.Component {
           <ClientsEditModal ref="clientEditModal" company={company}/>
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-          <NotesCreateModal ref='notesCreateModal' />
+          <NotesCreateModal saveNote={this._handleSaveNote.bind(this)} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
           <JobCreateModal contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
           <Header iconRight={
@@ -218,7 +249,7 @@ class ClientDetailsPage extends React.Component {
           } title={company.get('name')}
           />
 
-        <CustomTabsSwipe onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
+        <CustomTabsSwipe ref='customTabsSwipe' onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
             <div style={style.slide}>
               <List>
                 <div>
@@ -283,40 +314,9 @@ class ClientDetailsPage extends React.Component {
               <ContactsList contacts={company.get('contacts')} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             </div>
             <div style={style.slide}>
-              <Card initiallyExpanded>
-                <CardHeader
-                    title="Rameet Singh"
-                    subtitle="Private | 59 mins ago"
-                    avatar={<Avatar src={heroContact} />}
-                />
-                <CardText expandable>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                </CardText>
-                <CardActions expandable>
-                  <FlatButton label="Edit"/>
-                  <FlatButton label="Delete"/>
-                </CardActions>
-              </Card>
-              <Card initiallyExpanded>
-                <CardHeader
-                    title="Rameet Singh"
-                    subtitle="Private | 60 mins ago"
-                    avatar={<Avatar src={heroContact} />}
-                />
-                <CardText expandable>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                </CardText>
-                <CardActions expandable>
-                  <FlatButton label="Edit"/>
-                  <FlatButton label="Delete"/>
-                </CardActions>
-              </Card>
+              <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() > 1) ? ('s') : (''))}`}>
+                <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={company.get('notes')}/>
+              </List>
             </div>
           </CustomTabsSwipe>
         </div>
