@@ -4,6 +4,7 @@ const LOAD_FAIL = 'hero.client/auth/LOAD_FAIL';
 const LOGIN = 'hero.clientauth/LOGIN';
 const LOGIN_SUCCESS = 'hero.client/auth/LOGIN_SUCCESS';
 const LOGIN_FAIL = 'hero.client/auth/LOGIN_FAIL';
+const RESET_LOGIN_ERROR = 'hero.client/auth/RESET_LOGIN_ERROR';
 const LOGOUT = 'hero.client/auth/LOGOUT';
 const LOGOUT_SUCCESS = 'hero.client/auth/LOGOUT_SUCCESS';
 const LOGOUT_FAIL = 'hero.client/auth/LOGOUT_FAIL';
@@ -57,6 +58,12 @@ export default function reducer(state = initialState, action = {}) {
       loggingIn: false,
       user: null,
       loginError: action.error
+    };
+  case RESET_LOGIN_ERROR:
+    
+    return {
+      ...state,
+      loginError: null
     };
   case AUTHLOCALSTORAGE:
     return {
@@ -183,6 +190,12 @@ export function login(email, password) {
         });
       });
     }
+  };
+}
+
+export function resetLoginError(){
+  return {
+    type: RESET_LOGIN_ERROR,
   };
 }
 
