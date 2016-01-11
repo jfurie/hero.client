@@ -3,7 +3,7 @@ import { routerStateReducer } from 'redux-router';
 import auth from './auth';
 import users from './users';
 import contacts from './contacts';
-import companies from './companies';
+import companies from './companies/index';
 import leftNav from './leftNav';
 import locations from './locations';
 import companyContacts from './companyContacts';

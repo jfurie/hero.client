@@ -4,7 +4,7 @@ import { pushState } from 'redux-router';
 import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs } from '../../modules/jobs/index';
-import { getAllContacts } from '../../modules/contacts';
+import { getAllUserCandidates } from '../../modules/candidates';
 import { getAllCompanies } from '../../modules/companies';
 
 const style = {
@@ -13,12 +13,33 @@ const style = {
   },
 };
 
+function filterMyCandidates(candidates, auth) {
+
+  let userId = auth.authToken.userId;
+
+  // grab the candidates for this job
+  let myCandidates = [];
+  if (userId && candidates && candidates.byUserId && candidates.list) {
+    if (candidates.byUserId.size > 0) {
+      candidates.byUserId.get(userId).forEach(function(candidateId) {
+        let c = candidates.list.get(candidateId);
+        if (c) {
+          myCandidates.push(c);
+        }
+      });
+    }
+  }
+
+  return myCandidates;
+}
+
 @connect(state => ({
   user: state.auth.user,
   jobs: state.jobs,
-  contacts: state.contacts,
+  candidates: filterMyCandidates(state.candidates, state.auth),
+  auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllContacts, getAllCompanies})
+}), {pushState, toggleNav, getAllJobs, getAllUserCandidates, getAllCompanies})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -27,8 +48,8 @@ class HomePage extends React.Component {
 
   componentDidMount() {
     this.props.getAllJobs();
-    this.props.getAllContacts();
     this.props.getAllCompanies();
+    this.props.getAllUserCandidates(this.props.auth.authToken.userId);
   }
 
   _handleJobClick(){
@@ -37,7 +58,7 @@ class HomePage extends React.Component {
 
   render () {
 
-    let { jobs, contacts, companies } = this.props;
+    let { jobs, candidates, companies } = this.props;
 
     return (
       <div>
@@ -51,8 +72,7 @@ class HomePage extends React.Component {
             <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
           </div>
           <div style={style.slide}>
-            <p>soon ...</p>
-            {/* <CandidatesList candidates={contacts.list}/> */}
+            <CandidatesList candidates={candidates}/>
           </div>
         </CustomTabsSwipe>
 

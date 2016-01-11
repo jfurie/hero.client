@@ -20,6 +20,7 @@ client.api = new ApiClient({
   baseUrl: 'https://core-api-loopback.herokuapp.com',
 });
 
+
 client.localStorage = new LocalStorageClient('auth');
 client.fakeApi = new FakeApiClient(); // fake api
 

@@ -5,24 +5,24 @@ import { pushState } from 'redux-router';
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
   CompanyJobsList, CompanyNotesList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
-  JobDetailsModal, ClientsEditModal, CompanyAvatar,
+  JobDetailsModal, ClientsEditModal, CompanyAvatar, Gravatar
 } from '../../../components/web';
 
-import { getOneCompany } from '../../../modules/companies';
+import { getOneCompany } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
-import { getAllCandidates } from '../../../modules/candidates';
-
+import { getAllJobCandidates } from '../../../modules/candidates';
+import { invite } from '../../../modules/users';
 import getCompanyDataFromState from '../../../dataHelpers/company';
 import getJobDataFromState from '../../../dataHelpers/job';
 
 import {
   List, ListItem, Divider, FontIcon, IconMenu, IconButton, Avatar,
 } from 'material-ui';
-
+const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
 function getData(state, props) {
@@ -32,6 +32,15 @@ function getData(state, props) {
   let tab = props.params.tab;
   let tabId = 0;
   let localJobResource = null;
+
+
+  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+  let heroContacts = null;
+  if(heroContactIds){
+    heroContacts = state.contacts.list.filter(x =>{
+      return heroContactIds.indexOf(x.get('id')) > -1;
+    });
+  }
 
   switch (tab) {
   case 'jobs':
@@ -44,8 +53,9 @@ function getData(state, props) {
     tabId = 0;
   }
 
-  let imageId = state.jobs.localJob.get('imageId');
-  if (imageId) {
+
+  var imageId = state.jobs.localJob.get('imageId');
+  if(imageId){
     localJobResource = state.resources.list.get(imageId);
   }
 
@@ -68,7 +78,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, getAllCandidates})
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite })
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -93,8 +103,9 @@ class ClientDetailsPage extends React.Component {
       if (self.props.params.jobId) {
         self.props.getOneJob(self.props.params.jobId);
         self.props.getImageByJobId(self.props.params.jobId);
-        self.props.getAllCandidates(self.props.params.jobId);
+        self.props.getAllJobCandidates(self.props.params.jobId);
       }
+      self.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
     }, 500);
   }
 
@@ -108,7 +119,7 @@ class ClientDetailsPage extends React.Component {
     if (nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId) {
       this.props.getOneJob(nextProps.params.jobId);
       this.props.getImageByJobId(nextProps.params.jobId);
-      this.props.getAllCandidates(nextProps.params.jobId);
+      this.props.getAllJobCandidates(nextProps.params.jobId);
     }
 
     if(nextProps.localNote.get('success')){
@@ -153,6 +164,10 @@ class ClientDetailsPage extends React.Component {
       detailsJob: null,
       openJob: false,
     });
+  }
+  _inviteHandler(){
+    var email = this.state.detailsContact.get('email');
+    this.props.invite(email, window.location.origin + '/invited');
   }
 
   createNoteModalOpen() {
@@ -211,7 +226,6 @@ class ClientDetailsPage extends React.Component {
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
       let heroContact = '/img/rameet.jpg';
-
       return (
         <div>
           <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} open={(this.props.params.jobId)?(true):(false)} />
@@ -219,7 +233,7 @@ class ClientDetailsPage extends React.Component {
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" company={company}/>
 
-          <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
+          <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal saveNote={this._handleSaveNote.bind(this)} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
           <JobCreateModal contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
@@ -280,12 +294,12 @@ class ClientDetailsPage extends React.Component {
                 ) : (null)}
               </div>
               <List subheader="Your HERO talent advocate">
-                {(heroContact) ? (
+                {(company.get('clientAdvocate')) ? (
                   <ListItem
-                      leftAvatar={<Avatar src={heroContact} />}
-                      primaryText={'Rameet Singh'}
-                      secondaryText={<p>Hero Talent Advocate</p>}
-                      secondaryTextLines={1}
+                    leftAvatar={<Gravatar email={company.get('clientAdvocate').get('email')} status={'vetted'} />}
+                    primaryText={company.get('clientAdvocate').get('displayName')}
+                    secondaryText={<p>Hero Talent Advocate</p>}
+                    secondaryTextLines={1}
                   />
                 ) : (null)}
                 </List>

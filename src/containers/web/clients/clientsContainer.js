@@ -5,9 +5,10 @@ import { pushState } from 'redux-router';
 import { Header, ClientsCreateModal, ClientsList } from '../../../components/web';
 import { getAllCompanies, createCompany, searchCompany } from '../../../modules/companies';
 import { getCurrentAccount } from '../../../modules/currentAccount';
+import { getContactsByCompany } from '../../../modules/contacts';
 
 import { IconButton } from 'material-ui';
-
+const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 @connect((state) => {
   let visibleCompanies = new Immutable.Map();
   if (state.companies.currentSearch != '') {
@@ -18,13 +19,23 @@ import { IconButton } from 'material-ui';
   } else {
     visibleCompanies = state.companies.list;
   }
+  //filter hero contacts
+  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+  let heroContacts = null;
+  if(heroContactIds){
+    heroContacts = state.contacts.list.filter(x =>{
+      return heroContactIds.indexOf(x.get('id')) > -1;
+    });
+  }
+
   return({
     type: state.router.location.query.type,
     companies: state.companies,
     visibleCompanies,
     currentAccount: state.currentAccount,
+    heroContacts,
   });
-}, { getAllCompanies, createCompany, searchCompany, pushState, getCurrentAccount })
+}, { getAllCompanies, createCompany, searchCompany, pushState, getCurrentAccount, getContactsByCompany })
 class ClientPage extends React.Component {
 
   constructor(props) {
@@ -37,6 +48,9 @@ class ClientPage extends React.Component {
   componentDidMount() {
     this.props.getAllCompanies();
     this.props.getCurrentAccount();
+
+    //get the hero compnay contacts
+    this.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
     // let self = this;
     // setTimeout(() => {
     //   self.props.getAllCompanies();
@@ -84,11 +98,11 @@ class ClientPage extends React.Component {
 
   render() {
 
-    let { visibleCompanies, currentAccount } = this.props;
+    let { visibleCompanies, currentAccount, heroContacts } = this.props;
 
     return (
       <div>
-        <ClientsCreateModal users={currentAccount.usersList} onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen} />
+        <ClientsCreateModal heroContacts={heroContacts} onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen} />
         <Header
             iconRight={<IconButton onTouchTap={this.openModal.bind(this)}
             iconClassName='material-icons'>add</IconButton>}

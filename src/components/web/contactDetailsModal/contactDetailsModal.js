@@ -60,6 +60,7 @@ class ContactDetailsModal extends React.Component {
 
   inviteToHero() {
     this.refs.inviteSuccessModal.show();
+    this.props.onInvite();
   }
 
   render() {
