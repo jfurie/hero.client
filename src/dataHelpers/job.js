@@ -22,6 +22,16 @@ export default function getJobDataFromState(state, jobId) {
     }
 
     job = job.set('candidates', jobCandidates);
+    let contactId =job.get('contactId');
+    if(contactId){
+      let contact = state.contacts.list.get(contactId);
+      job.set('contact',contact);
+    }
+    let talentAdvocateId =job.get('talentAdvocateId');
+    if(talentAdvocateId){
+      let contact = state.contacts.list.get(talentAdvocateId);
+      job.set('talentAdvocate',contact);
+    }
 
   }
 

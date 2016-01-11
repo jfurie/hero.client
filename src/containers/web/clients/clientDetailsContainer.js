@@ -67,6 +67,7 @@ function getData(state, props) {
     localNote: state.notes.localNote,
     localJob: state.jobs.localJob,
     localJobResource,
+    heroContacts,
   };
 }
 
@@ -218,7 +219,7 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company} = this.props;
+    let {company, heroContacts} = this.props;
 
     if (company) {
 
@@ -235,7 +236,7 @@ class ClientDetailsPage extends React.Component {
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal saveNote={this._handleSaveNote.bind(this)} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
-          <JobCreateModal contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
+          <JobCreateModal heroContacts={heroContacts} contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
           <Header iconRight={
             <IconMenu iconButtonElement={

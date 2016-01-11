@@ -94,7 +94,7 @@ export function saveLocalJob(){
 export function getOneJob(id) {
   return {
     types: [constants.GET_JOB, constants.GET_JOB_SUCCESS, constants.GET_JOB_FAIL],
-    promise: (client, auth) => client.api.get(`/jobs/${id}`, {
+    promise: (client, auth) => client.api.get(`/jobs/${id}?filter[include]=talentAdvocate&filter[include]=contact`, {
       authToken: auth.authToken,
       data: {
         id,
