@@ -135,7 +135,7 @@ export default(store) => {
             <Route path=":id/jobs(/:create)" component={ClientDetailsPage} />
             <Route path=":id" component={ClientDetailsPage} />
               <Route path=":id/notes" component={ClientDetailsPage}
-                onEnter={(nextState, replaceState) => {
+                onEnter={(nextState) => {
                   nextState.params.tab = 'notes';
                 }} />
           </Route>

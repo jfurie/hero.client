@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { CustomTabsSwipe, CandidatesList, LocationCard, ContactDetailsModal, Gravatar } from '../../../components/web';
-import { List , ListItem, FontIcon, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions, RaisedButton } from 'material-ui';
+import { List , ListItem, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions, RaisedButton } from 'material-ui';
 import marked from 'marked';
 
 import './jobDetails.scss';
