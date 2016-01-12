@@ -20,7 +20,7 @@ import getCompanyDataFromState from '../../../dataHelpers/company';
 import getJobDataFromState from '../../../dataHelpers/job';
 
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Avatar,
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton,
 } from 'material-ui';
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 import MenuItem from 'material-ui/lib/menus/menu-item';
@@ -226,7 +226,7 @@ class ClientDetailsPage extends React.Component {
       let website = company.get('website');
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
-      let heroContact = '/img/rameet.jpg';
+    //  let heroContact = '/img/rameet.jpg';
       return (
         <div>
           <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} open={(this.props.params.jobId)?(true):(false)} />

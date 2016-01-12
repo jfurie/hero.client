@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
+//import _ from 'lodash';
 import Immutable from 'immutable';
 import {
   Dialog, Toolbar, ToolbarTitle, IconButton,
@@ -7,7 +7,7 @@ import {
   Card, CardMedia, CardText, LinearProgress, SelectField,
   MenuItem,
 } from 'material-ui';
-import {geoCode} from '../../../utils/geoCoding';
+//import {geoCode} from '../../../utils/geoCoding';
 import {FileInput, TagsInput} from '../';
 //import GoogleMap from 'google-map-react';
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -159,7 +159,7 @@ class JobCreateModal extends React.Component {
   //  }
   render() {
     let { contacts, heroContacts } = this.props;
-    let location = this.state.location?{lat:this.state.location.geometry.location.lat(),lng:this.state.location.geometry.location.lng()}: {lat:34,lng:118};
+    //let location = this.state.location?{lat:this.state.location.geometry.location.lat(),lng:this.state.location.geometry.location.lng()}: {lat:34,lng:118};
     //console.log(contacts);
     heroContacts = heroContacts || new Immutable.Map();
     return (

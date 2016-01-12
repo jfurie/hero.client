@@ -98,7 +98,7 @@ class ClientPage extends React.Component {
 
   render() {
 
-    let { visibleCompanies, currentAccount, heroContacts } = this.props;
+    let { visibleCompanies, heroContacts } = this.props;
 
     return (
       <div>
