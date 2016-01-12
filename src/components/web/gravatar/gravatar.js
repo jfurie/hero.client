@@ -8,29 +8,32 @@ class Gravatar extends React.Component {
 
     let { email, status, style } = this.props;
 
+    //style = style || {};
+
     // extend style
-
-    style.container = {
-      display: 'inline',
-      position: 'relative',
-      marginRight: '7px',
+    let _style = {
+      container: {
+        display: 'inline',
+        position: 'relative',
+        marginRight: '7px',
+      },
+      picture: {
+        width: '40px',
+        height: '40px',
+        borderRadius: '50%',
+        border: '2px solid',
+        opacity: '1',
+      },
+      fontIcon: {
+        position: 'absolute',
+        top: '-20px',
+        right: '-6px',
+        fontSize: '16px',
+        textShadow: '1px 1px 1px rgba(0, 0, 0, 0.39)',
+      },
     };
 
-    style.picture = {
-      width: '40px',
-      height: '40px',
-      borderRadius: '50%',
-      border: '2px solid',
-      opacity: '1',
-    };
-
-    style.fontIcon = {
-      position: 'absolute',
-      top: '-20px',
-      right: '-6px',
-      fontSize: '16px',
-      textShadow: '1px 1px 1px rgba(0, 0, 0, 0.39)',
-    };
+    style = {..._style, ...style};
 
     status = status || 'new';
     let font = null;
