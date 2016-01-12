@@ -59,7 +59,7 @@ class CompanyNotesList extends React.Component {
 
 CompanyNotesList.propTypes = {
   company: React.PropTypes.object,
-  jobs: React.PropTypes.object.isRequired,
+  notes: React.PropTypes.object.isRequired,
   onJobClick: React.PropTypes.func,
 };
 

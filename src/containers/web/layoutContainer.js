@@ -111,7 +111,7 @@ class Layout extends React.Component {
         <MenuItem style={{color:'#e0e0e0'}} primaryText="My Clients" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">business</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
         <MenuItem style={{color:'#e0e0e0'}} primaryText="My Jobs" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">work</FontIcon>} onTouchTap={this.clickMyJobs.bind(this)} index={0} />
         <MenuItem style={{color:'#e0e0e0'}} primaryText="My Candidates" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">people</FontIcon>} onTouchTap={this.clickMyCandidates.bind(this)} index={0} />
-        <MenuItem style={{color:'#e0e0e0'}} primaryText="Settings" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">settings</FontIcon>} onTouchTap={this.clickSettings.bind(this)} index={0} />
+        {/*<MenuItem style={{color:'#e0e0e0'}} primaryText="Settings" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">settings</FontIcon>} onTouchTap={this.clickSettings.bind(this)} index={0} />*/}
         {(user) ? (
           <MenuItem style={{color:'#e0e0e0'}} primaryText="Logout" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">vpn_key</FontIcon>} onTouchTap={this.clickLogout.bind(this)} index={0} />
         ) : (

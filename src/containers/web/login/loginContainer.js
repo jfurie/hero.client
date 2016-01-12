@@ -1,5 +1,5 @@
 import React from 'react';
-import { login } from '../../../modules/auth';
+import { login, resetLoginError } from '../../../modules/auth';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
@@ -25,14 +25,16 @@ const style = {
 
 @connect(state => ({
   user: state.auth.user,
-}), {login, pushState})
+  auth: state.auth,
+}), {login, resetLoginError, pushState})
 class LogoutPage extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      loginError: '',
+      userNameError: '',
       passwordError: '',
+      loginError: false,
     };
   }
 
@@ -45,8 +47,11 @@ class LogoutPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
 
-    if (!this.props.user && !nextProps.user) { // fail to log
-      this.refs.snackbar.show();
+    if (nextProps.auth && nextProps.auth.loginError) { // fail to log
+      this.setState({
+        loginError: true
+      });
+
     } else if (!this.props.user && nextProps.user) { // login
       let param = this.getParameterByName('redirect');
 
@@ -70,13 +75,14 @@ class LogoutPage extends React.Component {
     }
 
     this.setState({
-      loginError: null,
+      userNameError: null,
       passwordError: null,
+      loginError: false,
     });
 
     if (!this.state.email) {
       this.setState({
-        loginError: 'Login is required.',
+        userNameError: 'Login is required.',
       });
     }
 
@@ -89,6 +95,14 @@ class LogoutPage extends React.Component {
     if (this.state.password && this.state.email) {
       this.props.login(this.state.email, this.state.password);
     }
+  }
+
+  handleLoginErrorClose () {
+    this.setState({
+      loginError: false,
+    });
+
+    this.props.resetLoginError();
   }
 
   handleChange (item, e) {
@@ -111,11 +125,12 @@ class LogoutPage extends React.Component {
 
             <TextField
                 errorStyle={style.error}
-                errorText={this.state.loginError || ''}
+                errorText={this.state.userNameError || ''}
                 fullWidth
                 hintText="Login"
                 onChange={this.handleChange.bind(this, 'email')}
                 underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
+                name='username'
             />
 
             <TextField
@@ -126,6 +141,7 @@ class LogoutPage extends React.Component {
                 onChange={this.handleChange.bind(this, 'password')}
                 underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
                 type="password"
+                name='password'
             />
 
             <RaisedButton
@@ -146,6 +162,8 @@ class LogoutPage extends React.Component {
 
         <Snackbar
             action="ok"
+            open={this.state.loginError}
+            onRequestClose={this.handleLoginErrorClose.bind(this)}
             autoHideDuration={2500}
             message="Invalid username or password."
             ref="snackbar"
