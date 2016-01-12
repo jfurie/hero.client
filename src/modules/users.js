@@ -3,6 +3,9 @@ import Immutable from 'immutable';
 const GET_USER = 'hero.client/users/GET_USER';
 const GET_USER_SUCCESS = 'hero.client/users/GET_USER_SUCCESS';
 const GET_USER_FAIL = 'hero.client/users/GET_USER_FAIL';
+const GET_USER_CONTACT = 'hero.client/users/GET_USER_CONTACT_CONTACT';
+const GET_USER_CONTACT_SUCCESS = 'hero.client/users/GET_USER_CONTACT_SUCCESS';
+const GET_USER_CONTACT_FAIL = 'hero.client/users/GET_USER_CONTACT_FAIL';
 const INVITE_USER = 'hero.client/users/INVITE_USER';
 const INVITE_USER_SUCCESS = 'hero.client/users/INVITE_USER_SUCCESS';
 const INVITE_USER_FAIL = 'hero.client/users/INVITE_USER_FAIL';
@@ -32,6 +35,18 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       err: action.err,
     };
+  case GET_USER_CONTACT_SUCCESS: {
+    return {
+      ...state,
+      userContact: action.result,
+    };
+  }
+  case GET_USER_CONTACT_FAIL: {
+    return {
+      ...state,
+      err: action.error,
+    };
+  }
   case INVITE_USER: {
     return {
       ...state,
@@ -63,6 +78,15 @@ export function invite(email, redirect) {
         email,
         redirect,
       },
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function getUserContact(id) {
+  return {
+    types: [GET_USER_CONTACT, GET_USER_CONTACT_SUCCESS, GET_USER_CONTACT_FAIL],
+    promise: (client, auth) => client.api.get(`/contacts/findOne?filters[where][userId]=${id}`, {
       authToken: auth.authToken,
     }),
   };
