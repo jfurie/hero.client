@@ -156,6 +156,7 @@ export default(store) => {
             <IndexRoute component={SettingsHomePage}/>
             <Route path="account" onEnter={requireAccount} component={SettingsAccountPage}/>
           </Route>
+          
 
           {/* Account  */}
           <Route path="/account" onEnter={requireAccount}>
