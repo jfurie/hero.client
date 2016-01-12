@@ -135,7 +135,7 @@ export default(store) => {
             <Route path=":id/jobs(/:create)" component={ClientDetailsPage} />
             <Route path=":id" component={ClientDetailsPage} />
               <Route path=":id/notes" component={ClientDetailsPage}
-                onEnter={(nextState, replaceState) => {
+                onEnter={(nextState) => {
                   nextState.params.tab = 'notes';
                 }} />
           </Route>
@@ -156,6 +156,7 @@ export default(store) => {
             <IndexRoute component={SettingsHomePage}/>
             <Route path="account" onEnter={requireAccount} component={SettingsAccountPage}/>
           </Route>
+          
 
           {/* Account  */}
           <Route path="/account" onEnter={requireAccount}>
