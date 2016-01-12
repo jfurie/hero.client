@@ -21,18 +21,26 @@ const style = {
 @connect(state => ({
   user: state.auth.user,
   users: state.users,
+  companies: state.companies,
+  jobs: state.jobs,
+  candidates: state.candidates,
 }), { getUserContact })
 class LeftNavTop extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  componentDidMount() {
-    this.props.getUserContact(this.props.user.id);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user) {
+      this.props.getUserContact(nextProps.user.id);
+    }
   }
 
   render(){
     let userContact = this.props.users.userContact;
+    let clientCount = this.props.companies.list.size;
+    let jobCount = this.props.jobs.list.size;
+    let candidateCount = this.props.candidates.list.size;
 
     if (userContact) {
       return (
@@ -46,15 +54,15 @@ class LeftNavTop extends React.Component {
           <div style={{marginLeft:'.5em', marginRight:'.5em'}} className="container">
             <div className="leftNavTop-tabs row">
               <div className="leftNavTop-tab col-xs-4">
-                <div>123</div>
+                <div>{clientCount}</div>
                 <div className="leftNavTop-label">Clients</div>
               </div>
               <div className="leftNavTop-tab col-xs-4">
-                <div>123</div>
+                <div>{jobCount}</div>
                 <div className="leftNavTop-label">Jobs</div>
               </div>
               <div className="leftNavTop-tab col-xs-4">
-                <div>123</div>
+                <div>{candidateCount}</div>
                 <div className="leftNavTop-label">Candidates</div>
               </div>
             </div>

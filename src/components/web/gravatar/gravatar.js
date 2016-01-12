@@ -33,7 +33,7 @@ class Gravatar extends React.Component {
       },
     };
 
-    style = Object.assign(_style, style);
+    style = {..._style, ...style};
 
     status = status || 'new';
     let font = null;
