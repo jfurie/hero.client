@@ -28,6 +28,8 @@ class Layout extends React.Component {
         open: !this.state.open,
       });
     }
+
+    this.refs.leftNavTop.getWrappedInstance().refresh();
   }
 
   handleTouchTap (e) {
@@ -106,7 +108,7 @@ class Layout extends React.Component {
       <div style={{
       }}>
       <LeftNav style={{backgroundColor:'#424242'}} ref="leftNavChildren" open={this.state.open} onRequestChange={open => this.setState({open})} docked={false} disableSwipeToOpen={leftNav.disableSwipeToOpen}>
-        <LeftNavTop></LeftNavTop>
+        <LeftNavTop ref="leftNavTop"></LeftNavTop>
         <MenuItem style={{color:'#e0e0e0'}} primaryText="Dashboard" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">view_quilt</FontIcon>} onTouchTap={this.clickHome.bind(this)} index={0} />
         <MenuItem style={{color:'#e0e0e0'}} primaryText="My Clients" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">business</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
         <MenuItem style={{color:'#e0e0e0'}} primaryText="My Jobs" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">work</FontIcon>} onTouchTap={this.clickMyJobs.bind(this)} index={0} />
