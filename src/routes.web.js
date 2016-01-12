@@ -7,7 +7,7 @@ import LocalStorageClient from './utils/localStorageClient';
 import Home from './containers/web/homeContainer';
 import LoginPage from './containers/web/login/loginContainer';
 import LogoutPage from './containers/web/logoutContainer';
-import InvitedPage from './containers/web/invitedContainer';
+import InvitedPage from './containers/web/invited/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
 import Layout from './containers/web/layoutContainer';
 
