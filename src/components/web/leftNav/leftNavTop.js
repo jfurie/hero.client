@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getUserContact } from '../../../modules/users';
+import { getUserContact, getUserStats } from '../../../modules/users';
 import { Gravatar } from '../../../components/web';
 
 import './leftNavTop.scss';
@@ -21,48 +21,49 @@ const style = {
 @connect(state => ({
   user: state.auth.user,
   users: state.users,
-  companies: state.companies,
-  jobs: state.jobs,
-  candidates: state.candidates,
-}), { getUserContact })
+}), { getUserContact, getUserStats })
 class LeftNavTop extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user && !this.props.users.userContact) {
-      this.props.getUserContact(nextProps.user.id);
-    }
+  componentDidMount() {
+    let self = this;
+
+    let id = setInterval(() => {
+      if (self.props.user) {
+        self.props.getUserContact(self.props.user.id);
+        self.props.getUserStats(self.props.user.id);
+        clearInterval(id);
+      }
+    }, 500);
   }
 
   render(){
-    let userContact = this.props.users.userContact;
-    let clientCount = this.props.companies.list.size;
-    let jobCount = this.props.jobs.list.size;
-    let candidateCount = this.props.candidates.list.size;
+    let contact = this.props.users.userContact;
+    let stats = this.props.users.stats;
 
-    if (userContact) {
+    if (contact && stats) {
       return (
         <div className="leftNavTop">
           <div className="leftNavTop-image center-xs">
-            <Gravatar style={style.gravatar} email={userContact.email} />
+            <Gravatar style={style.gravatar} email={contact.email} />
           </div>
           <div className="leftNavTop-name">
-          {userContact.displayName}
+          {contact.displayName}
           </div>
           <div style={{marginLeft:'.5em', marginRight:'.5em'}} className="container">
             <div className="leftNavTop-tabs row">
               <div className="leftNavTop-tab col-xs-4">
-                <div>{clientCount}</div>
+                <div>{stats.companyCount}</div>
                 <div className="leftNavTop-label">Clients</div>
               </div>
               <div className="leftNavTop-tab col-xs-4">
-                <div>{jobCount}</div>
+                <div>{stats.jobCount}</div>
                 <div className="leftNavTop-label">Jobs</div>
               </div>
               <div className="leftNavTop-tab col-xs-4">
-                <div>{candidateCount}</div>
+                <div>{stats.candidateCount}</div>
                 <div className="leftNavTop-label">Candidates</div>
               </div>
             </div>

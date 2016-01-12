@@ -6,6 +6,9 @@ const GET_USER_FAIL = 'hero.client/users/GET_USER_FAIL';
 const GET_USER_CONTACT = 'hero.client/users/GET_USER_CONTACT_CONTACT';
 const GET_USER_CONTACT_SUCCESS = 'hero.client/users/GET_USER_CONTACT_SUCCESS';
 const GET_USER_CONTACT_FAIL = 'hero.client/users/GET_USER_CONTACT_FAIL';
+const GET_USER_STATS = 'hero.client/users/GET_USER_STATS';
+const GET_USER_STATS_SUCCESS = 'hero.client/users/GET_USER_STATS_SUCCESS';
+const GET_USER_STATS_FAIL = 'hero.client/users/GET_USER_STATS_FAIL';
 const INVITE_USER = 'hero.client/users/INVITE_USER';
 const INVITE_USER_SUCCESS = 'hero.client/users/INVITE_USER_SUCCESS';
 const INVITE_USER_FAIL = 'hero.client/users/INVITE_USER_FAIL';
@@ -45,6 +48,12 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       err: action.error,
+    };
+  }
+  case GET_USER_STATS_SUCCESS: {
+    return {
+      ...state,
+      stats: action.result,
     };
   }
   case INVITE_USER: {
@@ -87,6 +96,15 @@ export function getUserContact(id) {
   return {
     types: [GET_USER_CONTACT, GET_USER_CONTACT_SUCCESS, GET_USER_CONTACT_FAIL],
     promise: (client, auth) => client.api.get(`/contacts/findOne?filters[where][userId]=${id}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function getUserStats(id) {
+  return {
+    types: [GET_USER_STATS, GET_USER_STATS_SUCCESS, GET_USER_STATS_FAIL],
+    promise: (client, auth) => client.api.get(`/users/stats?id=${id}`, {
       authToken: auth.authToken,
     }),
   };
