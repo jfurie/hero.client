@@ -31,7 +31,7 @@ class LeftNavTop extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.user) {
+    if (nextProps.user && !this.props.users.userContact) {
       this.props.getUserContact(nextProps.user.id);
     }
   }
