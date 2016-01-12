@@ -47,6 +47,7 @@ class JobDetails extends React.Component {
     job =  job || new Immutable.Map();
     let jobImage = ((job) ? (job.get('image')) : (null));
     let jobCandidates = ((job) ? (job.get('candidates')) : ([]));
+    jobCandidates = jobCandidates || [];
 
     // mardown to html
     //let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
