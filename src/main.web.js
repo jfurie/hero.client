@@ -11,15 +11,14 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import getRoutes from './routes.web';
 
 //import DevTools from './utils/devTools';
+import Config from './utils/config';
 
 injectTapEventPlugin();
 
 let client = {};
 client.api = new ApiClient({
-  //baseUrl: 'http://localhost:3003',
-  baseUrl: 'https://core-api-loopback.herokuapp.com',
+  baseUrl: Config.get('apiBaseUrl'),
 });
-
 
 client.localStorage = new LocalStorageClient('auth');
 client.fakeApi = new FakeApiClient(); // fake api
@@ -34,7 +33,7 @@ class Root extends React.Component {
         <Provider store={store}>
           <div>
             <ReduxRouter routes={getRoutes(store)} />
-            {/* <DevTools /> */}
+            {/*<DevTools />*/}
           </div>
         </Provider>
       </div>

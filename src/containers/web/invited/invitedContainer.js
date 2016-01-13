@@ -4,6 +4,8 @@ import {changePassword} from '../../../modules/auth';
 import {ChangePasswordForm} from '../../../components/web';
 import {pushState} from 'redux-router';
 
+import Config from '../../../utils/config';
+
 import { RaisedButton, Styles, Snackbar } from 'material-ui';
 import './invitedContainer.scss';
 
@@ -54,6 +56,8 @@ class InvitedPage extends React.Component {
 
     if (auth && auth.authToken && auth.authToken.id) {
       console.log('linkedinConnect', auth.authToken.id, window.location.href);
+      let url = Config.get('apiBaseUrl');
+      console.log(url);
       //window.location.replace("http://stackoverflow.com");
     } else {
       this.showError('You\'re not connected!');
@@ -66,14 +70,14 @@ class InvitedPage extends React.Component {
   }
 
   render () {
-    return(
+    return (
       <div>
         <div id="invited-box" className="row center-xs center-md">
           <div className="col-xs-10 col-md-4">
             <h1>Welcome!</h1>
             <p>Please choose a password for your account.</p>
             <ChangePasswordForm onPassword={this.changePassword.bind(this)} onError={this.showError.bind(this)}/>
-            <p className='or'>or</p>
+            <p className="or">or</p>
             <RaisedButton
                 backgroundColor={Styles.Colors.blue800}
                 label="Connect with Linkedin"

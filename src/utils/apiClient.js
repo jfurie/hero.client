@@ -11,11 +11,15 @@ function formatUrl(baseUrl, path) {
 class _ApiClient {
 
   constructor(options) {
+
     this.baseUrl = '';
-    if(options.baseUrl){
+
+    if (options.baseUrl) {
       this.baseUrl = options.baseUrl;
     }
+
     let self = this;
+
     methods.forEach((method) =>
       this[method] = (path, {
         params, data, authToken,
@@ -35,7 +39,7 @@ class _ApiClient {
         }
 
         request.end((err, {
-          body
+          body,
         } = {}) => {
           if (err) {
             return reject(body || err);
@@ -44,6 +48,10 @@ class _ApiClient {
           }
         });
       }));
+  }
+
+  getBaseUrl() {
+    return this.baseUrl;
   }
 }
 
