@@ -21,7 +21,7 @@ const style = {
 @connect(state => ({
   user: state.auth.user,
   users: state.users,
-}), { getUserContact, getUserStats })
+}), { getUserContact, getUserStats }, null, { withRef: true })
 class LeftNavTop extends React.Component {
   constructor(props) {
     super(props);
@@ -32,11 +32,15 @@ class LeftNavTop extends React.Component {
 
     let id = setInterval(() => {
       if (self.props.user) {
-        self.props.getUserContact(self.props.user.id);
-        self.props.getUserStats(self.props.user.id);
+        self.refresh();
         clearInterval(id);
       }
     }, 500);
+  }
+
+  refresh() {
+    this.props.getUserContact(this.props.user.id);
+    this.props.getUserStats(this.props.user.id);
   }
 
   render(){
