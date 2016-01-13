@@ -51,18 +51,13 @@ class InvitedPage extends React.Component {
   }
 
   linkedinConnect() {
-
     let auth = this.props.auth;
-
     if (auth && auth.authToken && auth.authToken.id) {
-      console.log('linkedinConnect', auth.authToken.id, window.location.href);
-      let url = Config.get('apiBaseUrl');
-      console.log(url);
-      //window.location.replace("http://stackoverflow.com");
+      let url = Config.get('apiBaseUrl') + '/auth/linkedin?redirect=' + window.location.origin + '&associative_token=' + auth.authToken.id;
+      window.location.replace(url);
     } else {
       this.showError('You\'re not connected!');
     }
-
   }
 
   changePassword(password) {
