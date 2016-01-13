@@ -7,11 +7,13 @@ import { LeftNav, FontIcon, MenuItem} from 'material-ui';
 
 import { onNavOpen, onNavClose, toggleNav } from '../../modules/leftNav';
 import { LeftNavTop } from '../../components/web';
+import { logout } from '../../modules/auth';
 
 @connect(state => ({
+  auth: state.auth,
   user: state.auth.user,
   leftNav: state.leftNav,
-}),{pushState, onNavOpen, onNavClose, toggleNav})
+}),{pushState, onNavOpen, onNavClose, toggleNav, logout})
 
 class Layout extends React.Component {
 
@@ -23,6 +25,10 @@ class Layout extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
+    if (nextProps.auth.logoutReady) {
+      window.location.href = '/login';
+    }
+
     if (nextProps.leftNav.open != this.props.leftNav.open) {
       this.setState({
         open: !this.state.open,
@@ -80,10 +86,10 @@ class Layout extends React.Component {
     });
   }
   clickLogout() {
-    this.props.pushState(null, '/logout');
     this.setState({
       open: false,
     });
+    this.props.logout();
   }
 
   clickMyJobs() {
