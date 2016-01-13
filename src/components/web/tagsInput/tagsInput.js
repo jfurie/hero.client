@@ -1,10 +1,10 @@
-import TagsInput from 'react-tagsinput'
+import TagsInput from 'react-tagsinput';
 import React from 'react';
-import Style from './tagsInput.scss';
+//import Style from './tagsInput.scss';
 export default class Tags extends React.Component {
   constructor() {
-    super()
-    this.state = {tags: []}
+    super();
+    this.state = {tags: []};
   }
   handleChange(tags) {
     if(this.props.onChange){

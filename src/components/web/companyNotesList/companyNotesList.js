@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Avatar, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
+import { Divider, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 import { Gravatar } from '../../../components/web';
 import TimeAgo from 'react-timeago';
 
@@ -23,7 +23,7 @@ class CompanyNotesList extends React.Component {
     let self = this;
 
     let { notes } = this.props;
-    let heroContact = '/img/rameet.jpg';
+  //  let heroContact = '/img/rameet.jpg';
 
     return (
 
@@ -59,7 +59,7 @@ class CompanyNotesList extends React.Component {
 
 CompanyNotesList.propTypes = {
   company: React.PropTypes.object,
-  jobs: React.PropTypes.object.isRequired,
+  notes: React.PropTypes.object.isRequired,
   onJobClick: React.PropTypes.func,
 };
 

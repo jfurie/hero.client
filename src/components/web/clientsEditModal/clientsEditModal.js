@@ -1,5 +1,5 @@
 import React from 'react';
-import Immutable from 'immutable';
+//import Immutable from 'immutable';
 import { Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle,SelectField,MenuItem } from 'material-ui';
 import { editCompany } from '../../../modules/companies/index';
 import { connect } from 'react-redux';

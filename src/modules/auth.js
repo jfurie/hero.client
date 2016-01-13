@@ -60,7 +60,7 @@ export default function reducer(state = initialState, action = {}) {
       loginError: action.error
     };
   case RESET_LOGIN_ERROR:
-    
+
     return {
       ...state,
       loginError: null
@@ -92,7 +92,8 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       loggingOut: false,
-      user: null
+      user: null,
+      logoutReady: true,
     };
   case LOGOUT_FAIL:
     return {
@@ -130,11 +131,9 @@ export function logout() {
   return {
     types: [LOGOUT, LOGOUT_SUCCESS, LOGOUT_FAIL],
     promise: (client, auth) => {
-      return new Promise(() => {
-        client.localStorage.remove('Auth');
-        return client.api.post('/users/logout', {
-          authToken: auth.authToken,
-        });
+      client.localStorage.remove('Auth');
+      return client.api.post('/users/logout', {
+        authToken: auth.authToken,
       });
     },
   };
