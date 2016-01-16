@@ -88,9 +88,7 @@ export default(store) => {
       if (!user) {
         let auth = localStorage.get('Auth');
         let tokenParam = getParameterByName('accessToken');
-
-        console.log(tokenParam);
-
+        
         if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
           store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
             cb();
