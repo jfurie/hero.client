@@ -3,6 +3,8 @@ import { login, resetLoginError } from '../../../modules/auth';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
+import Config from '../../../utils/config';
+
 import './loginContainer.scss';
 import { RaisedButton, TextField, Styles, Snackbar } from 'material-ui';
 
@@ -105,7 +107,8 @@ class LogoutPage extends React.Component {
   }
 
   linkedinConnect() {
-    console.log('NOPE!');
+    let url = Config.get('apiBaseUrl') + '/auth/linkedin?redirect=' + window.location.origin;
+    window.location.replace(url);
   }
 
   handleChange (item, e) {
