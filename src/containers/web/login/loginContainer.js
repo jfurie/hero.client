@@ -3,6 +3,8 @@ import { login, resetLoginError } from '../../../modules/auth';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
+import Config from '../../../utils/config';
+
 import './loginContainer.scss';
 import { RaisedButton, TextField, Styles, Snackbar } from 'material-ui';
 
@@ -49,9 +51,8 @@ class LogoutPage extends React.Component {
 
     if (nextProps.auth && nextProps.auth.loginError) { // fail to log
       this.setState({
-        loginError: true
+        loginError: true,
       });
-
     } else if (!this.props.user && nextProps.user) { // login
       let param = this.getParameterByName('redirect');
 
@@ -105,6 +106,11 @@ class LogoutPage extends React.Component {
     this.props.resetLoginError();
   }
 
+  linkedinConnect() {
+    let url = Config.get('apiBaseUrl') + '/auth/linkedin?redirect=' + window.location.origin;
+    window.location.replace(url);
+  }
+
   handleChange (item, e) {
     let newState = {};
     newState[item] = e.target.value;
@@ -130,7 +136,7 @@ class LogoutPage extends React.Component {
                 hintText="Login"
                 onChange={this.handleChange.bind(this, 'email')}
                 underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
-                name='username'
+                name="username"
             />
 
             <TextField
@@ -141,7 +147,7 @@ class LogoutPage extends React.Component {
                 onChange={this.handleChange.bind(this, 'password')}
                 underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
                 type="password"
-                name='password'
+                name="password"
             />
 
             <RaisedButton
@@ -155,6 +161,7 @@ class LogoutPage extends React.Component {
                 label="Sign In with Linkedin"
                 labelColor="#FFF"
                 style={style.linkedinButton}
+                onTouchTap={this.linkedinConnect.bind(this)}
             />
 
           </form>
