@@ -95,7 +95,7 @@ export function invite(email, redirect) {
 export function getUserContact(id) {
   return {
     types: [GET_USER_CONTACT, GET_USER_CONTACT_SUCCESS, GET_USER_CONTACT_FAIL],
-    promise: (client, auth) => client.api.get(`/contacts/findOne?filters[where][userId]=${id}`, {
+    promise: (client, auth) => client.api.get(`/contacts/findOne?filter[where][userId]=${id}`, {
       authToken: auth.authToken,
     }),
   };
