@@ -53,7 +53,7 @@ class InvitedPage extends React.Component {
   linkedinConnect() {
     //let auth = this.props.auth;
     if (this.props.location.query.token) {
-      let url = Config.get('apiBaseUrl') + '/auth/linkedin?redirect=' + window.location.origin + '&access_token=' + this.props.location.query.token;
+      let url = Config.get('apiBaseUrl') + '/link/linkedin?redirect=' + window.location.origin + '&access_token=' + this.props.location.query.token;
       console.log(url);
       window.location.replace(url);
     } else {
