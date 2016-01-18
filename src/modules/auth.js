@@ -11,13 +11,16 @@ const LOGOUT_FAIL = 'hero.client/auth/LOGOUT_FAIL';
 const AUTHLOCALSTORAGE = 'hero.client/auth/AUTHLOCALSTORAGE';
 const AUTHLOCALSTORAGE_SUCCESS = 'hero.client/auth/AUTHLOCALSTORAGE_SUCCESS';
 const AUTHLOCALSTORAGE_FAIL = 'hero.client/auth/AUTHLOCALSTORAGE_FAIL';
+const AUTHACCCESSTOKEN = 'hero.client/auth/AUTHACCCESSTOKEN';
+const AUTHACCCESSTOKEN_SUCCESS = 'hero.client/auth/AUTHACCCESSTOKEN_SUCCESS';
+const AUTHACCCESSTOKEN_FAIL = 'hero.client/auth/AUTHACCCESSTOKEN_FAIL';
 const CHANGEPASSWORD = 'hero.client/auth/CHANGEPASSWORD';
 const CHANGEPASSWORD_SUCCESS = 'hero.client/auth/CHANGEPASSWORD_SUCCESS';
 const CHANGEPASSWORD_FAIL = 'hero.client/auth/CHANGEPASSWORD_FAIL';
 
 const initialState = {
   loaded: false,
-  auth: {}
+  auth: {},
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -25,25 +28,25 @@ export default function reducer(state = initialState, action = {}) {
   case LOAD:
     return {
       ...state,
-      loading: true
+      loading: true,
     };
   case LOAD_SUCCESS:
     return {
       ...state,
       loading: false,
-      loaded: true
+      loaded: true,
     };
   case LOAD_FAIL:
     return {
       ...state,
       loading: false,
       loaded: false,
-      error: action.error
+      error: action.error,
     };
   case LOGIN:
     return {
       ...state,
-      loggingIn: true
+      loggingIn: true,
     };
   case LOGIN_SUCCESS:
     return {
@@ -57,17 +60,17 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       loggingIn: false,
       user: null,
-      loginError: action.error
+      loginError: action.error,
     };
   case RESET_LOGIN_ERROR:
 
     return {
       ...state,
-      loginError: null
+      loginError: null,
     };
   case AUTHLOCALSTORAGE:
     return {
-      ...state
+      ...state,
     };
   case AUTHLOCALSTORAGE_SUCCESS:
     return {
@@ -81,12 +84,12 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       loggingIn: false,
       user: null,
-      loginError: action.error
+      loginError: action.error,
     };
   case LOGOUT:
     return {
       ...state,
-      loggingOut: true
+      loggingOut: true,
     };
   case LOGOUT_SUCCESS:
     return {
@@ -99,7 +102,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       loggingOut: false,
-      logoutError: action.error
+      logoutError: action.error,
     };
   case CHANGEPASSWORD:
     return {
@@ -142,7 +145,7 @@ export function logout() {
 export function load() {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: (client) => client.api.get('/loadAuth')
+    promise: (client) => client.api.get('/loadAuth'),
   };
 }
 
@@ -215,6 +218,31 @@ export function logginWithAuthLocalStorage() {
               user,
               authToken:auth,
             });
+          }).catch((err) => {
+            reject({
+              error: err,
+            });
+          });
+        } else {
+          reject();
+        }
+      });
+
+    },
+  };
+}
+
+export function logginWithAccessToken(accessToken) {
+
+  return {
+    types: [AUTHACCCESSTOKEN, AUTHACCCESSTOKEN_SUCCESS, AUTHACCCESSTOKEN_FAIL],
+    promise: (client) => {
+      return new Promise((resolve, reject) => {
+        if (accessToken) {
+          return client.api.get('/accessTokens/' + accessToken + '?access_token=' + accessToken, {
+          }).then((token)=> {
+            client.localStorage.set('Auth', token);
+            resolve();
           }).catch((err) => {
             reject({
               error: err,

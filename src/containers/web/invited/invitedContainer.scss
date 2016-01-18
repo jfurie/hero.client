@@ -1,0 +1,39 @@
+#invited-box {
+
+    padding-top: 10%;
+
+    h1 {
+        font-size: 26px;
+        color: #444444;
+        margin-bottom: 5px;
+    }
+
+    form {
+        margin-top: 40px;
+    }
+
+    .or {
+        margin-top: 0px;
+        margin-bottom: 13px;
+    }
+
+    @media (min-width: 64em) { /* desktop */
+        form {
+            background-color: #FFF;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 1px 2px 9px rgba(0, 0, 0, 0.17);
+        }
+
+        .or {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    }
+
+    p {
+        font-size: 16px;
+        color: #918F8F;
+        font-weight: 200;
+    }
+}
