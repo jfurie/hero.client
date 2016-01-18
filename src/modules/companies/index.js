@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import { getOneLocation } from '../locations';
 
 import * as constants from './constants';
-
+import * as jobConstants from '../jobs/constants';
 const initialState = {
   list: new Immutable.Map(),
   searches: new Immutable.Map(),
@@ -103,6 +103,15 @@ export default function reducer(state = initialState, action = {}) {
       searches: state.searches.mergeDeep(action.result),
       currentSearch: action.query,
     };
+  case jobConstants.GET_MY_JOBS_SUCCESS:
+    let companyList =  {};
+    action.result.map(job =>{
+      companyList[job.company.id] = job.company;
+    });
+    return {
+      ...state,
+      list:state.list.mergeDeep(companyList)
+    }
   default:
     return state;
   }

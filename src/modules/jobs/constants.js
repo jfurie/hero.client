@@ -17,3 +17,6 @@ export const UPDATE_JOB_IMAGE_LOCAL_SUCCESS = 'hero.client/jobs/UPDATE_JOB_IMAGE
 export const UPDATE_JOB_IMAGE_LOCAL_FAIL = 'hero.client/jobs/UPDATE_JOB_IMAGE_LOCAL_FAIL';
 export const UPDATE_JOB_IMAGE_LOCAL_PROGRESS = 'hero.client/jobs/UPDATE_JOB_IMAGE_LOCAL_PROGRESS';
 export const REPLACE_JOB_LOCAL = 'hero.client/jobs/REPLACE_JOB_LOCAL';
+export const GET_MY_JOBS = 'hero.client/jobs/GET_MY_JOBS';
+export const GET_MY_JOBS_SUCCESS = 'hero.client/jobs/GET_MY_JOBS_SUCCESS';
+export const GET_MY_JOBS_FAIL = 'hero.client/jobs/GET_MY_JOBS_FAIL';

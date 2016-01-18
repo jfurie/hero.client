@@ -91,6 +91,15 @@ export function saveLocalJob(){
   };
 }
 
+export function getMyJobs(){
+  return {
+    types: [constants.GET_MY_JOBS, constants.GET_MY_JOBS_SUCCESS, constants.GET_MY_JOBS_FAIL],
+    promise: (client, auth) => client.api.get('/jobs/myJobs', {
+      authToken: auth.authToken
+    }),
+  };
+}
+
 export function getOneJob(id) {
   return {
     types: [constants.GET_JOB, constants.GET_JOB_SUCCESS, constants.GET_JOB_FAIL],

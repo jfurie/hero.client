@@ -4,6 +4,7 @@ const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
   localJob: new Immutable.Map(),
+  myJobIds: new Immutable.List()
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -175,6 +176,19 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       localJob: state.localJob.mergeDeep(image),
     };
+  }
+  case constants.GET_MY_JOBS_SUCCESS:{
+    let myJobIds = [];
+    let jobList = {};
+    myJobIds = action.result.map(job =>{
+      jobList[job.id] = job;
+      return job.id;
+    });
+    return{
+      ...state,
+      myJobIds: new Immutable.List(myJobIds),
+      list: state.list.mergeDeep(jobList)
+    }
   }
   case constants.UPDATE_JOB_IMAGE_LOCAL_FAIL:{
     return{

@@ -22,6 +22,11 @@ class JobsList extends React.Component {
     if (ressourceName !== 'Job' && ressourceNamePlurial === 'Jobs') {
       ressourceNamePlurial = `${ressourceName}s`;
     }
+    jobs.map(function(job){
+      let companyMap = {}
+      companyMap[job.company.id] = job.company;
+
+    });
 
     // create 2 fakes companies
     let companies = new Immutable.Map();

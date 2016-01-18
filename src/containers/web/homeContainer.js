@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
-import { getAllJobs } from '../../modules/jobs/index';
+import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllUserCandidates } from '../../modules/candidates';
 import { getAllCompanies } from '../../modules/companies';
 
@@ -33,13 +33,21 @@ function filterMyCandidates(candidates, auth) {
   return myCandidates;
 }
 
-@connect(state => ({
+function filterMyJobs(state){
+  let ids = state.jobs.myJobIds;
+  return ids.map(id =>{
+    return state.jobs.list.get(id);
+  });
+}
+
+@connect((state, props) => ({
   user: state.auth.user,
   jobs: state.jobs,
+  myJobs:filterMyJobs(state,props),
   candidates: filterMyCandidates(state.candidates, state.auth),
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllUserCandidates, getAllCompanies})
+}), {pushState, toggleNav, getAllJobs, getAllUserCandidates, getAllCompanies, getMyJobs})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -47,6 +55,7 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
+    this.props.getMyJobs();
     this.props.getAllJobs();
     this.props.getAllCompanies();
     this.props.getAllUserCandidates(this.props.auth.authToken.userId);
@@ -58,7 +67,7 @@ class HomePage extends React.Component {
 
   render () {
 
-    let { jobs, candidates, companies } = this.props;
+    let { candidates, companies, myJobs } = this.props;
 
     return (
       <div>
@@ -69,7 +78,7 @@ class HomePage extends React.Component {
             <ClientsList clients={companies.list} />
           </div>
           <div>
-            <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
+            <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={myJobs}/>
           </div>
           <div style={style.slide}>
             <CandidatesList candidates={candidates}/>
