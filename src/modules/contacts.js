@@ -133,6 +133,20 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.merge(contactsMap),
     };
   }
+  case jobConstants.GET_MY_JOBS_SUCCESS:
+    {
+      let contactList =  {};
+      action.result.map(job =>{
+        job.candidates.map(candidate=>{
+          console.log('candidate',candidate);
+          contactList[candidate.contact.id] = candidate.contact;
+        });
+      });
+      return {
+        ...state,
+        list:state.list.mergeDeep(contactList)
+      };
+    }
   default:
     return state;
   }
