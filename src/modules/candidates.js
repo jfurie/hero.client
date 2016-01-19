@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import * as jobConstants from './jobs/constants';
 
 const CREATE_CANDIDATE = 'hero.client/candidates/CREATE_CANDIDATE';
 const CREATE_CANDIDATE_SUCCESS = 'hero.client/candidates/CREATE_CANDIDATE_SUCCESS';
@@ -33,7 +34,7 @@ export default function reducer(state = initialState, action = {}) {
     byJobIdNew[jobId] = byJobIdNew[jobId].push(action.result.id);
 
     // add candidate Id to the byUserId list
-    byUserIdNew[userId] = state.byUserIdNew.get(userId) || new Immutable.List();
+    byUserIdNew[userId] = state.byUserId.get(userId) || new Immutable.List();
     byUserIdNew[userId] = byUserIdNew[userId].push(action.result.createdBy);
 
     // // add candidate to the global list
@@ -105,6 +106,19 @@ export default function reducer(state = initialState, action = {}) {
 
     return state;
   }
+  case jobConstants.GET_MY_JOBS_SUCCESS:
+    {
+      let candidateList =  {};
+      action.result.map(job =>{
+        job.candidates.map(candidate=>{
+          candidateList[candidate.id] = candidate;
+        });
+      });
+      return {
+        ...state,
+        list:state.list.mergeDeep(candidateList)
+      };
+    }
   default:
     return state;
   }
