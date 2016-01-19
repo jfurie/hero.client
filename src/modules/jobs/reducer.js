@@ -188,7 +188,7 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       myJobIds: new Immutable.List(myJobIds),
       list: state.list.mergeDeep(jobList)
-    }
+    };
   }
   case constants.UPDATE_JOB_IMAGE_LOCAL_FAIL:{
     return{

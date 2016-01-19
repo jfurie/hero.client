@@ -4,7 +4,7 @@ import {
   List, ListItem, FontIcon, Divider, FlatButton, CardText,
 } from 'material-ui';
 
-import { CustomTabsSwipe, ResumePDFViewer, JobsList, Gravatar } from '../../../components/web';
+import { CustomTabsSwipe, ResumePDFViewer, Gravatar } from '../../../components/web';
 import Immutable from 'immutable';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -278,7 +278,7 @@ class CandidateDetailsModal extends React.Component {
                 </List>
               </div>
               <div>
-          
+
               </div>
             </CustomTabsSwipe>
           </div>

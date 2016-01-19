@@ -111,7 +111,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       list:state.list.mergeDeep(companyList)
-    }
+    };
   default:
     return state;
   }

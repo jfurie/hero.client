@@ -25,8 +25,8 @@ class JobsList extends React.Component {
     let companies = new Immutable.Map();
     let jobsByCompany = new Immutable.Map();
     jobs.map(function(job){
-      let companyMap = {}
-      let jobMap = {}
+      let companyMap = {};
+      let jobMap = {};
       companyMap[job.get('company').get('id')] = job.get('company');
       var companyJobs = jobsByCompany.get(job.get('company').get('id'));
       companyJobs = companyJobs || new Immutable.List();
