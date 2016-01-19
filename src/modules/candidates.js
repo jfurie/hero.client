@@ -33,7 +33,7 @@ export default function reducer(state = initialState, action = {}) {
     byJobIdNew[jobId] = byJobIdNew[jobId].push(action.result.id);
 
     // add candidate Id to the byUserId list
-    byUserIdNew[userId] = state.byUserIdNew.get(userId) || new Immutable.List();
+    byUserIdNew[userId] = state.byUserId.get(userId) || new Immutable.List();
     byUserIdNew[userId] = byUserIdNew[userId].push(action.result.createdBy);
 
     // // add candidate to the global list
