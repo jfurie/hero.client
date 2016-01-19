@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontIcon } from 'material-ui';
-
+import md5 from 'md5';
 
 class CandidateAvatar extends React.Component {
 
@@ -28,9 +28,14 @@ class CandidateAvatar extends React.Component {
       },
     };
 
-    let { picture, status } = this.props;
+    let { picture, status, email } = this.props;
     let font = null;
-
+    let image = picture;
+    if(email){
+      // gravatar part
+      email = md5(email) || '00000000000000000000000000000000';
+      image = `http://www.gravatar.com/avatar/${email}?d=mm`;
+    }
     status = status || 'new';
 
     switch (status) {
@@ -53,7 +58,7 @@ class CandidateAvatar extends React.Component {
 
     return (
       <div className='candidateAvatarContainer' style={style.container}>
-        <img style={style.picture} src={picture} />
+        <img style={style.picture} src={image} />
         {(font) ? (
           <FontIcon style={style.fontIcon} className="material-icons" color={style.fontIcon.color}>{font}</FontIcon>
         ) : (null)}
@@ -63,7 +68,8 @@ class CandidateAvatar extends React.Component {
 }
 
 CandidateAvatar.propTypes = {
-  picture: React.PropTypes.string.isRequired,
+  picture: React.PropTypes.string,
+  email:React.PropTypes.string,
   status: React.PropTypes.string,
 };
 
