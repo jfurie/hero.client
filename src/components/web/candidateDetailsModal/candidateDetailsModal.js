@@ -278,11 +278,7 @@ class CandidateDetailsModal extends React.Component {
                 </List>
               </div>
               <div>
-                <JobsList
-                    ressourceName="Application"
-                    onJobClick={this._handleJobClick.bind(this)}
-                    jobs={jobs.list}
-                />
+          
               </div>
             </CustomTabsSwipe>
           </div>

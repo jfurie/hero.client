@@ -3,6 +3,7 @@ import { ListItem, Divider, FontIcon } from 'material-ui';
 //import Infinite from 'react-infinite';
 import { CompanyAvatar } from '../../../components/web';
 import { CandidateAvatar } from '../../../components/web';
+import Immutable from 'immutable';
 
 const style = {
   peopleList: {
@@ -22,38 +23,43 @@ class CompanyJobsList extends React.Component {
 
     let { jobs, company } = this.props;
 
-    let people = [
-      [
-        'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
-        'https://lh5.googleusercontent.com/-ZadaXoUTBfs/AAAAAAAAAAI/AAAAAAAAAGA/19US52OmBqc/photo.jpg',
-        'http://cdn.devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
-      ],
-      [
-        'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
-        'http://www.biz.uiowa.edu/tippiemba/wp-content/uploads/2010/07/Kim-Hyundong-300x300.jpg',
-      ],
-    ];
+    // let people = [
+    //   [
+    //     'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
+    //     'https://lh5.googleusercontent.com/-ZadaXoUTBfs/AAAAAAAAAAI/AAAAAAAAAGA/19US52OmBqc/photo.jpg',
+    //     'http://cdn.devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
+    //   ],
+    //   [
+    //     'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
+    //     'http://www.biz.uiowa.edu/tippiemba/wp-content/uploads/2010/07/Kim-Hyundong-300x300.jpg',
+    //   ],
+    // ];
 
     // TMP
     let nestedJobsItem = [];
     let index = 0;
-    let fakeStatus = ['fav', 'vetted', 'rejected', 'vetted', 'none'];
+  //  let fakeStatus = ['fav', 'vetted', 'rejected', 'vetted', 'none'];
     let self = this;
     jobs.forEach(function(job) {
-
+      let candidates = job.get('candidates');
+      candidates = candidates || new Immutable.List();
       let peopleList = [];
 
-      people[0].forEach(function(p, key) {
-        let status = fakeStatus.shift();
-        peopleList.push(<CandidateAvatar key={key} picture={p} status={status}/>);
+      candidates.forEach(function(p, key) {
+        //let status = fakeStatus.shift();
+        peopleList.push(<CandidateAvatar key={key} email={p.get('contact').get('email')} status={p.get('status')}/>);
       });
+      let secondaryText = (<div>No Candidates Yet</div>);
+      if(peopleList.length > 0){
+        secondaryText = (<div style={style.peopleList}>{peopleList}</div>);
+      }
 
       nestedJobsItem.push(
         <ListItem
           onTouchTap={self._handleJobClick.bind(self, job)}
           primaryText={job.get('title')}
           secondaryText={
-            <div style={style.peopleList}>{peopleList}</div>
+            secondaryText
           }
           rightIcon={<FontIcon className="material-icons">info</FontIcon>}
           secondaryTextLines={2}
@@ -70,7 +76,7 @@ class CompanyJobsList extends React.Component {
         <ListItem
           primaryText={company.get('name')}
           leftAvatar={<CompanyAvatar url={company.get('website')} />}
-          secondaryText={<p>Santa Monica, CA</p>}
+          secondaryText={<p></p>}
           initiallyOpen={true}
           nestedItems={nestedJobsItem}
         />

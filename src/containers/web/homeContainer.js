@@ -61,8 +61,8 @@ class HomePage extends React.Component {
     this.props.getAllUserCandidates(this.props.auth.authToken.userId);
   }
 
-  _handleJobClick(){
-    this.props.pushState(null,'/jobs/1a');
+  _handleJobClick(job){
+    this.props.pushState(null,'/jobs/'+job.get('id'));
   }
 
   render () {

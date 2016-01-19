@@ -1,9 +1,32 @@
 import superagent from 'superagent';
 import * as constants from './constants';
 export function getJobsByCompany(companyId){
+  let include = [
+    {
+      relation:'company',
+      scope:{
+        fields:['name','website']
+      }
+    },
+    {
+      relation:'candidates',
+      scope:{
+        fields:['status','isActive','jobId','contactId'],
+        include:{
+          relation:'contact',
+          scope:{
+            fields:['displayName','email','status']
+          }
+        }
+      }
+    }
+
+  ];
+  let includeStr = encodeURIComponent(JSON.stringify(include));
+  console.log(includeStr);
   return {
     types: [constants.GET_JOBS_BY_COMPANY, constants.GET_JOBS_BY_COMPANY_SUCCESS, constants.GET_JOBS_BY_COMPANY_FAIL],
-    promise: (client, auth) => client.api.get(`/companies/${companyId}/jobs`, {
+    promise: (client, auth) => client.api.get(`/companies/${companyId}/jobs?filter={"include":${includeStr}}`, {
       authToken: auth.authToken,
     }),
   };

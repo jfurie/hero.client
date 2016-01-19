@@ -37,8 +37,10 @@ export default function reducer(state = initialState, action = {}) {
     let usersMap = {};
 
     action.result.forEach(function(result) {
-      let id = result.user.id;
-      usersMap[id] = result.user;
+      if(result && result.user){
+        let id = result.user.id;
+        usersMap[id] = result.user;
+      }
     });
 
     return {
