@@ -53,16 +53,8 @@ class JobDetailsModal extends React.Component {
     this.props.closeModal();
   }
 
-  candidateSearchModalClose(){
-    this.setState({
-      candidateSearchOpen: false,
-    });
-  }
-
   candidateSearchModalOpen(){
-    this.setState({
-      candidateSearchOpen: true,
-    });
+    this.refs.candidateSearchModal.getWrappedInstance().show();
   }
 
   render() {
@@ -75,7 +67,7 @@ class JobDetailsModal extends React.Component {
     return (
       <div>
         <Dialog open={this.props.open}>
-          <CandidateSearchModal open={this.state.candidateSearchOpen} closeModal={this.candidateSearchModalClose.bind(this)} candidates={this.props.seachCandidates}/>
+          <CandidateSearchModal ref="candidateSearchModal" candidates={this.props.seachCandidates}/>
           <CandidateCreateModal ref="candidateCreateModal" jobId={jobId} />
           <div style={style.dialog}>
             <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>

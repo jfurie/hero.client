@@ -15,7 +15,7 @@ export default class CandidateSearch extends React.Component {
             floatingLabelText="Search Candidates"
             >
           </TextField>
-          <TextField
+          {/*}<TextField
             fullWidth
             floatingLabelText="Location"
             >
@@ -27,12 +27,9 @@ export default class CandidateSearch extends React.Component {
   tooltip="View Map">location_on</IconButton> |
   <IconButton iconClassName="material-icons" tooltipPosition="top-center"
 tooltip="View Favorites">favorite</IconButton>
-          </div>
-          <div>
-
-          </div>
+          </div>*/}
         </CardText>
-        <CandidatesList candidates={this.props.candidates} ></CandidatesList>
+        {/*<CandidatesList candidates={this.props.candidates} ></CandidatesList>*/}
       </Card></div>
 
     );
