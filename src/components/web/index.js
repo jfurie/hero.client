@@ -12,7 +12,6 @@ export JobsList from './jobsList/jobsList';
 export CompanyJobsList from './companyJobsList/companyJobsList';
 export CompanyNotesList from './companyNotesList/companyNotesList';
 export LeftNavTop from './leftNav/leftNavTop';
-export CandidateAvatar from './candidateAvatar/candidateAvatar';
 export CustomTabsSwipe from './customTabsSwipe/customTabsSwipe';
 export JobDetails from './jobDetails/jobDetails';
 export JobDetailsPage from './jobDetails/jobDetailsPage';
@@ -24,6 +23,8 @@ export CandidatesListItemStatus from './candidatesListItemStatus/candidatesListI
 export FileInput from './fileInput/fileInput';
 export TagsInput from './tagsInput/tagsInput';
 export CandidateSearch from './candidateSearch/candidateSearch';
+
+/* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
 export ClientsCreateModal from './clientsCreateModal/clientsCreateModal';

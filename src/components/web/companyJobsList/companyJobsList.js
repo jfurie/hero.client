@@ -1,8 +1,6 @@
 import React from 'react';
 import { ListItem, Divider, FontIcon } from 'material-ui';
-//import Infinite from 'react-infinite';
-import { CompanyAvatar } from '../../../components/web';
-import { CandidateAvatar } from '../../../components/web';
+import { CompanyAvatar, Gravatar } from '../../../components/web';
 
 const style = {
   peopleList: {
@@ -22,31 +20,24 @@ class CompanyJobsList extends React.Component {
 
     let { jobs, company } = this.props;
 
-    let people = [
-      [
-        'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
-        'https://lh5.googleusercontent.com/-ZadaXoUTBfs/AAAAAAAAAAI/AAAAAAAAAGA/19US52OmBqc/photo.jpg',
-        'http://cdn.devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
-      ],
-      [
-        'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
-        'http://www.biz.uiowa.edu/tippiemba/wp-content/uploads/2010/07/Kim-Hyundong-300x300.jpg',
-      ],
-    ];
-
     // TMP
     let nestedJobsItem = [];
     let index = 0;
-    let fakeStatus = ['fav', 'vetted', 'rejected', 'vetted', 'none'];
     let self = this;
     jobs.forEach(function(job) {
 
       let peopleList = [];
+      let candidates = job.get('candidates');
 
-      people[0].forEach(function(p, key) {
-        let status = fakeStatus.shift();
-        peopleList.push(<CandidateAvatar key={key} picture={p} status={status}/>);
-      });
+      //console.log(candidates);
+
+      /* NOT WORKING */
+
+      if (candidates) {
+        candidates.forEach(function(c, key) {
+          peopleList.push(<Gravatar key={key} email={c.get('contact').get('email')} status={c.get('status')}/>);
+        });
+      }
 
       nestedJobsItem.push(
         <ListItem
