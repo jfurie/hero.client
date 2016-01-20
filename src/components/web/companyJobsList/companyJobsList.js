@@ -7,6 +7,11 @@ const style = {
   peopleList: {
     marginTop: '7px',
   },
+  gravatar: {
+    display: 'inline',
+    width: '30px',
+    height: '30px',
+  },
 };
 
 class CompanyJobsList extends React.Component {
@@ -32,7 +37,7 @@ class CompanyJobsList extends React.Component {
       let peopleList = [];
 
       candidates.forEach(function(c, key) {
-        peopleList.push(<Gravatar key={key} email={c.get('contact').get('email')} status={c.get('status')}/>);
+        peopleList.push(<Gravatar style={style.gravatar} key={key} email={c.get('contact').get('email')} status={c.get('status')}/>);
       });
 
       let secondaryText = (<div>No Candidates Yet</div>);

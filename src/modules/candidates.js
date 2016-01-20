@@ -170,9 +170,6 @@ export function getAllJobCandidates(jobId) {
 }
 
 export function getAllUserCandidates(userId) {
-
-  console.log('getAllUserCandidates', userId);
-
   return {
     types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
     promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"createdBy": "${userId}"}, "include": "contact"}`, {

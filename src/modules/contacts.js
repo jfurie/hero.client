@@ -138,7 +138,6 @@ export default function reducer(state = initialState, action = {}) {
       let contactList =  {};
       action.result.map(job =>{
         job.candidates.map(candidate=>{
-          console.log('candidate',candidate);
           contactList[candidate.contact.id] = candidate.contact;
         });
       });

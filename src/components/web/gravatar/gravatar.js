@@ -18,8 +18,8 @@ class Gravatar extends React.Component {
         marginRight: '7px',
       },
       picture: {
-        width: '40px',
-        height: '40px',
+        width: style.width || '40px',
+        height: style.height || '40px',
         borderRadius: '50%',
         border: '2px solid',
         opacity: '1',
