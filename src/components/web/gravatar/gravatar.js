@@ -1,5 +1,5 @@
 import React from 'react';
-import { FontIcon } from 'material-ui';
+import { FontIcon, Styles } from 'material-ui';
 import md5 from 'md5';
 
 class Gravatar extends React.Component {
@@ -18,38 +18,29 @@ class Gravatar extends React.Component {
         marginRight: '7px',
       },
       picture: {
-        width: '40px',
-        height: '40px',
+        width: style.width || '40px',
+        height: style.height || '40px',
         borderRadius: '50%',
         border: '2px solid',
         opacity: '1',
-      },
-      fontIcon: {
-        position: 'absolute',
-        top: '-20px',
-        right: '-6px',
-        fontSize: '16px',
-        textShadow: '1px 1px 1px rgba(0, 0, 0, 0.39)',
       },
     };
 
     style = {..._style, ...style};
 
-    status = status || 'new';
-    let font = null;
+    status = status || null;
 
     switch (status) {
-    case 'active': {
-      style.picture.borderColor = '#40bb3f';
-      style.fontIcon.color = '#40bb3f';
-      font = 'done';
+    case 'interested': {
+      style.picture.borderColor = Styles.Colors.lightGreen600;
       break;
     }
-    case 'inactive': {
-      style.picture.borderColor = '#959494';
-      style.picture.opacity = '0.5';
-      style.fontIcon.color = '#959494';
-      font = 'block';
+    case 'notinterested': {
+      style.picture.borderColor = Styles.Colors.red600;
+      break;
+    }
+    case 'notset': {
+      style.picture.borderColor = Styles.Colors.grey600;
       break;
     }
     default:
@@ -64,9 +55,6 @@ class Gravatar extends React.Component {
       <div style={style}>
         <div style={style.container}>
           <img style={style.picture} src={imgSrc} />
-          {(font) ? (
-            <FontIcon style={style.fontIcon} className="material-icons" color={style.fontIcon.color}>{font}</FontIcon>
-          ) : (null)}
         </div>
       </div>
     );
