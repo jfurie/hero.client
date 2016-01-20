@@ -64,10 +64,13 @@ class JobDetailsModal extends React.Component {
     let jobId = ((job) ? (job.get('id')) : (null));
     let jobTitle = ((job) ? (job.get('title')) : (''));
 
+    let candidates = ((job) ? (job.get('candidates')) : ([]));
+    candidates = candidates || [];
+
     return (
       <div>
         <Dialog open={this.props.open}>
-          <CandidateSearchModal ref="candidateSearchModal" candidates={this.props.seachCandidates}/>
+          <CandidateSearchModal ref="candidateSearchModal" jobId={jobId} candidates={candidates}/>
           <CandidateCreateModal ref="candidateCreateModal" jobId={jobId} />
           <div style={style.dialog}>
             <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>

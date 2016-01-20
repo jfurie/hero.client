@@ -42,7 +42,7 @@ export default class CandidateSearchModal extends React.Component {
               </Toolbar>
             </div>
             <div style={{height:'64px'}}></div>
-          <CandidateSearch {...this.props}></CandidateSearch>
+          <CandidateSearch {...this.props} close={this.close.bind(this)}></CandidateSearch>
         </Dialog>
       </div>
     );
