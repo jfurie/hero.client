@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Immutable from 'immutable';
+
 import { List, ListItem, Divider, Card, CardText, TextField, FontIcon } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { Gravatar, CandidateCreateFromContactModal } from '../../../components/web';
+import { Gravatar, CandidateDetailsModal } from '../../../components/web';
 
 import { searchContacts } from '../../../modules/contacts';
 
@@ -18,8 +20,6 @@ export default class CandidateSearch extends React.Component {
     this.state = {
       query: '',
       results: [],
-      openModal: false,
-      selectedContact: null,
     };
   }
 
@@ -45,27 +45,14 @@ export default class CandidateSearch extends React.Component {
     });
   }
 
-  onSelectContact(contact, isCandidate) {
-    this.setState({
-      openModal: true,
-      selectedContact: contact,
-      isCandidate,
-    });
+  onSelectContact(contact, candidate) {
+    this.refs.candidateDetailsModal.getWrappedInstance().show(candidate ? candidate : new Immutable.Map({
+      job: this.props.job,
+      contact,
+    }));
   }
 
-  onCloseModal() {
-    this.setState({
-      openModal: false,
-      selectedContact: null,
-    });
-  }
-
-  onCloseAllModals() {
-    this.setState({
-      openModal: false,
-      selectedContact: null,
-    });
-
+  onAddCandidateSuccess() {
     this.props.close();
   }
 
@@ -125,16 +112,17 @@ tooltip="View Favorites">favorite</IconButton>
               secondaryText = location;
             }
 
-            let isCandidate = this.props.candidates.map(x => { return x.get('contact').get('id'); }).indexOf(contact.get('id')) == -1 ? false : true;
+            let candidateIndex = this.props.candidates.map(x => { return x.get('contact').get('id'); }).indexOf(contact.get('id'));
+            let candidate = candidateIndex == -1 ? null : this.props.candidates[candidateIndex];
 
             return (
               <div key={key}>
                 <ListItem
-                    leftAvatar={<Gravatar email={contact.get('email')} />}
+                    leftAvatar={<Gravatar email={contact.get('email')} status="notset" />}
                     primaryText={contact.get('displayName')}
                     secondaryText={<p>{secondaryText}</p>}
-                    onTouchTap={this.onSelectContact.bind(this, contact, isCandidate)}
-                    rightIcon={<FontIcon className="material-icons">{isCandidate ? 'check' : 'add'}</FontIcon>}
+                    onTouchTap={this.onSelectContact.bind(this, contact, candidate)}
+                    rightIcon={<FontIcon className="material-icons">{candidate ? 'check' : 'add'}</FontIcon>}
                 />
                 <Divider inset={true} />
               </div>
@@ -142,7 +130,7 @@ tooltip="View Favorites">favorite</IconButton>
           })}
         </Infinite>
       </List>
-      <CandidateCreateFromContactModal open={this.state.openModal} contact={this.state.selectedContact} close={this.onCloseModal.bind(this)} closeAll={this.onCloseAllModals.bind(this)} jobId={this.props.jobId} isCandidate={this.state.isCandidate} />
+      <CandidateDetailsModal ref="candidateDetailsModal" onAddCandidateSuccess={this.onAddCandidateSuccess.bind(this)} />
       </div>
     );
   }

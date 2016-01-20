@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, Divider, Styles } from 'material-ui';
+import { List, ListItem, Divider } from 'material-ui';
 import Infinite from 'react-infinite';
 
 import { CandidateDetailsModal, Gravatar, CandidatesListItemStatus } from '../../../components/web';
@@ -15,7 +15,7 @@ class CandidatesList extends React.Component {
   }
 
   openDetails(candidate){
-    this.refs.candidateDetailsModal.show(candidate);
+    this.refs.candidateDetailsModal.getWrappedInstance().show(candidate);
   }
 
   closeDetails() {

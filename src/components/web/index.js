@@ -30,7 +30,6 @@ export ClientsCreateModal from './clientsCreateModal/clientsCreateModal';
 export ClientsEditModal from './clientsEditModal/clientsEditModal';
 export ContactDetailsModal from './contactDetailsModal/contactDetailsModal';
 export CandidateDetailsModal from './candidateDetailsModal/candidateDetailsModal';
-export CandidateCreateFromContactModal from './candidateCreateFromContactModal/candidateCreateFromContactModal';
 export InviteSuccessModal from './inviteSuccessModal/inviteSuccessModal';
 export NotesCreateModal from './notesCreateModal/notesCreateModal';
 export JobCreateModal from './jobCreateModal/jobCreateModal';

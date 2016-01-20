@@ -70,7 +70,7 @@ class JobDetailsModal extends React.Component {
     return (
       <div>
         <Dialog open={this.props.open}>
-          <CandidateSearchModal ref="candidateSearchModal" jobId={jobId} candidates={candidates}/>
+          <CandidateSearchModal ref="candidateSearchModal" job={job} candidates={candidates}/>
           <CandidateCreateModal ref="candidateCreateModal" jobId={jobId} />
           <div style={style.dialog}>
             <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>

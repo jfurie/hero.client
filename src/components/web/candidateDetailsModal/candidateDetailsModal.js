@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import Immutable from 'immutable';
+
 import {
   Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
   List, ListItem, FontIcon, Divider, FlatButton, CardText, Styles,
@@ -6,7 +9,7 @@ import {
 
 import { CustomTabsSwipe, Gravatar } from '../../../components/web';
 
-import Immutable from 'immutable';
+import { createCandidate } from '../../../modules/candidates';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -56,8 +59,15 @@ const style = {
     color: '#FFF',
     margin: '14px 0px',
   },
+  addCandidate: {
+    marginTop:'14px',
+    marginRight:'-16px',
+    marginLeft:'auto',
+  },
 };
 
+@connect(() => (
+{}), {createCandidate}, null, {withRef: true})
 class CandidateDetailsModal extends React.Component {
 
   constructor(props) {
@@ -95,6 +105,11 @@ class CandidateDetailsModal extends React.Component {
     window.open(resumeLink);
   }
 
+  addCandidate() {
+    this.props.createCandidate(this.state.candidate.get('contact'), this.state.candidate.get('job').get('id'));
+    this.props.onAddCandidateSuccess();
+  }
+
   render() {
 
     let jobs = {};
@@ -117,8 +132,10 @@ class CandidateDetailsModal extends React.Component {
     let displayName = null;
     let candidateStatus = 'notset';
     let resumeLink = null;
+    let candidateId = null;
 
     if (this.state.candidate) {
+      candidateId = this.state.candidate.get('id') || null;
 
       candidateStatus = this.state.candidate.get('status') || 'notset';
       let contact = this.state.candidate.get('contact');
@@ -155,14 +172,26 @@ class CandidateDetailsModal extends React.Component {
                 <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
                 <ToolbarTitle style={style.detailsTitle} text={'Details'} />
               </ToolbarGroup>
-              <ToolbarGroup key={1} float="right">
-                {(candidateStatus === 'notinterested') ? (
-                  <FlatButton style={style.statusNotInterestedButton} label="Not Interested" />
-                ) : (null)}
-                {(candidateStatus === 'interested') ? (
-                  <FlatButton style={style.statusInterestedButton} label="Interested" />
-                ) : (null)}
-              </ToolbarGroup>
+
+              {
+                candidateId ?
+
+                <ToolbarGroup key={1} float="right">
+                  {(candidateStatus === 'notinterested') ? (
+                    <FlatButton style={style.statusNotInterestedButton} label="Not Interested" />
+                  ) : (null)}
+                  {(candidateStatus === 'interested') ? (
+                    <FlatButton style={style.statusInterestedButton} label="Interested" />
+                  ) : (null)}
+                </ToolbarGroup>
+
+                :
+
+                <ToolbarGroup key={1} float="right">
+                  <FlatButton onTouchTap={this.addCandidate.bind(this)} style={style.addCandidate}>Add</FlatButton>
+                </ToolbarGroup>
+              }
+
             </Toolbar>
             <CustomTabsSwipe
                 tabs={['Details', 'Infos', 'Applications']}
