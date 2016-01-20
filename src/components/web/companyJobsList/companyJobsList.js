@@ -1,6 +1,7 @@
 import React from 'react';
 import { ListItem, Divider, FontIcon } from 'material-ui';
 import { CompanyAvatar, Gravatar } from '../../../components/web';
+import Immutable from 'immutable';
 
 const style = {
   peopleList: {
@@ -20,23 +21,23 @@ class CompanyJobsList extends React.Component {
 
     let { jobs, company } = this.props;
 
-    // TMP
     let nestedJobsItem = [];
     let index = 0;
+
     let self = this;
     jobs.forEach(function(job) {
 
-      let peopleList = [];
       let candidates = job.get('candidates');
+      candidates = candidates || new Immutable.List();
+      let peopleList = [];
 
-      //console.log(candidates);
+      candidates.forEach(function(c, key) {
+        peopleList.push(<Gravatar key={key} email={c.get('contact').get('email')} status={c.get('status')}/>);
+      });
 
-      /* NOT WORKING */
-
-      if (candidates) {
-        candidates.forEach(function(c, key) {
-          peopleList.push(<Gravatar key={key} email={c.get('contact').get('email')} status={c.get('status')}/>);
-        });
+      let secondaryText = (<div>No Candidates Yet</div>);
+      if (peopleList.length > 0) {
+        secondaryText = (<div style={style.peopleList}>{peopleList}</div>);
       }
 
       nestedJobsItem.push(
@@ -44,7 +45,7 @@ class CompanyJobsList extends React.Component {
           onTouchTap={self._handleJobClick.bind(self, job)}
           primaryText={job.get('title')}
           secondaryText={
-            <div style={style.peopleList}>{peopleList}</div>
+            secondaryText
           }
           rightIcon={<FontIcon className="material-icons">info</FontIcon>}
           secondaryTextLines={2}
@@ -61,7 +62,7 @@ class CompanyJobsList extends React.Component {
         <ListItem
           primaryText={company.get('name')}
           leftAvatar={<CompanyAvatar url={company.get('website')} />}
-          secondaryText={<p>Santa Monica, CA</p>}
+          secondaryText={<p></p>}
           initiallyOpen={true}
           nestedItems={nestedJobsItem}
         />
