@@ -1,8 +1,8 @@
 import React from 'react';
-import { List, ListItem, Divider } from 'material-ui';
+import { List, ListItem, Divider, Styles } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { CandidateDetailsModal, Gravatar } from '../../../components/web';
+import { CandidateDetailsModal, Gravatar, CandidatesListItemStatus } from '../../../components/web';
 
 class CandidatesList extends React.Component {
 
@@ -60,10 +60,11 @@ class CandidatesList extends React.Component {
               return (
                 <div key={key}>
                   <ListItem
-                      leftAvatar={<Gravatar email={candidateContact.get('email')} status={candidate.get('status')}/>}
+                      leftAvatar={<Gravatar email={candidateContact.get('email')} status={candidate.get('status')} />}
                       primaryText={candidateContact.get('displayName')}
-                      secondaryText={<p>{secondaryText} <br/> {candidate.get('status')}</p>}
-                      secondaryTextLines={2}
+                      secondaryText={<p>{secondaryText}</p>}
+                      secondaryTextLines={1}
+                      rightIcon={<CandidatesListItemStatus status={candidate.get('status')} />}
                       onTouchTap={this.openDetails.bind(this, candidate)}
                   />
                   <Divider inset={true} />

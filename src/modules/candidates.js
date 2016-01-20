@@ -78,14 +78,14 @@ export default function reducer(state = initialState, action = {}) {
 
       // add contact Ids to the byJobId list
       let byJobIdNew = {};
-      byJobIdNew[jobId] = state.byJobId.get(jobId) || new Immutable.List();
+      byJobIdNew[jobId] = new Immutable.List();
       byJobIdNew[jobId] = byJobIdNew[jobId].concat(action.result.map((c) => {
         return c.id;
       }));
 
       // add contact Ids to the byUserId list
       let byUserIdNew = {};
-      byUserIdNew[userId] = state.byUserId.get(userId) || new Immutable.List();
+      byUserIdNew[userId] = new Immutable.List();
       byUserIdNew[userId] = byUserIdNew[userId].concat(action.result.map((c) => {
         return c.id;
       }));
@@ -170,9 +170,6 @@ export function getAllJobCandidates(jobId) {
 }
 
 export function getAllUserCandidates(userId) {
-
-  console.log('getAllUserCandidates', userId);
-
   return {
     types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
     promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"createdBy": "${userId}"}, "include": "contact"}`, {
