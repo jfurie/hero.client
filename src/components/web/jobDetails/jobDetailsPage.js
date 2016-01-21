@@ -73,7 +73,7 @@ class JobDetailsPage extends React.Component {
     return (
       <div>
         <CandidateSearchModal open={this.state.candidateSearchOpen} closeModal={this.candidateSearchModalClose.bind(this)} candidates={this.props.contacts.list}/>
-        <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
+        <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen} />
         <Header iconRight={
           <IconMenu iconButtonElement={
             <IconButton  iconClassName='material-icons'>more_vert</IconButton>

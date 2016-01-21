@@ -18,7 +18,6 @@ export default function getCompanyDataFromState(state, companyId) {
       });
     }
 
-
     company = company.set('jobs', companyJobs);
     //filter clientAdvocate
     if(company){
