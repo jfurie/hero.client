@@ -75,7 +75,6 @@ class ShareJobModal extends React.Component {
     this.state = {
       shareJob: {
         selectedContact: null,
-        selectedContactText: '',
         note: '',
       },
       errors: {},
@@ -131,18 +130,15 @@ class ShareJobModal extends React.Component {
 
     console.log(value.get('displayName'));
 
-    var state = this.state;
+    let state = this.state;
     state.shareJob.selectedContact = value;
-    state.shareJob.selectedContactText = value.get('displayName') + ': ' + value.get('email');
+    state.shareJob.selectedContactText = `${value.get('displayName')}: ${value.get('email')}`;
     this.setState(state);
   }
 
   render() {
 
     let { companyContacts } = this.props;
-
-    console.log(this.state.shareJob.selectedContactText);
-
     return (
       <Dialog
           open={this.state.open}
@@ -158,7 +154,7 @@ class ShareJobModal extends React.Component {
         <div style={style.content}>
           <Toolbar style={style.toolBar}>
             <ToolbarGroup key={0} float="left">
-              <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
+              <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName="material-icons">close</IconButton>
               <ToolbarTitle style={style.detailsTitle} text={'Share Job'} />
             </ToolbarGroup>
             <ToolbarGroup key={1} float="right">
@@ -179,7 +175,7 @@ class ShareJobModal extends React.Component {
                     >
                       {companyContacts.map((contact) => {
                         return (
-                          <MenuItem disabled={!contact.get('isInvited')} value={contact} primaryText={contact.get('displayName') + ': ' + contact.get('email')}/>
+                          <MenuItem disabled={!contact.get('isInvited')} value={contact} primaryText={`${contact.get('displayName')}: ${contact.get('email')}`}/>
                         );
                       })}
 
@@ -190,7 +186,8 @@ class ShareJobModal extends React.Component {
                           errorText={this.state.errors['note'] || ''}
                           errorStyle={style.error}
                           onChange={(e) => this._handleChange.bind(this)(e, 'note')}
-                          floatingLabelText="Email note (optional)" />
+                          floatingLabelText="Email note (optional)"
+                      />
                     </div>
                   </div>
               </div>

@@ -5,7 +5,7 @@ import { pushState } from 'redux-router';
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
   CompanyJobsList, CompanyNotesList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
-  JobDetailsModal, ClientsEditModal, CompanyAvatar, Gravatar
+  JobDetailsModal, ClientsEditModal, CompanyAvatar, Gravatar,
 } from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies/index';
