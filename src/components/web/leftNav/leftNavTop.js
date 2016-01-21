@@ -19,7 +19,7 @@ const style = {
 };
 
 @connect(state => ({
-  account: state.auth.authToken.accountInfo.account,
+  authToken: state.auth.authToken,
   user: state.auth.user,
   users: state.users,
 }), { getUserContact, getUserStats }, null, { withRef: true })
@@ -40,8 +40,11 @@ class LeftNavTop extends React.Component {
   }
 
   refresh() {
-    this.props.getUserContact(this.props.user.id);
-    this.props.getUserStats(this.props.account.id);
+    if (this.props.user)
+      this.props.getUserContact(this.props.user.id);
+
+    if (this.props.authToken)
+      this.props.getUserStats(this.props.authToken.accountInfo.account.id);
   }
 
   render(){
