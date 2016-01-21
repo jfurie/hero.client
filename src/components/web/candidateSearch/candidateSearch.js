@@ -20,6 +20,8 @@ export default class CandidateSearch extends React.Component {
     this.state = {
       query: '',
       results: [],
+      candidateDetailsModalOpen: false,
+      selectedCandidate: null,
     };
   }
 
@@ -46,14 +48,24 @@ export default class CandidateSearch extends React.Component {
   }
 
   onSelectContact(contact, candidate) {
-    this.refs.candidateDetailsModal.getWrappedInstance().show(candidate ? candidate : new Immutable.Map({
-      job: this.props.job,
-      contact,
-    }));
+    this.setState({
+      candidateDetailsModalOpen: true,
+      selectedCandidate: candidate ? candidate : new Immutable.Map({
+        job: this.props.job,
+        contact,
+      }),
+    });
   }
 
-  onAddCandidateSuccess() {
-    this.props.close();
+  createCandidate() {
+    this.props.createCandidate(this.state.selectedCandidate.get('contact'), this.state.selectedCandidate.get('job').get('id'));
+    this.closeCandidateDetailsModal();
+  }
+
+  closeCandidateDetailsModal() {
+    this.setState({
+      candidateDetailsModalOpen: false,
+    });
   }
 
   render(){
@@ -130,7 +142,7 @@ tooltip="View Favorites">favorite</IconButton>
           })}
         </Infinite>
       </List>
-      <CandidateDetailsModal ref="candidateDetailsModal" onAddCandidateSuccess={this.onAddCandidateSuccess.bind(this)} />
+      <CandidateDetailsModal open={this.state.candidateDetailsModalOpen} candidate={this.state.selectedCandidate} createCandidate={this.createCandidate.bind(this)} close={this.closeCandidateDetailsModal.bind(this)} />
       </div>
     );
   }

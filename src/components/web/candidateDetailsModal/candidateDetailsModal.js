@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import Immutable from 'immutable';
 
 import {
@@ -8,8 +7,6 @@ import {
 } from 'material-ui';
 
 import { CustomTabsSwipe, Gravatar } from '../../../components/web';
-
-import { createCandidate } from '../../../modules/candidates';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -59,42 +56,21 @@ const style = {
     color: '#FFF',
     margin: '14px 0px',
   },
-  addCandidate: {
+  createCandidate: {
     marginTop:'14px',
     marginRight:'-16px',
     marginLeft:'auto',
   },
 };
 
-@connect(() => (
-{}), {createCandidate}, null, {withRef: true})
 class CandidateDetailsModal extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      open: false,
-      candidate: null,
-    };
   }
 
   componentDidMount() {
     //this.props.getAllJobs();
-  }
-
-  show(candidate) {
-    this.setState({
-      open: true,
-      candidate,
-    });
-  }
-
-  closeModal() {
-    this.setState({
-      open: false,
-      candidate: null,
-    });
   }
 
   _handleJobClick(){
@@ -105,9 +81,8 @@ class CandidateDetailsModal extends React.Component {
     window.open(resumeLink);
   }
 
-  addCandidate() {
-    this.props.createCandidate(this.state.candidate.get('contact'), this.state.candidate.get('job').get('id'));
-    this.props.onAddCandidateSuccess();
+  createCandidate() {
+    if (this.props.createCandidate) this.props.createCandidate();
   }
 
   render() {
@@ -134,11 +109,11 @@ class CandidateDetailsModal extends React.Component {
     let resumeLink = null;
     let candidateId = null;
 
-    if (this.state.candidate) {
-      candidateId = this.state.candidate.get('id') || null;
+    if (this.props.candidate) {
+      candidateId = this.props.candidate.get('id') || null;
 
-      candidateStatus = this.state.candidate.get('status') || 'notset';
-      let contact = this.state.candidate.get('contact');
+      candidateStatus = this.props.candidate.get('status') || 'notset';
+      let contact = this.props.candidate.get('contact');
 
       // TMP
       resumeLink = '/sample.pdf';
@@ -156,7 +131,7 @@ class CandidateDetailsModal extends React.Component {
     return (
       <div>
         <Dialog
-            open={this.state.open}
+            open={this.props.open}
             autoDetectWindowHeight={false}
             autoScrollBodyContent={false}
             repositionOnUpdate={false}
@@ -169,7 +144,7 @@ class CandidateDetailsModal extends React.Component {
           <div style={style.content}>
             <Toolbar style={style.toolBar}>
               <ToolbarGroup key={0} float="left">
-                <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
+                <IconButton onTouchTap={this.props.close.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
                 <ToolbarTitle style={style.detailsTitle} text={'Details'} />
               </ToolbarGroup>
 
@@ -188,7 +163,7 @@ class CandidateDetailsModal extends React.Component {
                 :
 
                 <ToolbarGroup key={1} float="right">
-                  <FlatButton onTouchTap={this.addCandidate.bind(this)} style={style.addCandidate}>Add</FlatButton>
+                  <FlatButton onTouchTap={this.createCandidate.bind(this)} style={style.createCandidate}>Add</FlatButton>
                 </ToolbarGroup>
               }
 
@@ -354,7 +329,7 @@ class CandidateDetailsModal extends React.Component {
 }
 
 CandidateDetailsModal.propTypes = {
-  // jobs: React.PropTypes.object.isRequired,
+
 };
 
 export default CandidateDetailsModal;

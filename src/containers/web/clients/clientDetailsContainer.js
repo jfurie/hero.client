@@ -14,7 +14,7 @@ import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
-import { getAllJobCandidates } from '../../../modules/candidates';
+import { getAllJobCandidates, createCandidate } from '../../../modules/candidates';
 import { invite } from '../../../modules/users';
 import getCompanyDataFromState from '../../../dataHelpers/company';
 import getJobDataFromState from '../../../dataHelpers/job';
@@ -79,7 +79,7 @@ const style = {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite })
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite, createCandidate })
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -202,6 +202,10 @@ class ClientDetailsPage extends React.Component {
     this.props.updateJobImageLocal(imageArray);
   }
 
+  createCandidate(contact, jobId) {
+    this.props.createCandidate(contact, jobId);
+  }
+
   onSwipe(index){
     let tab = '';
     switch (index) {
@@ -229,7 +233,7 @@ class ClientDetailsPage extends React.Component {
     //  let heroContact = '/img/rameet.jpg';
       return (
         <div>
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} open={(this.props.params.jobId)?(true):(false)} />
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} open={(this.props.params.jobId)?(true):(false)} createCandidate={this.createCandidate.bind(this)} />
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" company={company}/>

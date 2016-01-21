@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, ClientContactsCreateModal, JobDetails, CandidateSearchModal } from '../../../components/web';
+import { Header, ClientContactsCreateModal, JobDetails } from '../../../components/web';
 
 import IconButton from 'material-ui/lib/icon-button';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
@@ -21,7 +21,6 @@ class JobDetailsPage extends React.Component {
 
     this.state = {
       createContactModalOpen: false,
-      candidateSearchOpen: false,
     };
   }
 
@@ -55,24 +54,12 @@ class JobDetailsPage extends React.Component {
     console.log('save contact');
   }
 
-  candidateSearchModalClose(){
-    this.setState({
-      candidateSearchOpen: false,
-    });
-  }
-  candidateSearchModalOpen(){
-    this.setState({
-      candidateSearchOpen: true,
-    });
-  }
-
   render() {
 
     let { job } = this.props;
     //let heroContact = '/img/rameet.jpg';
     return (
       <div>
-        <CandidateSearchModal open={this.state.candidateSearchOpen} closeModal={this.candidateSearchModalClose.bind(this)} candidates={this.props.contacts.list}/>
         <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
         <Header iconRight={
           <IconMenu iconButtonElement={

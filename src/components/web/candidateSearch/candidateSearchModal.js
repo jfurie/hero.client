@@ -9,32 +9,18 @@ import { connect } from 'react-redux';
 export default class CandidateSearchModal extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      open: false,
-    };
-  }
-  show() {
-    this.setState({
-      open: true,
-    });
-  }
-
-  close(){
-    this.setState({
-      open: false,
-    });
   }
   render(){
     return (
       <div>
-        <Dialog open={this.state.open}>
+        <Dialog open={this.props.open}>
             <div style={{
               position:'fixed',
               width:'100%',
             }}>
               <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
                 <ToolbarGroup key={0} float="left">
-                  <IconButton onTouchTap={this.close.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
+                  <IconButton onTouchTap={this.props.close.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
                   <ToolbarTitle style={{lineHeight:'64px', float:'left'}} text="Find Candidates" />
                 </ToolbarGroup>
                 <ToolbarGroup key={1} float="right">
@@ -42,7 +28,7 @@ export default class CandidateSearchModal extends React.Component {
               </Toolbar>
             </div>
             <div style={{height:'64px'}}></div>
-          <CandidateSearch {...this.props} close={this.close.bind(this)}></CandidateSearch>
+          <CandidateSearch {...this.props}></CandidateSearch>
         </Dialog>
       </div>
     );

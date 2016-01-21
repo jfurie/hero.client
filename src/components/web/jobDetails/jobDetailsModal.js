@@ -27,7 +27,7 @@ class JobDetailsModal extends React.Component {
     super(props);
 
     this.state = {
-      candidateSearchOpen: false,
+      candidateSearchModalOpen: false,
     };
   }
 
@@ -45,7 +45,7 @@ class JobDetailsModal extends React.Component {
     });
   }
 
-  createCandidateModalOpen() {
+  openCreateCandidateModal() {
     this.refs.candidateCreateModal.getWrappedInstance().show();
   }
 
@@ -53,8 +53,21 @@ class JobDetailsModal extends React.Component {
     this.props.closeModal();
   }
 
-  candidateSearchModalOpen(){
-    this.refs.candidateSearchModal.getWrappedInstance().show();
+  openCandidateSearchModal() {
+    this.setState({
+      candidateSearchModalOpen: true,
+    });
+  }
+
+  closeCandidateSearchModal() {
+    this.setState({
+      candidateSearchModalOpen: false,
+    });
+  }
+
+  createCandidate(contact, jobId) {
+    this.props.createCandidate(contact, jobId);
+    this.closeCandidateSearchModal();
   }
 
   render() {
@@ -70,7 +83,7 @@ class JobDetailsModal extends React.Component {
     return (
       <div>
         <Dialog open={this.props.open}>
-          <CandidateSearchModal ref="candidateSearchModal" job={job} candidates={candidates}/>
+          <CandidateSearchModal open={this.state.candidateSearchModalOpen} job={job} candidates={candidates} close={this.closeCandidateSearchModal.bind(this)} createCandidate={this.createCandidate.bind(this)}/>
           <CandidateCreateModal ref="candidateCreateModal" jobId={jobId} />
           <div style={style.dialog}>
             <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
@@ -82,8 +95,8 @@ class JobDetailsModal extends React.Component {
                 <IconMenu style={{marginTop:'8px',float:'left', marginRight:'-16px', marginLeft:'8px'}} iconButtonElement={
                   <IconButton  iconClassName='material-icons'>more_vert</IconButton>
                 }>
-                  <MenuItem index={0} onTouchTap={this.candidateSearchModalOpen.bind(this)} primaryText='Find Candidates' />
-                  <MenuItem index={1} onTouchTap={this.createCandidateModalOpen.bind(this)} primaryText="Add Candidate" />
+                  <MenuItem index={0} onTouchTap={this.openCandidateSearchModal.bind(this)} primaryText='Find Candidates' />
+                  <MenuItem index={1} onTouchTap={this.openCreateCandidateModal.bind(this)} primaryText="Add Candidate" />
                 </IconMenu>
               </ToolbarGroup>
             </Toolbar>
