@@ -27,30 +27,21 @@ class JobDetailsModal extends React.Component {
     super(props);
 
     this.state = {
+      candidateCreateModalOpen: false,
       candidateSearchModalOpen: false,
     };
   }
 
-  contactDetailsModalOpen(contact) {
-    this.setState({
-      contactDetailsModalOpen: true,
-      detailsContact: contact,
-    });
-  }
-
-  contactDetailsModalClose() {
-    this.setState({
-      contactDetailsModalOpen: false,
-      detailsContact: null,
-    });
-  }
-
   openCreateCandidateModal() {
-    this.refs.candidateCreateModal.getWrappedInstance().show();
+    this.setState({
+      candidateCreateModalOpen: true,
+    });
   }
 
-  closeModal() {
-    this.props.closeModal();
+  closeCandidateCreateModal() {
+    this.setState({
+      candidateCreateModalOpen: false,
+    });
   }
 
   openCandidateSearchModal() {
@@ -68,13 +59,13 @@ class JobDetailsModal extends React.Component {
   createCandidate(contact, jobId) {
     this.props.createCandidate(contact, jobId);
     this.closeCandidateSearchModal();
+    this.closeCandidateCreateModal();
   }
 
   render() {
 
     let { job } = this.props;
 
-    let jobId = ((job) ? (job.get('id')) : (null));
     let jobTitle = ((job) ? (job.get('title')) : (''));
 
     let candidates = ((job) ? (job.get('candidates')) : ([]));
@@ -84,11 +75,11 @@ class JobDetailsModal extends React.Component {
       <div>
         <Dialog open={this.props.open}>
           <CandidateSearchModal open={this.state.candidateSearchModalOpen} job={job} candidates={candidates} close={this.closeCandidateSearchModal.bind(this)} createCandidate={this.createCandidate.bind(this)}/>
-          <CandidateCreateModal ref="candidateCreateModal" jobId={jobId} />
+          <CandidateCreateModal open={this.state.candidateCreateModalOpen} job={job} close={this.closeCandidateCreateModal.bind(this)}  createCandidate={this.createCandidate.bind(this)}/>
           <div style={style.dialog}>
             <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
               <ToolbarGroup key={0} float="left">
-                <IconButton onTouchTap={this.closeModal.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
+                <IconButton onTouchTap={this.props.closeModal.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
                 <ToolbarTitle style={style.toolbarTitle} text={jobTitle} />
               </ToolbarGroup>
               <ToolbarGroup key={1} float="right">

@@ -1,8 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Dialog, IconButton, FlatButton, TextField } from 'material-ui';
-
-import { createCandidate } from '../../../modules/candidates';
 
 import Toolbar from 'material-ui/lib/toolbar/toolbar';
 import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
@@ -19,8 +16,6 @@ const style = {
   },
 };
 
-@connect(() => (
-{}), {createCandidate}, null, {withRef: true})
 export default class CandidateCreateModal extends React.Component {
 
   constructor(props){
@@ -28,20 +23,7 @@ export default class CandidateCreateModal extends React.Component {
     this.state = {
       candidate: {},
       errors: {},
-      open: false,
     };
-  }
-
-  show() {
-    this.setState({
-      open: true,
-    });
-  }
-
-  closeModal(){
-    this.setState({
-      open: false,
-    });
   }
 
   _handleChange(e, field) {
@@ -87,8 +69,7 @@ export default class CandidateCreateModal extends React.Component {
 
       //console.log(candidate, this.props.jobId);
 
-      this.props.createCandidate(candidate, this.props.jobId);
-      this.closeModal();
+      this.props.createCandidate(candidate, this.props.job.get('id'));
     }
   }
 
@@ -96,7 +77,7 @@ export default class CandidateCreateModal extends React.Component {
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     return (
-      <Dialog open={this.state.open} autoDetectWindowHeight={false} autoScrollBodyContent={false} repositionOnUpdate={false} defaultOpen={false} style={{
+      <Dialog open={this.props.open} autoDetectWindowHeight={false} autoScrollBodyContent={false} repositionOnUpdate={false} defaultOpen={false} style={{
         height: '100%', maxHeight: '100%', paddingTop: '0px'
       }} bodyStyle={{
         paddingTop: '0px', height: '100%', padding: '0'
@@ -106,7 +87,7 @@ export default class CandidateCreateModal extends React.Component {
         <div style={{height: (clientHeight) + 'px'}}>
           <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
             <ToolbarGroup key={0} float="left">
-              <IconButton onTouchTap={this.closeModal.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
+              <IconButton onTouchTap={this.props.close.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
               <ToolbarTitle style={{lineHeight:'64px', float:'left'}} text="Add Candidate" />
             </ToolbarGroup>
             <ToolbarGroup key={1} float="right">
