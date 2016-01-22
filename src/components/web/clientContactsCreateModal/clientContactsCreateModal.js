@@ -63,7 +63,7 @@ export default class ClientContactsCreateModal extends React.Component {
     });
 
     if (errors.validationErrors === 0) {
-      //console.log('good!');
+
       let contact = this.state.contact;
       contact.displayName = `${this.state.contact.firstName} ${this.state.contact.lastName}`;
 

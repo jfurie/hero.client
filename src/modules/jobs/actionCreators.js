@@ -1,12 +1,13 @@
 import superagent from 'superagent';
 import * as constants from './constants';
 export function getJobsByCompany(companyId){
+
   let include = [
     {
       relation:'company',
       scope:{
-        fields:['name','website']
-      }
+        fields:['name','website'],
+      },
     },
     {
       relation:'candidates',
@@ -15,15 +16,14 @@ export function getJobsByCompany(companyId){
         include:{
           relation:'contact',
           scope:{
-            fields:['displayName','email','status']
-          }
-        }
-      }
-    }
-
+            fields:['displayName','email','status'],
+          },
+        },
+      },
+    },
   ];
+
   let includeStr = encodeURIComponent(JSON.stringify(include));
-  console.log(includeStr);
   return {
     types: [constants.GET_JOBS_BY_COMPANY, constants.GET_JOBS_BY_COMPANY_SUCCESS, constants.GET_JOBS_BY_COMPANY_FAIL],
     promise: (client, auth) => client.api.get(`/companies/${companyId}/jobs?filter={"include":${includeStr}}`, {
@@ -47,6 +47,16 @@ export function createJob(job){
     promise: (client, auth) => client.api.post('/jobs', {
       authToken: auth.authToken,
       data:job,
+    }),
+  };
+}
+
+export function shareJob(jobId, data){
+  return {
+    types: [constants.SHARE_JOB, constants.SHARE_JOB_SUCCESS, constants.SHARE_JOB_FAIL],
+    promise: (client, auth) => client.api.post(`/jobs/${jobId}/share`, {
+      authToken: auth.authToken,
+      data,
     }),
   };
 }

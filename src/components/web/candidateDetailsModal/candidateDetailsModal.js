@@ -1,11 +1,12 @@
 import React from 'react';
+import Immutable from 'immutable';
+
 import {
   Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
-  List, ListItem, FontIcon, Divider, FlatButton, CardText,
+  List, ListItem, FontIcon, Divider, FlatButton, CardText, Styles,
 } from 'material-ui';
 
-import { CustomTabsSwipe, ResumePDFViewer, Gravatar } from '../../../components/web';
-import Immutable from 'immutable';
+import { CustomTabsSwipe, Gravatar } from '../../../components/web';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -45,10 +46,20 @@ const style = {
     lineHeight:'64px',
     float:'left',
   },
-  statusButton: {
-    backgroundColor: '#40bb3f',
+  statusNotInterestedButton: {
+    backgroundColor: Styles.Colors.red600,
     color: '#FFF',
     margin: '14px 0px',
+  },
+  statusInterestedButton: {
+    backgroundColor: Styles.Colors.lightGreen600,
+    color: '#FFF',
+    margin: '14px 0px',
+  },
+  createCandidate: {
+    marginTop:'14px',
+    marginRight:'-16px',
+    marginLeft:'auto',
   },
 };
 
@@ -56,38 +67,25 @@ class CandidateDetailsModal extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      open: false,
-      candidate: null,
-    };
   }
 
   componentDidMount() {
     //this.props.getAllJobs();
   }
 
-  show(candidate) {
-    this.setState({
-      open: true,
-      candidate,
-    });
-  }
-
-  closeModal() {
-    this.setState({
-      open: false,
-      candidate: null,
-    });
-  }
-
   _handleJobClick(){
     this.props.pushState(null,'/jobs/1a');
   }
 
-  render() {
+  _openResume(resumeLink) {
+    window.open(resumeLink);
+  }
 
-    //let { jobs } = this.props;
+  createCandidate() {
+    if (this.props.createCandidate) this.props.createCandidate();
+  }
+
+  render() {
 
     let jobs = {};
     jobs.list = new Immutable.Map();
@@ -101,30 +99,39 @@ class CandidateDetailsModal extends React.Component {
 
     jobs.list = jobs.list.mergeDeep(job);
 
-    //let picture = null;
     let email = null;
     let phone = null;
     let address = null;
     let city = null;
     let source = null;
     let displayName = null;
+    let candidateStatus = 'notset';
+    let resumeLink = null;
+    let candidateId = null;
 
-    if (this.state.candidate) {
-      displayName = this.state.candidate.get('displayName') || null;
-      //picture = 'http://www.material-ui.com/images/kerem-128.jpg';
-      email = this.state.candidate.get('email') || null;
-      phone = this.state.candidate.get('phone') || null;
-      address = '1316 3rd St #103';
-      city = 'Santa Monica, CA 90401';
-      source = 'facebook.com';
+    if (this.props.candidate) {
+      candidateId = this.props.candidate.get('id') || null;
+
+      candidateStatus = this.props.candidate.get('status') || 'notset';
+      let contact = this.props.candidate.get('contact');
+
+      // TMP
+      resumeLink = '/sample.pdf';
+
+      if (contact) {
+        displayName = contact.get('displayName') || null;
+        email = contact.get('email') || null;
+        phone = contact.get('phone') || null;
+        address = '1316 3rd St #103';
+        city = 'Santa Monica, CA 90401';
+        source = 'facebook.com';
+      }
     }
-
-    //console.log(this.props.open);
 
     return (
       <div>
         <Dialog
-            open={this.state.open}
+            open={this.props.open}
             autoDetectWindowHeight={false}
             autoScrollBodyContent={false}
             repositionOnUpdate={false}
@@ -137,15 +144,32 @@ class CandidateDetailsModal extends React.Component {
           <div style={style.content}>
             <Toolbar style={style.toolBar}>
               <ToolbarGroup key={0} float="left">
-                <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
-                <ToolbarTitle style={style.detailsTitle} text={'Candidate Details'} />
+                <IconButton onTouchTap={this.props.close.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
+                <ToolbarTitle style={style.detailsTitle} text={'Details'} />
               </ToolbarGroup>
-              <ToolbarGroup key={1} float="right">
-                <FlatButton style={style.statusButton} label="Vetted" />
-              </ToolbarGroup>
+
+              {
+                candidateId ?
+
+                <ToolbarGroup key={1} float="right">
+                  {(candidateStatus === 'notinterested') ? (
+                    <FlatButton style={style.statusNotInterestedButton} label="Not Interested" />
+                  ) : (null)}
+                  {(candidateStatus === 'interested') ? (
+                    <FlatButton style={style.statusInterestedButton} label="Interested" />
+                  ) : (null)}
+                </ToolbarGroup>
+
+                :
+
+                <ToolbarGroup key={1} float="right">
+                  <FlatButton onTouchTap={this.createCandidate.bind(this)} style={style.createCandidate}>Add</FlatButton>
+                </ToolbarGroup>
+              }
+
             </Toolbar>
             <CustomTabsSwipe
-                tabs={['Details', 'Resume', 'Infos', 'Applications']}
+                tabs={['Details', 'Infos', 'Applications']}
                 isLight
             >
               <List>
@@ -153,7 +177,7 @@ class CandidateDetailsModal extends React.Component {
 
                   {(displayName) ? (
                     <ListItem
-                        leftAvatar={<Gravatar email={this.state.candidate.get('email')} status={'vetted'} />}
+                        leftAvatar={<Gravatar email={email} status={candidateStatus} />}
                         primaryText={displayName}
                         secondaryText={<p>candidate</p>}
                         secondaryTextLines={1}
@@ -177,6 +201,19 @@ class CandidateDetailsModal extends React.Component {
                           primaryText={phone}
                           secondaryText={<p>phone</p>}
                           secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
+
+                  {(resumeLink) ? (
+                    <div>
+                      <Divider inset />
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">insert_drive_file</FontIcon>}
+                          primaryText={'Open resume'}
+                          secondaryText={<p>resume</p>}
+                          secondaryTextLines={1}
+                          onTouchTap={this._openResume.bind(this, resumeLink)}
                       />
                     </div>
                   ) : (null)}
@@ -219,9 +256,12 @@ class CandidateDetailsModal extends React.Component {
 
                 </div>
               </List>
-              <div className="innerView">
-                <ResumePDFViewer file="/sample.pdf" />
-              </div>
+              {/* <div className="innerView"> sample.pdf
+                <RaisedButton linkButton={true} href="https://github.com/callemall/material-ui" secondary={true} label="Label after" labelPosition="after">
+                  <FontIcon style={styles.exampleButtonIcon} className="muidocs-icon-custom-github" />
+                </RaisedButton>
+                <p>lol</p>
+              </div> */}
               <div>
                 <CardText>
                   <div className="description">
@@ -289,7 +329,7 @@ class CandidateDetailsModal extends React.Component {
 }
 
 CandidateDetailsModal.propTypes = {
-  // jobs: React.PropTypes.object.isRequired,
+
 };
 
 export default CandidateDetailsModal;

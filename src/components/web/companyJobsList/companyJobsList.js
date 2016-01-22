@@ -1,13 +1,16 @@
 import React from 'react';
 import { ListItem, Divider, FontIcon } from 'material-ui';
-//import Infinite from 'react-infinite';
-import { CompanyAvatar } from '../../../components/web';
-import { CandidateAvatar } from '../../../components/web';
+import { CompanyAvatar, Gravatar } from '../../../components/web';
 import Immutable from 'immutable';
 
 const style = {
   peopleList: {
     marginTop: '7px',
+  },
+  gravatar: {
+    display: 'inline',
+    width: '30px',
+    height: '30px',
   },
 };
 
@@ -15,7 +18,7 @@ class CompanyJobsList extends React.Component {
 
   _handleJobClick(job){
     if (this.props.onJobClick) {
-      this.props.onJobClick(job);
+      this.props.onJobClick(job, this.props.company);
     }
   }
 
@@ -23,34 +26,22 @@ class CompanyJobsList extends React.Component {
 
     let { jobs, company } = this.props;
 
-    // let people = [
-    //   [
-    //     'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
-    //     'https://lh5.googleusercontent.com/-ZadaXoUTBfs/AAAAAAAAAAI/AAAAAAAAAGA/19US52OmBqc/photo.jpg',
-    //     'http://cdn.devilsworkshop.org/files/2013/01/enlarged-facebook-profile-picture.jpg',
-    //   ],
-    //   [
-    //     'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square',
-    //     'http://www.biz.uiowa.edu/tippiemba/wp-content/uploads/2010/07/Kim-Hyundong-300x300.jpg',
-    //   ],
-    // ];
-
-    // TMP
     let nestedJobsItem = [];
     let index = 0;
-  //  let fakeStatus = ['fav', 'vetted', 'rejected', 'vetted', 'none'];
+
     let self = this;
     jobs.forEach(function(job) {
+
       let candidates = job.get('candidates');
       candidates = candidates || new Immutable.List();
       let peopleList = [];
 
-      candidates.forEach(function(p, key) {
-        //let status = fakeStatus.shift();
-        peopleList.push(<CandidateAvatar key={key} email={p.get('contact').get('email')} status={p.get('status')}/>);
+      candidates.forEach(function(c, key) {
+        peopleList.push(<Gravatar style={style.gravatar} key={key} email={c.get('contact').get('email')} status={c.get('status')}/>);
       });
+
       let secondaryText = (<div>No Candidates Yet</div>);
-      if(peopleList.length > 0){
+      if (peopleList.length > 0) {
         secondaryText = (<div style={style.peopleList}>{peopleList}</div>);
       }
 
