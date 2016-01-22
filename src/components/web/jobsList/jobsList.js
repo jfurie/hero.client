@@ -1,17 +1,16 @@
 import React from 'react';
 import { List } from 'material-ui';
-//import Infinite from 'react-infinite';
 import { CompanyJobsList } from '../../../components/web';
-
-// TMP
 import Immutable from 'immutable';
 
 class JobsList extends React.Component {
-  _handleJobClick(job){
-    if(this.props.onJobClick){
-      this.props.onJobClick(job);
+
+  _handleJobClick(job, company){
+    if (this.props.onJobClick) {
+      this.props.onJobClick(job, company);
     }
   }
+
   render() {
 
     let { jobs, ressourceName, ressourceNamePlurial } = this.props;
@@ -35,10 +34,6 @@ class JobsList extends React.Component {
       companies = companies.mergeDeep(companyMap);
       jobsByCompany = jobsByCompany.mergeDeep(jobMap);
     });
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // create 2 fakes companies
-
 
     let subheader = `${jobs.count() * 2} ${ressourceNamePlurial}`;
     let self = this;

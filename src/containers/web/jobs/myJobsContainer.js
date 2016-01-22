@@ -25,8 +25,8 @@ class MyJobsPage extends React.Component {
     this.props.getAllJobs();
   }
 
-  _handleJobClick(){
-    this.props.pushState(null,'/jobs/1a');
+  _handleJobClick(job, company){
+    this.props.pushState({}, `/clients/${company.get('id')}/jobs/${job.get('id')}`);
   }
 
   render () {
@@ -35,8 +35,11 @@ class MyJobsPage extends React.Component {
 
     return (
       <div>
-        <Header title='Jobs'></Header>
-        <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.list}/>
+        <Header title="Jobs" />
+        <JobsList
+            onJobClick={this._handleJobClick.bind(this)}
+            jobs={jobs.list}
+        />
       </div>
     );
   }

@@ -43,21 +43,6 @@ class Layout extends React.Component {
     this.props.pushState(null, '/test');
   }
 
-  // onNavOpen(){
-  //   this.selfSet = true;
-  //   this.props.onNavOpen();
-  // }
-  // onNavClose(){
-  //   this.selfSet = true;
-  //   this.props.onNavClose();
-  // }
-  // onClick() {
-  //   //this.refs.leftNavChildren.toggle();
-  //   this.setState({
-  //     open: false,
-  //   });
-  // }
-
   clickHome () {
     this.props.pushState(null, '');
     this.setState({
@@ -79,12 +64,6 @@ class Layout extends React.Component {
     });
   }
 
-  clickSettings() {
-    this.props.pushState(null, '/settings');
-    this.setState({
-      open: false,
-    });
-  }
   clickLogout() {
     this.setState({
       open: false,
@@ -116,10 +95,9 @@ class Layout extends React.Component {
       <LeftNav style={{backgroundColor:'#424242'}} ref="leftNavChildren" open={this.state.open} onRequestChange={open => this.setState({open})} docked={false} disableSwipeToOpen={leftNav.disableSwipeToOpen}>
         <LeftNavTop ref="leftNavTop"></LeftNavTop>
         <MenuItem style={{color:'#e0e0e0'}} primaryText="Dashboard" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">view_quilt</FontIcon>} onTouchTap={this.clickHome.bind(this)} index={0} />
-        <MenuItem style={{color:'#e0e0e0'}} primaryText="My Clients" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">business</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
-        <MenuItem style={{color:'#e0e0e0'}} primaryText="My Jobs" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">work</FontIcon>} onTouchTap={this.clickMyJobs.bind(this)} index={0} />
-        <MenuItem style={{color:'#e0e0e0'}} primaryText="My Candidates" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">people</FontIcon>} onTouchTap={this.clickMyCandidates.bind(this)} index={0} />
-        {/*<MenuItem style={{color:'#e0e0e0'}} primaryText="Settings" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">settings</FontIcon>} onTouchTap={this.clickSettings.bind(this)} index={0} />*/}
+        <MenuItem style={{color:'#e0e0e0'}} primaryText="Clients" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">business</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
+        <MenuItem style={{color:'#e0e0e0'}} primaryText="Jobs" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">work</FontIcon>} onTouchTap={this.clickMyJobs.bind(this)} index={0} />
+        <MenuItem style={{color:'#e0e0e0'}} primaryText="Candidates" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">people</FontIcon>} onTouchTap={this.clickMyCandidates.bind(this)} index={0} />
         {(user) ? (
           <MenuItem style={{color:'#e0e0e0'}} primaryText="Logout" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">vpn_key</FontIcon>} onTouchTap={this.clickLogout.bind(this)} index={0} />
         ) : (
