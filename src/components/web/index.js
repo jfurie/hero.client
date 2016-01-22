@@ -36,3 +36,4 @@ export JobCreateModal from './jobCreateModal/jobCreateModal';
 export JobDetailsModal from './jobDetails/jobDetailsModal';
 export CandidateSearchModal from './candidateSearch/candidateSearchModal';
 export CandidateCreateModal from './candidateCreateModal/candidateCreateModal';
+export ShareJobModal from './shareJobModal/shareJobModal';

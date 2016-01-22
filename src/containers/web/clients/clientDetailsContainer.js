@@ -5,7 +5,7 @@ import { pushState } from 'redux-router';
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
   CompanyJobsList, CompanyNotesList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
-  JobDetailsModal, ClientsEditModal, CompanyAvatar, Gravatar
+  JobDetailsModal, ClientsEditModal, CompanyAvatar, Gravatar,
 } from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies/index';
@@ -233,7 +233,7 @@ class ClientDetailsPage extends React.Component {
     //  let heroContact = '/img/rameet.jpg';
       return (
         <div>
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} open={(this.props.params.jobId)?(true):(false)} createCandidate={this.createCandidate.bind(this)} />
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} company={company} open={(this.props.params.jobId)?(true):(false)} createCandidate={this.createCandidate.bind(this)} />
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" company={company}/>
