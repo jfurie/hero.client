@@ -51,6 +51,16 @@ export function createJob(job){
   };
 }
 
+export function shareJob(jobId, data){
+  return {
+    types: [constants.SHARE_JOB, constants.SHARE_JOB_SUCCESS, constants.SHARE_JOB_FAIL],
+    promise: (client, auth) => client.api.post(`/jobs/${jobId}/share`, {
+      authToken: auth.authToken,
+      data,
+    }),
+  };
+}
+
 export function updateJobLocal(job,dontMergeDeep){
   return {
     type: constants.UPDATE_JOB_LOCAL,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FontIcon, Styles } from 'material-ui';
+import { Styles } from 'material-ui';
 import md5 from 'md5';
 
 class Gravatar extends React.Component {

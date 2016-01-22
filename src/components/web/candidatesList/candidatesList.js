@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, Divider, Styles } from 'material-ui';
+import { List, ListItem, Divider } from 'material-ui';
 import Infinite from 'react-infinite';
 
 import { CandidateDetailsModal, Gravatar, CandidatesListItemStatus } from '../../../components/web';

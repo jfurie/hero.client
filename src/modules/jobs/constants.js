@@ -20,3 +20,6 @@ export const REPLACE_JOB_LOCAL = 'hero.client/jobs/REPLACE_JOB_LOCAL';
 export const GET_MY_JOBS = 'hero.client/jobs/GET_MY_JOBS';
 export const GET_MY_JOBS_SUCCESS = 'hero.client/jobs/GET_MY_JOBS_SUCCESS';
 export const GET_MY_JOBS_FAIL = 'hero.client/jobs/GET_MY_JOBS_FAIL';
+export const SHARE_JOB = 'hero.client/jobs/SHARE_JOB';
+export const SHARE_JOB_SUCCESS = 'hero.client/jobs/SHARE_JOB_SUCCESS';
+export const SHARE_JOB_FAIL = 'hero.client/jobs/SHARE_JOB_FAIL';
