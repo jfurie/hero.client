@@ -122,6 +122,7 @@ class ShareJobModal extends React.Component {
       let data = {
         contactId: this.state.shareJob.selectedContact.get('id'),
         note: this.state.shareJob.note || null,
+        domain: location.origin,
       };
 
       this.props.shareJob(this.props.jobId, data);
