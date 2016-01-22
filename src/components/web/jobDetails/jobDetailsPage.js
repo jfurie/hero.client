@@ -68,8 +68,6 @@ class JobDetailsPage extends React.Component {
     let jobId = ((job) ? (job.get('id')) : (null));
     //let heroContact = '/img/rameet.jpg';
 
-    console.log(company);
-
     return (
       <div>
         <CandidateSearchModal open={this.state.candidateSearchOpen} closeModal={this.candidateSearchModalClose.bind(this)} candidates={this.props.contacts.list}/>

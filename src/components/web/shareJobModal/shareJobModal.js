@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   Dialog, Toolbar, ToolbarTitle, IconButton,
   ToolbarGroup, FlatButton, SelectField, TextField,
-  MenuItem,
+  MenuItem, Snackbar,
 } from 'material-ui';
+import { shareJob } from '../../../modules/jobs/index';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -12,7 +14,6 @@ const style = {
     height: '100%',
     maxHeight: '100%',
     paddingTop: '0px',
-    //zIndex: '50',
   },
   bodyStyle: {
     paddingTop: '0px',
@@ -67,6 +68,7 @@ const style = {
   },
 };
 
+@connect(() => ({}), {shareJob}, null, {withRef: true})
 class ShareJobModal extends React.Component {
 
   constructor(props) {
@@ -75,9 +77,9 @@ class ShareJobModal extends React.Component {
     this.state = {
       shareJob: {
         selectedContact: null,
-        note: '',
+        note: null,
       },
-      errors: {},
+      error: false,
       open: false,
     };
   }
@@ -87,12 +89,6 @@ class ShareJobModal extends React.Component {
       open: false,
     });
   }
-
-  // saveNote() {
-  //   console.log('save note!');
-  //
-  //   this.props.saveNote();
-  // }
 
   _handleChange(e, field) {
     let newShareJob = this.state.shareJob;
@@ -109,11 +105,32 @@ class ShareJobModal extends React.Component {
     });
   }
 
-  _share() {
-    // check for errors
+  _handleErrorClose() {
+    this.setState({
+      error: false,
+    });
+  }
 
-    console.log(this.props.jobId);
-    this.closeModal();
+  _share() {
+
+    this.setState({
+      error: false,
+    });
+
+    if (this.state.shareJob.selectedContact) {
+
+      let data = {
+        contactId: this.state.shareJob.selectedContact.get('id'),
+        note: this.state.shareJob.note || null,
+      };
+
+      this.props.shareJob(this.props.jobId, data);
+      this.closeModal();
+    } else {
+      this.setState({
+        error: true,
+      });
+    }
   }
 
   show() {
@@ -123,16 +140,9 @@ class ShareJobModal extends React.Component {
   }
 
   _handleRecipientChange(event, index, value) {
-    // var change = {};
-    // change['privacyValue'] = value;
-    // this.props.onNoteChange(change);
-    console.log(index, value);
-
-    console.log(value.get('displayName'));
-
     let state = this.state;
     state.shareJob.selectedContact = value;
-    state.shareJob.selectedContactText = `${value.get('displayName')}: ${value.get('email')}`;
+    //state.shareJob.selectedContactText = `${value.get('displayName')}: ${value.get('email')}`;
     this.setState(state);
   }
 
@@ -162,37 +172,47 @@ class ShareJobModal extends React.Component {
             </ToolbarGroup>
           </Toolbar>
           <div className="row center-xs">
-              <div className="col-xs-10 col-md-6">
-                  <div className="box">
-                    <SelectField
-                        floatingLabelText="Recipient:"
-                        floatingLabelStyle={style.floatLabel}
-                        fullWidth
-                        style={style.select}
-                        onChange={this._handleRecipientChange.bind(this)}
-                        hintText={''}
-                        value={this.state.shareJob.selectedContact}
-                    >
-                      {companyContacts.map((contact) => {
-                        return (
-                          <MenuItem disabled={!contact.get('isInvited')} value={contact} primaryText={`${contact.get('displayName')}: ${contact.get('email')}`}/>
-                        );
-                      })}
+            <div className="col-xs-10 col-md-6">
+              <div className="box">
+                <SelectField
+                    floatingLabelText="Recipient:"
+                    floatingLabelStyle={style.floatLabel}
+                    fullWidth
+                    style={style.select}
+                    onChange={this._handleRecipientChange.bind(this)}
+                    hintText={''}
+                    value={this.state.shareJob.selectedContact}
+                >
+                  {companyContacts.map((contact) => {
+                    return (
+                      <MenuItem disabled={!contact.get('isInvited')} value={contact} primaryText={contact.get('displayName')} />
+                    );
+                  })}
 
-                    </SelectField>
-                    <div>
-                      <TextField
-                          style={style.textField}
-                          errorText={this.state.errors['note'] || ''}
-                          errorStyle={style.error}
-                          onChange={(e) => this._handleChange.bind(this)(e, 'note')}
-                          floatingLabelText="Email note (optional)"
-                      />
-                    </div>
-                  </div>
+                </SelectField>
+                <div>
+                  <TextField
+                      style={style.textField}
+                      errorText={''}
+                      errorStyle={style.error}
+                      onChange={(e) => this._handleChange.bind(this)(e, 'note')}
+                      floatingLabelText="Email note (optional)"
+                  />
+                </div>
               </div>
+            </div>
           </div>
         </div>
+
+        <Snackbar
+            action="ok"
+            open={this.state.error}
+            onRequestClose={this._handleErrorClose.bind(this)}
+            autoHideDuration={2500}
+            message="Please select a recipient!"
+            ref="snackbar"
+        />
+
       </Dialog>
     );
   }

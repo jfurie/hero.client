@@ -50,7 +50,7 @@ class JobDetailsModal extends React.Component {
   }
 
   shareJobModalOpen() {
-    this.refs.shareJobModal.show();
+    this.refs.shareJobModal.getWrappedInstance().show();
   }
 
   closeModal() {
