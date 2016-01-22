@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, ClientContactsCreateModal, JobDetails, CandidateSearchModal, ShareJobModal } from '../../../components/web';
+import { Header, ClientContactsCreateModal, JobDetails, ShareJobModal } from '../../../components/web';
 
 import IconButton from 'material-ui/lib/icon-button';
 import IconMenu from 'material-ui/lib/menus/icon-menu';
@@ -12,7 +12,6 @@ class JobDetailsPage extends React.Component {
 
     this.state = {
       createContactModalOpen: false,
-      candidateSearchOpen: false,
     };
   }
 
@@ -46,18 +45,6 @@ class JobDetailsPage extends React.Component {
     console.log('save contact');
   }
 
-  candidateSearchModalClose(){
-    this.setState({
-      candidateSearchOpen: false,
-    });
-  }
-
-  candidateSearchModalOpen(){
-    this.setState({
-      candidateSearchOpen: true,
-    });
-  }
-
   shareJobModalOpen() {
     this.refs.shareJobModal.show();
   }
@@ -70,7 +57,6 @@ class JobDetailsPage extends React.Component {
 
     return (
       <div>
-        <CandidateSearchModal open={this.state.candidateSearchOpen} closeModal={this.candidateSearchModalClose.bind(this)} candidates={this.props.contacts.list}/>
         <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen} />
         <ShareJobModal ref="shareJobModal" jobId={jobId} companyContacts={company.get('contacts')}/>
 
@@ -78,7 +64,7 @@ class JobDetailsPage extends React.Component {
           <IconMenu iconButtonElement={
             <IconButton iconClassName='material-icons'>more_vert</IconButton>
           }>
-            <MenuItem index={0} onTouchTap={this.candidateSearchModalOpen.bind(this)} primaryText='Find Candidates' />
+            <MenuItem index={0} primaryText='Find Candidates' />
             <MenuItem index={1} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Candidate" />
             <MenuItem index={2} onTouchTap={this.shareJobModalOpen.bind(this)} primaryText="Share This Job" />
           </IconMenu>
