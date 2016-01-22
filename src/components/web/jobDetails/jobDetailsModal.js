@@ -44,7 +44,7 @@ class JobDetailsModal extends React.Component {
     });
   }
 
-shareJobModalOpen() {
+  shareJobModalOpen() {
     this.refs.shareJobModal.getWrappedInstance().show();
   }
 
@@ -81,7 +81,7 @@ shareJobModalOpen() {
         <Dialog open={this.props.open}>
           <CandidateSearchModal open={this.state.candidateSearchModalOpen} job={job} candidates={candidates} close={this.closeCandidateSearchModal.bind(this)} createCandidate={this.createCandidate.bind(this)}/>
           <CandidateCreateModal open={this.state.candidateCreateModalOpen} job={job} close={this.closeCandidateCreateModal.bind(this)}  createCandidate={this.createCandidate.bind(this)}/>
-<ShareJobModal ref="shareJobModal" jobId={jobId} companyContacts={company.get('contacts')}/>
+          <ShareJobModal ref="shareJobModal" jobId={jobId} companyContacts={company.get('contacts')}/>
           <div style={style.dialog}>
             <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
               <ToolbarGroup key={0} float="left">
