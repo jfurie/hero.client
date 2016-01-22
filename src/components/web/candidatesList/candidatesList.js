@@ -9,17 +9,23 @@ class CandidatesList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      detailsCandidate: null,
-      detailsModalOpen: false,
+      selectedCandidate: null,
+      candidateDetailsModalOpen: false,
     };
   }
 
   openDetails(candidate){
-    this.refs.candidateDetailsModal.show(candidate);
+    this.setState({
+      selectedCandidate: candidate,
+      candidateDetailsModalOpen: true,
+    });
   }
 
   closeDetails() {
-
+    this.setState({
+      selectedCandidate: null,
+      candidateDetailsModalOpen: false,
+    });
   }
 
   render() {
@@ -29,7 +35,7 @@ class CandidatesList extends React.Component {
 
     return (
       <div>
-        <CandidateDetailsModal ref="candidateDetailsModal"/>
+        <CandidateDetailsModal open={this.state.candidateDetailsModalOpen} candidate={this.state.selectedCandidate} close={this.closeDetails.bind(this)}/>
         <List style={{backgroundColor:'transparant'}} subheader={`${candidates.length} Candidate${(candidates.length > 1) ? ('s') : ('')}`}>
           <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
             {candidates.map((candidate, key) => {
