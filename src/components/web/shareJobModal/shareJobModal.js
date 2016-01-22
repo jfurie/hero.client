@@ -142,7 +142,6 @@ class ShareJobModal extends React.Component {
   _handleRecipientChange(event, index, value) {
     let state = this.state;
     state.shareJob.selectedContact = value;
-    //state.shareJob.selectedContactText = `${value.get('displayName')}: ${value.get('email')}`;
     this.setState(state);
   }
 
