@@ -2,10 +2,8 @@ import CandidateSearch from './candidateSearch';
 import {Dialog} from '../';
 import { Toolbar, ToolbarGroup, IconButton, ToolbarTitle} from 'material-ui';
 import React from 'react';
-import { connect } from 'react-redux';
 
-@connect(() => (
-{}), {}, null, {withRef: true})
+
 export default class CandidateSearchModal extends React.Component {
   constructor(props){
     super(props);
