@@ -4,7 +4,7 @@ import { pushState } from 'redux-router';
 import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
-import { getAllUserCandidates } from '../../modules/candidates';
+import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies } from '../../modules/companies';
 
 const style = {
@@ -15,13 +15,12 @@ const style = {
 
 function filterMyCandidates(candidates, auth) {
 
-  let userId = auth.authToken.userId;
+  let accountId = auth.authToken.accountInfo.account.id;
 
-  // grab the candidates for this job
   let myCandidates = [];
-  if (userId && candidates && candidates.byUserId && candidates.list) {
-    if (candidates.byUserId.size > 0) {
-      candidates.byUserId.get(userId).forEach(function(candidateId) {
+  if (accountId && candidates && candidates.byAccountId && candidates.list) {
+    if (candidates.byAccountId.size > 0) {
+      candidates.byAccountId.get(accountId).forEach(function(candidateId) {
         let c = candidates.list.get(candidateId);
         if (c) {
           myCandidates.push(c);
@@ -47,7 +46,7 @@ function filterMyJobs(state){
   candidates: filterMyCandidates(state.candidates, state.auth),
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllUserCandidates, getAllCompanies, getMyJobs})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -58,7 +57,7 @@ class HomePage extends React.Component {
     this.props.getMyJobs();
     this.props.getAllJobs();
     this.props.getAllCompanies();
-    this.props.getAllUserCandidates(this.props.auth.authToken.userId);
+    this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
   }
 
   _handleJobClick(job){
