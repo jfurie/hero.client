@@ -17,7 +17,9 @@ const AUTHACCCESSTOKEN_FAIL = 'hero.client/auth/AUTHACCCESSTOKEN_FAIL';
 const CHANGEPASSWORD = 'hero.client/auth/CHANGEPASSWORD';
 const CHANGEPASSWORD_SUCCESS = 'hero.client/auth/CHANGEPASSWORD_SUCCESS';
 const CHANGEPASSWORD_FAIL = 'hero.client/auth/CHANGEPASSWORD_FAIL';
-
+const AUTHCHECK = 'hero.client/auth/AUTHCHECK';
+const AUTHCHECK_SUCCESS = 'hero.client/auth/AUTHCHECK_SUCCESS';
+const AUTHCHECK_FAIL = 'hero.client/auth/AUTHCHECK_FAIL';
 const initialState = {
   loaded: false,
   auth: {},
@@ -219,6 +221,31 @@ export function logginWithAuthLocalStorage() {
               authToken:auth,
             });
           }).catch((err) => {
+            reject({
+              error: err,
+            });
+          });
+        } else {
+          reject();
+        }
+      });
+
+    },
+  };
+}
+export function checkAuthServer(accessToken){
+  return {
+    types: [AUTHCHECK, AUTHCHECK_SUCCESS, AUTHCHECK_FAIL],
+    promise: (client) => {
+      return new Promise((resolve, reject) => {
+        if (accessToken) {
+          return client.api.get('/accessTokens/' + accessToken + '?access_token=' + accessToken, {
+          }).then((token)=> {
+            //client.localStorage.set('Auth', token);
+            resolve();
+          }).catch((err) => {
+            client.localStorage.remove('Auth');
+            document.location.href = '/login?redirect='+encodeURIComponent(document.location.pathname);
             reject({
               error: err,
             });
