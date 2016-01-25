@@ -133,7 +133,7 @@ class LogoutPage extends React.Component {
                 errorStyle={style.error}
                 errorText={this.state.userNameError || ''}
                 fullWidth
-                hintText="Login"
+                hintText="Email Address"
                 onChange={this.handleChange.bind(this, 'email')}
                 underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
                 name="username"
@@ -171,9 +171,10 @@ class LogoutPage extends React.Component {
             action="ok"
             open={this.state.loginError}
             onRequestClose={this.handleLoginErrorClose.bind(this)}
-            autoHideDuration={2500}
-            message="Invalid username or password."
+            autoHideDuration={250000}
+            message="Invalid email address or password."
             ref="snackbar"
+            className="snackbar"
         />
 
       </div>
