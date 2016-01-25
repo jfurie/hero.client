@@ -240,7 +240,7 @@ export function checkAuthServer(accessToken){
       return new Promise((resolve, reject) => {
         if (accessToken) {
           return client.api.get('/accessTokens/' + accessToken + '?access_token=' + accessToken, {
-          }).then((token)=> {
+          }).then(()=> {
             //client.localStorage.set('Auth', token);
             resolve();
           }).catch((err) => {
