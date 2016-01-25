@@ -108,6 +108,12 @@ class CandidateDetailsModal extends React.Component {
     let candidateStatus = 'notset';
     let resumeLink = null;
     let candidateId = null;
+    let currentSalary = null;
+    let currentHourly = null;
+    let desiredHourly = null;
+    let desiredSalary = null;
+    let bonusNotes = null;
+    let pitch = null;
 
     if (this.props.candidate) {
       candidateId = this.props.candidate.get('id') || null;
@@ -125,6 +131,12 @@ class CandidateDetailsModal extends React.Component {
         address = '1316 3rd St #103';
         city = 'Santa Monica, CA 90401';
         source = 'facebook.com';
+        currentSalary = contact.get('currentSalary') || null;
+        currentHourly = contact.get('currentHourly') || null;
+        desiredHourly = contact.get('desiredHourly') || null;
+        desiredSalary = contact.get('desiredSalary') || null;
+        bonusNotes = contact.get('bonusNotes') || null;
+        pitch = contact.get('pitch') || null;
       }
     }
 
@@ -169,7 +181,7 @@ class CandidateDetailsModal extends React.Component {
 
             </Toolbar>
             <CustomTabsSwipe
-                tabs={['Details', 'Infos', 'Applications']}
+                tabs={['Details', 'Info' /*, 'Applications'*/]}
                 isLight
             >
               <List>
@@ -263,63 +275,87 @@ class CandidateDetailsModal extends React.Component {
                 <p>lol</p>
               </div> */}
               <div>
-                <CardText>
-                  <div className="description">
-                    <p>Quick Pitch:</p>
-                    <p>Experienced software engineer passionate about creating technology to empower people. Effective communicator able to lead cross-functional teams to achieve innovative results. All challenges considered.</p>
-                  </div>
-                </CardText>
+                {(pitch) ? (
+                  <CardText>
+                    <div className="description">
+                      <p>Quick Pitch:</p>
+                      <p>{pitch}</p>
+                    </div>
+                  </CardText>
+                ) : (null)}
+
                 <List>
                   <div>
 
-                    <ListItem
-                        leftAvatar={<FontIcon className="material-icons">attach_money</FontIcon>}
-                        primaryText="$130,000"
-                        secondaryText={<p>curent salary</p>}
-                        secondaryTextLines={1}
-                    />
+                    {(!currentSalary && !bonusNotes && !desiredSalary && !currentHourly && !desiredHourly) ? (
+                      <p style={{textAlign: 'center', marginTop: '20px', color: Styles.Colors.grey600}}>
+                        No additional informations
+                      </p>
+                    ) : (null)}
 
-                    <Divider inset />
+                    {(currentSalary) ? (
+                      <ListItem
+                          leftAvatar={<FontIcon className="material-icons">attach_money</FontIcon>}
+                          primaryText={`$${currentSalary}`}
+                          secondaryText={<p>curent salary</p>}
+                          secondaryTextLines={1}
+                      />
+                    ) : (null)}
 
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">star_rate</FontIcon>}
-                        primaryText="401k match, free lunch"
-                        secondaryText={<p>bonus</p>}
-                        secondaryTextLines={1}
-                    />
+                    {(bonusNotes) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">star_rate</FontIcon>}
+                            primaryText={bonusNotes}
+                            secondaryText={<p>bonus</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <Divider inset />
+                    {(desiredSalary) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
+                            primaryText={`$${desiredSalary}`}
+                            secondaryText={<p>desired salary</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
-                        primaryText="$140,000"
-                        secondaryText={<p>desired salary</p>}
-                        secondaryTextLines={1}
-                    />
+                    {(currentHourly) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">alarm</FontIcon>}
+                            primaryText={`$${currentHourly}`}
+                            secondaryText={<p>current hourly</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <Divider inset />
+                    {(desiredHourly) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">alarm_on</FontIcon>}
+                            primaryText={`$${desiredHourly}`}
+                            secondaryText={<p>desired hourly</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">alarm</FontIcon>}
-                        primaryText="$67"
-                        secondaryText={<p>current hourly</p>}
-                        secondaryTextLines={1}
-                    />
-
-                    <Divider inset />
-
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">alarm_on</FontIcon>}
-                        primaryText="$72"
-                        secondaryText={<p>desired hourly</p>}
-                        secondaryTextLines={1}
-                    />
                   </div>
                 </List>
               </div>
-              <div>
+              {/*<div>
 
-              </div>
+              </div>*/}
             </CustomTabsSwipe>
           </div>
         </Dialog>
