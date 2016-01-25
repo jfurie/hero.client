@@ -2,13 +2,13 @@ import React from 'react';
 //import _ from 'lodash';
 import Immutable from 'immutable';
 import {
-  Dialog, Toolbar, ToolbarTitle, IconButton,
+  Toolbar, ToolbarTitle, IconButton,
   ToolbarGroup, FlatButton, TextField, DatePicker,
   Card, CardMedia, CardText, LinearProgress, SelectField,
-  MenuItem,
+  MenuItem
 } from 'material-ui';
 //import {geoCode} from '../../../utils/geoCoding';
-import {FileInput, TagsInput} from '../';
+import {FileInput, TagsInput, Dialog} from '../';
 //import GoogleMap from 'google-map-react';
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
