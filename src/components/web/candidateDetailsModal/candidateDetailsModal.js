@@ -115,9 +115,13 @@ class CandidateDetailsModal extends React.Component {
       candidateStatus = this.props.candidate.get('status') || 'notset';
       let contact = this.props.candidate.get('contact');
 
-      // TMP
-      resumeLink = '/sample.pdf';
 
+      // TMP
+      resumeLink = null;
+      let resume = contact.get('resume');
+      if(resume){
+        resumeLink = resume.get('item');
+      }
       if (contact) {
         displayName = contact.get('displayName') || null;
         email = contact.get('email') || null;
