@@ -120,7 +120,7 @@ class LogoutPage extends React.Component {
   render () {
     return (
       <div>
-        <div id="login-box" className="row center-xs center-md">
+        <div id="login-box" className="row center-xs center-md row-top">
 
           <form className="col-xs-10 col-md-4" onSubmit={this.onSubmit.bind(this)}>
 
