@@ -14,22 +14,24 @@ const style = {
 };
 
 function filterMyCandidates(candidates, auth) {
+  if(auth && auth.authToken){
+    let accountId = auth.authToken.accountInfo.account.id;
 
-  let accountId = auth.authToken.accountInfo.account.id;
-
-  let myCandidates = [];
-  if (accountId && candidates && candidates.byAccountId && candidates.list) {
-    if (candidates.byAccountId.size > 0) {
-      candidates.byAccountId.get(accountId).forEach(function(candidateId) {
-        let c = candidates.list.get(candidateId);
-        if (c) {
-          myCandidates.push(c);
-        }
-      });
+    let myCandidates = [];
+    if (accountId && candidates && candidates.byAccountId && candidates.list) {
+      if (candidates.byAccountId.size > 0) {
+        candidates.byAccountId.get(accountId).forEach(function(candidateId) {
+          let c = candidates.list.get(candidateId);
+          if (c) {
+            myCandidates.push(c);
+          }
+        });
+      }
     }
-  }
 
-  return myCandidates;
+    return myCandidates;
+  }
+  return [];
 }
 
 function filterMyJobs(state){
@@ -57,7 +59,10 @@ class HomePage extends React.Component {
     this.props.getMyJobs();
     this.props.getAllJobs();
     this.props.getAllCompanies();
-    this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
+    if(this.props.auth && this.props.auth.authToken){
+      this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
+    }
+
   }
 
   _handleJobClick(job){

@@ -170,10 +170,24 @@ export function createCandidate(candidateData, jobId) {
   };
 }
 
+let include = [
+  {
+    relation:'contact',
+    scope:{
+      include:{
+        relation:'resume',
+        scope:{
+        },
+      },
+    },
+  },
+];
+let includeStr = encodeURIComponent(JSON.stringify(include));
+
 export function getAllJobCandidates(jobId) {
   return {
     types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
-    promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"jobId": "${jobId}"}, "include": "contact"}`, {
+    promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"jobId": "${jobId}"}, "include": ${includeStr}}`, {
       authToken: auth.authToken,
     }),
   };
