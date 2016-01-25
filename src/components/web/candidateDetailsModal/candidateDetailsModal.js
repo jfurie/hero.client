@@ -1,5 +1,5 @@
 import React from 'react';
-import Immutable from 'immutable';
+//import Immutable from 'immutable';
 
 import {
   Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
@@ -73,9 +73,9 @@ class CandidateDetailsModal extends React.Component {
     //this.props.getAllJobs();
   }
 
-  _handleJobClick(){
-    this.props.pushState(null,'/jobs/1a');
-  }
+  // _handleJobClick(){
+  //   this.props.pushState(null,'/jobs/1a');
+  // }
 
   _openResume(resumeLink) {
     window.open(resumeLink);
@@ -87,17 +87,17 @@ class CandidateDetailsModal extends React.Component {
 
   render() {
 
-    let jobs = {};
-    jobs.list = new Immutable.Map();
-
-    let job = {};
-    job['1a'] = {
-      title: 'Android Mobile Engineer',
-      location: 'Santa Monica, CA',
-      id: '1a',
-    };
-
-    jobs.list = jobs.list.mergeDeep(job);
+    // let jobs = {};
+    // jobs.list = new Immutable.Map();
+    //
+    // let job = {};
+    // job['1a'] = {
+    //   title: 'Android Mobile Engineer',
+    //   location: 'Santa Monica, CA',
+    //   id: '1a',
+    // };
+    //
+    // jobs.list = jobs.list.mergeDeep(job);
 
     let email = null;
     let phone = null;
@@ -132,9 +132,27 @@ class CandidateDetailsModal extends React.Component {
         displayName = contact.get('displayName') || null;
         email = contact.get('email') || null;
         phone = contact.get('phone') || null;
-        address = '1316 3rd St #103';
-        city = 'Santa Monica, CA 90401';
-        source = 'facebook.com';
+
+        // define address and city
+        address = contact.get('_address').get('addressLine') || null;
+        city = contact.get('_address').get('city') || null;
+
+        let postalCode = contact.get('_address').get('postalCode') || null;
+        let countrySubDivisionCode = contact.get('_address').get('countrySubDivisionCode') || null;
+        if (city && countrySubDivisionCode) {
+          city += `, ${countrySubDivisionCode}`;
+        }
+
+        if (city && postalCode) {
+          city += ` ${postalCode}`;
+        }
+
+        // get source
+
+        if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
+          source = contact.get('sourceInfo').get('referrer');
+        }
+
         currentSalary = contact.get('currentSalary') || null;
         currentHourly = contact.get('currentHourly') || null;
         desiredHourly = contact.get('desiredHourly') || null;
@@ -272,12 +290,6 @@ class CandidateDetailsModal extends React.Component {
 
                 </div>
               </List>
-              {/* <div className="innerView"> sample.pdf
-                <RaisedButton linkButton={true} href="https://github.com/callemall/material-ui" secondary={true} label="Label after" labelPosition="after">
-                  <FontIcon style={styles.exampleButtonIcon} className="muidocs-icon-custom-github" />
-                </RaisedButton>
-                <p>lol</p>
-              </div> */}
               <div>
                 {(pitch) ? (
                   <CardText>
