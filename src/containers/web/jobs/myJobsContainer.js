@@ -5,12 +5,6 @@ import { Header, JobsList } from '../../../components/web';
 import { toggleNav } from '../../../modules/leftNav';
 import { getAllJobs } from '../../../modules/jobs/index';
 
-// const style = {
-//   slide: {
-//     minHeight: `${window.innerHeight - 112}px`,
-//   },
-// };
-
 @connect(state => ({
   user: state.auth.user,
   jobs: state.jobs,
