@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { IconButton, ToolbarGroup, FlatButton, TextField, ToolbarTitle, Toolbar } from 'material-ui';
 import {Dialog} from '../';
 import { createCompanyContact } from '../../../modules/companyContacts';
+import phoneFormatter from 'phone-formatter';
 
 import validateContact from '../../../validators/contact';
 
@@ -56,6 +57,15 @@ export default class ClientContactsCreateModal extends React.Component {
   }
 
   _handleSubmit(){
+
+    // format phone number
+    if (this.state.contact.phone) {
+      let newContact = this.state.contact;
+      newContact.phone = phoneFormatter.format(newContact.phone, '(NNN) NNN-NNNN');
+      this.setState({
+        contact: newContact,
+      });
+    }
 
     let errors = validateContact(this.state.contact);
 
@@ -146,6 +156,7 @@ export default class ClientContactsCreateModal extends React.Component {
                           style={style.textField}
                           errorText={this.state.errors['phone'] || ''}
                           errorStyle={style.error}
+                          value={this.state.contact.phone || ''}
                           onChange={(e) => this._handleChange.bind(this)(e, 'phone')}
                           floatingLabelText="Phone (optional)" />
                     </div>
