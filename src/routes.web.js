@@ -7,7 +7,7 @@ import LocalStorageClient from './utils/localStorageClient';
 import Home from './containers/web/homeContainer';
 import LoginPage from './containers/web/login/loginContainer';
 import LogoutPage from './containers/web/logoutContainer';
-import InvitedPage from './containers/web/invitedContainer';
+import InvitedPage from './containers/web/invited/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
 import Layout from './containers/web/layoutContainer';
 
@@ -32,6 +32,13 @@ import MyJobsPage from './containers/web/jobs/myJobsContainer';
 
 const localStorage = new LocalStorageClient('Auth');
 
+function getParameterByName(name) {
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+  let results = regex.exec(location.search);
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
 export default(store) => {
 
   /* block access if it's not a user */
@@ -42,7 +49,9 @@ export default(store) => {
 
       if (!user) {
         let auth = localStorage.get('Auth');
+
         if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
+          store.dispatch(authActions.checkAuthServer(auth.id));
           store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
             cb();
           });
@@ -80,8 +89,14 @@ export default(store) => {
       const { auth: { user } } = ((store) ? (store.getState()) : (null));
       if (!user) {
         let auth = localStorage.get('Auth');
+        let tokenParam = getParameterByName('accessToken');
+
         if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
           store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
+            cb();
+          });
+        } else if (tokenParam) {
+          store.dispatch(authActions.logginWithAccessToken(tokenParam)).then(() => {
             cb();
           });
         } else {
@@ -135,7 +150,7 @@ export default(store) => {
             <Route path=":id/jobs(/:create)" component={ClientDetailsPage} />
             <Route path=":id" component={ClientDetailsPage} />
               <Route path=":id/notes" component={ClientDetailsPage}
-                onEnter={(nextState, replaceState) => {
+                onEnter={(nextState) => {
                   nextState.params.tab = 'notes';
                 }} />
           </Route>
@@ -157,6 +172,7 @@ export default(store) => {
             <Route path="account" onEnter={requireAccount} component={SettingsAccountPage}/>
           </Route>
 
+
           {/* Account  */}
           <Route path="/account" onEnter={requireAccount}>
             <IndexRoute component={AccountHomePage}/>
@@ -167,7 +183,7 @@ export default(store) => {
 
         <Route path="invited" component={InvitedPage}/>
         {/* Catch all route */}
-        {/*  <Route path="*" component={NotFound} status={404} /> */}
+        <Route path="*" component={ErrorPage} status={404} />
 
       </Route>
     </Route>

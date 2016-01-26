@@ -1,22 +1,39 @@
 import React from 'react';
+import { TextField, RaisedButton, Styles } from 'material-ui';
+
+const style = {
+  error: {
+    color: Styles.Colors.red400,
+    textAlign: 'left',
+  },
+  submitButton: {
+    width: '100%',
+    marginBottom: '14px',
+    marginTop: '30px',
+    height: '50px',
+  },
+};
 
 class ChangePasswordForm extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
-      error: null
+      password: null,
+      password2: null,
     };
   }
 
   onSubmit (e) {
     e.preventDefault();
-    this.setState({error: null});
 
     let password = this.state.password;
     let password2 = this.state.password2;
-    if (password.length < 6) {this.setState({error: 'Password not valid!'});} else if (password != password2) {this.setState({error: 'Password do not match!'});} else {
+    if (!password || !password2 || password.length < 6) {
+      this.props.onError('Password not valid!');
+    } else if (password && password2 && password !== password2) {
+      this.props.onError('Passwords do not match!');
+    } else {
       this.props.onPassword(password);
     }
   }
@@ -29,43 +46,46 @@ class ChangePasswordForm extends React.Component {
 
   render () {
 
-    let {
-      submitText
-    } = this.props;
+    let { submitText } = this.props;
 
     submitText = submitText || 'submit';
 
     return (
       <form onSubmit={this.onSubmit.bind(this)}>
-        {(this.state && this.state.error)
-          ? (
-            <p>Error:
-              {this.state.error}</p>
-          )
-          : (null)}
-        <div>
-          <label htmlFor='email'>password:
-          </label>
 
-          <input name="password2" onChange={this.handleChange.bind(this, 'password')} placeholder="at least 6 characters" type="password"></input>
-        </div>
-        <div>
-          <label htmlFor='email'>confirm:
-          </label>
+        <TextField
+            fullWidth
+            hintText="Password (at least 6 characters)"
+            onChange={this.handleChange.bind(this, 'password')}
+            underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
+            type="password"
+            name="password"
+        />
 
-          <input name="password2" onChange={this.handleChange.bind(this, 'password2')} placeholder="at least 6 characters" type="password"></input>
-        </div>
-        <div>
-          <input type="submit" value={submitText}></input>
-        </div>
+        <TextField
+            fullWidth
+            hintText="Password (confirm)"
+            onChange={this.handleChange.bind(this, 'password2')}
+            underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
+            type="password"
+            name="password2"
+        />
+
+        <RaisedButton
+            label="Change Password"
+            style={style.submitButton}
+            type="submit"
+        />
+
       </form>
     );
   }
 }
 
 ChangePasswordForm.propTypes = {
+  onError: React.PropTypes.func.isRequired,
   onPassword: React.PropTypes.func.isRequired,
-  submitText: React.PropTypes.string
+  submitText: React.PropTypes.string,
 };
 
 export default ChangePasswordForm;

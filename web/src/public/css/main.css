@@ -152,3 +152,9 @@ body {
 #innerView {
     padding: 8px;
 }
+
+/* fix for snackbars on mobile */
+
+.snackbar div button {
+    min-width: auto !important;
+}

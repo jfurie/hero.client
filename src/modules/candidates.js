@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import * as jobConstants from './jobs/constants';
 
 const CREATE_CANDIDATE = 'hero.client/candidates/CREATE_CANDIDATE';
 const CREATE_CANDIDATE_SUCCESS = 'hero.client/candidates/CREATE_CANDIDATE_SUCCESS';
@@ -13,7 +14,7 @@ const GET_ONE_CANDIDATE_FAIL = 'hero.client/candidates/GET_ONE_CANDIDATE_FAIL';
 const initialState = {
   list: new Immutable.Map(),
   byJobId: new Immutable.Map(),
-  byUserId: new Immutable.Map(),
+  byAccountId: new Immutable.Map(),
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -24,17 +25,17 @@ export default function reducer(state = initialState, action = {}) {
   case CREATE_CANDIDATE_SUCCESS: {
 
     let jobId = action.result.jobId;
-    let userId = action.result.createdBy;
+    let accountId = action.result.accountId;
     let byJobIdNew = {};
-    let byUserIdNew = {};
+    let byAccountIdNew = {};
 
     // add candidate Id to the byJobId list
     byJobIdNew[jobId] = state.byJobId.get(jobId) || new Immutable.List();
     byJobIdNew[jobId] = byJobIdNew[jobId].push(action.result.id);
 
-    // add candidate Id to the byUserId list
-    byUserIdNew[userId] = state.byUserIdNew.get(userId) || new Immutable.List();
-    byUserIdNew[userId] = byUserIdNew[userId].push(action.result.createdBy);
+    // add candidate Id to the byAccountId list
+    byAccountIdNew[accountId] = state.byAccountId.get(accountId) || new Immutable.List();
+    byAccountIdNew[accountId] = byAccountIdNew[accountId].push(action.result.id);
 
     // // add candidate to the global list
     // let listNew = {};
@@ -43,7 +44,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       byJobId: state.byJobId.mergeDeep(byJobIdNew),
-      byUserId: state.byUserId.mergeDeep(byUserIdNew),
+      byAccountId: state.byAccountId.mergeDeep(byAccountIdNew),
       // list: state.list.mergeDeep(listNew),
     };
   }
@@ -73,21 +74,31 @@ export default function reducer(state = initialState, action = {}) {
 
     if (action.result.length) {
       let jobId = action.result[0].jobId;
-      let userId = action.result[0].createdBy;
 
       // add contact Ids to the byJobId list
       let byJobIdNew = {};
-      byJobIdNew[jobId] = state.byJobId.get(jobId) || new Immutable.List();
+      byJobIdNew[jobId] = new Immutable.List();
       byJobIdNew[jobId] = byJobIdNew[jobId].concat(action.result.map((c) => {
         return c.id;
       }));
 
-      // add contact Ids to the byUserId list
-      let byUserIdNew = {};
-      byUserIdNew[userId] = state.byUserId.get(userId) || new Immutable.List();
-      byUserIdNew[userId] = byUserIdNew[userId].concat(action.result.map((c) => {
-        return c.id;
-      }));
+      // add contact Ids to the byAccountId list
+      let byAccountIdNew = {};
+
+      /* doing a forEach here because some candidates might not have
+      an accountId yet. (bug fixed in API since then) */
+      action.result.forEach((candidate) => {
+        if (candidate.accountId) {
+
+          let accountId = candidate.accountId;
+
+          if (!byAccountIdNew[accountId]) {
+            byAccountIdNew[accountId] = new Immutable.List();
+          }
+
+          byAccountIdNew[accountId] = byAccountIdNew[accountId].concat(candidate.id);
+        }
+      });
 
       // add every candidate in the list
       let listNew = {};
@@ -98,13 +109,26 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         byJobId: state.byJobId.mergeDeep(byJobIdNew),
-        byUserId: state.byUserId.mergeDeep(byUserIdNew),
+        byAccountId: state.byAccountId.mergeDeep(byAccountIdNew),
         list: state.list.mergeDeep(listNew),
       };
     }
 
     return state;
   }
+  case jobConstants.GET_MY_JOBS_SUCCESS:
+    {
+      let candidateList =  {};
+      action.result.map(job =>{
+        job.candidates.map(candidate=>{
+          candidateList[candidate.id] = candidate;
+        });
+      });
+      return {
+        ...state,
+        list:state.list.mergeDeep(candidateList)
+      };
+    }
   default:
     return state;
   }
@@ -146,22 +170,42 @@ export function createCandidate(candidateData, jobId) {
   };
 }
 
+let include = [
+  {
+    relation:'contact',
+    scope:{
+      include:{
+        relation:'resume',
+        scope:{
+        },
+      },
+    },
+  },
+];
+let includeStr = encodeURIComponent(JSON.stringify(include));
+
 export function getAllJobCandidates(jobId) {
   return {
     types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
-    promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"jobId": "${jobId}"}, "include": "contact"}`, {
+    promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"jobId": "${jobId}"}, "include": ${includeStr}}`, {
       authToken: auth.authToken,
     }),
   };
 }
 
 export function getAllUserCandidates(userId) {
-
-  console.log('getAllUserCandidates', userId);
-
   return {
     types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
     promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"createdBy": "${userId}"}, "include": "contact"}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function getAllAccountCandidates(accountId) {
+  return {
+    types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
+    promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"accountId": "${accountId}"}, "include": "contact"}`, {
       authToken: auth.authToken,
     }),
   };

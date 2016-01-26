@@ -1,17 +1,16 @@
 import React from 'react';
 import { List } from 'material-ui';
-//import Infinite from 'react-infinite';
 import { CompanyJobsList } from '../../../components/web';
-
-// TMP
 import Immutable from 'immutable';
 
 class JobsList extends React.Component {
-  _handleJobClick(job){
-    if(this.props.onJobClick){
-      this.props.onJobClick(job);
+
+  _handleJobClick(job, company){
+    if (this.props.onJobClick) {
+      this.props.onJobClick(job, company);
     }
   }
+
   render() {
 
     let { jobs, ressourceName, ressourceNamePlurial } = this.props;
@@ -23,30 +22,30 @@ class JobsList extends React.Component {
       ressourceNamePlurial = `${ressourceName}s`;
     }
 
-    // create 2 fakes companies
     let companies = new Immutable.Map();
+    let jobsByCompany = new Immutable.Map();
+    jobs.map(function(job){
+      let companyMap = {};
+      let jobMap = {};
+      companyMap[job.get('company').get('id')] = job.get('company');
+      var companyJobs = jobsByCompany.get(job.get('company').get('id'));
+      companyJobs = companyJobs || new Immutable.List();
+      companyJobs = companyJobs.push(job);
+      jobMap[job.get('company').get('id')] = companyJobs;
+      companies = companies.mergeDeep(companyMap);
+      jobsByCompany = jobsByCompany.mergeDeep(jobMap);
+    });
 
-    let ring = {};
-    ring['ring'] = {
-      'website': 'http://ring.com',
-      'name': 'Ring',
-    };
+    let subheader = `${jobs.count()} ${(jobs.count() !== 1) ? (ressourceNamePlurial) : (ressourceName)}`;
 
-    let washio = {};
-    washio['washio'] = {
-      'website': 'http://www.getwashio.com/',
-      'name': 'Washio',
-    };
-
-    companies = companies.mergeDeep(ring);
-    companies = companies.mergeDeep(washio);
-
-    let subheader = `${jobs.count() * 2} ${ressourceNamePlurial}`;
-
+    let self = this;
     return (
       <List subheader={subheader}>
-        <CompanyJobsList jobs={jobs} onJobClick={this._handleJobClick.bind(this)} company={companies.get('ring')} />
-        <CompanyJobsList jobs={jobs} onJobClick={this._handleJobClick.bind(this)} company={companies.get('washio')} />
+        {companies.map(function(company){
+          var jobs = jobsByCompany.get(company.get('id'));
+          jobs = jobs || new Immutable.Map();
+          return (<CompanyJobsList jobs={jobs} onJobClick={self._handleJobClick.bind(self)} company={company} />);
+        })}
       </List>
     );
   }

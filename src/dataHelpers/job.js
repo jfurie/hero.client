@@ -12,16 +12,30 @@ export default function getJobDataFromState(state, jobId) {
     let jobCandidates = [];
     if (candidates && candidates.byJobId && candidates.list) {
       if (candidates.byJobId.size > 0) {
-        candidates.byJobId.get(jobId).forEach(function(candidateId) {
-          let c = state.candidates.list.get(candidateId);
-          if (c) {
-            jobCandidates.push(c);
-          }
-        });
+        let jobCandidateIds = candidates.byJobId.get(jobId);
+        if(jobCandidateIds){
+          jobCandidateIds.forEach(function(candidateId) {
+            let c = state.candidates.list.get(candidateId);
+            if (c) {
+              jobCandidates.push(c);
+            }
+          });
+        }
       }
     }
 
     job = job.set('candidates', jobCandidates);
+    let contactId = job.get('contactId');
+    if (contactId) {
+      let contact = state.contacts.list.get(contactId);
+      job.set('contact',contact);
+    }
+
+    let talentAdvocateId = job.get('talentAdvocateId');
+    if (talentAdvocateId) {
+      let contact = state.contacts.list.get(talentAdvocateId);
+      job.set('talentAdvocate',contact);
+    }
 
   }
 

@@ -2,24 +2,30 @@ import React from 'react';
 import { List, ListItem, Divider } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { CandidateDetailsModal, Gravatar } from '../../../components/web';
+import { CandidateDetailsModal, Gravatar, CandidatesListItemStatus } from '../../../components/web';
 
 class CandidatesList extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      detailsCandidate: null,
-      detailsModalOpen: false,
+      selectedCandidate: null,
+      candidateDetailsModalOpen: false,
     };
   }
 
   openDetails(candidate){
-    this.refs.candidateDetailsModal.show(candidate);
+    this.setState({
+      selectedCandidate: candidate,
+      candidateDetailsModalOpen: true,
+    });
   }
 
   closeDetails() {
-
+    this.setState({
+      selectedCandidate: null,
+      candidateDetailsModalOpen: false,
+    });
   }
 
   render() {
@@ -29,8 +35,8 @@ class CandidatesList extends React.Component {
 
     return (
       <div>
-        <CandidateDetailsModal ref="candidateDetailsModal"/>
-        <List style={{backgroundColor:'transparant'}} subheader={`${candidates.length} Candidate${(candidates.length > 1) ? ('s') : ('')}`}>
+        <CandidateDetailsModal open={this.state.candidateDetailsModalOpen} candidate={this.state.selectedCandidate} close={this.closeDetails.bind(this)}/>
+        <List style={{backgroundColor:'transparant'}} subheader={`${candidates.length} Candidate${(candidates.length !== 1) ? ('s') : ('')}`}>
           <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
             {candidates.map((candidate, key) => {
 
@@ -60,10 +66,11 @@ class CandidatesList extends React.Component {
               return (
                 <div key={key}>
                   <ListItem
-                      leftAvatar={<Gravatar email={candidateContact.get('email')} status={candidate.get('status')}/>}
+                      leftAvatar={<Gravatar email={candidateContact.get('email')} status={candidate.get('status')} />}
                       primaryText={candidateContact.get('displayName')}
-                      secondaryText={<p>{secondaryText} <br/> {candidate.get('status')}</p>}
-                      secondaryTextLines={2}
+                      secondaryText={<p>{secondaryText}</p>}
+                      secondaryTextLines={1}
+                      rightIcon={<CandidatesListItemStatus status={candidate.get('status')} />}
                       onTouchTap={this.openDetails.bind(this, candidate)}
                   />
                   <Divider inset={true} />

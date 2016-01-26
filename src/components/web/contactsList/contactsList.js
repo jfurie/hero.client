@@ -15,23 +15,12 @@ class ContactsList extends React.Component {
   }
 
   openDetails(contact){
-
     if (this.props.onOpenContactDetails) {
       this.props.onOpenContactDetails(contact);
     }
-    //console.log(contact);
-
-    // this.setState({
-    //   detailsContact: contact,
-    //   detailsModalOpen: true,
-    // });
   }
 
   closeDetails(){
-    // this.setState({
-    //   detailsContact: null,
-    //   detailsModalOpen: false,
-    // });
   }
 
   render() {
@@ -42,7 +31,7 @@ class ContactsList extends React.Component {
     let count = contacts.count();
     let ressourceName = 'Contact';
 
-    if (count > 1) {
+    if (count !== 1) {
       ressourceName += 's';
     }
 
@@ -73,11 +62,11 @@ class ContactsList extends React.Component {
               } else if (!secondaryText.length && contactLocation) {
                 secondaryText = contactLocation;
               }
-              
+
               return (
                 <div>
                   <ListItem
-                      leftAvatar={<Gravatar src={contact.get('email')} />}
+                      leftAvatar={<Gravatar email={contact.get('email')} />}
                       primaryText={contact.get('displayName')}
                       secondaryText={<p>{secondaryText}</p>}
                       secondaryTextLines={2}

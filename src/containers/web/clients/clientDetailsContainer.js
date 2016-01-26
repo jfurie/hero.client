@@ -5,7 +5,7 @@ import { pushState } from 'redux-router';
 import {
   Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
   CompanyJobsList, CompanyNotesList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
-  JobDetailsModal, ClientsEditModal, CompanyAvatar, Gravatar
+  JobDetailsModal, ClientsEditModal, CompanyAvatar, Gravatar,
 } from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies/index';
@@ -14,13 +14,13 @@ import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
 import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
-import { getAllJobCandidates } from '../../../modules/candidates';
+import { getAllJobCandidates, createCandidate } from '../../../modules/candidates';
 import { invite } from '../../../modules/users';
 import getCompanyDataFromState from '../../../dataHelpers/company';
 import getJobDataFromState from '../../../dataHelpers/job';
 
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Avatar,
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton,
 } from 'material-ui';
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 import MenuItem from 'material-ui/lib/menus/menu-item';
@@ -67,18 +67,20 @@ function getData(state, props) {
     localNote: state.notes.localNote,
     localJob: state.jobs.localJob,
     localJobResource,
+    heroContacts,
   };
 }
 
 const style = {
   slide: {
     minHeight: `${window.innerHeight - 112}px`,
+    // marginTop: '48px',
   },
 };
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite })
+{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite, createCandidate })
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -201,6 +203,10 @@ class ClientDetailsPage extends React.Component {
     this.props.updateJobImageLocal(imageArray);
   }
 
+  createCandidate(contact, jobId) {
+    this.props.createCandidate(contact, jobId);
+  }
+
   onSwipe(index){
     let tab = '';
     switch (index) {
@@ -218,24 +224,24 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company} = this.props;
+    let {company, heroContacts} = this.props;
 
     if (company) {
 
       let website = company.get('website');
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
-      let heroContact = '/img/rameet.jpg';
+    //  let heroContact = '/img/rameet.jpg';
       return (
         <div>
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} open={(this.props.params.jobId)?(true):(false)} />
+          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} company={company} open={(this.props.params.jobId)?(true):(false)} createCandidate={this.createCandidate.bind(this)} />
 
           <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
           <ClientsEditModal ref="clientEditModal" company={company}/>
 
           <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
           <NotesCreateModal saveNote={this._handleSaveNote.bind(this)} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
-          <JobCreateModal contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
+          <JobCreateModal heroContacts={heroContacts} contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
 
           <Header iconRight={
             <IconMenu iconButtonElement={
@@ -306,7 +312,7 @@ class ClientDetailsPage extends React.Component {
 
             </div>
             <div style={style.slide}>
-              <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() > 1) ? ('s') : (''))}`}>
+              <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() !== 1) ? ('s') : (''))}`}>
                 <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
               </List>
             </div>
@@ -314,7 +320,7 @@ class ClientDetailsPage extends React.Component {
               <ContactsList contacts={company.get('contacts')} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             </div>
             <div style={style.slide}>
-              <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() > 1) ? ('s') : (''))}`}>
+              <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
                 <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={company.get('notes')}/>
               </List>
             </div>

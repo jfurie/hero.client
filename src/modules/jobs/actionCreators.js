@@ -1,9 +1,32 @@
 import superagent from 'superagent';
 import * as constants from './constants';
 export function getJobsByCompany(companyId){
+
+  let include = [
+    {
+      relation:'company',
+      scope:{
+        fields:['name','website'],
+      },
+    },
+    {
+      relation:'candidates',
+      scope:{
+        fields:['status','isActive','jobId','contactId'],
+        include:{
+          relation:'contact',
+          scope:{
+            fields:['displayName','email','status'],
+          },
+        },
+      },
+    },
+  ];
+
+  let includeStr = encodeURIComponent(JSON.stringify(include));
   return {
     types: [constants.GET_JOBS_BY_COMPANY, constants.GET_JOBS_BY_COMPANY_SUCCESS, constants.GET_JOBS_BY_COMPANY_FAIL],
-    promise: (client, auth) => client.api.get(`/companies/${companyId}/jobs`, {
+    promise: (client, auth) => client.api.get(`/companies/${companyId}/jobs?filter={"include":${includeStr}}`, {
       authToken: auth.authToken,
     }),
   };
@@ -24,6 +47,16 @@ export function createJob(job){
     promise: (client, auth) => client.api.post('/jobs', {
       authToken: auth.authToken,
       data:job,
+    }),
+  };
+}
+
+export function shareJob(jobId, data){
+  return {
+    types: [constants.SHARE_JOB, constants.SHARE_JOB_SUCCESS, constants.SHARE_JOB_FAIL],
+    promise: (client, auth) => client.api.post(`/jobs/${jobId}/share`, {
+      authToken: auth.authToken,
+      data,
     }),
   };
 }
@@ -91,10 +124,19 @@ export function saveLocalJob(){
   };
 }
 
+export function getMyJobs(){
+  return {
+    types: [constants.GET_MY_JOBS, constants.GET_MY_JOBS_SUCCESS, constants.GET_MY_JOBS_FAIL],
+    promise: (client, auth) => client.api.get('/jobs/myJobs', {
+      authToken: auth.authToken
+    }),
+  };
+}
+
 export function getOneJob(id) {
   return {
     types: [constants.GET_JOB, constants.GET_JOB_SUCCESS, constants.GET_JOB_FAIL],
-    promise: (client, auth) => client.api.get(`/jobs/${id}`, {
+    promise: (client, auth) => client.api.get(`/jobs/${id}?filter[include]=talentAdvocate&filter[include]=contact`, {
       authToken: auth.authToken,
       data: {
         id,

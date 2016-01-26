@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import * as companyConstants from './companies/constants';
+import * as jobConstants from './jobs/constants';
 const GET_CONTACTS = 'hero.client/contacts/GET_CONTACTS';
 const GET_CONTACTS_SUCCESS = 'hero.client/contacts/GET_CONTACTS_SUCCESS';
 const GET_CONTACTS_FAIL = 'hero.client/contacts/GET_CONTACTS_FAIL';
@@ -13,10 +14,14 @@ const CREATE_COMPANY_CONTACT_SUCCESS = 'hero.client/contacts/CREATE_COMPANY_CONT
 const GET_ONE_CONTACT = 'hero.client/contacts/GET_ONE_CONTACT';
 const GET_ONE_CONTACT_SUCCESS = 'hero.client/contacts/GET_ONE_CONTACT_SUCCESS';
 const GET_ONE_CONTACT_FAIL = 'hero.client/contacts/GET_ONE_CONTACT_FAIL';
+const SEARCH_CONTACTS = 'hero.client/contacts/SEARCH_CONTACTS';
+const SEARCH_CONTACTS_SUCCESS = 'hero.client/contacts/SEARCH_CONTACTS_SUCCESS';
+const SEARCH_CONTACTS_FAIL = 'hero.client/contacts/SEARCH_CONTACTS_FAIL';
 
 const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
+  queries: new Immutable.Map(),
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -117,6 +122,50 @@ export default function reducer(state = initialState, action = {}) {
     };
 
   }
+  case jobConstants.GET_JOB_SUCCESS:{
+    let contactsMap = {};
+    if(action.result.talentAdvocate){
+      let id = action.result.talentAdvocate.id;
+      contactsMap[id] = action.result.talentAdvocate;
+    }
+    if(action.result.contact){
+      let id = action.result.contact.id;
+      contactsMap[id] = action.result.contact;
+    }
+    return {
+      ...state,
+      list: state.list.merge(contactsMap),
+    };
+  }
+  case jobConstants.GET_MY_JOBS_SUCCESS:
+    {
+      let contactList =  {};
+      action.result.map(job =>{
+        job.candidates.map(candidate=>{
+          contactList[candidate.contact.id] = candidate.contact;
+        });
+      });
+      return {
+        ...state,
+        list:state.list.mergeDeep(contactList)
+      };
+    }
+  case SEARCH_CONTACTS_SUCCESS: {
+    let query = action.result.query;
+
+    let queriesMap = {};
+    queriesMap[query] = action.result.results;
+
+    return {
+      ...state,
+      queries: state.queries.mergeDeep(queriesMap),
+    };
+  }
+  case SEARCH_CONTACTS_FAIL:
+    return {
+      ...state,
+      err: action.err,
+    };
   default:
     return state;
   }
@@ -164,6 +213,15 @@ export function createContact(contact) {
     promise: (client, auth) => client.api.post('/contacts', {
       authToken: auth.authToken,
       data:contact
+    }),
+  };
+}
+
+export function searchContacts(query) {
+  return {
+    types: [SEARCH_CONTACTS, SEARCH_CONTACTS_SUCCESS, SEARCH_CONTACTS_FAIL],
+    promise: (client, auth) => client.api.get(`/contacts/search?query=${query}`, {
+      authToken: auth.authToken,
     }),
   };
 }

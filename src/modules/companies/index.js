@@ -3,9 +3,10 @@ import Immutable from 'immutable';
 import { getOneLocation } from '../locations';
 
 import * as constants from './constants';
-
+import * as jobConstants from '../jobs/constants';
 const initialState = {
   list: new Immutable.Map(),
+  myCompanyIds: new Immutable.Map(),
   searches: new Immutable.Map(),
   currentSearch: '',
 };
@@ -80,7 +81,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       creating:true,
-      creatingError:''
+      creatingError:'',
     };
   case constants.CREATE_COMPANY_SUCCESS:
     let newItem = {};
@@ -89,13 +90,13 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       creating:false,
       creatingError:'',
-      list:state.list.mergeDeep(newItem)
+      list:state.list.mergeDeep(newItem),
     };
   case constants.CREATE_COMPANY_FAIL:
     return {
       ...state,
       creating:false,
-      creatingError:'Failed to create company'
+      creatingError:'Failed to create company',
     };
   case constants.SEARCH_COMPANIES:
     return {
@@ -103,6 +104,34 @@ export default function reducer(state = initialState, action = {}) {
       searches: state.searches.mergeDeep(action.result),
       currentSearch: action.query,
     };
+  case jobConstants.GET_MY_JOBS_SUCCESS:
+    let companyList =  {};
+    action.result.map(job =>{
+      companyList[job.company.id] = job.company;
+    });
+    return {
+      ...state,
+      list:state.list.mergeDeep(companyList),
+    };
+  case constants.GET_MY_COMPANIES_SUCCESS: {
+
+    let companiesMap = {};
+    action.result.map((c) => {
+      companiesMap[c.id] = c;
+    });
+
+    return{
+      ...state,
+      myCompanyIds: state.myCompanyIds.mergeDeep(companiesMap),
+      list: state.list.mergeDeep(companiesMap),
+    };
+  }
+  case constants.GET_MY_COMPANIES_FAIL: {
+    return {
+      ...state,
+      err: action.err,
+    };
+  }
   default:
     return state;
   }
@@ -119,7 +148,7 @@ export function searchCompany(query){
     dispatch({
       type:constants.SEARCH_COMPANIES,
       result: resultIds,
-      query
+      query,
     });
   };
 }
@@ -165,6 +194,15 @@ export function editCompany(company) {
     promise: (client, auth) => client.api.put(`/companies/${company.id}`, {
       authToken: auth.authToken,
       data: company,
+    }),
+  };
+}
+
+export function getMyCompanies() {
+  return {
+    types: [constants.GET_MY_COMPANIES, constants.GET_MY_COMPANIES_SUCCESS, constants.GET_MY_COMPANIES_FAIL],
+    promise: (client, auth) => client.api.get('/companies/myCompanies', {
+      authToken: auth.authToken,
     }),
   };
 }
