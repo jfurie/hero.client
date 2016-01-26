@@ -5,6 +5,11 @@ import { disableSwipeToOpen, enableSwipeToOpen } from '../../../modules/leftNav'
 import ReactSwipe from 'react-swipe';
 
 const style = {
+  tabsContainer: {
+    position: 'fixed',
+    width: '100%',
+    zIndex: '10',
+  },
   tabs: {
     backgroundColor: Styles.Colors.grey900,
   },
@@ -110,6 +115,7 @@ class CustomTabsSwipe extends React.Component {
             tabItemContainerStyle={tabsStyle}
             onChange={this._handleChangeTabs.bind(this)}
             value={`${this.state.slideIndex}`}
+            style={style.tabsContainer}
         >
           {tabs.map((tab, key) => {
             return (

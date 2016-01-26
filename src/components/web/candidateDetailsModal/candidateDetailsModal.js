@@ -32,7 +32,7 @@ const style = {
   content: {
     height: `${clientHeight}px`,
     overflowY:'scroll',
-    WebkitOverflowScrolling: 'touch'
+    WebkitOverflowScrolling: 'touch',
   },
   toolBar: {
     backgroundColor:'#ffffff',
@@ -62,6 +62,9 @@ const style = {
     marginTop:'14px',
     marginRight:'-16px',
     marginLeft:'auto',
+  },
+  slide: {
+    marginTop: '48px',
   },
 };
 
@@ -208,7 +211,7 @@ class CandidateDetailsModal extends React.Component {
                 tabs={['Details', 'Info' /*, 'Applications'*/]}
                 isLight
             >
-              <List>
+              <List style={style.slide}>
                 <div>
 
                   {(displayName) ? (
@@ -292,7 +295,7 @@ class CandidateDetailsModal extends React.Component {
 
                 </div>
               </List>
-              <div>
+              <div style={style.slide}>
                 {(pitch) ? (
                   <CardText>
                     <div className="description">
@@ -371,7 +374,7 @@ class CandidateDetailsModal extends React.Component {
                   </div>
                 </List>
               </div>
-              {/*<div>
+              {/*<div style={style.slide}>
 
               </div>*/}
             </CustomTabsSwipe>
