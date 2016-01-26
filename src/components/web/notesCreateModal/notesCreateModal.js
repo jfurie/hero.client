@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  Dialog, Toolbar, ToolbarTitle, IconButton,
+  Toolbar, ToolbarTitle, IconButton,
   ToolbarGroup, FlatButton, SelectField, TextField,
   MenuItem,
 } from 'material-ui';
-
+import {Dialog} from '../';
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 const style = {
@@ -105,31 +105,28 @@ class NotesCreateModal extends React.Component {
     change['privacyValue'] = value;
     this.props.onNoteChange(change);
   }
-
+  toolbar(){
+    return (
+      <Toolbar style={style.toolBar}>
+        <ToolbarGroup key={0} float="left">
+          <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
+          <ToolbarTitle style={style.detailsTitle} text={'Create Note'} />
+        </ToolbarGroup>
+        <ToolbarGroup key={1} float="right">
+          <FlatButton onTouchTap={this.saveNote.bind(this)} style={style.save}>Save</FlatButton>
+        </ToolbarGroup>
+      </Toolbar>
+    );
+  }
   render() {
 
     return (
       <Dialog
           open={this.state.open}
-          autoDetectWindowHeight={false}
-          autoScrollBodyContent={false}
-          repositionOnUpdate={false}
-          defaultOpen={false}
-          style={style.dialog}
-          bodyStyle={style.bodyStyle}
-          contentStyle={style.contentStyle}
-          ref="contactDetailsDialog"
+          toolbar = {this.toolbar()}
       >
         <div style={style.content}>
-          <Toolbar style={style.toolBar}>
-            <ToolbarGroup key={0} float="left">
-              <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
-              <ToolbarTitle style={style.detailsTitle} text={'Create Note'} />
-            </ToolbarGroup>
-            <ToolbarGroup key={1} float="right">
-              <FlatButton onTouchTap={this.saveNote.bind(this)} style={style.save}>Save</FlatButton>
-            </ToolbarGroup>
-          </Toolbar>
+
           <div className="row center-xs">
               <div className="col-xs-10 col-md-6">
                   <div className="box">
