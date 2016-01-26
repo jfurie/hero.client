@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, ClientsCreateModal, ClientsList } from '../../../components/web';
-import { getAllCompanies, createCompany, searchCompany } from '../../../modules/companies';
+import { getAllCompanies, getMyCompanies, createCompany, searchCompany } from '../../../modules/companies';
 import { getCurrentAccount } from '../../../modules/currentAccount';
 import { getContactsByCompany } from '../../../modules/contacts';
 
@@ -13,11 +13,11 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
   let visibleCompanies = new Immutable.Map();
   if (state.companies.currentSearch != '') {
     let current = state.companies.searches.get(state.companies.currentSearch);
-    visibleCompanies = state.companies.list.filter((x) => {
+    visibleCompanies = state.companies.myCompanyIds.filter((x) => {
       return current.indexOf(x.get('id')) > -1;
     });
   } else {
-    visibleCompanies = state.companies.list;
+    visibleCompanies = state.companies.myCompanyIds;
   }
   //filter hero contacts
   let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
@@ -35,7 +35,7 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
     currentAccount: state.currentAccount,
     heroContacts,
   });
-}, { getAllCompanies, createCompany, searchCompany, pushState, getCurrentAccount, getContactsByCompany })
+}, { getAllCompanies, getMyCompanies, createCompany, searchCompany, pushState, getCurrentAccount, getContactsByCompany })
 class ClientPage extends React.Component {
 
   constructor(props) {
@@ -47,6 +47,7 @@ class ClientPage extends React.Component {
 
   componentDidMount() {
     this.props.getAllCompanies();
+    this.props.getMyCompanies();
     this.props.getCurrentAccount();
 
     //get the hero compnay contacts
