@@ -21,7 +21,8 @@ class Dialog extends React.Component {
       }} ref="addNewDialog">
         <div style={{
           height: ( clientHeight) + 'px',
-          overflowY:'scroll'
+          overflowY:'scroll',
+          WebkitOverflowScrolling: 'touch'
         }}>
           {this.props.children}
         </div>

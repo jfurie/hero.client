@@ -31,6 +31,8 @@ const style = {
   },
   content: {
     height: `${clientHeight}px`,
+    overflowY:'scroll',
+    WebkitOverflowScrolling: 'touch'
   },
   toolBar: {
     backgroundColor:'#ffffff',
