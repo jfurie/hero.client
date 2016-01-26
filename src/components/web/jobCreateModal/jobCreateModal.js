@@ -355,6 +355,7 @@ class JobCreateModal extends React.Component {
                         </SelectField>
                       </div>
                     </form>
+                    <div style={{height:'300px'}}></div>
                   </div>
               </div>
           </div>
