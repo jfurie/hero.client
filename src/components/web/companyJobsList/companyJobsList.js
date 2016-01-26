@@ -45,9 +45,9 @@ class CompanyJobsList extends React.Component {
       candidates = candidates || new Immutable.List();
       let peopleList = [];
 
-      let limit = candidates.length;
+      let limit = candidates.count();
 
-      if (candidates.length > 4) {
+      if (candidates.count() > 4) {
         limit = 4;
       }
 
@@ -58,8 +58,8 @@ class CompanyJobsList extends React.Component {
       });
 
       // add a + circle if needed
-      if (limit < candidates.length) {
-        peopleList.push(<Avatar style={style.plusAvatar} color="#FF1564" backgroundColor={Styles.Colors.grey300}>+{candidates.length - limit}</Avatar>);
+      if (limit < candidates.count()) {
+        peopleList.push(<Avatar style={style.plusAvatar} color="#FF1564" backgroundColor={Styles.Colors.grey300}>+{candidates.count() - limit}</Avatar>);
       }
 
       let secondaryText = (<div>No Candidates Yet</div>);
