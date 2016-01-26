@@ -73,7 +73,7 @@ class ClientsList extends React.Component {
     return (
 
       <div>
-        <Toolbar>
+        {/*<Toolbar>
           <ToolbarGroup key={0} float="left">
             <TextField onChange={this.searchCompany.bind(this)}  style={style.textField}
                 hintText="Search"
@@ -84,7 +84,7 @@ class ClientsList extends React.Component {
           <ToolbarGroup key={1} float="right">
             <FontIcon className="material-icons">search</FontIcon>
           </ToolbarGroup>
-        </Toolbar>
+        </Toolbar>*/}
         <List style={style.list} subheader={`${count} ${ressourceName}`}>
           <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
             {clients.map((company) => {
