@@ -8,7 +8,7 @@ import './jobDetails.scss';
 
 const style = {
   slide: {
-    minHeight: `${window.innerHeight - 112}px`,
+    minHeight: `${window.innerHeight - 160}px`,
     // marginTop: '48px',
   },
 };
