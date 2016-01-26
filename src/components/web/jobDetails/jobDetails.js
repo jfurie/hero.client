@@ -59,7 +59,7 @@ class JobDetails extends React.Component {
     return (
       <div>
         <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-        <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']}>
+        <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']} >
           <div style={style.slide}>
             <Card>
               {(jobImage) ? (
@@ -67,12 +67,12 @@ class JobDetails extends React.Component {
                   <CardMedia>
                     <img src={jobImage.get('item')} />
                   </CardMedia>
-                  <div className="button-right-bottom">
+                  {/*<div className="button-right-bottom">
                     <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}} label="Apply" />
                   </div>
                   <div className="button-left-bottom">
                     <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}}  label="Share" />
-                  </div>
+                  </div>*/}
                 </div>
               ) : (null)}
               <CardText>
@@ -81,7 +81,7 @@ class JobDetails extends React.Component {
                     <div className='row center-xs'>
                       <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'><div>${job?job.get('minSalary'):''}</div> <div style={{fontSize:'11px', color:'rgba(0,0,0,0.54)'}}>to</div> <div>${job?job.get('maxSalary'):''}</div> <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>salary</div></div>
                       <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>{job?job.get('employmentType'):''} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>position</div></div>
-                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>{jobCandidates.length} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>candidates</div></div>
+                      <div style={{fontSize:'16px','color':'green'}} onTouchTap={this._slideToCandidateTab.bind(this)} className='col-xs-4'>{jobCandidates.length} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>candidates</div></div>
                     </div>
                   </CardText>
                 </Card>

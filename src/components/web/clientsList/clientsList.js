@@ -66,7 +66,7 @@ class ClientsList extends React.Component {
     let count = clients.count();
     let ressourceName = 'Client';
 
-    if (count > 1) {
+    if (count !== 1) {
       ressourceName += 's';
     }
 
