@@ -1,6 +1,7 @@
 import React from 'react';
 //import Immutable from 'immutable';
-import { Dialog, IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle,SelectField,MenuItem } from 'material-ui';
+import {IconButton, ToolbarGroup, Toolbar, FlatButton, TextField, ToolbarTitle,SelectField,MenuItem } from 'material-ui';
+import {Dialog} from '../';
 import { editCompany } from '../../../modules/companies/index';
 import { connect } from 'react-redux';
 import validateCompany from '../../../validators/company';
@@ -136,34 +137,30 @@ export default class ClientsEditModal extends React.Component {
       this.closeModal();
     }
   }
-
+  toolbar(){
+    return (
+    <Toolbar style={style.toolbar}>
+      <ToolbarGroup key={0} float="left">
+        <IconButton onTouchTap={this.closeModal.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
+        <ToolbarTitle style={style.toolbarTitle} text="Edit Client" />
+      </ToolbarGroup>
+      <ToolbarGroup key={1} float="right">
+        <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
+      </ToolbarGroup>
+    </Toolbar>);
+  }
   render(){
 
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    //let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     if(!this.state.company.heroContacts){
       this.state.company.heroContacts = [];
     }
     return (
       <Dialog
+          toolbar={this.toolbar()}
           open={this.state.open}
-          autoDetectWindowHeight={false}
-          autoScrollBodyContent={false}
-          repositionOnUpdate={false}
-          defaultOpen={false}
-          style={style.dialog}
-          bodyStyle={style.bodyStyle}
-          contentStyle={style.contentStyle}
       >
-        <div style={{height: `${clientHeight}px`}}>
-          <Toolbar style={style.toolbar}>
-            <ToolbarGroup key={0} float="left">
-              <IconButton onTouchTap={this.closeModal.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
-              <ToolbarTitle style={style.toolbarTitle} text="Edit Client" />
-            </ToolbarGroup>
-            <ToolbarGroup key={1} float="right">
-              <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
-            </ToolbarGroup>
-          </Toolbar>
+        <div>
           <div className="row center-xs">
               <div className="col-xs-10 col-md-6">
                   <div className="box">
