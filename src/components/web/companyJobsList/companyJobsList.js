@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItem, Divider, FontIcon } from 'material-ui';
+import { ListItem, Divider, FontIcon, Avatar, Styles } from 'material-ui';
 import { CompanyAvatar, Gravatar } from '../../../components/web';
 import Immutable from 'immutable';
 
@@ -11,6 +11,15 @@ const style = {
     display: 'inline',
     width: '30px',
     height: '30px',
+  },
+  plusAvatar: {
+    display: 'inline',
+    width: '40px',
+    height: '40px',
+    padding: '7px 8px 7px 7px',
+    fontSize: '16px',
+    position: 'relative',
+    top: '-11px',
   },
 };
 
@@ -36,9 +45,22 @@ class CompanyJobsList extends React.Component {
       candidates = candidates || new Immutable.List();
       let peopleList = [];
 
+      let limit = candidates.length;
+
+      if (candidates.length > 4) {
+        limit = 4;
+      }
+
       candidates.forEach(function(c, key) {
-        peopleList.push(<Gravatar style={style.gravatar} key={key} email={c.get('contact').get('email')} status={c.get('status')}/>);
+        if (key < limit) {
+          peopleList.push(<Gravatar style={style.gravatar} key={key} email={c.get('contact').get('email')} status={c.get('status')}/>);
+        }
       });
+
+      // add a + circle if needed
+      if (limit < candidates.length) {
+        peopleList.push(<Avatar style={style.plusAvatar} color="#FF1564" backgroundColor={Styles.Colors.grey300}>+{candidates.length - limit}</Avatar>);
+      }
 
       let secondaryText = (<div>No Candidates Yet</div>);
       if (peopleList.length > 0) {
