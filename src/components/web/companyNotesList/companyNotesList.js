@@ -33,9 +33,9 @@ class CompanyNotesList extends React.Component {
           <div>
           <Card initiallyExpanded>
             <CardHeader
-              title="Rameet Singh"
+              title={note.get('contact').get('displayName')}
               subtitle={<div>{(note.get('privacyValue') ? 'Public' : 'Private')} | <TimeAgo live={true} date={note.get('updated')} /></div>}
-              avatar={<Gravatar style={style.gravatar} email='thiensly@gmail.com' />}>
+              avatar={<Gravatar style={style.gravatar} email={note.get('contact').get('email')} />}>
             </CardHeader>
             <CardText expandable>
               {note.get('noteText')}
