@@ -81,7 +81,7 @@ class JobDetails extends React.Component {
                     <div className='row center-xs'>
                       <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'><div>${job?job.get('minSalary'):''}</div> <div style={{fontSize:'11px', color:'rgba(0,0,0,0.54)'}}>to</div> <div>${job?job.get('maxSalary'):''}</div> <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>salary</div></div>
                       <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>{job?job.get('employmentType'):''} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>position</div></div>
-                      <div style={{fontSize:'16px','color':'green'}} onTouchTap={this._slideToCandidateTab.bind(this)} className='col-xs-4'>{jobCandidates.length} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>candidates</div></div>
+                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>{jobCandidates.length} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>candidates</div></div>
                     </div>
                   </CardText>
                 </Card>
