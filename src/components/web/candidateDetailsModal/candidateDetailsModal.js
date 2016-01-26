@@ -64,7 +64,7 @@ const style = {
     marginLeft:'auto',
   },
   slide: {
-    marginTop: '48px',
+    // marginTop: '48px',
   },
 };
 

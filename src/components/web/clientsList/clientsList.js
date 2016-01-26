@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, Divider, Toolbar, ToolbarGroup, TextField, FontIcon } from 'material-ui';
+import { List, ListItem, Divider } from 'material-ui';
 import Infinite from 'react-infinite';
 import { CompanyAvatar } from '../../../components/web';
 import { pushState } from 'redux-router';
@@ -91,12 +91,13 @@ class ClientsList extends React.Component {
               return (
                 <div>
                   <ListItem
-                    leftAvatar={<CompanyAvatar url={company.get('website')} />}
-                    primaryText={company.get('name')}
-                    secondaryText={<p>3 Jobs | 20 Candidates</p>}
-                    secondaryTextLines={2}
-                    onTouchTap={this._showClientDetails.bind(this, company.get('id'))} />
-                  <Divider inset={true} />
+                      leftAvatar={<CompanyAvatar url={company.get('website')} />}
+                      primaryText={company.get('name')}
+                      secondaryText={<p>3 Jobs | 20 Candidates</p>}
+                      secondaryTextLines={2}
+                      onTouchTap={this._showClientDetails.bind(this, company.get('id'))}
+                  />
+                  <Divider inset />
                 </div>
               );
             })}
