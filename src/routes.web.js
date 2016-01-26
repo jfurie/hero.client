@@ -49,7 +49,9 @@ export default(store) => {
 
       if (!user) {
         let auth = localStorage.get('Auth');
+
         if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
+          store.dispatch(authActions.checkAuthServer(auth.id));
           store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
             cb();
           });
@@ -88,7 +90,7 @@ export default(store) => {
       if (!user) {
         let auth = localStorage.get('Auth');
         let tokenParam = getParameterByName('accessToken');
-        
+
         if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
           store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
             cb();
@@ -181,7 +183,7 @@ export default(store) => {
 
         <Route path="invited" component={InvitedPage}/>
         {/* Catch all route */}
-        {/*  <Route path="*" component={NotFound} status={404} /> */}
+        <Route path="*" component={ErrorPage} status={404} />
 
       </Route>
     </Route>

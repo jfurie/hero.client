@@ -1,5 +1,5 @@
 import React from 'react';
-import Immutable from 'immutable';
+//import Immutable from 'immutable';
 
 import {
   Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
@@ -31,6 +31,8 @@ const style = {
   },
   content: {
     height: `${clientHeight}px`,
+    overflowY:'scroll',
+    WebkitOverflowScrolling: 'touch',
   },
   toolBar: {
     backgroundColor:'#ffffff',
@@ -61,6 +63,9 @@ const style = {
     marginRight:'-16px',
     marginLeft:'auto',
   },
+  slide: {
+    // marginTop: '48px',
+  },
 };
 
 class CandidateDetailsModal extends React.Component {
@@ -73,9 +78,9 @@ class CandidateDetailsModal extends React.Component {
     //this.props.getAllJobs();
   }
 
-  _handleJobClick(){
-    this.props.pushState(null,'/jobs/1a');
-  }
+  // _handleJobClick(){
+  //   this.props.pushState(null,'/jobs/1a');
+  // }
 
   _openResume(resumeLink) {
     window.open(resumeLink);
@@ -87,17 +92,17 @@ class CandidateDetailsModal extends React.Component {
 
   render() {
 
-    let jobs = {};
-    jobs.list = new Immutable.Map();
-
-    let job = {};
-    job['1a'] = {
-      title: 'Android Mobile Engineer',
-      location: 'Santa Monica, CA',
-      id: '1a',
-    };
-
-    jobs.list = jobs.list.mergeDeep(job);
+    // let jobs = {};
+    // jobs.list = new Immutable.Map();
+    //
+    // let job = {};
+    // job['1a'] = {
+    //   title: 'Android Mobile Engineer',
+    //   location: 'Santa Monica, CA',
+    //   id: '1a',
+    // };
+    //
+    // jobs.list = jobs.list.mergeDeep(job);
 
     let email = null;
     let phone = null;
@@ -108,6 +113,12 @@ class CandidateDetailsModal extends React.Component {
     let candidateStatus = 'notset';
     let resumeLink = null;
     let candidateId = null;
+    let currentSalary = null;
+    let currentHourly = null;
+    let desiredHourly = null;
+    let desiredSalary = null;
+    let bonusNotes = null;
+    let pitch = null;
 
     if (this.props.candidate) {
       candidateId = this.props.candidate.get('id') || null;
@@ -115,16 +126,44 @@ class CandidateDetailsModal extends React.Component {
       candidateStatus = this.props.candidate.get('status') || 'notset';
       let contact = this.props.candidate.get('contact');
 
-      // TMP
-      resumeLink = '/sample.pdf';
 
+      // TMP
+      resumeLink = null;
+      let resume = contact.get('resume');
+      if(resume){
+        resumeLink = resume.get('item');
+      }
       if (contact) {
         displayName = contact.get('displayName') || null;
         email = contact.get('email') || null;
         phone = contact.get('phone') || null;
-        address = '1316 3rd St #103';
-        city = 'Santa Monica, CA 90401';
-        source = 'facebook.com';
+
+        // define address and city
+        address = contact.get('_address').get('addressLine') || null;
+        city = contact.get('_address').get('city') || null;
+
+        let postalCode = contact.get('_address').get('postalCode') || null;
+        let countrySubDivisionCode = contact.get('_address').get('countrySubDivisionCode') || null;
+        if (city && countrySubDivisionCode) {
+          city += `, ${countrySubDivisionCode}`;
+        }
+
+        if (city && postalCode) {
+          city += ` ${postalCode}`;
+        }
+
+        // get source
+
+        if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
+          source = contact.get('sourceInfo').get('referrer');
+        }
+
+        currentSalary = contact.get('currentSalary') || null;
+        currentHourly = contact.get('currentHourly') || null;
+        desiredHourly = contact.get('desiredHourly') || null;
+        desiredSalary = contact.get('desiredSalary') || null;
+        bonusNotes = contact.get('bonusNotes') || null;
+        pitch = contact.get('pitch') || null;
       }
     }
 
@@ -169,10 +208,10 @@ class CandidateDetailsModal extends React.Component {
 
             </Toolbar>
             <CustomTabsSwipe
-                tabs={['Details', 'Infos', 'Applications']}
+                tabs={['Details', 'Info' /*, 'Applications'*/]}
                 isLight
             >
-              <List>
+              <List style={style.slide}>
                 <div>
 
                   {(displayName) ? (
@@ -256,70 +295,88 @@ class CandidateDetailsModal extends React.Component {
 
                 </div>
               </List>
-              {/* <div className="innerView"> sample.pdf
-                <RaisedButton linkButton={true} href="https://github.com/callemall/material-ui" secondary={true} label="Label after" labelPosition="after">
-                  <FontIcon style={styles.exampleButtonIcon} className="muidocs-icon-custom-github" />
-                </RaisedButton>
-                <p>lol</p>
-              </div> */}
-              <div>
-                <CardText>
-                  <div className="description">
-                    <p>Quick Pitch:</p>
-                    <p>Experienced software engineer passionate about creating technology to empower people. Effective communicator able to lead cross-functional teams to achieve innovative results. All challenges considered.</p>
-                  </div>
-                </CardText>
+              <div style={style.slide}>
+                {(pitch) ? (
+                  <CardText>
+                    <div className="description">
+                      <p>Quick Pitch:</p>
+                      <p>{pitch}</p>
+                    </div>
+                  </CardText>
+                ) : (null)}
+
                 <List>
                   <div>
 
-                    <ListItem
-                        leftAvatar={<FontIcon className="material-icons">attach_money</FontIcon>}
-                        primaryText="$130,000"
-                        secondaryText={<p>curent salary</p>}
-                        secondaryTextLines={1}
-                    />
+                    {(!currentSalary && !bonusNotes && !desiredSalary && !currentHourly && !desiredHourly) ? (
+                      <p style={{textAlign: 'center', marginTop: '20px', color: Styles.Colors.grey600}}>
+                        No additional informations
+                      </p>
+                    ) : (null)}
 
-                    <Divider inset />
+                    {(currentSalary) ? (
+                      <ListItem
+                          leftAvatar={<FontIcon className="material-icons">attach_money</FontIcon>}
+                          primaryText={`$${currentSalary}`}
+                          secondaryText={<p>curent salary</p>}
+                          secondaryTextLines={1}
+                      />
+                    ) : (null)}
 
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">star_rate</FontIcon>}
-                        primaryText="401k match, free lunch"
-                        secondaryText={<p>bonus</p>}
-                        secondaryTextLines={1}
-                    />
+                    {(bonusNotes) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">star_rate</FontIcon>}
+                            primaryText={bonusNotes}
+                            secondaryText={<p>bonus</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <Divider inset />
+                    {(desiredSalary) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
+                            primaryText={`$${desiredSalary}`}
+                            secondaryText={<p>desired salary</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
-                        primaryText="$140,000"
-                        secondaryText={<p>desired salary</p>}
-                        secondaryTextLines={1}
-                    />
+                    {(currentHourly) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">alarm</FontIcon>}
+                            primaryText={`$${currentHourly}`}
+                            secondaryText={<p>current hourly</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <Divider inset />
+                    {(desiredHourly) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">alarm_on</FontIcon>}
+                            primaryText={`$${desiredHourly}`}
+                            secondaryText={<p>desired hourly</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">alarm</FontIcon>}
-                        primaryText="$67"
-                        secondaryText={<p>current hourly</p>}
-                        secondaryTextLines={1}
-                    />
-
-                    <Divider inset />
-
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">alarm_on</FontIcon>}
-                        primaryText="$72"
-                        secondaryText={<p>desired hourly</p>}
-                        secondaryTextLines={1}
-                    />
                   </div>
                 </List>
               </div>
-              <div>
+              {/*<div style={style.slide}>
 
-              </div>
+              </div>*/}
             </CustomTabsSwipe>
           </div>
         </Dialog>

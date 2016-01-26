@@ -9,6 +9,7 @@ import './jobDetails.scss';
 const style = {
   slide: {
     minHeight: `${window.innerHeight - 112}px`,
+    // marginTop: '48px',
   },
 };
 
@@ -58,7 +59,7 @@ class JobDetails extends React.Component {
     return (
       <div>
         <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-        <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']}>
+        <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']} >
           <div style={style.slide}>
             <Card>
               {(jobImage) ? (
@@ -66,12 +67,12 @@ class JobDetails extends React.Component {
                   <CardMedia>
                     <img src={jobImage.get('item')} />
                   </CardMedia>
-                  <div className="button-right-bottom">
+                  {/*<div className="button-right-bottom">
                     <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}} label="Apply" />
                   </div>
                   <div className="button-left-bottom">
                     <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}}  label="Share" />
-                  </div>
+                  </div>*/}
                 </div>
               ) : (null)}
               <CardText>

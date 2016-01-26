@@ -2,13 +2,13 @@ import React from 'react';
 //import _ from 'lodash';
 import Immutable from 'immutable';
 import {
-  Dialog, Toolbar, ToolbarTitle, IconButton,
+  Toolbar, ToolbarTitle, IconButton,
   ToolbarGroup, FlatButton, TextField, DatePicker,
   Card, CardMedia, CardText, LinearProgress, SelectField,
-  MenuItem,
+  MenuItem
 } from 'material-ui';
 //import {geoCode} from '../../../utils/geoCoding';
-import {FileInput, TagsInput} from '../';
+import {FileInput, TagsInput, Dialog} from '../';
 //import GoogleMap from 'google-map-react';
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -157,6 +157,19 @@ class JobCreateModal extends React.Component {
   //      }
   //    });
   //  }
+  toolbar(){
+    return (
+      <Toolbar style={style.toolBar}>
+        <ToolbarGroup key={0} float="left">
+          <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
+          <ToolbarTitle style={style.title} text={'Create Job'} />
+        </ToolbarGroup>
+        <ToolbarGroup key={1} float="right">
+          <FlatButton onTouchTap={this.saveJob.bind(this)} style={style.save}>Save</FlatButton>
+        </ToolbarGroup>
+      </Toolbar>
+    );
+  }
   render() {
     let { contacts, heroContacts } = this.props;
     //let location = this.state.location?{lat:this.state.location.geometry.location.lat(),lng:this.state.location.geometry.location.lng()}: {lat:34,lng:118};
@@ -165,25 +178,10 @@ class JobCreateModal extends React.Component {
     return (
       <Dialog
           open={this.state.open}
-          autoDetectWindowHeight={false}
-          autoScrollBodyContent={false}
-          repositionOnUpdate={false}
-          defaultOpen={false}
-          style={style.dialog}
-          bodyStyle={style.bodyStyle}
-          contentStyle={style.contentStyle}
-          ref="contactDetailsDialog"
+          toolbar={this.toolbar()}
       >
         <div style={style.content}>
-          <Toolbar style={style.toolBar}>
-            <ToolbarGroup key={0} float="left">
-              <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
-              <ToolbarTitle style={style.title} text={'Create Job'} />
-            </ToolbarGroup>
-            <ToolbarGroup key={1} float="right">
-              <FlatButton onTouchTap={this.saveJob.bind(this)} style={style.save}>Save</FlatButton>
-            </ToolbarGroup>
-          </Toolbar>
+
           <div className="row center-xs" style={style.formContent}>
               <div className="col-xs-10 col-md-6">
                   <div className="box">
@@ -355,6 +353,7 @@ class JobCreateModal extends React.Component {
                         </SelectField>
                       </div>
                     </form>
+                    <div style={{height:'300px'}}></div>
                   </div>
               </div>
           </div>

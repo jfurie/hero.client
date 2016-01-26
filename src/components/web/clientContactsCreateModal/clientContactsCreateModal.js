@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dialog, IconButton, ToolbarGroup, FlatButton, TextField, ToolbarTitle, Toolbar } from 'material-ui';
+import { IconButton, ToolbarGroup, FlatButton, TextField, ToolbarTitle, Toolbar } from 'material-ui';
+import {Dialog} from '../';
 import { createCompanyContact } from '../../../modules/companyContacts';
+import phoneFormatter from 'phone-formatter';
 
 import validateContact from '../../../validators/contact';
 
@@ -56,6 +58,15 @@ export default class ClientContactsCreateModal extends React.Component {
 
   _handleSubmit(){
 
+    // format phone number
+    if (this.state.contact.phone) {
+      let newContact = this.state.contact;
+      newContact.phone = phoneFormatter.format(newContact.phone, '(NNN) NNN-NNNN');
+      this.setState({
+        contact: newContact,
+      });
+    }
+
     let errors = validateContact(this.state.contact);
 
     this.setState({
@@ -63,7 +74,7 @@ export default class ClientContactsCreateModal extends React.Component {
     });
 
     if (errors.validationErrors === 0) {
-      //console.log('good!');
+
       let contact = this.state.contact;
       contact.displayName = `${this.state.contact.firstName} ${this.state.contact.lastName}`;
 
@@ -89,30 +100,28 @@ export default class ClientContactsCreateModal extends React.Component {
       this.closeModal();
     }
   }
-
-  render(){
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+  toolbar(){
     return (
-      <Dialog open={this.state.open} autoDetectWindowHeight={false} autoScrollBodyContent={false} repositionOnUpdate={false} defaultOpen={false} style={{
-        height: '100%', maxHeight: '100%', paddingTop: '0px'
-      }} bodyStyle={{
-        paddingTop: '0px', height: '100%', padding: '0'
-      }} contentStyle={{
-        width: '100%', maxWidth: 'none', height: '100%', maxHeight: '100%', paddingTop: '0px', top: '-64px'
-      }} ref="addNewDialog">
-        <div style={{
-          height: (clientHeight) + 'px'
-        }}>
+      <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
+        <ToolbarGroup key={0} float="left">
+          <IconButton onTouchTap={this.closeModal.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
+          <ToolbarTitle style={{lineHeight:'64px', float:'left'}} text="Create Contact" />
+        </ToolbarGroup>
+        <ToolbarGroup key={1} float="right">
+          <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={{marginTop:'14px', marginRight:'-16px', marginLeft:'auto'}}>Save</FlatButton>
+        </ToolbarGroup>
+      </Toolbar>
+    );
+  }
+  render(){
+    //let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    return (
+      <Dialog
+          toolbar={this.toolbar()}
+          open={this.state.open}>
+        <div >
 
-        <Toolbar style={{backgroundColor:'#ffffff', height:'64px'}}>
-          <ToolbarGroup key={0} float="left">
-            <IconButton onTouchTap={this.closeModal.bind(this)} style={{marginTop:'8px',float:'left', marginRight:'8px', marginLeft:'-16px'}} iconClassName='material-icons'>close</IconButton>
-            <ToolbarTitle style={{lineHeight:'64px', float:'left'}} text="Create Contact" />
-          </ToolbarGroup>
-          <ToolbarGroup key={1} float="right">
-            <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={{marginTop:'14px', marginRight:'-16px', marginLeft:'auto'}}>Save</FlatButton>
-          </ToolbarGroup>
-        </Toolbar>
+
         <div className="row center-xs">
             <div className="col-xs-10 col-md-6">
                 <div className="box">
@@ -147,6 +156,7 @@ export default class ClientContactsCreateModal extends React.Component {
                           style={style.textField}
                           errorText={this.state.errors['phone'] || ''}
                           errorStyle={style.error}
+                          value={this.state.contact.phone || ''}
                           onChange={(e) => this._handleChange.bind(this)(e, 'phone')}
                           floatingLabelText="Phone (optional)" />
                     </div>

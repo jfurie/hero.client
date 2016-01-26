@@ -53,27 +53,33 @@ class LeftNavTop extends React.Component {
 
     if (contact && stats) {
       return (
-        <div className="leftNavTop">
-          <div className="leftNavTop-image center-xs">
-            <Gravatar style={style.gravatar} email={contact.email} />
+        <div className="leftNavTop row center-xs">
+          <div className="leftNavTop-image col-xs-12">
+            <div className='box'>
+              <Gravatar style={style.gravatar} email={contact.email} />
+            </div>
           </div>
-          <div className="leftNavTop-name">
-          {contact.displayName}
+          <div className="leftNavTop-name col-xs-12">
+            <div className='box'>
+              <p>{contact.displayName}</p>
+            </div>
           </div>
-          <div style={{margin:'auto', width: 'auto'}} className="container">
-            <div className="leftNavTop-tabs row">
-              <div className="leftNavTop-tab col-xs-4">
-                <div>{stats.companyCount}</div>
-                <div className="leftNavTop-label">Clients</div>
-              </div>
-              <div className="leftNavTop-tab col-xs-4">
-                <div>{stats.jobCount}</div>
-                <div className="leftNavTop-label">Jobs</div>
-              </div>
-              <div className="leftNavTop-tab col-xs-4">
-                <div>{stats.candidateCount}</div>
-                <div className="leftNavTop-label">Candidates</div>
-              </div>
+          <div className="leftNavTop-tab col-xs-4" style={{marginLeft: '-12px'}}>
+            <div className="box">
+              <div>{stats.companyCount}</div>
+              <div className="leftNavTop-label">Clients</div>
+            </div>
+          </div>
+          <div className="leftNavTop-tab col-xs-4">
+            <div className="box">
+              <div>{stats.jobCount}</div>
+              <div className="leftNavTop-label">Jobs</div>
+            </div>
+          </div>
+          <div className="leftNavTop-tab col-xs-4">
+            <div className="box">
+              <div>{stats.candidateCount}</div>
+              <div className="leftNavTop-label">Candidates</div>
             </div>
           </div>
         </div>

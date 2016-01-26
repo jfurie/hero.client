@@ -21,8 +21,12 @@ const constraints = {
     email: true,
   },
   'phone': {
+    length: {
+      is: 14,
+      message: 'must be valid',
+    },
     format: {
-      pattern: /^(\([0-9]{3}\)|[0-9]{3}) ([0-9]{3})-([0-9]{4})$/g,
+      pattern: /^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$/,
       message: 'must be (XXX) YYY-ZZZZ',
     },
   },
@@ -33,9 +37,14 @@ const constraints = {
     },
   },
   'postalCode': {
+    length: {
+      is: 5,
+      message: 'must be valid',
+    },
     format: {
-      pattern: /^([0-9]{5})$/g,
-      message: 'must be a valid postal code',
+      pattern: '[0-9]+',
+      flags: 'i',
+      message: 'must be valid',
     },
   },
   'city': {

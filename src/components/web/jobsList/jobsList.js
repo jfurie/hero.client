@@ -21,6 +21,7 @@ class JobsList extends React.Component {
     if (ressourceName !== 'Job' && ressourceNamePlurial === 'Jobs') {
       ressourceNamePlurial = `${ressourceName}s`;
     }
+
     let companies = new Immutable.Map();
     let jobsByCompany = new Immutable.Map();
     jobs.map(function(job){
@@ -35,7 +36,8 @@ class JobsList extends React.Component {
       jobsByCompany = jobsByCompany.mergeDeep(jobMap);
     });
 
-    let subheader = `${jobs.count() * 2} ${ressourceNamePlurial}`;
+    let subheader = `${jobs.count()} ${(jobs.count() !== 1) ? (ressourceNamePlurial) : (ressourceName)}`;
+
     let self = this;
     return (
       <List subheader={subheader}>
