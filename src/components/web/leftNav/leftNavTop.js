@@ -82,25 +82,6 @@ class LeftNavTop extends React.Component {
               <div className="leftNavTop-label">Candidates</div>
             </div>
           </div>
-          {/*<div className="leftNavTop-name">
-          {contact.displayName}
-          </div>
-          <div style={{margin:'auto', width: 'auto'}} className="container">
-            <div className="leftNavTop-tabs row">
-              <div className="leftNavTop-tab col-xs-4">
-                <div>{stats.companyCount}</div>
-                <div className="leftNavTop-label">Clients</div>
-              </div>
-              <div className="leftNavTop-tab col-xs-4">
-                <div>{stats.jobCount}</div>
-                <div className="leftNavTop-label">Jobs</div>
-              </div>
-              <div className="leftNavTop-tab col-xs-4">
-                <div>{stats.candidateCount}</div>
-                <div className="leftNavTop-label">Candidates</div>
-              </div>
-            </div>
-          </div> */}
         </div>
       );
     }
