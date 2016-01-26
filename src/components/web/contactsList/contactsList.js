@@ -31,7 +31,7 @@ class ContactsList extends React.Component {
     let count = contacts.count();
     let ressourceName = 'Contact';
 
-    if (count > 1) {
+    if (count !== 1) {
       ressourceName += 's';
     }
 

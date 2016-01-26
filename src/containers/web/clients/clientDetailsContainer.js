@@ -74,6 +74,7 @@ function getData(state, props) {
 const style = {
   slide: {
     minHeight: `${window.innerHeight - 112}px`,
+    // marginTop: '48px',
   },
 };
 
@@ -311,7 +312,7 @@ class ClientDetailsPage extends React.Component {
 
             </div>
             <div style={style.slide}>
-              <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() > 1) ? ('s') : (''))}`}>
+              <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() !== 1) ? ('s') : (''))}`}>
                 <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
               </List>
             </div>
@@ -319,7 +320,7 @@ class ClientDetailsPage extends React.Component {
               <ContactsList contacts={company.get('contacts')} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
             </div>
             <div style={style.slide}>
-              <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() > 1) ? ('s') : (''))}`}>
+              <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
                 <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={company.get('notes')}/>
               </List>
             </div>

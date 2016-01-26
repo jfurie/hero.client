@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, Divider, Toolbar, ToolbarGroup, TextField, FontIcon } from 'material-ui';
+import { List, ListItem, Divider } from 'material-ui';
 import Infinite from 'react-infinite';
 import { CompanyAvatar } from '../../../components/web';
 import { pushState } from 'redux-router';
@@ -66,14 +66,14 @@ class ClientsList extends React.Component {
     let count = clients.count();
     let ressourceName = 'Client';
 
-    if (count > 1) {
+    if (count !== 1) {
       ressourceName += 's';
     }
 
     return (
 
       <div>
-        <Toolbar>
+        {/*<Toolbar>
           <ToolbarGroup key={0} float="left">
             <TextField onChange={this.searchCompany.bind(this)}  style={style.textField}
                 hintText="Search"
@@ -84,19 +84,20 @@ class ClientsList extends React.Component {
           <ToolbarGroup key={1} float="right">
             <FontIcon className="material-icons">search</FontIcon>
           </ToolbarGroup>
-        </Toolbar>
+        </Toolbar>*/}
         <List style={style.list} subheader={`${count} ${ressourceName}`}>
           <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
             {clients.map((company) => {
               return (
                 <div>
                   <ListItem
-                    leftAvatar={<CompanyAvatar url={company.get('website')} />}
-                    primaryText={company.get('name')}
-                    secondaryText={<p>{company.get('jobs').size} Jobs | {company.get('candidates').size} Candidates</p>}
-                    secondaryTextLines={2}
-                    onTouchTap={this._showClientDetails.bind(this, company.get('id'))} />
-                  <Divider inset={true} />
+                      leftAvatar={<CompanyAvatar url={company.get('website')} />}
+                      primaryText={company.get('name')}
+                      secondaryText={<p>{company.get('jobs').size} Jobs | {company.get('candidates').size} Candidates</p>}
+                      secondaryTextLines={2}
+                      onTouchTap={this._showClientDetails.bind(this, company.get('id'))}
+                  />
+                  <Divider inset />
                 </div>
               );
             })}

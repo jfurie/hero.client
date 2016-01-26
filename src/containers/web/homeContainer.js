@@ -4,33 +4,35 @@ import { pushState } from 'redux-router';
 import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
-import { getAllUserCandidates } from '../../modules/candidates';
-import { getAllCompanies } from '../../modules/companies';
+import { getAllAccountCandidates } from '../../modules/candidates';
+import { getAllCompanies, getMyCompanies } from '../../modules/companies';
 
 const style = {
   slide: {
     minHeight: `${window.innerHeight - 112}px`,
+    // marginTop: '48px',
   },
 };
 
 function filterMyCandidates(candidates, auth) {
+  if(auth && auth.authToken){
+    let accountId = auth.authToken.accountInfo.account.id;
 
-  let userId = auth.authToken.userId;
-
-  // grab the candidates for this job
-  let myCandidates = [];
-  if (userId && candidates && candidates.byUserId && candidates.list) {
-    if (candidates.byUserId.size > 0) {
-      candidates.byUserId.get(userId).forEach(function(candidateId) {
-        let c = candidates.list.get(candidateId);
-        if (c) {
-          myCandidates.push(c);
-        }
-      });
+    let myCandidates = [];
+    if (accountId && candidates && candidates.byAccountId && candidates.list) {
+      if (candidates.byAccountId.size > 0) {
+        candidates.byAccountId.get(accountId).forEach(function(candidateId) {
+          let c = candidates.list.get(candidateId);
+          if (c) {
+            myCandidates.push(c);
+          }
+        });
+      }
     }
-  }
 
-  return myCandidates;
+    return myCandidates;
+  }
+  return [];
 }
 
 function filterMyJobs(state){
@@ -47,7 +49,7 @@ function filterMyJobs(state){
   candidates: filterMyCandidates(state.candidates, state.auth),
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllUserCandidates, getAllCompanies, getMyJobs})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -58,7 +60,11 @@ class HomePage extends React.Component {
     this.props.getMyJobs();
     this.props.getAllJobs();
     this.props.getAllCompanies();
-    this.props.getAllUserCandidates(this.props.auth.authToken.userId);
+    this.props.getMyCompanies();
+    if(this.props.auth && this.props.auth.authToken){
+      this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
+    }
+
   }
 
   _handleJobClick(job){
@@ -75,7 +81,7 @@ class HomePage extends React.Component {
 
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
           <div style={style.slide}>
-            <ClientsList clients={companies.list} />
+            <ClientsList clients={companies.myCompanyIds} />
           </div>
           <div>
             <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={myJobs}/>
