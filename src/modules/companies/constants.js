@@ -11,3 +11,6 @@ export const SEARCH_COMPANIES = 'hero.client/clients/SEARCH_COMPANIES';
 export const EDIT_COMPANY = 'hero.client/clients/EDIT_COMPANY';
 export const EDIT_COMPANY_SUCCESS = 'hero.client/clients/EDIT_COMPANY_SUCCESS';
 export const EDIT_COMPANY_FAIL = 'hero.client/clients/EDIT_COMPANY_FAIL';
+export const GET_MY_COMPANIES = 'hero.client/clients/GET_MY_COMPANIES';
+export const GET_MY_COMPANIES_SUCCESS = 'hero.client/clients/GET_MY_COMPANIES_SUCCESS';
+export const GET_MY_COMPANIES_FAIL = 'hero.client/clients/GET_MY_COMPANIES_FAIL';

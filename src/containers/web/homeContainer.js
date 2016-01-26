@@ -5,7 +5,7 @@ import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList } from '
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
-import { getAllCompanies } from '../../modules/companies';
+import { getAllCompanies, getMyCompanies } from '../../modules/companies';
 
 const style = {
   slide: {
@@ -49,7 +49,7 @@ function filterMyJobs(state){
   candidates: filterMyCandidates(state.candidates, state.auth),
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -60,6 +60,7 @@ class HomePage extends React.Component {
     this.props.getMyJobs();
     this.props.getAllJobs();
     this.props.getAllCompanies();
+    this.props.getMyCompanies();
     if(this.props.auth && this.props.auth.authToken){
       this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
     }
@@ -80,7 +81,7 @@ class HomePage extends React.Component {
 
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
           <div style={style.slide}>
-            <ClientsList clients={companies.list} />
+            <ClientsList clients={companies.myCompanyIds} />
           </div>
           <div>
             <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={myJobs}/>
