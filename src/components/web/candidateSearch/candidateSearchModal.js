@@ -3,6 +3,26 @@ import {Dialog} from '../';
 import { Toolbar, ToolbarGroup, IconButton, ToolbarTitle} from 'material-ui';
 import React from 'react';
 
+const style = {
+  dialog: {
+    height: '100%',
+    maxHeight: '100%',
+    paddingTop: '0px',
+  },
+  bodyStyle: {
+    paddingTop: '0px',
+    height: '100%',
+    padding: '0',
+  },
+  contentStyle: {
+    width: '100%',
+    maxWidth: 'none',
+    height: '100%',
+    maxHeight: '100%',
+    paddingTop: '0px',
+    top: '-64px',
+  },
+};
 
 export default class CandidateSearchModal extends React.Component {
   constructor(props){
@@ -11,7 +31,16 @@ export default class CandidateSearchModal extends React.Component {
   render(){
     return (
       <div>
-        <Dialog open={this.props.open}>
+        <Dialog
+            open={this.props.open}
+            autoDetectWindowHeight={false}
+            autoScrollBodyContent={false}
+            repositionOnUpdate={false}
+            defaultOpen={false}
+            style={style.dialog}
+            bodyStyle={style.bodyStyle}
+            contentStyle={style.contentStyle}
+        >
             <div style={{
               position:'fixed',
               width:'100%',
