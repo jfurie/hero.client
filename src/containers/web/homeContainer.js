@@ -9,7 +9,7 @@ import { getAllCompanies, getMyCompanies } from '../../modules/companies';
 
 const style = {
   slide: {
-    minHeight: `${window.innerHeight - 112}px`,
+    minHeight: `${window.innerHeight - 160}px`,
     // marginTop: '48px',
   },
 };
@@ -68,7 +68,7 @@ class HomePage extends React.Component {
   }
 
   _handleJobClick(job){
-    this.props.pushState(null,'/jobs/'+job.get('id'));
+    this.props.pushState(null,'/clients/'+ job.get('companyId') + '/jobs/'+job.get('id'));
   }
 
   render () {
