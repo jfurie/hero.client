@@ -59,7 +59,7 @@ class CompanyJobsList extends React.Component {
 
       // add a + circle if needed
       if (limit < candidates.count()) {
-        peopleList.push(<Avatar style={style.plusAvatar} color="#FF1564" backgroundColor={Styles.Colors.grey300}>+{candidates.count() - limit}</Avatar>);
+        peopleList.push(<Avatar style={style.plusAvatar} key={limit} color="#FF1564" backgroundColor={Styles.Colors.grey300}>+{candidates.count() - limit}</Avatar>);
       }
 
       let secondaryText = (<div>No Candidates Yet</div>);
