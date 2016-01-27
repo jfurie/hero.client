@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
-  List, ListItem, FontIcon, Divider, FlatButton, RaisedButton } from 'material-ui';
+  List, ListItem, FontIcon, Divider, FlatButton } from 'material-ui';
 import { InviteSuccessModal, Gravatar } from '../../../components/web';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;

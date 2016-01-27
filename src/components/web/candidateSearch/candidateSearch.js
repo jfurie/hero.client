@@ -10,6 +10,7 @@ import { Gravatar, CandidateDetailsModal } from '../../../components/web';
 
 import { searchContacts } from '../../../modules/contacts';
 
+let debounce = require('debounce');
 
 @connect(state => ({
   contacts: state.contacts,
@@ -45,6 +46,8 @@ export default class CandidateSearch extends React.Component {
     this.setState({
       query: e.target.value
     });
+
+    this.onSubmitQuery();
   }
 
   onSelectContact(contact, candidate) {
@@ -78,7 +81,7 @@ export default class CandidateSearch extends React.Component {
         <CardText>
           <TextField
             onEnterKeyDown={this.onSubmitQuery.bind(this)}
-            onChange={this.onQueryChange.bind(this)}
+            onChange={debounce(this.onQueryChange.bind(this), 500)}
             fullWidth
             floatingLabelText="Search Candidates"
           >

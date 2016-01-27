@@ -25,6 +25,7 @@
     "browser-sync": "^2.9.12",
     "compression": "^1.6.0",
     "css-loader": "^0.23.0",
+    "debounce": "^1.0.0",
     "eslint": "^1.8.0",
     "eslint-loader": "^1.1.1",
     "eslint-plugin-react": "^3.11.2",
