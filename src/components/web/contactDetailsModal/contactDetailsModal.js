@@ -70,37 +70,45 @@ class ContactDetailsModal extends React.Component {
     //let picture = null;
     let email = null;
     let phone = null;
-    let address = null;
+    let addressLine = null;
     let city = null;
     let postalCode = null;
     //let countryCode = null;
     let countrySubDivisionCode = null;
     let source = null;
     let displayName = null;
+    let invited = false;
 
     if (contact) {
       displayName = contact.get('displayName') || null;
-      //picture = 'http://www.material-ui.com/images/kerem-128.jpg';
       email = contact.get('email') || null;
       phone = contact.get('phone') || null;
-      address = contact.get('_address').get('addressLine') || null;
-      city = contact.get('_address').get('city') || null;
-      postalCode = contact.get('_address').get('postalCode') || null;
-      //countryCode = contact.get('_address').countryCode || null;
-      countrySubDivisionCode = contact.get('_address').get('countrySubDivisionCode') || null;
+      invited = contact.get('isInvited');
 
       if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
         source = contact.get('sourceInfo').get('referrer');
       }
+
+      // location stuff
+      let address = contact.get('_address');
+
+      if (address) {
+        addressLine = address.get('addressLine') || null;
+        city = address.get('city') || null;
+        postalCode = address.get('postalCode') || null;
+        countrySubDivisionCode = address.get('countrySubDivisionCode') || null;
+
+        if (city && countrySubDivisionCode) {
+          city += `, ${countrySubDivisionCode}`;
+        }
+
+        if (city && postalCode) {
+          city += ` ${postalCode}`;
+        }
+
+      }
     }
 
-    if (city && countrySubDivisionCode) {
-      city += `, ${countrySubDivisionCode}`;
-    }
-
-    if (city && postalCode) {
-      city += ` ${postalCode}`;
-    }
 
     return (
       <div>
@@ -124,9 +132,11 @@ class ContactDetailsModal extends React.Component {
                 <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
                 <ToolbarTitle style={style.detailsTitle} text={'Contact Details'} />
               </ToolbarGroup>
-              <ToolbarGroup key={1} float="right">
-                <FlatButton onTouchTap={this.inviteToHero.bind(this)} style={style.invite}>Invite</FlatButton>
-              </ToolbarGroup>
+              {(!invited) ? (
+                <ToolbarGroup key={1} float="right">
+                  <FlatButton onTouchTap={this.inviteToHero.bind(this)} style={style.invite}>Invite</FlatButton>
+                </ToolbarGroup>
+              ) : (null)}
             </Toolbar>
             <List>
               <div>
@@ -161,12 +171,12 @@ class ContactDetailsModal extends React.Component {
                   </div>
                 ) : (null)}
 
-                {(address) ? (
+                {(addressLine) ? (
                   <div>
                     <Divider inset />
                     <ListItem
                       leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                      primaryText={address}
+                      primaryText={addressLine}
                       secondaryText={<p>address</p>}
                       secondaryTextLines={1}
                     />
