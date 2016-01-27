@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import { CustomTabsSwipe, CandidatesList, LocationCard, ContactDetailsModal, Gravatar } from '../../../components/web';
-import { List , ListItem, Card, Avatar, CardText, CardMedia, FlatButton, CardHeader, CardActions, RaisedButton } from 'material-ui';
+import { List , ListItem, Card, CardText, CardMedia, RaisedButton } from 'material-ui';
 import marked from 'marked';
 
 import './jobDetails.scss';
@@ -54,7 +54,6 @@ class JobDetails extends React.Component {
     //let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
     let description = job.get('description')?marked(job.get('description')):'';
     let pitch = job.get('quickPitch')?marked(job.get('quickPitch')) : '';
-    let heroContact = '/img/rameet.jpg';
   //  let range = '$'+job?job.get('minSalary'):'' + 'to $'+ job?job.get('maxSalary'):'';
     return (
       <div>
