@@ -2,6 +2,7 @@ import React from 'react';
 import { Divider, Card, CardHeader, CardText, CardActions, FlatButton } from 'material-ui';
 import { Gravatar } from '../../../components/web';
 import TimeAgo from 'react-timeago';
+import Immutable from 'immutable';
 
 const style = {
   gravatar: {
@@ -29,13 +30,15 @@ class CompanyNotesList extends React.Component {
 
       <div>
       {notes.map((note) => {
+        let contact = note.get('contact') || new Immutable.Map(self.props.defaultContact);
+
         return (
           <div>
           <Card initiallyExpanded>
             <CardHeader
-              title={note.get('contact').get('displayName')}
+              title={contact.get('displayName')}
               subtitle={<div>{(note.get('privacyValue') ? 'Public' : 'Private')} | <TimeAgo live={true} date={note.get('updated')} /></div>}
-              avatar={<Gravatar style={style.gravatar} email={note.get('contact').get('email')} />}>
+              avatar={<Gravatar style={style.gravatar} email={contact.get('email')} />}>
             </CardHeader>
             <CardText expandable>
               {note.get('noteText')}
