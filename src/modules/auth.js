@@ -54,6 +54,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       loggingIn: false,
+      contact: action.result.contact,
       user: action.result.user,
       authToken: action.result.authToken,
     };
@@ -78,6 +79,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       loggingIn: false,
+      contact: action.result.contact,
       user: action.result.user,
       authToken: action.result.authToken,
     };
@@ -185,12 +187,19 @@ export function login(email, password) {
         return client.api.get('/users/' + auth.userId, {
           authToken: auth,
         }).then((user)=> {
-          client.localStorage.set('Auth', auth);
           auth.user = user.results;
-          return {
-            user,
-            authToken:auth,
-          };
+
+          return client.api.get(`/contacts/findOne?filter[where][and][0][userId]=${auth.userId}&filter[where][and][1][isMaster]=true`, {
+            authToken: auth,
+          }).then((contact)=> {
+            client.localStorage.set('Auth', auth);
+            auth.contact = contact.results;
+            return {
+              contact,
+              user,
+              authToken:auth,
+            };
+          });
         });
       });
     }
@@ -214,11 +223,18 @@ export function logginWithAuthLocalStorage() {
           return client.api.get('/users/' + auth.userId, {
             authToken: auth,
           }).then((user)=> {
-            client.localStorage.set('Auth', auth);
             auth.user = user.results;
-            resolve({
-              user,
-              authToken:auth,
+
+            return client.api.get(`/contacts/findOne?filter[where][and][0][userId]=${auth.userId}&filter[where][and][1][isMaster]=true`, {
+              authToken: auth,
+            }).then((contact)=> {
+              client.localStorage.set('Auth', auth);
+              auth.contact = contact.results;
+              resolve({
+                contact,
+                user,
+                authToken:auth,
+              });
             });
           }).catch((err) => {
             reject({

@@ -68,12 +68,13 @@ function getData(state, props) {
     localJob: state.jobs.localJob,
     localJobResource,
     heroContacts,
+    defaultContact: state.auth.contact,
   };
 }
 
 const style = {
   slide: {
-    minHeight: `${window.innerHeight - 112}px`,
+    minHeight: `${window.innerHeight - 160}px`,
     // marginTop: '48px',
   },
 };
@@ -128,9 +129,9 @@ class ClientDetailsPage extends React.Component {
       this.refs.notesCreateModal.closeModal();
       this.props.replaceNoteLocal({});
 
-      if (this.props.tabId != 3) {
-        this.refs.customTabsSwipe.getWrappedInstance()._handleChangeIndex(3);
-      }
+      // if (this.props.tabId != 3) {
+      //   this.refs.customTabsSwipe.getWrappedInstance()._handleChangeIndex(3);
+      // }
     }
   }
 
@@ -321,7 +322,7 @@ class ClientDetailsPage extends React.Component {
             </div>
             <div style={style.slide}>
               <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
-                <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={company.get('notes')}/>
+                <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={company.get('notes')} defaultContact={this.props.defaultContact}/>
               </List>
             </div>
           </CustomTabsSwipe>

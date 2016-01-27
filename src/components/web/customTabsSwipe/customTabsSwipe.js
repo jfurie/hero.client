@@ -10,22 +10,31 @@ import { connect } from 'react-redux';
 
 const style = {
   tabsContainer: {
+  },
+  tabs: {
+    backgroundColor: Styles.Colors.grey900,
     position: 'fixed',
     width: '100%',
     zIndex: '10',
   },
-  tabs: {
-    backgroundColor: Styles.Colors.grey900,
-  },
   tabs2: {
     backgroundColor: '#ffffff',
-
+    position: 'fixed',
+    width: '100%',
+    zIndex: '10',
   },
   tab:{
-
+    // marginTop: '48px',
   },
   tab2:{
     color:Styles.Colors.grey900,
+    // marginTop: '48px',
+  },
+  inkBar: {
+    marginTop: '0px',
+    position: 'fixed',
+    top: '110px',
+    zIndex: '20',
   },
 };
 
@@ -109,7 +118,7 @@ class CustomTabsSwipe extends React.Component {
     //let startSlide = startingTab || 0;
     let tabsStyle = style.tabs;
     let tabStyle = style.tab;
-    if(isLight){
+    if (isLight) {
       tabsStyle = style.tabs2;
       tabStyle = style.tab2;
     }
@@ -121,11 +130,14 @@ class CustomTabsSwipe extends React.Component {
             value={`${this.state.slideIndex}`}*/
             initialSelectedIndex={(this.props.startingTab || 0)}
             style={style.tabsContainer}
+            inkBarStyle={style.inkBar}
         >
           {tabs.map((tab, key) => {
             return (
               <Tab label={tab} key={key} style={tabStyle} value={`${key}`}>
-                {this.props.children[key]}
+                <div style={{paddingTop: '48px'}}>
+                  {this.props.children[key]}
+                </div>
               </Tab>
             );
           })}
