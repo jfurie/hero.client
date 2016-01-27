@@ -2,7 +2,7 @@ import * as constants from './constants';
 export function getNotesByCompany(companyId){
   return {
     types: [constants.GET_NOTES_BY_COMPANY, constants.GET_NOTES_BY_COMPANY_SUCCESS, constants.GET_NOTES_BY_COMPANY_FAIL],
-    promise: (client, auth) => client.api.get(`/companies/${companyId}/notes`, {
+    promise: (client, auth) => client.api.get(`/companies/${companyId}/notes?filter[include]=contact`, {
       authToken: auth.authToken,
     }),
   };
