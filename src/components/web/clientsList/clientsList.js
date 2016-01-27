@@ -93,7 +93,7 @@ class ClientsList extends React.Component {
                   <ListItem
                       leftAvatar={<CompanyAvatar url={company.get('website')} />}
                       primaryText={company.get('name')}
-                      secondaryText={<p>{company.get('jobs').size} Jobs | {company.get('candidates').size} Candidates</p>}
+                      secondaryText={<p>{company.get('jobs').size} Job{company.get('jobs').size == 1 ? '' : 's'} | {company.get('candidates').size} Candidate{company.get('candidates').size == 1 ? '' : 's'}</p>}
                       secondaryTextLines={2}
                       onTouchTap={this._showClientDetails.bind(this, company.get('id'))}
                   />
