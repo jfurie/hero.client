@@ -59,7 +59,7 @@ class JobDetails extends React.Component {
     return (
       <div>
         <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-        <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates', 'Notes']} >
+        <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates']} >
           <div style={style.slide}>
             <Card>
               {(jobImage) ? (
@@ -178,44 +178,6 @@ class JobDetails extends React.Component {
           </div>
           <div style={style.slide}>
             <CandidatesList candidates={jobCandidates} />
-          </div>
-          <div style={style.slide}>
-            <div>
-              <Card initiallyExpanded>
-                <CardHeader
-                  title="Rameet Singh"
-                  subtitle="Private | 59 mins ago"
-                  avatar={<Avatar src={heroContact} />}>
-                </CardHeader>
-                <CardText expandable>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                </CardText>
-                <CardActions expandable>
-                  <FlatButton label="Edit"/>
-                  <FlatButton label="Delete"/>
-                </CardActions>
-              </Card>
-              <Card initiallyExpanded>
-                <CardHeader
-                  title="Rameet Singh"
-                  subtitle="Private | 60 mins ago"
-                  avatar={<Avatar src={heroContact} />}>
-                </CardHeader>
-                <CardText expandable>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                  Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                  Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-                </CardText>
-                <CardActions expandable>
-                  <FlatButton label="Edit"/>
-                  <FlatButton label="Delete"/>
-                </CardActions>
-              </Card>
-            </div>
           </div>
         </CustomTabsSwipe>
       </div>
