@@ -105,14 +105,25 @@ export default function reducer(state = initialState, action = {}) {
       currentSearch: action.query,
     };
   case jobConstants.GET_MY_JOBS_SUCCESS:
-    let companyList =  {};
-    action.result.map(job =>{
-      companyList[job.company.id] = job.company;
-    });
-    return {
-      ...state,
-      list:state.list.mergeDeep(companyList),
-    };
+    {
+      let companyList =  {};
+      action.result.map(job =>{
+        companyList[job.company.id] = job.company;
+      });
+      return {
+        ...state,
+        list:state.list.mergeDeep(companyList),
+      };
+    }
+  case jobConstants.GET_JOB_SUCCESS:
+    {
+      let companyList =  {};
+      companyList[action.result.company.id] = action.result;
+      return {
+        ...state,
+        list:state.list.mergeDeep(companyList),
+      };
+    }
   case constants.GET_MY_COMPANIES_SUCCESS: {
 
     let companiesMap = {};

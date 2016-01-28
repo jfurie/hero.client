@@ -22,7 +22,7 @@ export CandidatesListItemStatus from './candidatesListItemStatus/candidatesListI
 export FileInput from './fileInput/fileInput';
 export TagsInput from './tagsInput/tagsInput';
 export CandidateSearch from './candidateSearch/candidateSearch';
-
+export ClientsCreate from './clientsCreate/clientsCreate';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';

@@ -6,7 +6,7 @@ import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies } from '../../modules/companies';
-
+import ClientCreateContainer from './clients/clientCreateContainer';
 const style = {
   slide: {
     minHeight: `${window.innerHeight - 160}px`,
@@ -54,6 +54,9 @@ class HomePage extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      openClientCreate: true
+    };
   }
 
   componentDidMount() {
@@ -65,21 +68,24 @@ class HomePage extends React.Component {
       this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
     }
 
+
   }
 
   _handleJobClick(job){
     this.props.pushState(null,'/clients/'+ job.get('companyId') + '/jobs/'+job.get('id'));
   }
-
+  _handleClose(){
+    this.setState({openClientCreate:false});
+  }
   render () {
 
     let { candidates, companies, myJobs } = this.props;
-
+    let { query } = this.props.location;
     return (
       <div>
         <Header title='Dashboard'></Header>
 
-        <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
+        <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates', 'Client Create Test']} startingTab={1}>
           <div style={style.slide}>
             <ClientsList clients={companies.myCompanyIds} />
           </div>
@@ -88,6 +94,10 @@ class HomePage extends React.Component {
           </div>
           <div style={style.slide}>
             <CandidatesList candidates={candidates}/>
+          </div>
+          <div>
+            <ClientCreateContainer companyId={query.companyId} inline={true} open={this.state.openClientCreate} onClose={this._handleClose.bind(this)}></ClientCreateContainer>
+            <ClientCreateContainer companyId={query.companyId} inline={false} open={this.state.openClientCreate} onClose={this._handleClose.bind(this)}></ClientCreateContainer>
           </div>
         </CustomTabsSwipe>
 
