@@ -28,7 +28,7 @@ class ClientSearchPage extends React.Component {
     this.onQuerySubmit();
   }
 
-  onQueryClear(e) {
+  onQueryClear() {
     this.setState({
       query: ''
     });

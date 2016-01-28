@@ -1,9 +1,7 @@
 import React from 'react';
 
-import { AppBar, Card, CardHeader, CardTitle, CardText, ListItem, IconButton, Divider, TextField, RaisedButton } from 'material-ui';
+import { AppBar, Card, CardHeader, IconButton, TextField, RaisedButton } from 'material-ui';
 import Infinite from 'react-infinite';
-
-import { Gravatar } from '../../../components/web';
 
 const style = {
   container: {
