@@ -22,6 +22,8 @@ export CandidatesListItemStatus from './candidatesListItemStatus/candidatesListI
 export FileInput from './fileInput/fileInput';
 export TagsInput from './tagsInput/tagsInput';
 export CandidateSearch from './candidateSearch/candidateSearch';
+export ActionButton from './actionButton/actionButton';
+export ActionButtonItem from './actionButtonItem/actionButtonItem';
 
 /* all the web modals components */
 
