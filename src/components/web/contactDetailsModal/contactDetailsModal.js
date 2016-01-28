@@ -10,6 +10,7 @@ const style = {
     height: '100%',
     maxHeight: '100%',
     paddingTop: '0px',
+    zIndex: '1400',
   },
   bodyStyle: {
     paddingTop: '0px',
@@ -52,6 +53,11 @@ class ContactDetailsModal extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      justInvited: false,
+      confirmOpen: false,
+    };
   }
 
   closeModal() {
@@ -59,8 +65,20 @@ class ContactDetailsModal extends React.Component {
   }
 
   inviteToHero() {
+    this.setState({confirmOpen: true});
+  }
+
+  handleConfirmInviteClose() {
+    this.setState({confirmOpen: false});
+  }
+
+  handleConfirmInviteGo() {
+    //this.props.onInvite();
+    this.setState({confirmOpen: false});
     this.refs.inviteSuccessModal.show();
-    this.props.onInvite();
+    this.setState({
+      justInvited: true,
+    });
   }
 
   render() {
@@ -109,11 +127,23 @@ class ContactDetailsModal extends React.Component {
       }
     }
 
+    const confirmInviteActions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onTouchTap={this.handleConfirmInviteClose.bind(this)} />,
+      <FlatButton
+        label="Submit"
+        secondary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleConfirmInviteGo.bind(this)} />,
+    ];
 
     return (
+
       <div>
 
-        <InviteSuccessModal ref="inviteSuccessModal" />
+        <InviteSuccessModal ref="inviteSuccessModal" email={email}/>
 
         <Dialog
             open={this.props.open}
@@ -132,7 +162,7 @@ class ContactDetailsModal extends React.Component {
                 <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
                 <ToolbarTitle style={style.detailsTitle} text={'Contact Details'} />
               </ToolbarGroup>
-              {(!invited) ? (
+              {(!invited && !this.state.justInvited && email) ? (
                 <ToolbarGroup key={1} float="right">
                   <FlatButton onTouchTap={this.inviteToHero.bind(this)} style={style.invite}>Invite</FlatButton>
                 </ToolbarGroup>
@@ -211,6 +241,16 @@ class ContactDetailsModal extends React.Component {
             </List>
           </div>
         </Dialog>
+        <div> {/* confirm */}
+          <Dialog
+            title="Are you sure?"
+            actions={confirmInviteActions}
+            modal={false}
+            open={this.state.confirmOpen}
+            onRequestClose={this.handleConfirmInviteClose.bind(this)}>
+            Do you want to invite <strong style={{fontWeight: '500'}}>{displayName}</strong> ({email}) to join the Hero platform?
+          </Dialog>
+        </div>
       </div>
     );
   }
