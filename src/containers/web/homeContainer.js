@@ -1,16 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList } from '../../components/web';
+import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies } from '../../modules/companies';
+import { Styles } from 'material-ui';
+
+//import FloatingActionButton from 'material-ui/lib/floating-action-button';
+import ContentAdd from 'material-ui/lib/svg-icons/content/add';
+
+
+//import Overlay from 'material-ui/lib/overlay';
+//import StylePropable from 'material-ui/lib/mixins/style-propable';
 
 const style = {
   slide: {
     minHeight: `${window.innerHeight - 160}px`,
     // marginTop: '48px',
+  },
+  actionButton: {
+    position: 'fixed',
+    bottom: '15px',
+    right: '15px',
+  },
+  overlay: {
+    zIndex: '1400',
   },
 };
 
@@ -71,9 +87,37 @@ class HomePage extends React.Component {
     this.props.pushState(null,'/clients/'+ job.get('companyId') + '/jobs/'+job.get('id'));
   }
 
+  _handleOverlayTouchTap() {
+    console.log('lol');
+  }
+
+  _createContact() {
+    console.log('_createContact');
+  }
+
+  _createJob() {
+    console.log('_createJob');
+  }
+
+  _createClient() {
+    console.log('_createClient');
+  }
+
   render () {
 
     let { candidates, companies, myJobs } = this.props;
+
+    let actions = [
+      <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this._createContact}>
+        <ContentAdd />
+      </ActionButtonItem>,
+      <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this._createJob}>
+        <ContentAdd />
+      </ActionButtonItem>,
+      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this._createClient}>
+        <ContentAdd />
+      </ActionButtonItem>,
+    ];
 
     return (
       <div>
@@ -90,6 +134,8 @@ class HomePage extends React.Component {
             <CandidatesList candidates={candidates}/>
           </div>
         </CustomTabsSwipe>
+
+        <ActionButton actions={actions}/>
 
       </div>
     );
