@@ -3,6 +3,8 @@ import React from 'react';
 import { AppBar, Card, CardHeader, IconButton, TextField, RaisedButton } from 'material-ui';
 import Infinite from 'react-infinite';
 
+import { CompanyAvatar } from '../../../components/web';
+
 const style = {
   container: {
     padding: '10px',
@@ -37,6 +39,10 @@ export default class ClientSearch extends React.Component {
     this.refs.queryTextField._getInputNode().setAttribute('autocomplete', 'off');
   }
 
+  onQueryClear() {
+    this.props.onQueryClear(this.refs.queryTextField);
+  }
+
   render(){
 
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -48,13 +54,12 @@ export default class ClientSearch extends React.Component {
       <AppBar
         style={style.search.bar}
         iconElementLeft={<IconButton iconStyle={{color: 'rgba(0, 0, 0, 0.54)'}} onTouchTap={this.props.onSearchModalClose.bind(this)} iconClassName='material-icons'>arrow_back</IconButton>}
-        iconElementRight={query ? <IconButton iconStyle={{color: 'rgba(0, 0, 0, 0.54)'}} onTouchTap={this.props.onQueryClear.bind(this)} iconClassName='material-icons'>close</IconButton> : <div></div>}
+        iconElementRight={query ? <IconButton iconStyle={{color: 'rgba(0, 0, 0, 0.54)'}} onTouchTap={this.onQueryClear.bind(this)} iconClassName='material-icons'>close</IconButton> : <div></div>}
         zDepth={1}
         title=
         {
           <TextField
             ref="queryTextField"
-            value={query}
             style={style.search.input}
             underlineShow={false}
             onEnterKeyDown={this.props.onQuerySubmit.bind(this)}
@@ -78,9 +83,9 @@ export default class ClientSearch extends React.Component {
             <div key={key} style={style.section}>
             <Card>
               <CardHeader
-                title="Client Title"
-                subtitle="Client Subtitle"
-                avatar="http://lorempixel.com/100/100/nature/"
+                title={client.get('name')}
+                subtitle={<p>{client.get('jobs').size} Job{client.get('jobs').size == 1 ? '' : 's'} | {client.get('candidates').size} Candidate{client.get('candidates').size == 1 ? '' : 's'}</p>}
+                avatar={<CompanyAvatar url={client.get('website')} />}
               />
             </Card>
             </div>
