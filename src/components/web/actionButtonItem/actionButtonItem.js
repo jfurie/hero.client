@@ -26,8 +26,10 @@ class ActionButtonItem extends React.Component {
   }
 
   _onTouchTap() {
-    if (this.props.onTouchTap) {
-      this.props.onTouchTap();
+    console.log('item _onTouchTap');
+    if (this.props.itemTapped) {
+      console.log('call')
+      this.props.itemTapped();
     }
   }
 
@@ -56,9 +58,9 @@ class ActionButtonItem extends React.Component {
     }
 
     return (
-      <div style={{display: (this.props.show) ? ('block') : ('hidden')}} key={this.props.position}>
-        <Paper style={style.paper} zDepth={1}>{this.props.title}</Paper>
-        <FloatingActionButton onTouchTap={this._onTouchTap.bind(this)} mini={true} style={style.actionButtonItem} onTouchTap={this._openActions.bind(this)} backgroundColor={this.props.color}>
+      <div style={{display: (this.props.show) ? ('block') : ('hidden')}} key={this.props.position} onTouchTap={this._onTouchTap.bind(this)}>
+        <Paper style={style.paper} zDepth={1} >{this.props.title}</Paper>
+        <FloatingActionButton mini={true} style={style.actionButtonItem} onTouchTap={this._openActions.bind(this)} backgroundColor={this.props.color}>
           {this.props.children}
         </FloatingActionButton>
       </div>
@@ -68,7 +70,7 @@ class ActionButtonItem extends React.Component {
 
 ActionButtonItem.propTypes = {
   color: React.PropTypes.string.isRequired,
-  onTouchTap: React.PropTypes.func,
+  itemTapped: React.PropTypes.func,
   position:  React.PropTypes.number,
   show: React.PropTypes.bool,
   title: React.PropTypes.string.isRequired,

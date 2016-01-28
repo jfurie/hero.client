@@ -91,16 +91,16 @@ class HomePage extends React.Component {
     console.log('lol');
   }
 
-  _creacteContact() {
-    console.log('_creacteContact');
+  _createContact() {
+    console.log('_createContact');
   }
 
-  _creacteJob() {
-    console.log('_creacteJob');
+  _createJob() {
+    console.log('_createJob');
   }
 
-  _creacteClient() {
-    console.log('_creacteClient');
+  _createClient() {
+    console.log('_createClient');
   }
 
   render () {
@@ -108,13 +108,13 @@ class HomePage extends React.Component {
     let { candidates, companies, myJobs } = this.props;
 
     let actions = [
-      <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} onTouchTap={this._creacteContact.bind(this)}>
+      <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this._createContact}>
         <ContentAdd />
       </ActionButtonItem>,
-      <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} onTouchTap={this._creacteJob.bind(this)}>
+      <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this._createJob}>
         <ContentAdd />
       </ActionButtonItem>,
-      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} onTouchTap={this._creacteClient.bind(this)}>
+      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this._createClient}>
         <ContentAdd />
       </ActionButtonItem>,
     ];
