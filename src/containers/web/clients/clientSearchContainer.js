@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { pushState } from 'redux-router';
-
 import { ClientSearchModal } from '../../../components/web';
 
 import { searchCompanies } from '../../../modules/companies';
@@ -13,7 +11,7 @@ let debounce = require('debounce');
 
 @connect(state => ({
   companies: state.companies,
-}), { searchCompanies, pushState }, null, { withRef: true })
+}), { searchCompanies }, null, { withRef: true })
 class ClientSearchContainer extends React.Component {
 
   constructor(props) {
@@ -229,7 +227,7 @@ class ClientSearchContainer extends React.Component {
         name: detail.name,
         website: detail.website,
         phone: detail.formatted_phone_number,
-        address: {
+        location: {
           geoField: {
             lat: detail.geometry.location.lat(),
             lng: detail.geometry.location.lng(),
