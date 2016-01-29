@@ -57,47 +57,75 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.EDIT_COMPANY: {
+    let company = {};
+    company[action.id] = {};
+    company[action.id].saving = true;
+    company[action.id].savingError = '';
     return {
       ...state,
+      saving:true,
+      savingError: '',
+      list: state.list.mergeDeep(company),
     };
   }
   case constants.EDIT_COMPANY_SUCCESS: {
     let company = {};
     let id = action.result.id;
     company[id] = action.result;
-
+    company[id].saving = false;
+    company[id].savingError = '';
     return {
       ...state,
+      saving:false,
       list: state.list.mergeDeep(company),
     };
   }
   case constants.EDIT_COMPANY_FAIL: {
+    let company = {};
+    let id = action.result.id;
+    company[id].saving = false;
+    company[id].savingError = action.err;
     return {
       ...state,
-      err: action.err,
+      saving:false,
+      savingError: action.err,
+      list: state.list.mergeDeep(company),
     };
   }
-  case constants.CREATE_COMPANY:
+  case constants.CREATE_COMPANY:{
+    let company = {};
+    company[action.id] = {};
+    company[action.id].saving = true;
+    company[action.id].savingError = '';
     return {
       ...state,
-      creating:true,
-      creatingError:'',
+      saving:true,
+      savingError:'',
+      list: state.list.mergeDeep(company),
     };
+  }
   case constants.CREATE_COMPANY_SUCCESS:
     let newItem = {};
     newItem[action.result.id] = action.result;
+    newItem[action.result.id].saving = false;
+    newItem[action.result.id].savingError = '';
+    newItem[action.id] = newItem[action.result.id];
     return {
       ...state,
-      creating:false,
-      creatingError:'',
+      saving:false,
+      savingError:'',
       list:state.list.mergeDeep(newItem),
     };
   case constants.CREATE_COMPANY_FAIL:
+  { let company = {};
+    company[id].saving = false;
+    company[id].savingError = action.err || 'Failed to create company';
     return {
       ...state,
-      creating:false,
-      creatingError:'Failed to create company',
+      saving:false,
+      savingError:'Failed to create company',
     };
+  }
   case constants.SEARCH_COMPANIES:
     return {
       ...state,
@@ -141,6 +169,14 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       err: action.err,
+    };
+  }
+  case constants.CREATE_TEMP_COMPANY:{
+    let companiesMap = {};
+    companiesMap[action.result.id] = action.result;
+    return {
+      ...state,
+      list: state.list.mergeDeep(companiesMap),
     };
   }
   default:
@@ -189,8 +225,20 @@ export function getOneCompany(id) {
   };
 }
 
-export function createCompany(company) {
+export function createTempCompany(company){
   return {
+    type:constants.CREATE_TEMP_COMPANY,
+    result:company
+  }
+}
+
+export function createCompany(company) {
+  var id = company.get('id');
+  if(id && id.indexOf('tmp') > -1){
+    company = company.remove('id');
+  }
+  return {
+    id,
     types: [constants.CREATE_COMPANY, constants.CREATE_COMPANY_SUCCESS, constants.CREATE_COMPANY_FAIL],
     promise: (client, auth) => client.api.post('/companies', {
       authToken: auth.authToken,
@@ -201,6 +249,7 @@ export function createCompany(company) {
 
 export function editCompany(company) {
   return {
+    id:company.get('id'),
     types: [constants.EDIT_COMPANY, constants.EDIT_COMPANY_SUCCESS, constants.EDIT_COMPANY_FAIL],
     promise: (client, auth) => client.api.put(`/companies/${company.id}`, {
       authToken: auth.authToken,

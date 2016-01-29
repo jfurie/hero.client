@@ -1,16 +1,33 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList } from '../../components/web';
+import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
-import { getAllCompanies, getMyCompanies } from '../../modules/companies';
+import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
 import ClientCreateContainer from './clients/clientCreateContainer';
+import { Styles } from 'material-ui';
+
+//import FloatingActionButton from 'material-ui/lib/floating-action-button';
+import ContentAdd from 'material-ui/lib/svg-icons/content/add';
+
+
+//import Overlay from 'material-ui/lib/overlay';
+//import StylePropable from 'material-ui/lib/mixins/style-propable';
+
 const style = {
   slide: {
     minHeight: `${window.innerHeight - 160}px`,
     // marginTop: '48px',
+  },
+  actionButton: {
+    position: 'fixed',
+    bottom: '15px',
+    right: '15px',
+  },
+  overlay: {
+    zIndex: '1400',
   },
 };
 
@@ -49,13 +66,13 @@ function filterMyJobs(state){
   candidates: filterMyCandidates(state.candidates, state.auth),
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany})
 class HomePage extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      openClientCreate: true
+      openClientCreate: false
     };
   }
 
@@ -77,10 +94,54 @@ class HomePage extends React.Component {
   _handleClose(){
     this.setState({openClientCreate:false});
   }
+
+  _handleOverlayTouchTap() {
+    console.log('lol');
+  }
+
+  _createContact() {
+    console.log('_createContact');
+  }
+
+  _createJob() {
+    console.log('_createJob');
+  }
+
+  _createClient() {
+    this.refs.actionButtons.close();
+    this.props.createTempCompany({
+      id:'tmp'
+    });
+    this.setState({
+      companyId:'tmp',
+      openClientCreate:true
+    });
+  }
+  _handleContactSave(id){
+    //onSave
+    console.log('saved',id);
+    this.setState({
+      companyId:id,
+      openClientCreate:false
+    });
+  }
+
   render () {
 
     let { candidates, companies, myJobs } = this.props;
     let { query } = this.props.location;
+    let actions = [
+      <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this._createContact}>
+        <ContentAdd />
+      </ActionButtonItem>,
+      <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this._createJob}>
+        <ContentAdd />
+      </ActionButtonItem>,
+      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={::this._createClient}>
+        <ContentAdd />
+      </ActionButtonItem>,
+    ];
+
     return (
       <div>
         <Header title='Dashboard'></Header>
@@ -96,10 +157,10 @@ class HomePage extends React.Component {
             <CandidatesList candidates={candidates}/>
           </div>
           <div>
-            <ClientCreateContainer companyId={query.companyId} inline={true} open={this.state.openClientCreate} onClose={this._handleClose.bind(this)}></ClientCreateContainer>
-            <ClientCreateContainer companyId={query.companyId} inline={false} open={this.state.openClientCreate} onClose={this._handleClose.bind(this)}></ClientCreateContainer>
+            <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this._handleClose.bind(this)}></ClientCreateContainer>
           </div>
         </CustomTabsSwipe>
+        <ActionButton ref='actionButtons' actions={actions}/>
 
       </div>
     );

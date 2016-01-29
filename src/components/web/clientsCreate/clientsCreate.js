@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import {
   Dialog, IconButton, ToolbarGroup, Toolbar,
   FlatButton, TextField, ToolbarTitle, SelectField,
-  MenuItem,RaisedButton,
+  MenuItem,RaisedButton, Styles
 } from 'material-ui';
 import {
   Header
@@ -131,42 +131,6 @@ export default class ClientsCreateModal extends React.Component {
               <div className="box">
                 <form onSubmit={this._handleSubmit.bind(this)}>
                   <div>
-                    <TextField
-                        style={style.textField}
-                        errorText={(company.get('errors') && company.get('errors').name) || ''}
-                        errorStyle={style.error}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'name')}
-                        value={company.get('name')}
-                        floatingLabelText="Company Name" />
-                  </div>
-                  <div>
-                    <TextField
-                        style={style.textField}
-                        errorText={company.get('errors').website || ''}
-                        errorStyle={style.error}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'website')}
-                        value={company.get('website')}
-                        floatingLabelText="Company Website" />
-                  </div>
-                  <div>
-                    <TextField
-                        style={style.textField}
-                        errorText={company.get('errors').facebookHandle || ''}
-                        errorStyle={style.error}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'facebookHandle')}
-                        value={company.get('facebookHandle')}
-                        floatingLabelText="Facebook Handle (optional)" />
-                  </div>
-                  <div>
-                    <TextField
-                        style={style.textField}
-                        errorText={company.get('errors').twitterHandle || ''}
-                        errorStyle={style.error}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'twitterHandle')}
-                        value={company.get('twitterHandle')}
-                        floatingLabelText="Twitter Handle (optional)" />
-                  </div>
-                  <div>
                     <SelectField
                         floatingLabelText="Client Advocate"
                         floatingLabelStyle={style.floatLabel}
@@ -186,7 +150,161 @@ export default class ClientsCreateModal extends React.Component {
                       })}
                     </SelectField>
                   </div>
-                  <RaisedButton primary={true} label='Save' onTouchTap={this._handleSubmit.bind(this)}></RaisedButton>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={(company.get('errors') && company.get('errors').name) || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'name')}
+                        value={company.get('name')}
+                        floatingLabelText="Company Name" />
+                  </div>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors').website || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'website')}
+                        value={company.get('website')}
+                        floatingLabelText="Company Website" />
+                  </div>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={(company.get('errors') && company.get('errors').phone) || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'phone')}
+                        value={company.get('phone')}
+                        floatingLabelText="Phone Number" />
+                  </div>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={(company.get('errors') && company.get('errors').email) || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'email')}
+                        value={company.get('email')}
+                        floatingLabelText="Email" />
+                  </div>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['angelList'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'angelList')}
+                        value={company.get('angelList')}
+                        floatingLabelText="AngelList Url (optional)" />
+                  </div>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['crunchbase'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'crunchbase')}
+                        value={company.get('crunchbase')}
+                        floatingLabelText="Crunchbase Url (optional)" />
+                  </div>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['jobboard'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'jobboard')}
+                        value={company.get('jobboard')}
+                        floatingLabelText="JobBoard Url (optional)" />
+                  </div>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['ziprecruiter'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'ziprecruiter')}
+                        value={company.get('ziprecruiter')}
+                        floatingLabelText="ZipRecruiter Url (optional)" />
+                  </div>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['indeed'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'indeed')}
+                        value={company.get('indeed')}
+                        floatingLabelText="Indeed Url (optional)" />
+                  </div>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors').facebookHandle || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'facebookHandle')}
+                        value={company.get('facebookHandle')}
+                        floatingLabelText="Facebook Handle (optional)" />
+                  </div>
+                  <div>
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors').twitterHandle || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'twitterHandle')}
+                        value={company.get('twitterHandle')}
+                        floatingLabelText="Twitter Handle (optional)" />
+                  </div>
+                  <div>
+                    <TextField
+                        multiLine={true}
+                        rows={3}
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['culture'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'culture')}
+                        value={company.get('culture')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="Company Culture (optional)" />
+                  </div>
+                  <div>
+                    <TextField
+                        multiLine={true}
+                        rows={3}
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['techstack'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'techstack')}
+                        value={company.get('techstack')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="What's your Tech Stack (optional)" />
+                  </div>
+                  <div>
+                    <TextField
+                        multiLine={true}
+                        rows={3}
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['leadership'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'leadership')}
+                        value={company.get('leadership')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="What is the leadership team? (optional)" />
+                  </div>
+                  <div>
+                    <TextField
+                        multiLine={true}
+                        rows={3}
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['productSolution'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'productSolution')}
+                        value={company.get('productSolution')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="What problem are you addressing and how are you addressing it?" />
+                  </div>
+                  <div style={{marginTop:'20px', marginBottom:'20px'}}>
+                    <RaisedButton primary={true} label='Save' onTouchTap={this._handleSubmit.bind(this)}></RaisedButton>
+                  </div>
+
                 </form>
               </div>
           </div>
@@ -195,6 +313,7 @@ export default class ClientsCreateModal extends React.Component {
   }
   render(){
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    let contentHeight = clientHeight - 64;
     if(this.props.inline){
       return (
       <div>
@@ -213,7 +332,7 @@ export default class ClientsCreateModal extends React.Component {
                 bodyStyle={style.bodyStyle}
                 contentStyle={style.contentStyle}
             >
-            <div style={{minHeight: `${clientHeight}px`}}>
+            <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
               <Toolbar style={style.toolbar}>
                 <ToolbarGroup key={0} float="left">
                   <IconButton onTouchTap={this.closeModal.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
@@ -223,7 +342,9 @@ export default class ClientsCreateModal extends React.Component {
                   <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
                 </ToolbarGroup>
               </Toolbar>
-              {this.renderContents()}
+              <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
+                {this.renderContents()}
+              </div>
             </div>
           </Dialog>
       </div>);
