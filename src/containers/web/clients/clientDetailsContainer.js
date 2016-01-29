@@ -20,8 +20,16 @@ import getCompanyDataFromState from '../../../dataHelpers/company';
 import getJobDataFromState from '../../../dataHelpers/job';
 
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton,
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles
 } from 'material-ui';
+import Card from 'material-ui/lib/card/card';
+import CardActions from 'material-ui/lib/card/card-actions';
+import CardMedia from 'material-ui/lib/card/card-media';
+import CardTitle from 'material-ui/lib/card/card-title';
+import FlatButton from 'material-ui/lib/flat-button';
+import FloatingActionButton from 'material-ui/lib/floating-action-button';
+import MapsDirections from 'material-ui/lib/svg-icons/maps/directions';
+
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
@@ -53,9 +61,8 @@ function getData(state, props) {
     tabId = 0;
   }
 
-
-  var imageId = state.jobs.localJob.get('imageId');
-  if(imageId){
+  let imageId = state.jobs.localJob.get('imageId');
+  if (imageId) {
     localJobResource = state.resources.list.get(imageId);
   }
 
@@ -73,9 +80,41 @@ function getData(state, props) {
 }
 
 const style = {
-  slide: {
-    minHeight: `${window.innerHeight - 160}px`,
-    // marginTop: '48px',
+  // slide: {
+  //   minHeight: `${window.innerHeight - 160}px`,
+  //   // marginTop: '48px',
+  // },
+  viewContent: {
+    position: 'absolute',
+    top: '0',
+  },
+  cardTitle: {
+    position: 'relative',
+  },
+  cardTitleComponent: {
+    backgroundColor: Styles.Colors.indigo500,
+    padding: '21px 16px 26px',
+  },
+  subtitle: {
+    fontWeight: 200,
+    opacity: 0.5,
+  },
+  direction: {
+    position: 'absolute',
+    right: '10px',
+    top: '-28px',
+    zIndex: '50',
+  },
+  actionFontIcon: {
+    position: 'relative',
+    // left: '-5px',
+    top: '8px',
+    marginLeft: '0px',
+    width: '24px',
+    height: '24px',
+  },
+  actionBox: {
+    marginRight: '0px',
   },
 };
 
@@ -223,6 +262,75 @@ class ClientDetailsPage extends React.Component {
     this.props.pushState('', `/clients/${this.props.params.id}/${tab}`);
   }
 
+  // <div style={style.slide}>
+  //   <List>
+  //     <div>
+  //       {(website) ? (
+  //         <ListItem
+  //             leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+  //             primaryText={website}
+  //             secondaryText={<p>website</p>}
+  //             secondaryTextLines={1}
+  //         />
+  //       ) : (null)}
+  //
+  //       {(twitter) ? (
+  //         <div>
+  //           <Divider inset />
+  //           <ListItem
+  //               leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+  //               primaryText={`@${twitter}`}
+  //               secondaryText={<p>twitter</p>}
+  //               secondaryTextLines={1}
+  //           />
+  //         </div>
+  //       ) : (null)}
+  //
+  //       {(facebook) ? (
+  //         <div>
+  //           <Divider inset />
+  //           <ListItem
+  //               leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+  //               primaryText={`facebook.com/${facebook}`}
+  //               secondaryText={<p>facebook</p>}
+  //               secondaryTextLines={1}
+  //           />
+  //         </div>
+  //       ) : (null)}
+  //
+  //     </div>
+  //   </List>
+  //   <div id="innerView">
+  //     {(company.get('location')) ? (
+  //         <LocationCard style={{height: '200px'}} location={company.get('location')} marker={<CompanyAvatar url={company.get('website')} />}/>
+  //     ) : (null)}
+  //   </div>
+  //   <List subheader="Your HERO talent advocate">
+  //     {(company.get('clientAdvocate')) ? (
+  //       <ListItem
+  //         leftAvatar={<Gravatar email={company.get('clientAdvocate').get('email')} status={'vetted'} />}
+  //         primaryText={company.get('clientAdvocate').get('displayName')}
+  //         secondaryText={<p>Hero Talent Advocate</p>}
+  //         secondaryTextLines={1}
+  //       />
+  //     ) : (null)}
+  //     </List>
+  //
+  // </div>
+  // <div style={style.slide}>
+  //   <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() !== 1) ? ('s') : (''))}`}>
+  //     <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
+  //   </List>
+  // </div>
+  // <div style={style.slide}>
+  //   <ContactsList contacts={company.get('contacts')} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
+  // </div>
+  // <div style={style.slide}>
+  //   <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
+  //     <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={company.get('notes')} defaultContact={this.props.defaultContact}/>
+  //   </List>
+  // </div>
+
   render() {
 
     let {company, heroContacts} = this.props;
@@ -253,25 +361,54 @@ class ClientDetailsPage extends React.Component {
               <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
               <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
             </IconMenu>
-          } title={company.get('name')}
+          } transparent
           />
 
-        <CustomTabsSwipe ref='customTabsSwipe' onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
-            <div style={style.slide}>
+          <div className="viewContent" style={style.viewContent}>
+            <Card>
+              <CardMedia>
+                <img src="http://southerncaliforniabeaches.org/img/santa-monica-beach-path.jpg" />
+              </CardMedia>
+              <div style={style.cardTitle}>
+                <FloatingActionButton style={style.direction} backgroundColor={Styles.Colors.white}>
+                  <MapsDirections color={Styles.Colors.grey900}/>
+                </FloatingActionButton>
+                <CardTitle style={style.cardTitleComponent} subtitleColor={Styles.Colors.white} titleColor={Styles.Colors.white} subtitleStyle={style.subtitle} title={company.get('name')} subtitle={company.get('website')} />
+              </div>
+              <CardActions className="row center-xs">
+                <div className="col-xs" style={style.actionBox}>
+                  <div className="box">
+                    <FontIcon style={style.actionFontIcon} className="material-icons">phone</FontIcon>
+                    <FlatButton style={{minWidth: '0px'}} label="Call" />
+                  </div>
+                </div>
+                <div className="col-xs" style={style.actionBox}>
+                  <div className="box">
+                    <FontIcon style={style.actionFontIcon} className="material-icons">star_rate</FontIcon>
+                    <FlatButton style={{minWidth: '0px'}} labelPosition="after" label="Save" />
+                  </div>
+                </div>
+                <div className="col-xs" style={style.actionBox}>
+                  <div className="box">
+                    <FontIcon style={style.actionFontIcon} className="material-icons">email</FontIcon>
+                    <FlatButton style={{minWidth: '0px'}} labelPosition="after" label="Email" />
+                  </div>
+                </div>
+                <div className="col-xs" style={style.actionBox}>
+                  <div className="box">
+                    <FontIcon style={style.actionFontIcon} className="material-icons">share</FontIcon>
+                    <FlatButton style={{minWidth: '0px'}} labelPosition="after" label="Share" />
+                  </div>
+                </div>
+              </CardActions>
+            </Card>
+
+            <CustomTabsSwipe isInline ref='customTabsSwipe' onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts']}>
               <List>
                 <div>
-                  {(website) ? (
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={website}
-                        secondaryText={<p>website</p>}
-                        secondaryTextLines={1}
-                    />
-                  ) : (null)}
 
                   {(twitter) ? (
                     <div>
-                      <Divider inset />
                       <ListItem
                           leftIcon={<FontIcon className="material-icons">public</FontIcon>}
                           primaryText={`@${twitter}`}
@@ -295,37 +432,14 @@ class ClientDetailsPage extends React.Component {
 
                 </div>
               </List>
-              <div id="innerView">
-                {(company.get('location')) ? (
-                    <LocationCard style={{height: '200px'}} location={company.get('location')} marker={<CompanyAvatar url={company.get('website')} />}/>
-                ) : (null)}
-              </div>
-              <List subheader="Your HERO talent advocate">
-                {(company.get('clientAdvocate')) ? (
-                  <ListItem
-                    leftAvatar={<Gravatar email={company.get('clientAdvocate').get('email')} status={'vetted'} />}
-                    primaryText={company.get('clientAdvocate').get('displayName')}
-                    secondaryText={<p>Hero Talent Advocate</p>}
-                    secondaryTextLines={1}
-                  />
-                ) : (null)}
-                </List>
-
-            </div>
-            <div style={style.slide}>
               <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() !== 1) ? ('s') : (''))}`}>
                 <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
               </List>
-            </div>
-            <div style={style.slide}>
               <ContactsList contacts={company.get('contacts')} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
-            </div>
-            <div style={style.slide}>
-              <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
-                <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={company.get('notes')} defaultContact={this.props.defaultContact}/>
-              </List>
-            </div>
-          </CustomTabsSwipe>
+            </CustomTabsSwipe>
+
+          </div>
+
         </div>
       );
     } else {

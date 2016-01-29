@@ -19,10 +19,22 @@ class Header extends React.Component {
 
   render() {
 
+    let transparent = this.props.transparent || false;
 
     let leftIconFont = 'menu';
     if (this.props.goBack) {
       leftIconFont = 'chevron_left';
+    }
+
+    // compile style
+    let style = {
+      position: 'fixed',
+      backgroundColor: Styles.Colors.grey900,
+    };
+
+    if (transparent) {
+      style.background = 'none';
+      style.boxShadow = 'none';
     }
 
     //console.log(this.props.history);
@@ -31,8 +43,8 @@ class Header extends React.Component {
       <div>
         <AppBar
           iconElementRight={this.props.iconRight}
-          style={{position:'fixed', 'backgroundColor': Styles.Colors.grey900}}
-          title={this.props.title}
+          style={style}
+          title={this.props.title || ''}
           iconElementLeft={<IconButton onTouchTap={this.menuClicked.bind(this)} iconClassName='material-icons'>{leftIconFont}</IconButton>}
         />
         <div style={{height: '64px'}}></div>
@@ -43,6 +55,8 @@ class Header extends React.Component {
 //
 Header.propTypes = {
   goBack: React.PropTypes.func,
+  title: React.PropTypes.string,
+  transparent: React.PropTypes.bool,
 };
 
 

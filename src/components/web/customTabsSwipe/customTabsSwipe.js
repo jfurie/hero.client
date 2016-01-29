@@ -122,6 +122,16 @@ class CustomTabsSwipe extends React.Component {
       tabsStyle = style.tabs2;
       tabStyle = style.tab2;
     }
+
+    let isInline = this.props.isInline || false;
+
+    console.log(isInline);
+
+    if (isInline) {
+      style.inkBar.display = 'none';
+      tabsStyle.position = 'relative';
+    }
+
     return (
       <div>
         <Tabs
@@ -135,7 +145,7 @@ class CustomTabsSwipe extends React.Component {
           {tabs.map((tab, key) => {
             return (
               <Tab label={tab} key={key} style={tabStyle} value={`${key}`}>
-                <div style={{paddingTop: '48px'}}>
+                <div style={{paddingTop: (isInline) ? ('0px') : ('48px')}}>
                   {this.props.children[key]}
                 </div>
               </Tab>
@@ -159,6 +169,7 @@ class CustomTabsSwipe extends React.Component {
 }
 
 CustomTabsSwipe.propTypes = {
+  isInline: React.PropTypes.boolean,
   onSwipeEnd: React.PropTypes.func,
   startingTab: React.PropTypes.number,
   tabs: React.PropTypes.array.isRequired,
