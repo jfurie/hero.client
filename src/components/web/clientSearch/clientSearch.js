@@ -6,6 +6,12 @@ import Infinite from 'react-infinite';
 import { CompanyAvatar } from '../../../components/web';
 
 const style = {
+  overflow: {
+    maxWidth: '300px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
   container: {
     padding: '10px',
   },
@@ -74,42 +80,72 @@ export default class ClientSearch extends React.Component {
         fullWidth={true}
         label={'add ' + (query ? query : 'client')}
       />
-      <div style={style.heading.container}>
-        <span style={style.heading.label}>Search Results: </span>{`${searchResults.length} Client${(searchResults.length == 1) ? ('') : ('s')}`}
-      </div>
-      <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
-        {searchResults.map((client, key) => {
-          return (
-            <div key={key} style={style.section}>
-            <Card>
-              <CardHeader
-                title={client.get('name')}
-                subtitle={<p>{client.get('jobs').size} Job{client.get('jobs').size == 1 ? '' : 's'} | {client.get('candidates').size} Candidate{client.get('candidates').size == 1 ? '' : 's'}</p>}
-                avatar={<CompanyAvatar url={client.get('website')} />}
-              />
-            </Card>
+      {
+        searchResults.length > 0 || suggestions.length > 0 ?
+        <div>
+        {
+          searchResults.length > 0 || (query.length > 1 && suggestions.length == 0) ?
+          <div>
+            <div style={style.heading.container}>
+              <span style={style.heading.label}>Search Results: </span>{`${searchResults.length} Client${(searchResults.length == 1) ? ('') : ('s')}`}
             </div>
-          );
-        })}
-      </Infinite>
-      <div style={style.heading.container}>
-        <span style={style.heading.label}>Suggestions: </span>{`${suggestions.length} Client${(suggestions.length == 1) ? ('') : ('s')}`}
-      </div>
-      <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
-        {suggestions.map((client, key) => {
-          return (
-            <div key={key} style={style.section}>
-            <Card>
-              <CardHeader
-                title="Client Title"
-                subtitle="Client Subtitle"
-                avatar="http://lorempixel.com/100/100/nature/"
-              />
-            </Card>
+            <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
+              {searchResults.map((client, key) => {
+                return (
+                  <div key={key} style={style.section}>
+                  <Card>
+                    <CardHeader
+                      title={client.get('name')}
+                      subtitle={<p>{client.get('jobs').size} Job{client.get('jobs').size == 1 ? '' : 's'} | {client.get('candidates').size} Candidate{client.get('candidates').size == 1 ? '' : 's'}</p>}
+                      avatar={<CompanyAvatar url={client.get('website')} />}
+                    />
+                  </Card>
+                  </div>
+                );
+              })}
+            </Infinite>
+          </div>
+          : <div></div>
+        }
+        {
+          suggestions.length > 0 || (query.length > 1 && searchResults.length == 0) ?
+          <div>
+            <div style={style.heading.container}>
+              <span style={style.heading.label}>Suggestions: </span>{`${suggestions.length} Client${(suggestions.length == 1) ? ('') : ('s')}`}
             </div>
-          );
-        })}
-      </Infinite>
+            <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
+              {suggestions.map((client, key) => {
+                let photo = client.photos ? client.photos[0].getUrl({'maxWidth': 100, 'maxHeight': 100}) : null;
+
+                return (
+                  <div key={key} style={style.section}>
+                  <Card>
+                    <CardHeader
+                      style={style.overflow}
+                      title={<span>{client.name}</span>}
+                      subtitle={<span>{client.vicinity}</span>}
+                      avatar={photo ? photo : client.icon}
+                    />
+                  </Card>
+                  </div>
+                );
+              })}
+            </Infinite>
+          </div>
+          : <div></div>
+        }
+        </div>
+        :
+        <div>
+        {
+          query.length > 1 ?
+          <div style={style.heading.container}>
+            <span style={style.heading.label}>No results found for "{query}"</span>
+          </div>
+          : <div></div>
+        }
+        </div>
+      }
       </div>
     );
   }
