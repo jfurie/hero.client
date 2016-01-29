@@ -9,6 +9,7 @@ const initialState = {
   myCompanyIds: new Immutable.Map(),
   searches: new Immutable.Map(),
   currentSearch: '',
+  queries: new Immutable.Map(),
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -179,6 +180,22 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.mergeDeep(companiesMap),
     };
   }
+  case constants.SEARCH_COMPANIES_SUCCESS: {
+    let query = action.result.query;
+
+    let queriesMap = {};
+    queriesMap[query] = action.result.results;
+
+    return {
+      ...state,
+      queries: state.queries.mergeDeep(queriesMap),
+    };
+  }
+  case constants.SEARCH_COMPANIES_FAIL:
+    return {
+      ...state,
+      err: action.err,
+    };
   default:
     return state;
   }
@@ -262,6 +279,15 @@ export function getMyCompanies() {
   return {
     types: [constants.GET_MY_COMPANIES, constants.GET_MY_COMPANIES_SUCCESS, constants.GET_MY_COMPANIES_FAIL],
     promise: (client, auth) => client.api.get('/companies/myCompanies', {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function searchCompanies(query) {
+  return {
+    types: [constants.SEARCH_COMPANIES, constants.SEARCH_COMPANIES_SUCCESS, constants.SEARCH_COMPANIES_FAIL],
+    promise: (client, auth) => client.api.get(`/companies/search?query=${query}`, {
       authToken: auth.authToken,
     }),
   };
