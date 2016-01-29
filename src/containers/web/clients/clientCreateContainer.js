@@ -31,7 +31,7 @@ export default class ClientCreateContainer extends React.Component {
     this.state = {
       company : this.props.company || new Immutable.Map({errors:new Immutable.Map()}),
       open:true
-    }
+    };
   }
   componentDidMount() {
     //get the hero compnay contacts
@@ -97,15 +97,15 @@ ClientCreateContainer.propTypes = {
   onSave:React.PropTypes.func,
 };
 
-function guid() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1);
-  }
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-    s4() + '-' + s4() + s4() + s4();
-}
+// function guid() {
+//   function s4() {
+//     return Math.floor((1 + Math.random()) * 0x10000)
+//       .toString(16)
+//       .substring(1);
+//   }
+//   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+//     s4() + '-' + s4() + s4() + s4();
+// }
 //
 // ClientCreateContainer.defaultProps = {
 //     companyId: 'tmp_'+ guid()

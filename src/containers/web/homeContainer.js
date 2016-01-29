@@ -129,7 +129,7 @@ class HomePage extends React.Component {
   render () {
 
     let { candidates, companies, myJobs } = this.props;
-    let { query } = this.props.location;
+    //let { query } = this.props.location;
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this._createContact}>
         <ContentAdd />

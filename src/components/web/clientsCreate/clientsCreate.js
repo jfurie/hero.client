@@ -3,10 +3,10 @@ import Immutable from 'immutable';
 import {
   Dialog, IconButton, ToolbarGroup, Toolbar,
   FlatButton, TextField, ToolbarTitle, SelectField,
-  MenuItem,RaisedButton, Styles
+  MenuItem,RaisedButton
 } from 'material-ui';
 import {
-  Header
+
 } from '../';
 import validateCompany from '../../../validators/company';
 

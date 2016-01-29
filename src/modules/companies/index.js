@@ -118,15 +118,16 @@ export default function reducer(state = initialState, action = {}) {
       list:state.list.mergeDeep(newItem),
     };
   case constants.CREATE_COMPANY_FAIL:
-  { let company = {};
-    company[id].saving = false;
-    company[id].savingError = action.err || 'Failed to create company';
-    return {
-      ...state,
-      saving:false,
-      savingError:'Failed to create company',
-    };
-  }
+    {
+      let company = {};
+      company[action.result.id].saving = false;
+      company[action.result.id].savingError = action.err || 'Failed to create company';
+      return {
+        ...state,
+        saving:false,
+        savingError:'Failed to create company',
+      };
+    }
   case constants.SEARCH_COMPANIES:
     return {
       ...state,
@@ -245,8 +246,8 @@ export function getOneCompany(id) {
 export function createTempCompany(company){
   return {
     type:constants.CREATE_TEMP_COMPANY,
-    result:company
-  }
+    result:company,
+  };
 }
 
 export function createCompany(company) {
