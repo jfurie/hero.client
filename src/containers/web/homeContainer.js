@@ -146,7 +146,7 @@ class HomePage extends React.Component {
       <div>
         <Header title='Dashboard'></Header>
 
-        <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates', 'Client Create Test']} startingTab={1}>
+        <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
           <div style={style.slide}>
             <ClientsList clients={companies.myCompanyIds} />
           </div>
@@ -156,12 +156,9 @@ class HomePage extends React.Component {
           <div style={style.slide}>
             <CandidatesList candidates={candidates}/>
           </div>
-          <div>
-            <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this._handleClose.bind(this)}></ClientCreateContainer>
-          </div>
         </CustomTabsSwipe>
         <ActionButton ref='actionButtons' actions={actions}/>
-
+        <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this._handleClose.bind(this)}></ClientCreateContainer>
       </div>
     );
   }

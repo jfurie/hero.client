@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import {
   Dialog, IconButton, ToolbarGroup, Toolbar,
   FlatButton, TextField, ToolbarTitle, SelectField,
-  MenuItem,RaisedButton
+  MenuItem,RaisedButton,Divider
 } from 'material-ui';
 import {
 
@@ -150,6 +150,7 @@ export default class ClientsCreateModal extends React.Component {
                       })}
                     </SelectField>
                   </div>
+                  //primary
                   <div>
                     <TextField
                         style={style.textField}
@@ -186,6 +187,7 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('email')}
                         floatingLabelText="Email" />
                   </div>
+                  //social
                   <div>
                     <TextField
                         style={style.textField}
@@ -204,6 +206,7 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('crunchbase')}
                         floatingLabelText="Crunchbase Url (optional)" />
                   </div>
+                  //jobs
                   <div>
                     <TextField
                         style={style.textField}
@@ -249,6 +252,21 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('twitterHandle')}
                         floatingLabelText="Twitter Handle (optional)" />
                   </div>
+                  //about us
+                  <Divider />
+                  <div>
+                    <TextField
+                        multiLine={true}
+                        rows={3}
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['productSolution'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'productSolution')}
+                        value={company.get('productSolution')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="What problem are you addressing and how are you addressing it?" />
+                  </div>
                   <div>
                     <TextField
                         multiLine={true}
@@ -273,7 +291,7 @@ export default class ClientsCreateModal extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'techstack')}
                         value={company.get('techstack')}
                         floatingLabelStyle={{left:'0px'}}
-                        floatingLabelText="What's your Tech Stack (optional)" />
+                        floatingLabelText="Tech Stack (optional)" />
                   </div>
                   <div>
                     <TextField
@@ -287,19 +305,6 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('leadership')}
                         floatingLabelStyle={{left:'0px'}}
                         floatingLabelText="What is the leadership team? (optional)" />
-                  </div>
-                  <div>
-                    <TextField
-                        multiLine={true}
-                        rows={3}
-                        fullWidth={true}
-                        style={style.textField}
-                        errorText={company.get('errors') && company.get('errors')['productSolution'] || ''}
-                        errorStyle={style.error}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'productSolution')}
-                        value={company.get('productSolution')}
-                        floatingLabelStyle={{left:'0px'}}
-                        floatingLabelText="What problem are you addressing and how are you addressing it?" />
                   </div>
                   <div style={{marginTop:'20px', marginBottom:'20px'}}>
                     <RaisedButton primary={true} label='Save' onTouchTap={this._handleSubmit.bind(this)}></RaisedButton>
