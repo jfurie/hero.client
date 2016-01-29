@@ -5,7 +5,8 @@ import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList, ActionB
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
-import { getAllCompanies, getMyCompanies } from '../../modules/companies';
+import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
+import ClientCreateContainer from './clients/clientCreateContainer';
 import { Styles } from 'material-ui';
 
 //import FloatingActionButton from 'material-ui/lib/floating-action-button';
@@ -65,11 +66,14 @@ function filterMyJobs(state){
   candidates: filterMyCandidates(state.candidates, state.auth),
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany})
 class HomePage extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      openClientCreate: false
+    };
   }
 
   componentDidMount() {
@@ -81,10 +85,14 @@ class HomePage extends React.Component {
       this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
     }
 
+
   }
 
   _handleJobClick(job){
     this.props.pushState(null,'/clients/'+ job.get('companyId') + '/jobs/'+job.get('id'));
+  }
+  _handleClose(){
+    this.setState({openClientCreate:false});
   }
 
   _handleOverlayTouchTap() {
@@ -100,13 +108,28 @@ class HomePage extends React.Component {
   }
 
   _createClient() {
-    console.log('_createClient');
+    this.refs.actionButtons.close();
+    this.props.createTempCompany({
+      id:'tmp'
+    });
+    this.setState({
+      companyId:'tmp',
+      openClientCreate:true
+    });
+  }
+  _handleContactSave(id){
+    //onSave
+    console.log('saved',id);
+    this.setState({
+      companyId:id,
+      openClientCreate:false
+    });
   }
 
   render () {
 
     let { candidates, companies, myJobs } = this.props;
-
+    //let { query } = this.props.location;
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this._createContact}>
         <ContentAdd />
@@ -114,7 +137,7 @@ class HomePage extends React.Component {
       <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this._createJob}>
         <ContentAdd />
       </ActionButtonItem>,
-      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this._createClient}>
+      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={::this._createClient}>
         <ContentAdd />
       </ActionButtonItem>,
     ];
@@ -123,7 +146,7 @@ class HomePage extends React.Component {
       <div>
         <Header title='Dashboard'></Header>
 
-        <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
+        <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates', 'Client Create Test']} startingTab={1}>
           <div style={style.slide}>
             <ClientsList clients={companies.myCompanyIds} />
           </div>
@@ -133,9 +156,11 @@ class HomePage extends React.Component {
           <div style={style.slide}>
             <CandidatesList candidates={candidates}/>
           </div>
+          <div>
+            <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this._handleClose.bind(this)}></ClientCreateContainer>
+          </div>
         </CustomTabsSwipe>
-
-        <ActionButton actions={actions}/>
+        <ActionButton ref='actionButtons' actions={actions}/>
 
       </div>
     );
