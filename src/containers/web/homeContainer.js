@@ -100,7 +100,7 @@ class HomePage extends React.Component {
   }
 
   _createClient() {
-    console.log('_createClient');
+    this.props.pushState(null, '/clients/search');
   }
 
   render () {
@@ -114,7 +114,7 @@ class HomePage extends React.Component {
       <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this._createJob}>
         <ContentAdd />
       </ActionButtonItem>,
-      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this._createClient}>
+      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this._createClient.bind(this)}>
         <ContentAdd />
       </ActionButtonItem>,
     ];

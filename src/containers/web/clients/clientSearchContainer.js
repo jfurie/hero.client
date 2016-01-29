@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { pushState } from 'redux-router';
+
 import { ClientSearchModal } from '../../../components/web';
 
 import { searchCompanies } from '../../../modules/companies';
@@ -11,7 +13,7 @@ let debounce = require('debounce');
 
 @connect(state => ({
   companies: state.companies,
-}), { searchCompanies }, null, { withRef: true })
+}), { searchCompanies, pushState }, null, { withRef: true })
 class ClientSearchPage extends React.Component {
 
   constructor(props) {
@@ -86,9 +88,7 @@ class ClientSearchPage extends React.Component {
   }
 
   onSearchModalClose() {
-    this.setState({
-      searchModalOpen: false,
-    });
+    this.props.pushState(null, '/');
   }
 
   onNearbyPlacesSearch() {
