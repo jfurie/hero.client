@@ -108,6 +108,9 @@ class HomePage extends React.Component {
   }
 
   _createClient() {
+<<<<<<< HEAD
+    this.props.pushState(null, '/clients/search');
+=======
     this.refs.actionButtons.close();
     this.props.createTempCompany({
       id:'tmp'
@@ -124,6 +127,7 @@ class HomePage extends React.Component {
       companyId:id,
       openClientCreate:false
     });
+>>>>>>> master
   }
 
   render () {
@@ -137,7 +141,11 @@ class HomePage extends React.Component {
       <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this._createJob}>
         <ContentAdd />
       </ActionButtonItem>,
+<<<<<<< HEAD
+      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this._createClient.bind(this)}>
+=======
       <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={::this._createClient}>
+>>>>>>> master
         <ContentAdd />
       </ActionButtonItem>,
     ];

@@ -4,6 +4,7 @@ export const GET_COMPANIES_FAIL = 'hero.client/clients/GET_COMPANIES_FAIL';
 export const GET_COMPANY = 'hero.client/clients/GET_COMPANY';
 export const GET_COMPANY_SUCCESS = 'hero.client/clients/GET_COMPANY_SUCCESS';
 export const GET_COMPANY_FAIL = 'hero.client/clients/GET_COMPANY_FAIL';
+export const CREATE_TEMP_COMPANY = 'hero.client/clients/CREATE_TEMP_COMPANY';
 export const CREATE_COMPANY = 'hero.client/clients/CREATE_COMPANY';
 export const CREATE_COMPANY_SUCCESS = 'hero.client/clients/CREATE_COMPANY_SUCCESS';
 export const CREATE_COMPANY_FAIL = 'hero.client/clients/CREATE_COMPANY_FAIL';
