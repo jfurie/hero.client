@@ -71,6 +71,7 @@ export default class ClientSearch extends React.Component {
             onEnterKeyDown={this.props.onQuerySubmit.bind(this)}
             onChange={this.props.onQueryChange.bind(this)}
             hintText="Search Clients"
+            fullWidth={true}
           >
           </TextField>
         }
@@ -123,7 +124,7 @@ export default class ClientSearch extends React.Component {
                     <CardHeader
                       style={style.overflow}
                       title={<span>{client.name}</span>}
-                      subtitle={<span>{client.vicinity}</span>}
+                      subtitle={<span>{client.formatted_address}</span>}
                       avatar={photo ? photo : client.icon}
                     />
                   </Card>

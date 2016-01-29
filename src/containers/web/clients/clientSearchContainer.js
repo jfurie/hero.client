@@ -54,7 +54,7 @@ class ClientSearchPage extends React.Component {
   onQuerySubmit() {
     if (this.state.query.length > 1) {
       this.props.searchCompanies(this.state.query);
-      this.onPlacesSearch();
+      this.onTextPlacesSearch();
     }
     else {
       this.setState({
@@ -91,17 +91,17 @@ class ClientSearchPage extends React.Component {
     });
   }
 
-  onPlacesSearch() {
+  onNearbyPlacesSearch() {
     let self = this;
 
-    let thirdSt = new google.maps.LatLng(this.state.position.lat, this.state.position.long);
+    let location = new google.maps.LatLng(this.state.position.lat, this.state.position.long);
 
     let map = new google.maps.Map(document.createElement('div'), {
-      center: thirdSt,
+      center: location,
     });
 
     let request = {
-      location: thirdSt,
+      location,
       radius: '50000',
       keyword: this.state.query,
     };
@@ -109,6 +109,30 @@ class ClientSearchPage extends React.Component {
     let service = new google.maps.places.PlacesService(map);
 
     service.nearbySearch(request, function(results, status) {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        self.setState({
+          suggestions: results,
+        });
+      } else if (status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+        self.setState({
+          suggestions: [],
+        });
+      }
+    });
+  }
+
+  onTextPlacesSearch() {
+    let self = this;
+
+    let map = new google.maps.Map(document.createElement('div'));
+
+    let request = {
+      query: this.state.query,
+    };
+
+    let service = new google.maps.places.PlacesService(map);
+
+    service.textSearch(request, function(results, status) {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         self.setState({
           suggestions: results,
