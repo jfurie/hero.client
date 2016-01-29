@@ -125,8 +125,6 @@ class CustomTabsSwipe extends React.Component {
 
     let isInline = this.props.isInline || false;
 
-    console.log(isInline);
-
     if (isInline) {
       style.inkBar.display = 'none';
       tabsStyle.position = 'relative';
