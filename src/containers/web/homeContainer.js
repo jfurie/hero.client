@@ -7,6 +7,8 @@ import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
 import ClientCreateContainer from './clients/clientCreateContainer';
+import ClientSearchContainer from './clients/clientSearchContainer';
+
 import { Styles } from 'material-ui';
 
 //import FloatingActionButton from 'material-ui/lib/floating-action-button';
@@ -72,7 +74,8 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openClientCreate: false
+      openClientCreate: false,
+      searchModalOpen: false,
     };
   }
 
@@ -126,6 +129,49 @@ class HomePage extends React.Component {
     });
   }
 
+  onClientSearchOpen() {
+    this.refs.actionButtons.close();
+
+    this.setState({
+      searchModalOpen: true,
+    });
+  }
+
+  onClientSearchClose() {
+    this.setState({
+      searchModalOpen: false,
+    });
+  }
+
+  onClientSelect(client) {
+    let id = client.id ? client.id : 'tmp_' + this._guid();
+    client.id = id;
+
+    this.props.createTempCompany(client);
+    this.setState({
+      companyId: id,
+      searchModalOpen: false,
+      openClientCreate: true
+    });
+  }
+
+  onClientCreateClose() {
+    this.setState({
+      searchModalOpen: true,
+      openClientCreate: false
+    });
+  }
+
+  _guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  }
+
   render () {
 
     let { candidates, companies, myJobs } = this.props;
@@ -137,7 +183,7 @@ class HomePage extends React.Component {
       <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this._createJob}>
         <ContentAdd />
       </ActionButtonItem>,
-      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={::this._createClient}>
+      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this.onClientSearchOpen.bind(this)}>
         <ContentAdd />
       </ActionButtonItem>,
     ];
@@ -158,7 +204,8 @@ class HomePage extends React.Component {
           </div>
         </CustomTabsSwipe>
         <ActionButton ref='actionButtons' actions={actions}/>
-        <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this._handleClose.bind(this)}></ClientCreateContainer>
+        <ClientSearchContainer open={this.state.searchModalOpen} onClientSelect={this.onClientSelect.bind(this)} onClose={this.onClientSearchClose.bind(this)} />
+        <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this.onClientCreateClose.bind(this)}></ClientCreateContainer>
       </div>
     );
   }
