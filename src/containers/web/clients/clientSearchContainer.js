@@ -223,14 +223,19 @@ class ClientSearchContainer extends React.Component {
 
       postal_code = postal_code && postal_code.length > 0 ? postal_code[0].short_name : null;
 
+      detail.geometry.location = {
+        lat: detail.geometry.location.lat(),
+        lng: detail.geometry.location.lng(),
+      };
+
       let client = {
         name: detail.name,
         website: detail.website,
         phone: detail.formatted_phone_number,
         location: {
           geoField: {
-            lat: detail.geometry.location.lat(),
-            lng: detail.geometry.location.lng(),
+            lat: detail.geometry.location.lat,
+            lng: detail.geometry.location.lng,
           },
           googlePlace: detail,
           addressLine: `${street_number} ${route}`,
