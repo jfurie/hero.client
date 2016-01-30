@@ -71,6 +71,7 @@ export default class ClientSearch extends React.Component {
             onEnterKeyDown={this.props.onQuerySubmit.bind(this)}
             onChange={this.props.onQueryChange.bind(this)}
             hintText="Search Clients"
+            fullWidth={true}
           >
           </TextField>
         }
@@ -79,6 +80,7 @@ export default class ClientSearch extends React.Component {
         style={style.section}
         fullWidth={true}
         label={'add ' + (query ? query : 'client')}
+        onTouchTap={this.props.onDbClientSelect.bind(this, null)}
       />
       {
         searchResults.length > 0 || suggestions.length > 0 ?
@@ -93,7 +95,9 @@ export default class ClientSearch extends React.Component {
               {searchResults.map((client, key) => {
                 return (
                   <div key={key} style={style.section}>
-                  <Card>
+                  <Card
+                    onTouchTap={this.props.onDbClientSelect.bind(this, client)}
+                  >
                     <CardHeader
                       title={client.get('name')}
                       subtitle={<p>{client.get('jobs').size} Job{client.get('jobs').size == 1 ? '' : 's'} | {client.get('candidates').size} Candidate{client.get('candidates').size == 1 ? '' : 's'}</p>}
@@ -119,11 +123,13 @@ export default class ClientSearch extends React.Component {
 
                 return (
                   <div key={key} style={style.section}>
-                  <Card>
+                  <Card
+                    onTouchTap={this.props.onGoogleClientSelect.bind(this, client)}
+                  >
                     <CardHeader
                       style={style.overflow}
                       title={<span>{client.name}</span>}
-                      subtitle={<span>{client.vicinity}</span>}
+                      subtitle={<span>{client.formatted_address}</span>}
                       avatar={photo ? photo : client.icon}
                     />
                   </Card>

@@ -24,7 +24,7 @@ import CandidateSearchContainer from './containers/web/candidates/candidateSearc
 // clients
 import ClientsPage from './containers/web/clients/clientsContainer';
 import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
-import ClientSearchPage from './containers/web/clients/clientSearchContainer';
+import ClientSearchContainer from './containers/web/clients/clientSearchContainer';
 
 //jobs
 import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
@@ -143,7 +143,7 @@ export default(store) => {
           {/* Clients */}
           <Route path="clients">
             <IndexRoute component={ClientsPage}/>
-            <Route path="search" component={ClientSearchPage}/>
+            <Route path="search" component={ClientSearchContainer}/>
             <Route path=":id" component={ClientDetailsPage} />
             <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
               nextState.params.tab = 'jobs';
