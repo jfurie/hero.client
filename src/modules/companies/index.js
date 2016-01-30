@@ -266,10 +266,14 @@ export function createCompany(company) {
 }
 
 export function editCompany(company) {
+  var id = company.id;
+  if(!company.id){
+    id = company.get('id');
+  }
   return {
-    id:company.get('id'),
+    id,
     types: [constants.EDIT_COMPANY, constants.EDIT_COMPANY_SUCCESS, constants.EDIT_COMPANY_FAIL],
-    promise: (client, auth) => client.api.put(`/companies/${company.id}`, {
+    promise: (client, auth) => client.api.put(`/companies/${id}`, {
       authToken: auth.authToken,
       data: company,
     }),
