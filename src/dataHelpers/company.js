@@ -66,8 +66,8 @@ export default function getCompanyDataFromState(state, companyId) {
     // company location
 
     let location = null;
-    if (company.get('location')) {
-      location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('location'))) : (null));
+    if (company.get('locationId')) {
+      location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('locationId'))) : (null));
     }
 
     company = company.set('location', location);

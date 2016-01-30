@@ -3,16 +3,27 @@ import Immutable from 'immutable';
 import {
   Dialog, IconButton, ToolbarGroup, Toolbar,
   FlatButton, TextField, ToolbarTitle, SelectField,
-  MenuItem,RaisedButton,Divider
+  MenuItem,RaisedButton,Divider, Styles
 } from 'material-ui';
 import {
-
+ Location
 } from '../';
 import validateCompany from '../../../validators/company';
 
 const style = {
   error: {
     float: 'left',
+  },
+  divider:{
+    marginTop:'16px',
+  },
+  subheader:{
+    color: Styles.Colors.grey600,
+    fontSize:'14px',
+    marginTop:'16px',
+    marginBottom:'16px',
+    marginLeft:'16px',
+    textAlign:'left',
   },
   textField: {
     'width': '100%',
@@ -94,6 +105,17 @@ export default class ClientsCreateModal extends React.Component {
 
     this.props.onCompanyChange(newCompany);
   }
+  _handleLocationChange(field, value) {
+    let newCompany = this.props.company;
+
+    if (value) {
+      newCompany = newCompany.set(field,value);
+    } else {
+      newCompany = newCompany.delete(field);
+    }
+
+    this.props.onCompanyChange(newCompany);
+  }
 
   _handleSubmit(){
 
@@ -127,10 +149,12 @@ export default class ClientsCreateModal extends React.Component {
     company = company || new Immutable.Map({errors:new Immutable.Map()});
     return (
       <div className="row center-xs">
-          <div className="col-xs-10 col-md-6">
+          <div className="col-xs-12 col-md-8">
               <div className="box">
                 <form onSubmit={this._handleSubmit.bind(this)}>
-                  <div>
+                  <div className="row center-xs" >
+
+                  <div className="col-xs-10 ">
                     <SelectField
                         floatingLabelText="Client Advocate"
                         floatingLabelStyle={style.floatLabel}
@@ -150,8 +174,12 @@ export default class ClientsCreateModal extends React.Component {
                       })}
                     </SelectField>
                   </div>
-                  //primary
-                  <div>
+                  <div className="col-xs-12">
+                    <Divider style={style.divider} />
+                    <div style={style.subheader}>Primary</div>
+                  </div>
+
+                  <div className="col-xs-10 ">
                     <TextField
                         style={style.textField}
                         errorText={(company.get('errors') && company.get('errors').name) || ''}
@@ -160,7 +188,7 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('name')}
                         floatingLabelText="Company Name" />
                   </div>
-                  <div>
+                  <div className="col-xs-10 ">
                     <TextField
                         style={style.textField}
                         errorText={company.get('errors') && company.get('errors').website || ''}
@@ -169,7 +197,7 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('website')}
                         floatingLabelText="Company Website" />
                   </div>
-                  <div>
+                  <div className="col-xs-10 ">
                     <TextField
                         style={style.textField}
                         errorText={(company.get('errors') && company.get('errors').phone) || ''}
@@ -178,7 +206,7 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('phone')}
                         floatingLabelText="Phone Number" />
                   </div>
-                  <div>
+                  <div className="col-xs-10 ">
                     <TextField
                         style={style.textField}
                         errorText={(company.get('errors') && company.get('errors').email) || ''}
@@ -187,8 +215,18 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('email')}
                         floatingLabelText="Email" />
                   </div>
-                  //social
-                  <div>
+                  <div className="col-xs-12">
+                    <Divider style={style.divider} />
+                    <div style={style.subheader}>Location</div>
+                  </div>
+                  <div className="col-xs-10" >
+                    <Location location={company.get('location')} onChange={this._handleLocationChange.bind(this,'location')} />
+                  </div>
+                  <div className="col-xs-12">
+                    <Divider style={style.divider} />
+                    <div style={style.subheader}>Social</div>
+                  </div>
+                  <div className="col-xs-10 ">
                     <TextField
                         style={style.textField}
                         errorText={company.get('errors') && company.get('errors')['angelList'] || ''}
@@ -197,7 +235,7 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('angelList')}
                         floatingLabelText="AngelList Url (optional)" />
                   </div>
-                  <div>
+                  <div className="col-xs-10">
                     <TextField
                         style={style.textField}
                         errorText={company.get('errors') && company.get('errors')['crunchbase'] || ''}
@@ -206,35 +244,7 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('crunchbase')}
                         floatingLabelText="Crunchbase Url (optional)" />
                   </div>
-                  //jobs
-                  <div>
-                    <TextField
-                        style={style.textField}
-                        errorText={company.get('errors') && company.get('errors')['jobboard'] || ''}
-                        errorStyle={style.error}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'jobboard')}
-                        value={company.get('jobboard')}
-                        floatingLabelText="JobBoard Url (optional)" />
-                  </div>
-                  <div>
-                    <TextField
-                        style={style.textField}
-                        errorText={company.get('errors') && company.get('errors')['ziprecruiter'] || ''}
-                        errorStyle={style.error}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'ziprecruiter')}
-                        value={company.get('ziprecruiter')}
-                        floatingLabelText="ZipRecruiter Url (optional)" />
-                  </div>
-                  <div>
-                    <TextField
-                        style={style.textField}
-                        errorText={company.get('errors') && company.get('errors')['indeed'] || ''}
-                        errorStyle={style.error}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'indeed')}
-                        value={company.get('indeed')}
-                        floatingLabelText="Indeed Url (optional)" />
-                  </div>
-                  <div>
+                  <div className="col-xs-10 ">
                     <TextField
                         style={style.textField}
                         errorText={company.get('errors') && company.get('errors').facebookHandle || ''}
@@ -243,7 +253,7 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('facebookHandle')}
                         floatingLabelText="Facebook Handle (optional)" />
                   </div>
-                  <div>
+                  <div className="col-xs-10 ">
                     <TextField
                         style={style.textField}
                         errorText={company.get('errors') && company.get('errors').twitterHandle || ''}
@@ -252,9 +262,43 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('twitterHandle')}
                         floatingLabelText="Twitter Handle (optional)" />
                   </div>
-                  //about us
-                  <Divider />
-                  <div>
+                  <div className="col-xs-12">
+                    <Divider style={style.divider} />
+                    <div style={style.subheader}>Jobs</div>
+                  </div>
+                  <div className="col-xs-10">
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['jobboard'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'jobboard')}
+                        value={company.get('jobboard')}
+                        floatingLabelText="JobBoard Url (optional)" />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['ziprecruiter'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'ziprecruiter')}
+                        value={company.get('ziprecruiter')}
+                        floatingLabelText="ZipRecruiter Url (optional)" />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['indeed'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'indeed')}
+                        value={company.get('indeed')}
+                        floatingLabelText="Indeed Url (optional)" />
+                  </div>
+
+                  <div className="col-xs-12">
+                    <Divider style={style.divider} />
+                    <div style={style.subheader}>About Us</div>
+                  </div>
+                  <div className="col-xs-10 ">
                     <TextField
                         multiLine={true}
                         rows={3}
@@ -267,7 +311,20 @@ export default class ClientsCreateModal extends React.Component {
                         floatingLabelStyle={{left:'0px'}}
                         floatingLabelText="What problem are you addressing and how are you addressing it?" />
                   </div>
-                  <div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        multiLine={true}
+                        rows={3}
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['benefits'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'benefits')}
+                        value={company.get('benefits')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="Benefits (optional)" />
+                  </div>
+                  <div className="col-xs-10 ">
                     <TextField
                         multiLine={true}
                         rows={3}
@@ -280,7 +337,7 @@ export default class ClientsCreateModal extends React.Component {
                         floatingLabelStyle={{left:'0px'}}
                         floatingLabelText="Company Culture (optional)" />
                   </div>
-                  <div>
+                  <div className="col-xs-10 ">
                     <TextField
                         multiLine={true}
                         rows={3}
@@ -293,7 +350,7 @@ export default class ClientsCreateModal extends React.Component {
                         floatingLabelStyle={{left:'0px'}}
                         floatingLabelText="Tech Stack (optional)" />
                   </div>
-                  <div>
+                  <div className="col-xs-10 ">
                     <TextField
                         multiLine={true}
                         rows={3}
@@ -306,10 +363,10 @@ export default class ClientsCreateModal extends React.Component {
                         floatingLabelStyle={{left:'0px'}}
                         floatingLabelText="What is the leadership team? (optional)" />
                   </div>
-                  <div style={{marginTop:'20px', marginBottom:'20px'}}>
+                  <div className="col-xs-10 " style={{marginTop:'20px', marginBottom:'20px'}}>
                     <RaisedButton primary={true} label='Save' onTouchTap={this._handleSubmit.bind(this)}></RaisedButton>
                   </div>
-
+                  </div>
                 </form>
               </div>
           </div>
