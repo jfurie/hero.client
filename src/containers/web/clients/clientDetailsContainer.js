@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
 import {
-  Header, CustomTabsSwipe, LocationCard, ContactsList, ClientContactsCreateModal,
-  CompanyJobsList, CompanyNotesList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
-  JobDetailsModal, ClientsEditModal, CompanyAvatar, Gravatar,
+  Header, CustomTabsSwipe, ContactsList, ClientContactsCreateModal,
+  CompanyJobsList, ContactDetailsModal, NotesCreateModal, JobCreateModal,
+  JobDetailsModal, ClientsEditModal,
 } from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies/index';
@@ -337,7 +337,7 @@ class ClientDetailsPage extends React.Component {
 
     if (company) {
 
-      let website = company.get('website');
+      //let website = company.get('website');
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
     //  let heroContact = '/img/rameet.jpg';
