@@ -1,6 +1,5 @@
 import React from 'react';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import Paper from 'material-ui/lib/paper';
 
 class ActionButtonItem extends React.Component {
@@ -28,7 +27,7 @@ class ActionButtonItem extends React.Component {
   _onTouchTap() {
     console.log('item _onTouchTap');
     if (this.props.itemTapped) {
-      console.log('call')
+      console.log('call');
       this.props.itemTapped();
     }
   }

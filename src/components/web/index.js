@@ -22,8 +22,10 @@ export CandidatesListItemStatus from './candidatesListItemStatus/candidatesListI
 export FileInput from './fileInput/fileInput';
 export TagsInput from './tagsInput/tagsInput';
 export CandidateSearch from './candidateSearch/candidateSearch';
+export ClientsCreate from './clientsCreate/clientsCreate';
 export ActionButton from './actionButton/actionButton';
 export ActionButtonItem from './actionButtonItem/actionButtonItem';
+export Location from './location/location';
 
 /* all the web modals components */
 
@@ -39,3 +41,4 @@ export JobDetailsModal from './jobDetails/jobDetailsModal';
 export CandidateSearchModal from './candidateSearch/candidateSearchModal';
 export CandidateCreateModal from './candidateCreateModal/candidateCreateModal';
 export ShareJobModal from './shareJobModal/shareJobModal';
+export ClientSearchModal from './clientSearch/clientSearchModal';

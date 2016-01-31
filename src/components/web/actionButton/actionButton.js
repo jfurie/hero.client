@@ -13,6 +13,9 @@ class ActionButton extends React.Component {
       open: false,
     };
   }
+  close(){
+    this._closeActions();
+  }
 
   _closeActions() {
     this.setState({
