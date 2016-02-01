@@ -129,7 +129,7 @@ export default(store) => {
 
   return (
 
-    <Route path="/" onEnter={loadUser}>
+    <Route path="/" onUpdate={() => window.scrollTo(0, 0)} onEnter={loadUser}>
       <Route component={Layout}>
 
         <Route path="login" onEnter={checkLogin} component={LoginPage}/>

@@ -8,7 +8,7 @@ import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
 import ClientCreateContainer from './clients/clientCreateContainer';
 import ClientSearchContainer from './clients/clientSearchContainer';
-
+import ClientDetailsContainer from './clients/clientDetailsContainer';
 import { Styles } from 'material-ui';
 
 //import FloatingActionButton from 'material-ui/lib/floating-action-button';
@@ -125,7 +125,8 @@ class HomePage extends React.Component {
     console.log('saved',id);
     this.setState({
       companyId:id,
-      openClientCreate:false
+      openClientCreate:false,
+      clientDetailsOpen: true
     });
   }
 
@@ -159,6 +160,11 @@ class HomePage extends React.Component {
     this.setState({
       searchModalOpen: true,
       openClientCreate: false
+    });
+  }
+  onClientDetailsClose(){
+    this.setState({
+      clientDetailsOpen: false
     });
   }
 
@@ -206,6 +212,11 @@ class HomePage extends React.Component {
         <ActionButton ref='actionButtons' actions={actions}/>
         <ClientSearchContainer open={this.state.searchModalOpen} onClientSelect={this.onClientSelect.bind(this)} onClose={this.onClientSearchClose.bind(this)} />
         <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this.onClientCreateClose.bind(this)}></ClientCreateContainer>
+        <ClientDetailsContainer
+          open={this.state.clientDetailsOpen}
+          companyId={this.state.companyId}
+          inline={false}
+          onClose={this.onClientDetailsClose.bind(this)}></ClientDetailsContainer>
       </div>
     );
   }

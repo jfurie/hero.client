@@ -26,7 +26,7 @@ export ClientsCreate from './clientsCreate/clientsCreate';
 export ActionButton from './actionButton/actionButton';
 export ActionButtonItem from './actionButtonItem/actionButtonItem';
 export Location from './location/location';
-
+export ClientDetails from './clientDetails/clientDetails';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
