@@ -120,8 +120,8 @@ export default class ClientDetails extends React.Component {
 
   }
   goBack(){
-    if(this.props.goBack)
-      this.props.goBack();
+    if(this.props.onClientDetailsClose)
+      this.props.onClientDetailsClose();
   }
   onSwipe(index){
     let tab = '';
@@ -245,7 +245,7 @@ export default class ClientDetails extends React.Component {
         );
       } else {
         let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-        let contentHeight = clientHeight - 64;
+        let contentHeight = clientHeight;
         return (
           <div>
             <Dialog

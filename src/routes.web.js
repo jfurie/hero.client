@@ -144,7 +144,11 @@ export default(store) => {
           <Route path="clients">
             <IndexRoute component={ClientsPage}/>
             <Route path="search" component={ClientSearchContainer}/>
-            <Route path=":id" component={ClientDetailsPage} />
+            <Route path=":companyId" component={Home}
+              onEnter={(nextState) => {
+                nextState.params.clientDetailsOpen = true;
+              }} />
+               />
             <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
               nextState.params.tab = 'jobs';
             }} />

@@ -196,6 +196,9 @@ class ClientDetailsPage extends React.Component {
   createCandidate(contact, jobId) {
     this.props.createCandidate(contact, jobId);
   }
+  onClientDetailsClose(){
+    this.props.onClose();
+  }
 
   onSwipe(index){
     let tab = '';
@@ -302,7 +305,7 @@ class ClientDetailsPage extends React.Component {
          <JobCreateModal heroContacts={heroContacts} contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
           */}
 
-          <ClientDetails open={this.props.open} tabId={0} company={company} ></ClientDetails>
+          <ClientDetails onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={this.props.open} tabId={0} company={company} ></ClientDetails>
 
         </div>
       );

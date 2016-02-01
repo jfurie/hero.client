@@ -95,6 +95,11 @@ class HomePage extends React.Component {
 
 
   }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.companyId){
+
+    }
+  }
 
   _handleJobClick(job){
     this.props.pushState(null,'/clients/'+ job.get('companyId') + '/jobs/'+job.get('id'));
@@ -131,8 +136,8 @@ class HomePage extends React.Component {
     this.setState({
       companyId:id,
       openClientCreate:false,
-      clientDetailsOpen: true
     });
+    this.props.pushState(null, `/clients/${id}`);
   }
 
   onClientSearchOpen() {
@@ -167,9 +172,10 @@ class HomePage extends React.Component {
     });
   }
   onClientDetailsClose(){
-    this.setState({
-      clientDetailsOpen: false
-    });
+    var self = this;
+    setTimeout(function () {
+      self.props.history.goBack();
+    }, 10);
   }
 
   onContactSearchOpen() {
@@ -194,8 +200,15 @@ class HomePage extends React.Component {
     this.setState({
       contactId: id,
       contactSearchModalOpen: false,
-      openContactCreate: true
     });
+    var self = this;
+    setTimeout(function () {
+      self.setState({
+        contactId: id,
+        openContactCreate: true
+      });
+
+    }, 10);
   }
 
   _guid() {
@@ -243,8 +256,8 @@ class HomePage extends React.Component {
         <ClientSearchContainer open={this.state.clientSearchModalOpen} onClientSelect={this.onClientSelect.bind(this)} onClose={this.onClientSearchClose.bind(this)} />
         <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this.onClientCreateClose.bind(this)}></ClientCreateContainer>
         <ClientDetailsContainer
-          open={this.state.clientDetailsOpen}
-          companyId={this.state.companyId}
+          open={this.props.params.clientDetailsOpen}
+          companyId={this.props.params.companyId}
           inline={false}
           onClose={this.onClientDetailsClose.bind(this)}></ClientDetailsContainer>
         <ContactSearchContainer open={this.state.contactSearchModalOpen} onContactSelect={this.onContactSelect.bind(this)} onClose={this.onContactSearchClose.bind(this)} />
