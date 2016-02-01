@@ -3,7 +3,7 @@ import React from 'react';
 import { AppBar, Card, CardHeader, IconButton, TextField, RaisedButton } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { CompanyAvatar } from '../../../components/web';
+import { Gravatar } from '../../../components/web';
 
 const style = {
   overflow: {
@@ -25,6 +25,9 @@ const style = {
   },
   card: {
     cursor: 'pointer',
+    gravatar: {
+      display: 'inline',
+    },
   },
   section: {
     margin: '10px 0',
@@ -39,7 +42,7 @@ const style = {
   },
 };
 
-export default class ClientSearch extends React.Component {
+export default class ContactSearch extends React.Component {
   constructor(props){
     super(props);
   }
@@ -73,7 +76,7 @@ export default class ClientSearch extends React.Component {
             underlineShow={false}
             onEnterKeyDown={this.props.onQuerySubmit.bind(this)}
             onChange={this.props.onQueryChange.bind(this)}
-            hintText="Search Clients"
+            hintText="Search Contacts"
             fullWidth={true}
           >
           </TextField>
@@ -82,8 +85,8 @@ export default class ClientSearch extends React.Component {
       <RaisedButton
         style={style.section}
         fullWidth={true}
-        label={'add ' + (query ? query : 'client')}
-        onTouchTap={this.props.onDbClientSelect.bind(this, { name: query })}
+        label={'add ' + (query ? query : 'contact')}
+        onTouchTap={this.props.onDbContactSelect.bind(this, { name: query })}
       />
       {
         searchResults.length > 0 || suggestions.length > 0 ?
@@ -92,20 +95,20 @@ export default class ClientSearch extends React.Component {
           searchResults.length > 0 || (query.length > 1 && suggestions.length == 0) ?
           <div>
             <div style={style.heading.container}>
-              <span style={style.heading.label}>Search Results: </span>{`${searchResults.length} Client${(searchResults.length == 1) ? ('') : ('s')}`}
+              <span style={style.heading.label}>Search Results: </span>{`${searchResults.length} Contact${(searchResults.length == 1) ? ('') : ('s')}`}
             </div>
             <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
-              {searchResults.map((client, key) => {
+              {searchResults.map((contact, key) => {
                 return (
                   <div key={key} style={style.section}>
                   <Card
                     style={style.card}
-                    onTouchTap={this.props.onDbClientSelect.bind(this, client)}
+                    onTouchTap={this.props.onDbContactSelect.bind(this, contact)}
                   >
                     <CardHeader
-                      title={client.get('name')}
-                      subtitle={<p>{client.get('jobs').size} Job{client.get('jobs').size == 1 ? '' : 's'} | {client.get('candidates').size} Candidate{client.get('candidates').size == 1 ? '' : 's'}</p>}
-                      avatar={<CompanyAvatar url={client.get('website')} />}
+                      title={contact.get('displayName')}
+                      subtitle={contact.get('email')}
+                      avatar={<Gravatar style={style.card.gravatar} email={contact.get('email')} status="notset" />}
                     />
                   </Card>
                   </div>
@@ -119,23 +122,20 @@ export default class ClientSearch extends React.Component {
           suggestions.length > 0 || (query.length > 1 && searchResults.length == 0) ?
           <div>
             <div style={style.heading.container}>
-              <span style={style.heading.label}>Suggestions: </span>{`${suggestions.length} Client${(suggestions.length == 1) ? ('') : ('s')}`}
+              <span style={style.heading.label}>Suggestions: </span>{`${suggestions.length} Contact${(suggestions.length == 1) ? ('') : ('s')}`}
             </div>
             <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
-              {suggestions.map((client, key) => {
-                let photo = client.photos ? client.photos[0].getUrl({'maxWidth': 100, 'maxHeight': 100}) : null;
-
+              {suggestions.map((contact, key) => {
                 return (
                   <div key={key} style={style.section}>
                   <Card
                     style={style.card}
-                    onTouchTap={this.props.onGoogleClientSelect.bind(this, client)}
+                    onTouchTap={this.props.onDbContactSelect.bind(this, contact)}
                   >
                     <CardHeader
-                      style={style.overflow}
-                      title={<span>{client.name}</span>}
-                      subtitle={<span>{client.formatted_address}</span>}
-                      avatar={photo ? photo : client.icon}
+                      title={contact.get('displayName')}
+                      subtitle={contact.get('email')}
+                      avatar={<Gravatar style={style.card.gravatar} email={contact.get('email')} status="notset" />}
                     />
                   </Card>
                   </div>

@@ -121,10 +121,10 @@ export default class Location extends React.Component {
         <div>
           <TextField
               style={style.textField}
-              errorText={(location.get('errors') && location.get('errors').country) || ''}
+              errorText={(location.get('errors') && location.get('errors').countryCode) || ''}
               errorStyle={style.error}
-              onChange={(e) => this._handleChange.bind(this)(e, 'country')}
-              value={location.get('country')}
+              onChange={(e) => this._handleChange.bind(this)(e, 'countryCode')}
+              value={location.get('countryCode')}
               floatingLabelText="Country (2 Letter)" />
         </div>
       </div>
