@@ -120,8 +120,8 @@ export default function reducer(state = initialState, action = {}) {
   case constants.CREATE_COMPANY_FAIL:
     {
       let company = {};
-      company[action.result.id].saving = false;
-      company[action.result.id].savingError = action.err || 'Failed to create company';
+      company[action.id].saving = false;
+      company[action.id].savingError = action.err || 'Failed to create company';
       return {
         ...state,
         saving:false,
@@ -234,8 +234,8 @@ export function getOneCompany(id) {
       promise: (client, auth) =>  client.api.get(`/companies/${id}?filter[include]=clientAdvocate`, {
         authToken: auth.authToken,
       }).then((company)=> {
-        if (company.location) {
-          dispatch(getOneLocation(company.location));
+        if (company.locationId) {
+          dispatch(getOneLocation(company.locationId));
         }
         return company;
       }),
@@ -266,10 +266,14 @@ export function createCompany(company) {
 }
 
 export function editCompany(company) {
+  var id = company.id;
+  if(!company.id){
+    id = company.get('id');
+  }
   return {
-    id:company.get('id'),
+    id,
     types: [constants.EDIT_COMPANY, constants.EDIT_COMPANY_SUCCESS, constants.EDIT_COMPANY_FAIL],
-    promise: (client, auth) => client.api.put(`/companies/${company.id}`, {
+    promise: (client, auth) => client.api.put(`/companies/${id}`, {
       authToken: auth.authToken,
       data: company,
     }),

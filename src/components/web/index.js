@@ -25,6 +25,7 @@ export CandidateSearch from './candidateSearch/candidateSearch';
 export ClientsCreate from './clientsCreate/clientsCreate';
 export ActionButton from './actionButton/actionButton';
 export ActionButtonItem from './actionButtonItem/actionButtonItem';
+export Location from './location/location';
 
 /* all the web modals components */
 

@@ -25,7 +25,7 @@ class ActionButton extends React.Component {
 
   _openActions() {
     this.setState({
-      open: true,
+      open: !this.state.open,
     });
   }
 
