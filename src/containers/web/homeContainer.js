@@ -8,6 +8,7 @@ import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
 import ClientCreateContainer from './clients/clientCreateContainer';
 import ClientSearchContainer from './clients/clientSearchContainer';
+import ContactSearchContainer from './contacts/contactSearchContainer';
 
 import { Styles } from 'material-ui';
 
@@ -75,7 +76,10 @@ class HomePage extends React.Component {
     super(props);
     this.state = {
       openClientCreate: false,
-      searchModalOpen: false,
+      clientSearchModalOpen: false,
+
+      openContactCreate: false,
+      contactSearchModalOpen: false,
     };
   }
 
@@ -133,13 +137,13 @@ class HomePage extends React.Component {
     this.refs.actionButtons.close();
 
     this.setState({
-      searchModalOpen: true,
+      clientSearchModalOpen: true,
     });
   }
 
   onClientSearchClose() {
     this.setState({
-      searchModalOpen: false,
+      clientSearchModalOpen: false,
     });
   }
 
@@ -150,7 +154,7 @@ class HomePage extends React.Component {
     this.props.createTempCompany(client);
     this.setState({
       companyId: id,
-      searchModalOpen: false,
+      clientSearchModalOpen: false,
       openClientCreate: true
     });
   }
@@ -158,6 +162,32 @@ class HomePage extends React.Component {
   onClientCreateClose() {
     this.setState({
       openClientCreate: false
+    });
+  }
+
+  onContactSearchOpen() {
+    this.refs.actionButtons.close();
+
+    this.setState({
+      contactSearchModalOpen: true,
+    });
+  }
+
+  onContactSearchClose() {
+    this.setState({
+      contactSearchModalOpen: false,
+    });
+  }
+
+  onContactSelect(contact) {
+    let id = contact.id ? contact.id : 'tmp_' + this._guid();
+    contact.id = id;
+
+    //this.props.createTempContact(contact);
+    this.setState({
+      contactId: id,
+      contactSearchModalOpen: false,
+      openContactCreate: true
     });
   }
 
@@ -176,7 +206,7 @@ class HomePage extends React.Component {
     let { candidates, companies, myJobs } = this.props;
     //let { query } = this.props.location;
     let actions = [
-      <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this._createContact}>
+      <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
         <ContentAdd />
       </ActionButtonItem>,
       <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this._createJob}>
@@ -203,8 +233,9 @@ class HomePage extends React.Component {
           </div>
         </CustomTabsSwipe>
         <ActionButton ref='actionButtons' actions={actions}/>
-        <ClientSearchContainer open={this.state.searchModalOpen} onClientSelect={this.onClientSelect.bind(this)} onClose={this.onClientSearchClose.bind(this)} />
+        <ClientSearchContainer open={this.state.clientSearchModalOpen} onClientSelect={this.onClientSelect.bind(this)} onClose={this.onClientSearchClose.bind(this)} />
         <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this.onClientCreateClose.bind(this)}></ClientCreateContainer>
+        <ContactSearchContainer open={this.state.contactSearchModalOpen} onContactSelect={this.onContactSelect.bind(this)} onClose={this.onContactSearchClose.bind(this)} />
       </div>
     );
   }
