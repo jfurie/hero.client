@@ -23,6 +23,9 @@ const style = {
       fontSize: '0.8em',
     },
   },
+  card: {
+    cursor: 'pointer',
+  },
   section: {
     margin: '10px 0',
   },
@@ -80,7 +83,7 @@ export default class ClientSearch extends React.Component {
         style={style.section}
         fullWidth={true}
         label={'add ' + (query ? query : 'client')}
-        onTouchTap={this.props.onDbClientSelect.bind(this, null)}
+        onTouchTap={this.props.onDbClientSelect.bind(this, { name: query })}
       />
       {
         searchResults.length > 0 || suggestions.length > 0 ?
@@ -96,6 +99,7 @@ export default class ClientSearch extends React.Component {
                 return (
                   <div key={key} style={style.section}>
                   <Card
+                    style={style.card}
                     onTouchTap={this.props.onDbClientSelect.bind(this, client)}
                   >
                     <CardHeader
@@ -124,6 +128,7 @@ export default class ClientSearch extends React.Component {
                 return (
                   <div key={key} style={style.section}>
                   <Card
+                    style={style.card}
                     onTouchTap={this.props.onGoogleClientSelect.bind(this, client)}
                   >
                     <CardHeader

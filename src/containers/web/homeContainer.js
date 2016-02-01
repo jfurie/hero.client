@@ -157,7 +157,6 @@ class HomePage extends React.Component {
 
   onClientCreateClose() {
     this.setState({
-      searchModalOpen: true,
       openClientCreate: false
     });
   }

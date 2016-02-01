@@ -31,6 +31,10 @@ class ClientSearchContainer extends React.Component {
     };
   }
 
+  _resetState() {
+    this.setState(this._getResetState());
+  }
+
   componentDidMount() {
     let self = this;
 
@@ -163,11 +167,12 @@ class ClientSearchContainer extends React.Component {
   }
 
   onDbClientSelect(dbClient) {
-    let client = dbClient ? dbClient.toObject() : {};
+    let client = dbClient ? (dbClient.toObject ? dbClient.toObject() : dbClient) : {};
 
     delete client['jobs'];
     delete client['candidates'];
 
+    this._resetState();
     this.props.onClientSelect(client);
   }
 
@@ -248,6 +253,7 @@ class ClientSearchContainer extends React.Component {
 
       // "street_number", "route", "locality", "administrative_area_level_1", "country", "postal_code"
 
+      self._resetState();
       self.props.onClientSelect(client);
     });
   }
