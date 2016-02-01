@@ -167,7 +167,7 @@ class ClientSearchContainer extends React.Component {
   }
 
   onDbClientSelect(dbClient) {
-    let client = dbClient ? dbClient.toObject() : {};
+    let client = dbClient ? (dbClient.toObject ? dbClient.toObject() : dbClient) : {};
 
     delete client['jobs'];
     delete client['candidates'];

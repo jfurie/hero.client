@@ -83,7 +83,7 @@ export default class ClientSearch extends React.Component {
         style={style.section}
         fullWidth={true}
         label={'add ' + (query ? query : 'client')}
-        onTouchTap={this.props.onDbClientSelect.bind(this, null)}
+        onTouchTap={this.props.onDbClientSelect.bind(this, { name: query })}
       />
       {
         searchResults.length > 0 || suggestions.length > 0 ?
