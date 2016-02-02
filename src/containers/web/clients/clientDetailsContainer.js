@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
-import { ClientContactsCreateModal, ContactDetailsModal, NotesCreateModal, JobCreateModal,
-  JobDetailsModal, ClientsEditModal, ClientDetails
+import { ClientDetails
 } from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies/index';
@@ -15,7 +14,6 @@ import { getAllContacts, getContactsByCompany } from '../../../modules/contacts'
 import { getAllJobCandidates, createCandidate } from '../../../modules/candidates';
 import { invite } from '../../../modules/users';
 import getCompanyDataFromState from '../../../dataHelpers/company';
-import getJobDataFromState from '../../../dataHelpers/job';
 
 
 
@@ -25,7 +23,7 @@ function getData(state, props) {
 
   let companyId = props.params.companyId;
   // let jobId = props.params.jobId;
-   let tab = props.tabId;
+  let tab = props.tabId;
   let tabId = 0;
   let localJobResource = null;
 
@@ -201,7 +199,7 @@ class ClientDetailsPage extends React.Component {
   }
   onClientDetailsClose(){
     if(this.props.onClose){
-        this.props.onClose();
+      this.props.onClose();
     } else{
       this.props.history.goBack();
     }
@@ -293,7 +291,7 @@ class ClientDetailsPage extends React.Component {
 
   render() {
 
-    let {company, heroContacts} = this.props;
+    let {company} = this.props;
 
 
       //let website = company.get('website');

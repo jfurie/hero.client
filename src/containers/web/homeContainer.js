@@ -8,7 +8,6 @@ import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
 import ClientCreateContainer from './clients/clientCreateContainer';
 import ClientSearchContainer from './clients/clientSearchContainer';
-import ClientDetailsContainer from './clients/clientDetailsContainer';
 import ContactSearchContainer from './contacts/contactSearchContainer';
 
 import { Styles } from 'material-ui';
@@ -95,11 +94,6 @@ class HomePage extends React.Component {
 
 
   }
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.companyId){
-
-    }
-  }
 
   _handleJobClick(job){
     this.props.pushState(null,'/clients/'+ job.get('companyId') + '/jobs/'+job.get('id'));
@@ -139,7 +133,7 @@ class HomePage extends React.Component {
     });
     var self = this;
     setTimeout(function () {
-        self.props.pushState(null, `/clients/${id}`);
+      self.props.pushState(null, `/clients/${id}`);
     }, 500);
 
   }

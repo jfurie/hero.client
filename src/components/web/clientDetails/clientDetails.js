@@ -1,7 +1,6 @@
 import React from 'react';
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog,
-  Toolbar, ToolbarGroup, ToolbarTitle
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog
 } from 'material-ui';
 import Card from 'material-ui/lib/card/card';
 import CardActions from 'material-ui/lib/card/card-actions';
