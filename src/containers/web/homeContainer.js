@@ -6,8 +6,6 @@ import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
-import ClientCreateContainer from './clients/clientCreateContainer';
-import ClientSearchContainer from './clients/clientSearchContainer';
 import ContactSearchContainer from './contacts/contactSearchContainer';
 
 import { Styles } from 'material-ui';
