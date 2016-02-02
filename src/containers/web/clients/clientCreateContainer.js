@@ -47,12 +47,11 @@ export default class ClientCreateContainer extends React.Component {
 
   }
   componentWillReceiveProps(newProps){
-    if((newProps.company && !this.props.company)
-    || (newProps.company && newProps.company.get('id') != this.props.company.get('id') )){
-      this.setState({company: newProps.company});
-    }
+    this.setState({company: newProps.company});
+    
     if( newProps.company && newProps.company.get('saving') == false
-    && this.props.company && this.props.company.get('saving') == true){
+    && this.props.company && this.props.company.get('saving') == true
+    && !newProps.company.get('savingError')){
       if(this.props.onSave){
         this.props.onSave(newProps.company.get('id'));
       } else {
