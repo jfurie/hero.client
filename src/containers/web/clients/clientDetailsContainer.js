@@ -23,7 +23,7 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 function getData(state, props) {
 
-  let companyId = props.companyId;
+  let companyId = props.params.companyId;
   // let jobId = props.params.jobId;
    let tab = props.tabId;
   let tabId = 0;
@@ -87,10 +87,13 @@ class ClientDetailsPage extends React.Component {
     let self = this;
 
     setTimeout(() => {
-      self.props.getOneCompany(self.props.companyId);
-      self.props.getContactsByCompany(self.props.companyId);
-      self.props.getJobsByCompany(self.props.companyId);
-      self.props.getNotesByCompany(self.props.companyId);
+      if(self.props.params.companyId){
+        self.props.getOneCompany(self.props.params.companyId);
+        self.props.getContactsByCompany(self.props.params.companyId);
+        self.props.getJobsByCompany(self.props.params.companyId);
+        self.props.getNotesByCompany(self.props.params.companyId);
+      }
+
 
       // if (self.props.params.jobId) {
       //   self.props.getOneJob(self.props.params.jobId);
@@ -105,7 +108,7 @@ class ClientDetailsPage extends React.Component {
 
     if (nextProps.localJob.get('success')) {
       this.refs.jobCreateModal.closeModal();
-      this.props.replaceJobLocal({companyId:this.props.companyId});
+      this.props.replaceJobLocal({companyId:this.props.params.companyId});
     }
 
     // if (nextProps.params.jobId && nextProps.params.jobId != this.props.params.jobId) {
@@ -147,11 +150,11 @@ class ClientDetailsPage extends React.Component {
   }
 
   _handleJobClick(job) {
-    this.props.pushState({}, `/clients/${this.props.companyId}/jobs/${job.get('id')}`);
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/jobs/${job.get('id')}`);
   }
 
   closeJobModal() {
-    this.props.pushState('', `/clients/${this.props.companyId}/jobs`);
+    this.props.pushState('', `/clients/${this.props.params.companyId}/jobs`);
     this.setState({
       detailsJob: null,
       openJob: false,
@@ -170,7 +173,7 @@ class ClientDetailsPage extends React.Component {
     this.props.updateNoteLocal(note);
   }
   _handleSaveNote() {
-    this.props.saveLocalNote(this.props.companyId, 'company');
+    this.props.saveLocalNote(this.props.params.companyId, 'company');
   }
   _handleEditNote(note) {
     this.props.replaceNoteLocal(note);
@@ -181,7 +184,7 @@ class ClientDetailsPage extends React.Component {
     this.props.deleteNote(note.get('id'));
   }
   createJobModalOpen() {
-    this.props.replaceJobLocal({companyId:this.props.params.id});
+    this.props.replaceJobLocal({companyId:this.props.params.companyId});
     this.refs.jobCreateModal.show();
   }
 
@@ -197,7 +200,11 @@ class ClientDetailsPage extends React.Component {
     this.props.createCandidate(contact, jobId);
   }
   onClientDetailsClose(){
-    this.props.onClose();
+    if(this.props.onClose){
+        this.props.onClose();
+    } else{
+      this.props.history.goBack();
+    }
   }
 
   onSwipe(index){
@@ -212,7 +219,7 @@ class ClientDetailsPage extends React.Component {
     default:
       tab = '';
     }
-    this.props.pushState('', `/clients/${this.props.params.id}/${tab}`);
+    this.props.pushState('', `/clients/${this.props.params.companyId}/${tab}`);
   }
 
   // <div style={style.slide}>
@@ -288,30 +295,26 @@ class ClientDetailsPage extends React.Component {
 
     let {company, heroContacts} = this.props;
 
-    if (company) {
 
       //let website = company.get('website');
     //  let heroContact = '/img/rameet.jpg';
-      return (
-        <div>
-        {/*
-          <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} company={company} open={(this.props.params.jobId)?(true):(false)} createCandidate={this.createCandidate.bind(this)} />
+    return (
+      <div>
+      {/*
+        <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} company={company} open={(this.props.params.jobId)?(true):(false)} createCandidate={this.createCandidate.bind(this)} />
 
-         <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
-         <ClientsEditModal ref="clientEditModal" company={company}/>
+       <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
+       <ClientsEditModal ref="clientEditModal" company={company}/>
 
-         <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-         <NotesCreateModal saveNote={this._handleSaveNote.bind(this)} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
-         <JobCreateModal heroContacts={heroContacts} contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
-          */}
+       <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
+       <NotesCreateModal saveNote={this._handleSaveNote.bind(this)} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
+       <JobCreateModal heroContacts={heroContacts} contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
+        */}
 
-          <ClientDetails onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={this.props.open} tabId={0} company={company} ></ClientDetails>
+        <ClientDetails onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={true} tabId={0} company={company} ></ClientDetails>
 
-        </div>
-      );
-    } else {
-      return (<div></div>);
-    }
+      </div>
+    );
   }
 }
 

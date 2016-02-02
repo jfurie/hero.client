@@ -137,7 +137,11 @@ class HomePage extends React.Component {
       companyId:id,
       openClientCreate:false,
     });
-    this.props.pushState(null, `/clients/${id}`);
+    var self = this;
+    setTimeout(function () {
+        self.props.pushState(null, `/clients/${id}`);
+    }, 500);
+
   }
 
   onClientSearchOpen() {
@@ -255,13 +259,20 @@ class HomePage extends React.Component {
         <ActionButton ref='actionButtons' actions={actions}/>
         <ClientSearchContainer open={this.state.clientSearchModalOpen} onClientSelect={this.onClientSelect.bind(this)} onClose={this.onClientSearchClose.bind(this)} />
         <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this.onClientCreateClose.bind(this)}></ClientCreateContainer>
+      {
+        /*
         <ClientDetailsContainer
-          open={this.props.params.clientDetailsOpen}
-          companyId={this.props.params.companyId}
-          inline={false}
-          onClose={this.onClientDetailsClose.bind(this)}></ClientDetailsContainer>
+            open={this.props.params.clientDetailsOpen}
+            companyId={this.props.params.companyId}
+            inline={false}
+            onClose={this.onClientDetailsClose.bind(this)}></ClientDetailsContainer>
+        */
+      }
         <ContactSearchContainer open={this.state.contactSearchModalOpen} onContactSelect={this.onContactSelect.bind(this)} onClose={this.onContactSearchClose.bind(this)} />
-      </div>
+        <div>
+            {this.props.children}
+        </div>
+    </div>
     );
   }
 }
