@@ -59,9 +59,9 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.EDIT_COMPANY: {
     let company = {};
-    company[action.id] = {};
-    company[action.id].saving = true;
-    company[action.id].savingError = '';
+    action.company = action.company.set('saving',true);
+    action.company = action.company.set('savingError',null);
+    company[action.id] = action.company;
     return {
       ...state,
       saving:true,
@@ -95,9 +95,9 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.CREATE_COMPANY:{
     let company = {};
-    company[action.id] = {};
-    company[action.id].saving = true;
-    company[action.id].savingError = '';
+    action.company = action.company.set('saving',true);
+    action.company = action.company.set('savingError',null);
+    company[action.id] = action.company;
     return {
       ...state,
       saving:true,
@@ -109,7 +109,7 @@ export default function reducer(state = initialState, action = {}) {
     let newItem = {};
     newItem[action.result.id] = action.result;
     newItem[action.result.id].saving = false;
-    newItem[action.result.id].savingError = '';
+    newItem[action.result.id].savingError = null;
     newItem[action.id] = newItem[action.result.id];
     return {
       ...state,
@@ -120,12 +120,14 @@ export default function reducer(state = initialState, action = {}) {
   case constants.CREATE_COMPANY_FAIL:
     {
       let company = {};
+      company[action.id] = {};
       company[action.id].saving = false;
-      company[action.id].savingError = action.err || 'Failed to create company';
+      company[action.id].savingError = (action.error && action.error.error && action.error.error.message) || 'Failed to create company';
       return {
         ...state,
         saving:false,
         savingError:'Failed to create company',
+        list:state.list.mergeDeep(company),
       };
     }
   case constants.SEARCH_COMPANIES:
@@ -257,6 +259,7 @@ export function createCompany(company) {
   }
   return {
     id,
+    company,
     types: [constants.CREATE_COMPANY, constants.CREATE_COMPANY_SUCCESS, constants.CREATE_COMPANY_FAIL],
     promise: (client, auth) => client.api.post('/companies', {
       authToken: auth.authToken,
@@ -272,6 +275,7 @@ export function editCompany(company) {
   }
   return {
     id,
+    company,
     types: [constants.EDIT_COMPANY, constants.EDIT_COMPANY_SUCCESS, constants.EDIT_COMPANY_FAIL],
     promise: (client, auth) => client.api.put(`/companies/${id}`, {
       authToken: auth.authToken,

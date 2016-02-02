@@ -9,6 +9,7 @@ import {
  Location
 } from '../';
 import validateCompany from '../../../validators/company';
+import Snackbar from 'material-ui/lib/snackbar';
 
 const style = {
   error: {
@@ -118,7 +119,8 @@ export default class ClientsCreateModal extends React.Component {
   }
 
   _handleSubmit(){
-
+    if(this.props.company.get('saving') == true)
+      return;
     let errors = validateCompany(this.props.company.toJSON());
 
     let newCompany = this.props.company.set('errors',errors);
@@ -368,6 +370,11 @@ export default class ClientsCreateModal extends React.Component {
                   </div>
                   </div>
                 </form>
+                <Snackbar
+                    open={ (this.props.company && this.props.company.get('savingError'))?true:false}
+                    message={this.props.company && this.props.company.get('savingError')}
+                    autoHideDuration={4000}
+                  ></Snackbar>
               </div>
           </div>
       </div>
