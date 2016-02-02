@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { ClientSearchModal } from '../../../components/web';
 
-import { searchCompanies } from '../../../modules/companies';
+import { searchCompanies, createTempCompany } from '../../../modules/companies';
 
 import google from 'google';
 
@@ -11,7 +11,7 @@ let debounce = require('debounce');
 
 @connect(state => ({
   companies: state.companies,
-}), { searchCompanies }, null, { withRef: true })
+}), { searchCompanies, createTempCompany }, null, { withRef: true })
 class ClientSearchContainer extends React.Component {
 
   constructor(props) {
@@ -94,7 +94,11 @@ class ClientSearchContainer extends React.Component {
 
   onSearchModalClose() {
     this.setState(this._getResetState());
-    this.props.onClose();
+    if(this.props.onClose){
+      this.props.onClose();
+    } else {
+      this.props.history.goBack();
+    }
   }
 
   onNearbyPlacesSearch() {
@@ -165,6 +169,27 @@ class ClientSearchContainer extends React.Component {
       }
     });
   }
+  _guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  }
+
+  onSelect(client){
+    if(this.props.onClientSelect){
+      this.props.onClientSelect(client);
+    } else {
+      let id = client.id ? client.id : 'tmp_' + this._guid();
+      client.id = id;
+      this.props.createTempCompany(client);
+
+      this.props.history.replaceState(null,`/clients/${id}/create`);
+    }
+  }
 
   onDbClientSelect(dbClient) {
     let client = dbClient ? (dbClient.toObject ? dbClient.toObject() : dbClient) : {};
@@ -173,7 +198,7 @@ class ClientSearchContainer extends React.Component {
     delete client['candidates'];
 
     this._resetState();
-    this.props.onClientSelect(client);
+    this.onSelect(client);
   }
 
   onGoogleClientSelect(googleClient) {
@@ -254,7 +279,7 @@ class ClientSearchContainer extends React.Component {
       // "street_number", "route", "locality", "administrative_area_level_1", "country", "postal_code"
 
       self._resetState();
-      self.props.onClientSelect(client);
+      self.onSelect(client);
     });
   }
 
@@ -262,7 +287,7 @@ class ClientSearchContainer extends React.Component {
     return (
       <div>
         <ClientSearchModal
-          open={this.props.open}
+          open={true}
           query={this.state.query}
           searchResults={this.state.searchResults}
           suggestions={this.state.suggestions}

@@ -47,7 +47,7 @@ class Header extends React.Component {
           title={this.props.title || ''}
           iconElementLeft={<IconButton onTouchTap={this.menuClicked.bind(this)} iconClassName='material-icons'>{leftIconFont}</IconButton>}
         />
-        <div style={{height: '64px'}}></div>
+      {transparent?(<div ></div>): (<div style={{height: '64px'}}></div>)}
       </div>
     );
   }
