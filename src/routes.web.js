@@ -140,31 +140,31 @@ export default(store) => {
         <Route onEnter={requireLogin}>
           <Route component={Home}>
             <IndexRoute component={EmptyPage}/>
-            {/* Clients */}
-            <Route path="clients">
-              <IndexRoute component={ClientsPage}/>
-              <Route path="search" component={ClientSearchContainer}/>
-              <Route path=":companyId" component={ClientDetailsPage}
-                onEnter={(nextState) => {
-                  nextState.params.clientDetailsOpen = true;
-                }} />
-                 />
-              <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
-                nextState.params.tab = 'jobs';
-              }} />
-              <Route path=":id/jobs/:jobId" component={ClientDetailsPage} />
-              <Route path=":id/jobs(/:create)" component={ClientDetailsPage} />
-              <Route path=":id" component={ClientDetailsPage} />
-                <Route path=":id/notes" component={ClientDetailsPage}
-                  onEnter={(nextState) => {
-                    nextState.params.tab = 'notes';
-                  }} />
-            </Route>
           </Route>
 
           <Route path="logout" component={LogoutPage}/>
 
-
+          {/* Clients */}
+          <Route path="clients">
+            <IndexRoute component={ClientsPage}/>
+            <Route path="search" component={ClientSearchContainer}/>
+            <Route component={Home}>
+              <Route path=":companyId" component={ClientDetailsPage}
+                onEnter={(nextState) => {
+                  nextState.params.clientDetailsOpen = true;
+                }} />
+            </Route>
+            <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
+              nextState.params.tab = 'jobs';
+            }} />
+            <Route path=":id/jobs/:jobId" component={ClientDetailsPage} />
+            <Route path=":id/jobs(/:create)" component={ClientDetailsPage} />
+            <Route path=":id" component={ClientDetailsPage} />
+              <Route path=":id/notes" component={ClientDetailsPage}
+                onEnter={(nextState) => {
+                  nextState.params.tab = 'notes';
+                }} />
+          </Route>
 
           <Route path="jobs">
             <IndexRoute component={MyJobsPage}/>
