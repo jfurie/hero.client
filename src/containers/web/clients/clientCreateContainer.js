@@ -36,7 +36,10 @@ export default class ClientCreateContainer extends React.Component {
   componentDidMount() {
     //get the hero compnay contacts
     this.props.getContactsByCompany(HEROCOMPANYID);
-    this.props.getOneCompany(this.props.companyId);
+    //console.log('this.props.getOneCompany', this.props.companyId);
+    if (this.props.companyId) {
+      this.props.getOneCompany(this.props.companyId);
+    }
     // let self = this;
     // setTimeout(() => {
     //   self.props.getAllCompanies();
