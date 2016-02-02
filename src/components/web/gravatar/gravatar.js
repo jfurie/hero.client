@@ -48,7 +48,12 @@ class Gravatar extends React.Component {
     }
 
     // gravatar part
-    email = md5(email) || '00000000000000000000000000000000';
+    if (email) {
+      email = md5(email);
+    } else {
+      email = '00000000000000000000000000000000';
+    }
+    
     let imgSrc = `http://www.gravatar.com/avatar/${email}?d=mm`;
 
     return (
