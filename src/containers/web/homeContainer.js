@@ -140,10 +140,7 @@ class HomePage extends React.Component {
 
   onClientSearchOpen() {
     this.refs.actionButtons.close();
-
-    this.setState({
-      clientSearchModalOpen: true,
-    });
+    this.props.history.pushState(null,`/clients/search`);
   }
 
   onClientSearchClose() {
@@ -251,8 +248,6 @@ class HomePage extends React.Component {
           </div>
         </CustomTabsSwipe>
         <ActionButton ref='actionButtons' actions={actions}/>
-        <ClientSearchContainer open={this.state.clientSearchModalOpen} onClientSelect={this.onClientSelect.bind(this)} onClose={this.onClientSearchClose.bind(this)} />
-        <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this.onClientCreateClose.bind(this)}></ClientCreateContainer>
       {
         /*
         <ClientDetailsContainer

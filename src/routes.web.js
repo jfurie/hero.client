@@ -26,7 +26,7 @@ import CandidateSearchContainer from './containers/web/candidates/candidateSearc
 import ClientsPage from './containers/web/clients/clientsContainer';
 import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
 import ClientSearchContainer from './containers/web/clients/clientSearchContainer';
-
+import ClientCreatePage from './containers/web/clients/clientCreateContainer';
 //jobs
 import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
 import MyJobsPage from './containers/web/jobs/myJobsContainer';
@@ -147,8 +147,10 @@ export default(store) => {
           {/* Clients */}
           <Route path="clients">
             <IndexRoute component={ClientsPage}/>
-            <Route path="search" component={ClientSearchContainer}/>
+
             <Route component={Home}>
+              <Route path="search" component={ClientSearchContainer}/>
+              <Route path=":companyId/create" component={ClientCreatePage}/>
               <Route path=":companyId" component={ClientDetailsPage}
                 onEnter={(nextState) => {
                   nextState.params.clientDetailsOpen = true;
