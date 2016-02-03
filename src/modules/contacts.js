@@ -4,6 +4,9 @@ import * as jobConstants from './jobs/constants';
 const GET_CONTACTS = 'hero.client/contacts/GET_CONTACTS';
 const GET_CONTACTS_SUCCESS = 'hero.client/contacts/GET_CONTACTS_SUCCESS';
 const GET_CONTACTS_FAIL = 'hero.client/contacts/GET_CONTACTS_FAIL';
+const GET_CONTACT_CREATED = 'hero.client/contacts/GET_CONTACT_CREATED';
+const GET_CONTACT_CREATED_SUCCESS = 'hero.client/contacts/GET_CONTACT_CREATED_SUCCESS';
+const GET_CONTACT_CREATED_FAIL = 'hero.client/contacts/GET_CONTACT_CREATED_FAIL';
 const GET_CONTACTS_BY_COMPANY = 'hero.client/contacts/GET_CONTACTS_BY_COMPANY';
 const GET_CONTACTS_BY_COMPANY_SUCCESS = 'hero.client/contacts/GET_CONTACTS_BY_COMPANY_SUCCESS';
 const GET_CONTACTS_BY_COMPANY_FAIL = 'hero.client/contacts/GET_CONTACTS_BY_COMPANY_FAIL';
@@ -20,6 +23,9 @@ const CREATE_TEMP_CONTACT = 'hero.client/contacts/CREATE_TEMP_CONTACT';
 const CREATE_COMPANY_CONTACT = 'hero.client/contacts/CREATE_COMPANY_CONTACT';
 const CREATE_COMPANY_CONTACT_SUCCESS = 'hero.client/contacts/CREATE_COMPANY_CONTACT_SUCCESS';
 const CREATE_COMPANY_CONTACT_FAIL = 'hero.client/contacts/CREATE_COMPANY_CONTACT_FAIL';
+const EDIT_CONTACT = 'hero.client/contacts/EDIT_CONTACT';
+const EDIT_CONTACT_SUCCESS = 'hero.client/contacts/EDIT_CONTACT_SUCCESS';
+const EDIT_CONTACT_FAIL = 'hero.client/contacts/EDIT_CONTACT_FAIL';
 
 const initialState = {
   list: new Immutable.Map(),
@@ -67,6 +73,40 @@ export default function reducer(state = initialState, action = {}) {
   case GET_ONE_CONTACT_FAIL: {
     return state;
   }
+  case GET_CONTACT_CREATED:{
+    let contactList = {};
+    let contact = {};
+    contact.id = action.id;
+    contact.saving = true;
+    contact.savingError = null;
+    contactList[action.id] = contact;
+    return {
+      ...state,
+      saving:true,
+      savingError:'',
+      list: state.list.mergeDeep(contactList),
+    };
+  }
+  case GET_CONTACT_CREATED_SUCCESS: {
+    let contactsMap = {};
+    contactsMap[action.result.id] = action.result;
+    contactsMap[action.result.id].saving = false;
+    contactsMap[action.result.id].savingError = '';
+    contactsMap[action.id] = contactsMap[action.result.id];
+    return {
+      ...state,
+      saving:false,
+      savingError:'',
+      list:state.list.mergeDeep(contactsMap),
+    };
+  }
+  case GET_CONTACT_CREATED_FAIL: {
+    return {
+      ...state,
+      creating: false,
+      error: 'Error Creating Contact',
+    };
+  }
   case CREATE_CONTACT:
     return {
       ...state,
@@ -86,6 +126,41 @@ export default function reducer(state = initialState, action = {}) {
       list:state.list.mergeDeep(contactsMap),
     };
   case CREATE_CONTACT_FAIL:
+    return {
+      ...state,
+      creating: false,
+      error: 'Error Creating Contact',
+    };
+  case EDIT_CONTACT:
+    {
+      let contactList ={};
+      let contact = {};
+      contact.id = action.id;
+      contact.saving = true;
+      contact.savingError = null;
+      contactList[action.id] = contact;
+      return {
+        ...state,
+        saving:true,
+        savingError:'',
+        list: state.list.mergeDeep(contactList),
+      };
+    }
+  case EDIT_CONTACT_SUCCESS:
+    {
+      let contactsMap = {};
+      contactsMap[action.result.id] = action.result;
+      contactsMap[action.result.id].saving = false;
+      contactsMap[action.result.id].savingError = '';
+      contactsMap[action.id] = contactsMap[action.result.id];
+      return {
+        ...state,
+        saving:false,
+        savingError:'',
+        list:state.list.mergeDeep(contactsMap),
+      };
+    }
+  case EDIT_CONTACT_FAIL:
     return {
       ...state,
       creating: false,
@@ -220,14 +295,40 @@ export function getOneContact(contactId) {
   };
 }
 
+export function contactCreated(oringinalContactId, newContactId){
+  return {
+    id:oringinalContactId,
+    types: [GET_CONTACT_CREATED, GET_CONTACT_CREATED_SUCCESS, GET_CONTACT_CREATED_FAIL],
+    promise: (client, auth) => client.api.get(`/contacts/${newContactId}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
 export function createContact(contact) {
   var id = contact.get('id');
   if(id && id.indexOf('tmp') > -1){
     contact = contact.remove('id');
   }
   return {
+    id,
     types: [CREATE_CONTACT, CREATE_CONTACT_SUCCESS, CREATE_CONTACT_FAIL],
     promise: (client, auth) => client.api.post('/contacts', {
+      authToken: auth.authToken,
+      data:contact,
+    }),
+  };
+}
+
+export function editContact(contact) {
+  var id = contact.get('id');
+  if(id && id.indexOf('tmp') > -1){
+    contact = contact.remove('id');
+  }
+  return {
+    id,
+    types: [EDIT_CONTACT, EDIT_CONTACT_SUCCESS, EDIT_CONTACT_FAIL],
+    promise: (client, auth) => client.api.put(`/contacts/${id}`, {
       authToken: auth.authToken,
       data:contact,
     }),

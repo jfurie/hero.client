@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
-import { InviteSuccessModal, Gravatar, Header } from '../../../components/web';
+import { Gravatar, Header } from '../../../components/web';
 import {
   Dialog, IconButton, List, ListItem, FontIcon,
   Divider, FlatButton, Styles, IconMenu, MenuItem,
@@ -298,15 +298,6 @@ export default class ContactDetails extends React.Component {
             </div>
           </div>
         </Dialog>
-        <Dialog
-          title="Are you sure?"
-          actions={confirmInviteActions}
-          modal={false}
-          open={this.state.confirmOpen}
-          onRequestClose={this.handleConfirmInviteClose.bind(this)}>
-          Do you want to invite <strong style={{fontWeight: '500'}}>{displayName}</strong> ({email}) to join the Hero platform?
-        </Dialog>
-        <InviteSuccessModal ref="inviteSuccessModal" email={email}/>
       </div>
     );
   }

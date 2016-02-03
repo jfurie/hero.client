@@ -19,6 +19,7 @@ class ContactSearchContainer extends React.Component {
 
   _getResetState() {
     return {
+      open:true,
       query: '',
       searchResults: [],
       suggestions: [],
@@ -105,8 +106,17 @@ class ContactSearchContainer extends React.Component {
       let id = contact.id ? contact.id : 'tmp_' + this._guid();
       contact.id = id;
       this.props.createTempContact(contact);
+      let self = this;
+      this.setState({open:false});
+      setTimeout(function () {
+        if(self.props.params.companyId){
+          let companyId = self.props.params.companyId
+          self.props.history.replaceState(null,`/clients/${companyId}/contacts/${id}/create`);
+        } else {
+          self.props.history.replaceState(null,`/contacts/${id}/create`);
+        }
+      },500);
 
-      this.props.history.replaceState(null,`/contacts/${id}/create`);
     }
   }
 
@@ -131,7 +141,7 @@ class ContactSearchContainer extends React.Component {
     return (
       <div>
         <ContactSearchModal
-          open={true}
+          open={this.state.open}
           query={this.state.query}
           searchResults={this.state.searchResults}
           suggestions={this.state.suggestions}

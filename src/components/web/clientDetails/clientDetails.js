@@ -103,7 +103,9 @@ export default class ClientDetails extends React.Component {
   }
 
   createContactModalOpen(){
-
+    if(this.props.addContactModalOpen){
+      this.props.addContactModalOpen();
+    }
   }
 
   createJobModalOpen(){
