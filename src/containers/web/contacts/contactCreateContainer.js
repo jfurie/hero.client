@@ -42,7 +42,7 @@ export default class ContactCreateContainer extends React.Component {
   }
 
   componentWillReceiveProps(newProps){
-    this.setState({company: newProps.contact});
+    this.setState({contact: newProps.contact});
 
     if( newProps.contact && newProps.contact.get('saving') == false
     && this.props.contact && this.props.contact.get('saving') == true
