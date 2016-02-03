@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
+import { pushState } from 'redux-router';
 
 import { createContact, createCompanyContact, getOneContact, getContactsByCompany } from '../../../modules/contacts';
 
@@ -8,24 +9,24 @@ import { ContactCreate } from '../../../components/web';
 
 let getData = (state, props) => {
   let contact = null;
-  let company = null;
+  //let company = null;
 
   if (props.params.contactId) {
     contact = state.contacts.list.get(props.params.contactId);
   }
 
-  if (props.params.companyId) {
-    company = state.companies.myCompanyIds.get(props.params.companyId);
-  }
+  // if (props.params.companyId) {
+  //   company = state.companies.myCompanyIds.get(props.params.companyId);
+  // }
 
   return {
     contact,
-    company,
+    //company,
     companies: state.companies.myCompanyIds,
   };
 };
 
-@connect(getData, { createContact, createCompanyContact, getOneContact, getContactsByCompany })
+@connect(getData, { pushState, createContact, createCompanyContact, getOneContact, getContactsByCompany })
 export default class ContactCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -70,6 +71,12 @@ export default class ContactCreateContainer extends React.Component {
     });
   }
 
+  _handleCompanyChange(company){
+    this.setState({
+      company,
+    });
+  }
+
   _handleSave(contact){
     contact.set('displayName', `${this.state.contact.get('firstName')} ${this.state.contact.get('lastName')}`);
 
@@ -88,7 +95,7 @@ export default class ContactCreateContainer extends React.Component {
       this.props.createContact(contact);
     }
 
-    this.props.onClose();
+    this.props.pushState('', `/contacts/${contact.get('id')}`);
   }
 
   _handleClose(){
@@ -108,6 +115,7 @@ export default class ContactCreateContainer extends React.Component {
         closeModal={this._handleClose.bind(this)}
         onSubmit={this._handleSave.bind(this)}
         onContactChange={this._handleChange.bind(this)}
+        onCompanyChange={this._handleCompanyChange.bind(this)}
         open={true}
         inline={false}  />
     );

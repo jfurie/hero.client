@@ -2,7 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import {
   Dialog, IconButton, ToolbarGroup, Toolbar, Toggle,
-  FlatButton, TextField, SelectField, MenuItem, ToolbarTitle, RaisedButton, Divider, Styles
+  FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles
 } from 'material-ui';
 import {
  Location,
@@ -126,7 +126,9 @@ export default class ContactCreate extends React.Component {
     this.props.onCompanyChange(value);
   }
 
-  _handleSubmit() {
+  _handleSubmit(){
+    if(this.props.contact.get('saving') == true) return;
+
     let errors = validateContact(this.props.contact.toJSON());
 
     let newContact = this.props.contact.set('errors',errors);
@@ -138,7 +140,7 @@ export default class ContactCreate extends React.Component {
   }
 
   _renderContents() {
-    let { contact, companies } = this.props;
+    let { contact } = this.props;
 
     contact = contact || new Immutable.Map({errors:new Immutable.Map()});
 
@@ -167,7 +169,7 @@ export default class ContactCreate extends React.Component {
                     />
                   </div>
 
-                  <div className="col-xs-10 ">
+                  {/*}<div className="col-xs-10 ">
                     <SelectField
                         floatingLabelText="Company"
                         floatingLabelStyle={style.floatLabel}
@@ -186,7 +188,7 @@ export default class ContactCreate extends React.Component {
                         );
                       })}
                     </SelectField>
-                  </div>
+                  </div>*/}
 
                   <div className="col-xs-10 ">
                     <TextField
