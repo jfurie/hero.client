@@ -124,8 +124,19 @@ export default class ClientDetails extends React.Component {
   }
 
   _handleDirections(){
-    var link = 'https://maps.google.com?saddr=Current+Location&daddr=Hero.jobs';
-    window.open(link,'_blank');
+    let { company } = this.props;
+    let location  = company.get('location');
+    if(location){
+      let locationObj = location.toJSON();
+      if(locationObj && locationObj.geoField && locationObj.geoField.lat && locationObj.geoField.lng){
+        let lat = locationObj.geoField.lat;
+        let lng = locationObj.geoField.lng;
+        var link = `https://maps.google.com?saddr=Current+Location&daddr=${lat},${lng}`;
+        window.open(link,'_blank');
+      }
+    }
+
+
   }
 
   closeModal(){
