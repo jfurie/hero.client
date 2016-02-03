@@ -163,6 +163,8 @@ export default(store) => {
                 onEnter={(nextState) => {
                   nextState.params.clientDetailsOpen = true;
                 }} />
+              <Route path=":companyId/contacts/search" component={ContactSearchContainer}></Route>
+              <Route path=":companyId/contacts/:contactId/create" component={ContactCreatePage}></Route>
             </Route>
             <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
               nextState.params.tab = 'jobs';

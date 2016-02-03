@@ -233,7 +233,7 @@ export function getOneCompany(id) {
   return (dispatch) => {
     dispatch({
       types: [constants.GET_COMPANY, constants.GET_COMPANY_SUCCESS, constants.GET_COMPANY_FAIL],
-      promise: (client, auth) =>  client.api.get(`/companies/${id}?filter[include]=clientAdvocate`, {
+      promise: (client, auth) =>  client.api.get(`/companies/${id}?filter[include]=clientAdvocate&filter[include]=location`, {
         authToken: auth.authToken,
       }).then((company)=> {
         if (company.locationId) {

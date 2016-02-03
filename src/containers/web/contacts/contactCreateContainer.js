@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState } from 'redux-router';
 
-import { createContact, createCompanyContact, getOneContact, getContactsByCompany } from '../../../modules/contacts';
-
+import { createContact, getOneContact, getContactsByCompany, editContact } from '../../../modules/contacts';
+import { createCompanyContact } from '../../../modules/companyContacts';
 import { ContactCreate } from '../../../components/web';
 
 let getData = (state, props) => {
@@ -26,7 +26,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData, { pushState, createContact, createCompanyContact, getOneContact, getContactsByCompany })
+@connect(getData, { pushState, createContact, createCompanyContact, getOneContact, getContactsByCompany, editContact })
 export default class ContactCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -53,11 +53,11 @@ export default class ContactCreateContainer extends React.Component {
       } else {
         let self = this;
         let id =newProps.contact.get('id');
+        this.setState({open:false});
         setTimeout(function () {
-          self.props.history.replaceState(null, `/clients/${id}`);
+          self.props.history.replaceState('', `/contacts/${id}`);
         }, 500);
       }
-
     }
 
     if(newProps.params.contactId != this.props.params.contactId && newProps.params.contactId.indexOf('tmp')<=-1 ){
@@ -87,15 +87,22 @@ export default class ContactCreateContainer extends React.Component {
     this.setState({
       contact,
     });
+    if(contact.get('id') && contact.get('id').indexOf('tmp') <= -1){
+      this.props.editContact(contact);
+      if(this.props.params.companyId){
+        this.props.createCompanyContact(this.props.params.companyId,null,contact.get('id'));
+      }
 
-    if (this.props.companyId) {
-      this.props.createCompanyContact(this.props.companyId, contact);
-    }
-    else {
-      this.props.createContact(contact);
+    } else {
+      if (this.props.params.companyId) {
+        this.props.createCompanyContact(this.props.params.companyId, contact);
+      }
+      else {
+        this.props.createContact(contact);
+      }
     }
 
-    this.props.pushState('', `/contacts/${contact.get('id')}`);
+
   }
 
   _handleClose(){
@@ -116,7 +123,7 @@ export default class ContactCreateContainer extends React.Component {
         onSubmit={this._handleSave.bind(this)}
         onContactChange={this._handleChange.bind(this)}
         onCompanyChange={this._handleCompanyChange.bind(this)}
-        open={true}
+        open={this.state.open}
         inline={false}  />
     );
   }

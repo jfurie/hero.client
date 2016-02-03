@@ -2,20 +2,29 @@
 const CREATE_COMPANY_CONTACT = 'hero.client/contacts/CREATE_COMPANY_CONTACT';
 const CREATE_COMPANY_CONTACT_SUCCESS = 'hero.client/contacts/CREATE_COMPANY_CONTACT_SUCCESS';
 const CREATE_COMPANY_CONTACT_FAIL = 'hero.client/contacts/CREATE_COMPANY_CONTACT_FAIL';
-const GET_ONE_CONTACT = 'hero.client/contacts/GET_ONE_CONTACT';
-const GET_ONE_CONTACT_SUCCESS = 'hero.client/contacts/GET_ONE_CONTACT_SUCCESS';
-const GET_ONE_CONTACT_FAIL = 'hero.client/contacts/GET_ONE_CONTACT_FAIL';
+const GET_CONTACT_CREATED = 'hero.client/contacts/GET_CONTACT_CREATED';
+const GET_CONTACT_CREATED_SUCCESS = 'hero.client/contacts/GET_CONTACT_CREATED_SUCCESS';
+const GET_CONTACT_CREATED_FAIL = 'hero.client/contacts/GET_CONTACT_CREATED_FAIL';
 
-function getOneContact(contactId) {
+function contactCreated(oringinalContactId, newContactId){
   return {
-    types: [GET_ONE_CONTACT, GET_ONE_CONTACT_SUCCESS, GET_ONE_CONTACT_FAIL],
-    promise: (client, auth) => client.api.get(`/contacts/${contactId}`, {
+    id:oringinalContactId,
+    types: [GET_CONTACT_CREATED, GET_CONTACT_CREATED_SUCCESS, GET_CONTACT_CREATED_FAIL],
+    promise: (client, auth) => client.api.get(`/contacts/${newContactId}`, {
       authToken: auth.authToken,
     }),
   };
 }
 
-export function createCompanyContact(companyId, contact) {
+export function createCompanyContact(companyId, contact, contactId) {
+  var id = contactId;
+  if(contact){
+    id = contact.get('id');
+    if(id && id.indexOf('tmp') > -1){
+      contact = contact.remove('id');
+    }
+  }
+
   return (dispatch) => {
     dispatch({
       types: [CREATE_COMPANY_CONTACT, CREATE_COMPANY_CONTACT_SUCCESS, CREATE_COMPANY_CONTACT_FAIL],
@@ -25,6 +34,7 @@ export function createCompanyContact(companyId, contact) {
           data: {
             companyId,
             contact,
+            contactId,
           },
         });
         contactPromise.then((res) => {
@@ -33,7 +43,7 @@ export function createCompanyContact(companyId, contact) {
           reject(ex);
         });
       }).then((companyContact)=>{
-        dispatch(getOneContact(companyContact.contactId));
+        dispatch(contactCreated(id, companyContact.contactId));
         return companyContact;
       }),
     });

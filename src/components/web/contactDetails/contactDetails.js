@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
-import { InviteSuccessModal, Gravatar, Header } from '../../../components/web';
+import { Gravatar, Header } from '../../../components/web';
 import {
   Dialog, IconButton, List, ListItem, FontIcon,
-  Divider, FlatButton, Styles, IconMenu, MenuItem,
+  Divider, Styles, IconMenu, MenuItem,
 } from 'material-ui';
 
 const style = {
@@ -249,25 +249,25 @@ export default class ContactDetails extends React.Component {
 
     let invited = false;
     let email = null;
-    let displayName = null;
+    //let displayName = null;
 
     if (contact) {
       invited = contact.get('isInvited');
       email = contact.get('email') || null;
-      displayName = contact.get('displayName') || null;
+      //displayName = contact.get('displayName') || null;
     }
 
-    const confirmInviteActions = [
-      <FlatButton
-          label="Cancel"
-          primary
-          onTouchTap={this.handleConfirmInviteClose.bind(this)} />,
-      <FlatButton
-          label="Submit"
-          secondary
-          keyboardFocused
-          onTouchTap={this.handleConfirmInviteGo.bind(this)} />,
-    ];
+    // const confirmInviteActions = [
+    //   <FlatButton
+    //       label="Cancel"
+    //       primary
+    //       onTouchTap={this.handleConfirmInviteClose.bind(this)} />,
+    //   <FlatButton
+    //       label="Submit"
+    //       secondary
+    //       keyboardFocused
+    //       onTouchTap={this.handleConfirmInviteGo.bind(this)} />,
+    // ];
 
     return (
       <div>
@@ -298,15 +298,6 @@ export default class ContactDetails extends React.Component {
             </div>
           </div>
         </Dialog>
-        <Dialog
-          title="Are you sure?"
-          actions={confirmInviteActions}
-          modal={false}
-          open={this.state.confirmOpen}
-          onRequestClose={this.handleConfirmInviteClose.bind(this)}>
-          Do you want to invite <strong style={{fontWeight: '500'}}>{displayName}</strong> ({email}) to join the Hero platform?
-        </Dialog>
-        <InviteSuccessModal ref="inviteSuccessModal" email={email}/>
       </div>
     );
   }
