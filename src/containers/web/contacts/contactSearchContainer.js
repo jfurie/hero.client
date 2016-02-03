@@ -110,7 +110,7 @@ class ContactSearchContainer extends React.Component {
       this.setState({open:false});
       setTimeout(function () {
         if(self.props.params.companyId){
-          let companyId = self.props.params.companyId
+          let companyId = self.props.params.companyId;
           self.props.history.replaceState(null,`/clients/${companyId}/contacts/${id}/create`);
         } else {
           self.props.history.replaceState(null,`/contacts/${id}/create`);
