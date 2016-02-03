@@ -7,6 +7,7 @@ class CompanyAvatar extends React.Component {
 
     let { style, url } = this.props;
 
+    url = url.toLowerCase();
     url = url.replace(/http(s?):\/\//, '');
     url = url.replace(/\/$/, '');
 

@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
-import { ClientDetails
-} from '../../../components/web';
+import { ClientDetails } from '../../../components/web';
 
 import { getOneCompany } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
@@ -14,8 +13,6 @@ import { getAllContacts, getContactsByCompany } from '../../../modules/contacts'
 import { getAllJobCandidates, createCandidate } from '../../../modules/candidates';
 import { invite } from '../../../modules/users';
 import getCompanyDataFromState from '../../../dataHelpers/company';
-
-
 
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
@@ -98,7 +95,8 @@ class ClientDetailsPage extends React.Component {
       //   self.props.getImageByJobId(self.props.params.jobId);
       //   self.props.getAllJobCandidates(self.props.params.jobId);
       // }
-      self.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
+      self.props.getContactsByCompany(HEROCOMPANYID);
+      //self.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
     }, 500);
   }
 
@@ -204,90 +202,6 @@ class ClientDetailsPage extends React.Component {
   editClientModalOpen(){
     this.props.pushState({}, `/clients/${this.props.params.companyId}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
   }
-
-  onSwipe(index){
-    let tab = '';
-    switch (index) {
-    case 1:
-      tab = 'jobs';
-      break;
-    case 3:
-      tab = 'notes';
-      break;
-    default:
-      tab = '';
-    }
-    this.props.pushState('', `/clients/${this.props.params.companyId}/${tab}`);
-  }
-
-  // <div style={style.slide}>
-  //   <List>
-  //     <div>
-  //       {(website) ? (
-  //         <ListItem
-  //             leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-  //             primaryText={website}
-  //             secondaryText={<p>website</p>}
-  //             secondaryTextLines={1}
-  //         />
-  //       ) : (null)}
-  //
-  //       {(twitter) ? (
-  //         <div>
-  //           <Divider inset />
-  //           <ListItem
-  //               leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-  //               primaryText={`@${twitter}`}
-  //               secondaryText={<p>twitter</p>}
-  //               secondaryTextLines={1}
-  //           />
-  //         </div>
-  //       ) : (null)}
-  //
-  //       {(facebook) ? (
-  //         <div>
-  //           <Divider inset />
-  //           <ListItem
-  //               leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-  //               primaryText={`facebook.com/${facebook}`}
-  //               secondaryText={<p>facebook</p>}
-  //               secondaryTextLines={1}
-  //           />
-  //         </div>
-  //       ) : (null)}
-  //
-  //     </div>
-  //   </List>
-  //   <div id="innerView">
-  //     {(company.get('location')) ? (
-  //         <LocationCard style={{height: '200px'}} location={company.get('location')} marker={<CompanyAvatar url={company.get('website')} />}/>
-  //     ) : (null)}
-  //   </div>
-  //   <List subheader="Your HERO talent advocate">
-  //     {(company.get('clientAdvocate')) ? (
-  //       <ListItem
-  //         leftAvatar={<Gravatar email={company.get('clientAdvocate').get('email')} status={'vetted'} />}
-  //         primaryText={company.get('clientAdvocate').get('displayName')}
-  //         secondaryText={<p>Hero Talent Advocate</p>}
-  //         secondaryTextLines={1}
-  //       />
-  //     ) : (null)}
-  //     </List>
-  //
-  // </div>
-  // <div style={style.slide}>
-  //   <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() !== 1) ? ('s') : (''))}`}>
-  //     <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
-  //   </List>
-  // </div>
-  // <div style={style.slide}>
-  //   <ContactsList contacts={company.get('contacts')} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
-  // </div>
-  // <div style={style.slide}>
-  //   <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
-  //     <CompanyNotesList company={company} editNote={this._handleEditNote.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} notes={company.get('notes')} defaultContact={this.props.defaultContact}/>
-  //   </List>
-  // </div>
 
   render() {
 

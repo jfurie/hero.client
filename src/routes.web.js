@@ -19,18 +19,25 @@ import SettingsAccountPage from './containers/web/settings/settingsAccountContai
 // account containers
 import AccountHomePage from './containers/web/account/accountHomeContainer';
 
+// contacts
+import ContactDetailsPage from './containers/web/contacts/contactDetailsContainer';
+
 // candidates
 import MyCandidatesPage from './containers/web/candidates/myCandidatesContainer';
 import CandidateSearchContainer from './containers/web/candidates/candidateSearchContainer';
+
 // clients
 import ClientsPage from './containers/web/clients/clientsContainer';
 import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
 import ClientSearchContainer from './containers/web/clients/clientSearchContainer';
 import ClientCreatePage from './containers/web/clients/clientCreateContainer';
+
 //jobs
 import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
 import MyJobsPage from './containers/web/jobs/myJobsContainer';
-
+// contacts
+import ContactSearchContainer from './containers/web/contacts/contactSearchContainer';
+import ContactCreatePage from './containers/web/contacts/contactCreateContainer';
 
 const localStorage = new LocalStorageClient('Auth');
 
@@ -145,6 +152,18 @@ export default(store) => {
           <Route path="logout" component={LogoutPage}/>
 
           {/* Clients */}
+          <Route path="contacts">
+            <Route component={Home}>
+              <Route path=":contactId" component={ContactDetailsPage}/>
+              {/* <Route path=":companyId/create" component={ClientCreatePage}/>
+              <Route path=":companyId" component={ClientDetailsPage}
+                onEnter={(nextState) => {
+                  nextState.params.clientDetailsOpen = true;
+                }} /> */}
+            </Route>
+          </Route>
+
+          {/* Clients */}
           <Route path="clients">
             <IndexRoute component={ClientsPage}/>
 
@@ -166,6 +185,16 @@ export default(store) => {
                 onEnter={(nextState) => {
                   nextState.params.tab = 'notes';
                 }} />
+          </Route>
+
+          {/* Contacts */}
+          <Route path="contacts">
+            <IndexRoute component={ClientsPage}/>
+
+            <Route component={Home}>
+              <Route path="search" component={ContactSearchContainer}/>
+              <Route path=":contactId/create" component={ContactCreatePage}/>
+            </Route>
           </Route>
 
           <Route path="jobs">
