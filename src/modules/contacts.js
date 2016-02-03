@@ -107,13 +107,19 @@ export default function reducer(state = initialState, action = {}) {
       error: 'Error Creating Contact',
     };
   }
-  case CREATE_CONTACT:
+  case CREATE_CONTACT: {
+    let contact = {};
+    action.contact = action.contact.set('saving',true);
+    action.contact = action.contact.set('savingError',null);
+    contact[action.id] = action.contact;
     return {
       ...state,
-      creating:true,
-      error: '',
+      saving:true,
+      savingError:'',
+      list: state.list.mergeDeep(contact),
     };
-  case CREATE_CONTACT_SUCCESS:
+  }
+  case CREATE_CONTACT_SUCCESS: {
     let contactsMap = {};
     contactsMap[action.result.id] = action.result;
     contactsMap[action.result.id].saving = false;
@@ -125,12 +131,19 @@ export default function reducer(state = initialState, action = {}) {
       savingError:'',
       list:state.list.mergeDeep(contactsMap),
     };
-  case CREATE_CONTACT_FAIL:
+  }
+  case CREATE_CONTACT_FAIL: {
+    let contact = {};
+    contact[action.id] = {};
+    contact[action.id].saving = false;
+    contact[action.id].savingError = (action.error && action.error.error && action.error.error.message) || 'Failed to create contact';
     return {
       ...state,
-      creating: false,
-      error: 'Error Creating Contact',
+      saving:false,
+      savingError:'Failed to create contact',
+      list:state.list.mergeDeep(contact),
     };
+  }
   case EDIT_CONTACT:
     {
       let contactList ={};
@@ -169,7 +182,7 @@ export default function reducer(state = initialState, action = {}) {
   case GET_CONTACTS_BY_COMPANY_SUCCESS: {
     let byCompanyMap = {};
     byCompanyMap[action.result.companyId] = action.result.result.map((contact)=>contact.id);
-    contactsMap = {};
+    let contactsMap = {};
     action.result.result.map((c) => {
       contactsMap[c.id] = c;
     });
@@ -179,15 +192,48 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.mergeDeep(contactsMap),
     };
   }
+  case CREATE_COMPANY_CONTACT: {
+    let contact = {};
+    action.contact = action.contact.set('saving',true);
+    action.contact = action.contact.set('savingError',null);
+    contact[action.id] = action.contact;
+    return {
+      ...state,
+      saving:true,
+      savingError:'',
+      list: state.list.mergeDeep(contact),
+    };
+  }
   case CREATE_COMPANY_CONTACT_SUCCESS: {
     let byCompanyMap = {};
     let allCompanyContacts = state.byCompanyId.get(action.result.companyId) ? state.byCompanyId.get(action.result.companyId).toJS() : [];
     allCompanyContacts.push(action.result.contactId);
     byCompanyMap[action.result.companyId] = allCompanyContacts;
 
+    let contactsMap = {};
+    contactsMap[action.result.contactId] = action.result;
+    contactsMap[action.result.contactId].saving = false;
+    contactsMap[action.result.contactId].savingError = '';
+    contactsMap[action.id] = contactsMap[action.result.contactId];
+
     return {
       ...state,
+      saving:false,
+      savingError:'',
       byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
+      list:state.list.mergeDeep(contactsMap),
+    };
+  }
+  case CREATE_COMPANY_CONTACT_FAIL: {
+    let contact = {};
+    contact[action.id] = {};
+    contact[action.id].saving = false;
+    contact[action.id].savingError = (action.error && action.error.error && action.error.error.message) || 'Failed to create contact';
+    return {
+      ...state,
+      saving:false,
+      savingError:'Failed to create contact',
+      list:state.list.mergeDeep(contact),
     };
   }
   case CREATE_TEMP_CONTACT:{
@@ -312,6 +358,7 @@ export function createContact(contact) {
   }
   return {
     id,
+    contact,
     types: [CREATE_CONTACT, CREATE_CONTACT_SUCCESS, CREATE_CONTACT_FAIL],
     promise: (client, auth) => client.api.post('/contacts', {
       authToken: auth.authToken,
@@ -358,6 +405,8 @@ export function createCompanyContact(companyId, contact) {
   }
   return (dispatch) => {
     dispatch({
+      id,
+      contact,
       types: [CREATE_COMPANY_CONTACT, CREATE_COMPANY_CONTACT_SUCCESS, CREATE_COMPANY_CONTACT_FAIL],
       promise: (client, auth) => new Promise(function(resolve, reject){
         let contactPromise = client.api.post('/companyContacts', {
