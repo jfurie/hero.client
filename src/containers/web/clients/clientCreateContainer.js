@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import {ClientsCreate} from '../../../components/web';
 import { getContactsByCompany } from '../../../modules/contacts';
-import { editCompany, createCompany, getOneCompany } from '../../../modules/companies';
+import { editCompany, createCompany, getMyCompanies, getOneCompany } from '../../../modules/companies';
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 let getData = (state, props) => {
   let company = null;
@@ -24,7 +24,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData,{getContactsByCompany, editCompany, createCompany, getOneCompany})
+@connect(getData,{getContactsByCompany, editCompany, createCompany, getOneCompany, getMyCompanies})
 export default class ClientCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -64,6 +64,8 @@ export default class ClientCreateContainer extends React.Component {
             self.props.history.replaceState(null, `/clients/${id}`);
           }
         }, 500);
+
+        this.props.getMyCompanies();
       }
 
     }

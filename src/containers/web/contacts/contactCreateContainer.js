@@ -3,25 +3,24 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState } from 'redux-router';
 
-import { createContact, getOneContact, getContactsByCompany, editContact } from '../../../modules/contacts';
-import { createCompanyContact } from '../../../modules/companyContacts';
+import { createContact, createCompanyContact, getOneContact, getContactsByCompany, editContact } from '../../../modules/contacts';
 import { ContactCreate } from '../../../components/web';
 
 let getData = (state, props) => {
   let contact = null;
-  //let company = null;
+  let company = null;
 
   if (props.params.contactId) {
     contact = state.contacts.list.get(props.params.contactId);
   }
 
-  // if (props.params.companyId) {
-  //   company = state.companies.myCompanyIds.get(props.params.companyId);
-  // }
+  if (props.params.companyId) {
+    company = state.companies.myCompanyIds.get(props.params.companyId);
+  }
 
   return {
     contact,
-    //company,
+    company,
     companies: state.companies.myCompanyIds,
   };
 };
@@ -52,10 +51,13 @@ export default class ContactCreateContainer extends React.Component {
         this.props.onSave(newProps.contact.get('id'));
       } else {
         let self = this;
-        let id =newProps.contact.get('id');
-        this.setState({open:false});
+        let id = newProps.contact.get('contactId') ? newProps.contact.get('contactId') : newProps.contact.get('id');
         setTimeout(function () {
-          self.props.history.replaceState('', `/contacts/${id}`);
+          if(self.props.location.query.returnUrl){
+            self.props.history.replaceState(null, self.props.location.query.returnUrl);
+          } else{
+            self.props.history.replaceState(null, `/contacts/${id}`);
+          }
         }, 500);
       }
     }
@@ -71,10 +73,8 @@ export default class ContactCreateContainer extends React.Component {
     });
   }
 
-  _handleCompanyChange(company){
-    this.setState({
-      company,
-    });
+  _handleCompanyChange(companyId){
+    this.props.history.replaceState(null, `/clients/${companyId}/contacts/${this.state.contact.get('id')}/create`);
   }
 
   _handleSave(contact){
@@ -94,15 +94,15 @@ export default class ContactCreateContainer extends React.Component {
       }
 
     } else {
-      if (this.props.params.companyId) {
-        this.props.createCompanyContact(this.props.params.companyId, contact);
+      let companyId = this.props.company ? this.props.company.get('id') : null;
+
+      if (companyId) {
+        this.props.createCompanyContact(companyId, contact);
       }
       else {
         this.props.createContact(contact);
       }
     }
-
-
   }
 
   _handleClose(){
