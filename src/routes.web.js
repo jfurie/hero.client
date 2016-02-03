@@ -151,17 +151,6 @@ export default(store) => {
 
           <Route path="logout" component={LogoutPage}/>
 
-          {/* Clients */}
-          <Route path="contacts">
-            <Route component={Home}>
-              <Route path=":contactId" component={ContactDetailsPage}/>
-              {/* <Route path=":companyId/create" component={ClientCreatePage}/>
-              <Route path=":companyId" component={ClientDetailsPage}
-                onEnter={(nextState) => {
-                  nextState.params.clientDetailsOpen = true;
-                }} /> */}
-            </Route>
-          </Route>
 
           {/* Clients */}
           <Route path="clients">
@@ -193,6 +182,7 @@ export default(store) => {
 
             <Route component={Home}>
               <Route path="search" component={ContactSearchContainer}/>
+              <Route path=":contactId" component={ContactDetailsPage}/>
               <Route path=":contactId/create" component={ContactCreatePage}/>
             </Route>
           </Route>
