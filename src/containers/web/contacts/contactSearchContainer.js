@@ -5,7 +5,8 @@ import { ContactSearchModal } from '../../../components/web';
 
 import { searchContacts, createTempContact } from '../../../modules/contacts';
 
-let debounce = require('debounce');
+//let debounce = require('debounce');
+import _ from 'lodash';
 
 @connect(state => ({
   contacts: state.contacts,
@@ -15,6 +16,8 @@ class ContactSearchContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = this._getResetState();
+    this.onQueryChangeImmediate = this.onQueryChangeImmediate.bind(this);
+    this.onQueryChange = _.debounce(this.onQueryChange.bind(this), 500);
   }
 
   _getResetState() {
@@ -75,6 +78,11 @@ class ContactSearchContainer extends React.Component {
     });
 
     this.onQuerySubmit();
+  }
+
+  onQueryChangeImmediate(e){
+    e.persist();
+    this.onQueryChange(e);
   }
 
   onQueryClear(e) {
@@ -145,7 +153,7 @@ class ContactSearchContainer extends React.Component {
           query={this.state.query}
           searchResults={this.state.searchResults}
           suggestions={this.state.suggestions}
-          onQueryChange={debounce(this.onQueryChange.bind(this), 500)}
+          onQueryChange={this.onQueryChangeImmediate}
           onQuerySubmit={this.onQuerySubmit.bind(this)}
           onQueryClear={this.onQueryClear.bind(this)}
           onSearchModalClose={this.onSearchModalClose.bind(this)}

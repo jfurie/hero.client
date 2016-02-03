@@ -17,6 +17,8 @@ class ClientSearchContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = this._getResetState();
+    this.onQueryChangeImmediate = this.onQueryChangeImmediate.bind(this);
+    this.onQueryChange = debounce(this.onQueryChange.bind(this), 500);
   }
 
   _getResetState() {
@@ -69,6 +71,11 @@ class ClientSearchContainer extends React.Component {
         suggestions: [],
       });
     }
+  }
+
+  onQueryChangeImmediate(e){
+    e.persist();
+    this.onQueryChange(e);
   }
 
   onQueryChange(e) {
@@ -291,7 +298,7 @@ class ClientSearchContainer extends React.Component {
           query={this.state.query}
           searchResults={this.state.searchResults}
           suggestions={this.state.suggestions}
-          onQueryChange={debounce(this.onQueryChange.bind(this), 500)}
+          onQueryChange={this.onQueryChangeImmediate}
           onQuerySubmit={this.onQuerySubmit.bind(this)}
           onQueryClear={this.onQueryClear.bind(this)}
           onSearchModalClose={this.onSearchModalClose.bind(this)}
