@@ -10,13 +10,16 @@ const GET_CONTACTS_BY_COMPANY_FAIL = 'hero.client/contacts/GET_CONTACTS_BY_COMPA
 const CREATE_CONTACT = 'hero.client/contacts/CREATE_CONTACT';
 const CREATE_CONTACT_SUCCESS = 'hero.client/contacts/CREATE_CONTACT_SUCCESS';
 const CREATE_CONTACT_FAIL = 'hero.client/contacts/CREATE_CONTACT_FAIL';
-const CREATE_COMPANY_CONTACT_SUCCESS = 'hero.client/contacts/CREATE_COMPANY_CONTACT_SUCCESS';
 const GET_ONE_CONTACT = 'hero.client/contacts/GET_ONE_CONTACT';
 const GET_ONE_CONTACT_SUCCESS = 'hero.client/contacts/GET_ONE_CONTACT_SUCCESS';
 const GET_ONE_CONTACT_FAIL = 'hero.client/contacts/GET_ONE_CONTACT_FAIL';
 const SEARCH_CONTACTS = 'hero.client/contacts/SEARCH_CONTACTS';
 const SEARCH_CONTACTS_SUCCESS = 'hero.client/contacts/SEARCH_CONTACTS_SUCCESS';
 const SEARCH_CONTACTS_FAIL = 'hero.client/contacts/SEARCH_CONTACTS_FAIL';
+const CREATE_TEMP_CONTACT = 'hero.client/contacts/CREATE_TEMP_CONTACT';
+const CREATE_COMPANY_CONTACT = 'hero.client/contacts/CREATE_COMPANY_CONTACT';
+const CREATE_COMPANY_CONTACT_SUCCESS = 'hero.client/contacts/CREATE_COMPANY_CONTACT_SUCCESS';
+const CREATE_COMPANY_CONTACT_FAIL = 'hero.client/contacts/CREATE_COMPANY_CONTACT_FAIL';
 
 const initialState = {
   list: new Immutable.Map(),
@@ -73,12 +76,14 @@ export default function reducer(state = initialState, action = {}) {
   case CREATE_CONTACT_SUCCESS:
     let contactsMap = {};
     contactsMap[action.result.id] = action.result;
+    contactsMap[action.result.id].saving = false;
+    contactsMap[action.result.id].savingError = '';
+    contactsMap[action.id] = contactsMap[action.result.id];
     return {
       ...state,
-      creating: false,
-      error: '',
-      currentId: action.result.id,
-      list: state.list.mergeDeep(contactsMap),
+      saving:false,
+      savingError:'',
+      list:state.list.mergeDeep(contactsMap),
     };
   case CREATE_CONTACT_FAIL:
     return {
@@ -101,13 +106,21 @@ export default function reducer(state = initialState, action = {}) {
   }
   case CREATE_COMPANY_CONTACT_SUCCESS: {
     let byCompanyMap = {};
-    let allCompanyContacts = state.byCompanyId.get(action.result.companyId).toJS() || [];
+    let allCompanyContacts = state.byCompanyId.get(action.result.companyId) ? state.byCompanyId.get(action.result.companyId).toJS() : [];
     allCompanyContacts.push(action.result.contactId);
     byCompanyMap[action.result.companyId] = allCompanyContacts;
 
     return {
       ...state,
       byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
+    };
+  }
+  case CREATE_TEMP_CONTACT:{
+    let contactsMap = {};
+    contactsMap[action.result.id] = action.result;
+    return {
+      ...state,
+      list: state.list.mergeDeep(contactsMap),
     };
   }
   case companyConstants.GET_COMPANY_SUCCESS:{
@@ -147,7 +160,7 @@ export default function reducer(state = initialState, action = {}) {
       });
       return {
         ...state,
-        list:state.list.mergeDeep(contactList)
+        list:state.list.mergeDeep(contactList),
       };
     }
   case SEARCH_CONTACTS_SUCCESS: {
@@ -189,7 +202,7 @@ export function getContactsByCompany(companyId) {
       }).then((result)=>{
         resolve({
           companyId,
-          result
+          result,
         });
       }).catch((err)=>{
         reject(err);
@@ -208,11 +221,15 @@ export function getOneContact(contactId) {
 }
 
 export function createContact(contact) {
+  var id = contact.get('id');
+  if(id && id.indexOf('tmp') > -1){
+    contact = contact.remove('id');
+  }
   return {
     types: [CREATE_CONTACT, CREATE_CONTACT_SUCCESS, CREATE_CONTACT_FAIL],
     promise: (client, auth) => client.api.post('/contacts', {
       authToken: auth.authToken,
-      data:contact
+      data:contact,
     }),
   };
 }
@@ -223,5 +240,41 @@ export function searchContacts(query) {
     promise: (client, auth) => client.api.get(`/contacts/search?query=${query}`, {
       authToken: auth.authToken,
     }),
+  };
+}
+
+export function createTempContact(contact){
+  return {
+    type: CREATE_TEMP_CONTACT,
+    result: contact,
+  };
+}
+
+export function createCompanyContact(companyId, contact) {
+  var id = contact.get('id');
+  if(id && id.indexOf('tmp') > -1){
+    contact = contact.remove('id');
+  }
+  return (dispatch) => {
+    dispatch({
+      types: [CREATE_COMPANY_CONTACT, CREATE_COMPANY_CONTACT_SUCCESS, CREATE_COMPANY_CONTACT_FAIL],
+      promise: (client, auth) => new Promise(function(resolve, reject){
+        let contactPromise = client.api.post('/companyContacts', {
+          authToken: auth.authToken,
+          data: {
+            companyId,
+            contact,
+          },
+        });
+        contactPromise.then((res) => {
+          resolve(res);
+        }).catch((ex) => {
+          reject(ex);
+        });
+      }).then((companyContact)=>{
+        dispatch(getOneContact(companyContact.contactId));
+        return companyContact;
+      }),
+    });
   };
 }

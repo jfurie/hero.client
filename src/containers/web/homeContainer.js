@@ -6,9 +6,11 @@ import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
+import { createTempContact } from '../../modules/contacts';
 import ClientCreateContainer from './clients/clientCreateContainer';
 import ClientSearchContainer from './clients/clientSearchContainer';
 import ContactSearchContainer from './contacts/contactSearchContainer';
+import ContactCreateContainer from './contacts/contactCreateContainer';
 
 import { Styles } from 'material-ui';
 
@@ -69,7 +71,7 @@ function filterMyJobs(state){
   candidates: filterMyCandidates(state.candidates, state.auth),
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany, createTempContact})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -114,22 +116,12 @@ class HomePage extends React.Component {
     console.log('_createJob');
   }
 
-  _createClient() {
-    this.refs.actionButtons.close();
-    this.props.createTempCompany({
-      id:'tmp'
-    });
-    this.setState({
-      companyId:'tmp',
-      openClientCreate:true
-    });
-  }
-  _handleContactSave(id){
+  _handleClientSave(id){
     //onSave
     console.log('saved',id);
     this.setState({
       companyId:id,
-      openClientCreate:false
+      openClientCreate:false,
     });
   }
 
@@ -155,13 +147,13 @@ class HomePage extends React.Component {
     this.setState({
       companyId: id,
       clientSearchModalOpen: false,
-      openClientCreate: true
+      openClientCreate: true,
     });
   }
 
   onClientCreateClose() {
     this.setState({
-      openClientCreate: false
+      openClientCreate: false,
     });
   }
 
@@ -183,11 +175,23 @@ class HomePage extends React.Component {
     let id = contact.id ? contact.id : 'tmp_' + this._guid();
     contact.id = id;
 
-    //this.props.createTempContact(contact);
+    this.props.createTempContact(contact);
     this.setState({
       contactId: id,
       contactSearchModalOpen: false,
-      openContactCreate: true
+      openContactCreate: true,
+    });
+  }
+
+  onContactCreateClose() {
+    this.setState({
+      openContactCreate: false,
+    });
+  }
+
+  onContactCompanyChange(companyId) {
+    this.setState({
+      companyId,
     });
   }
 
@@ -234,8 +238,10 @@ class HomePage extends React.Component {
         </CustomTabsSwipe>
         <ActionButton ref='actionButtons' actions={actions}/>
         <ClientSearchContainer open={this.state.clientSearchModalOpen} onClientSelect={this.onClientSelect.bind(this)} onClose={this.onClientSearchClose.bind(this)} />
-        <ClientCreateContainer onSave={this._handleContactSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this.onClientCreateClose.bind(this)}></ClientCreateContainer>
+        <ClientCreateContainer onSave={this._handleClientSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this.onClientCreateClose.bind(this)}></ClientCreateContainer>
+
         <ContactSearchContainer open={this.state.contactSearchModalOpen} onContactSelect={this.onContactSelect.bind(this)} onClose={this.onContactSearchClose.bind(this)} />
+        <ContactCreateContainer contactId={this.state.contactId} companyId={this.state.companyId} onCompanyChange={this.onContactCompanyChange.bind(this)} inline={false} open={this.state.openContactCreate} onClose={this.onContactCreateClose.bind(this)}></ContactCreateContainer>
       </div>
     );
   }
