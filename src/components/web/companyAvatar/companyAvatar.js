@@ -1,27 +1,37 @@
 import React from 'react';
-import { Avatar } from 'material-ui';
 
 class CompanyAvatar extends React.Component {
 
-  render() {
+  constructor(props){
+    super(props);
 
-    let { style, url } = this.props;
-
+    let url = props.url;
     url = url.toLowerCase();
     url = url.replace(/http(s?):\/\//, '');
     url = url.replace(/\/$/, '');
 
-    let imgSrc = `https://logo.clearbit.com/${url}`;
+    this.state = {
+      imgSrc: `https://logo.clearbit.com/${url}`,
+    };
+  }
+
+  _handleError() {
+    this.setState({
+      imgSrc: 'https://static.licdn.com/scds/common/u/img/themes/katy/ghosts/companies/ghost_company_40x40_v1.png',
+    });
+  }
+
+  render() {
+
+    let { style } = this.props;
 
     if (style) {
       style.borderRadius = '0px';
+      style.width = '40px';
     }
 
     return (
-      <Avatar
-          src={imgSrc}
-          style={style}
-      />
+      <img src={this.state.imgSrc} style={style} onError={this._handleError.bind(this)} />
     );
   }
 }
