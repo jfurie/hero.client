@@ -86,7 +86,7 @@ export default class ContactSearch extends React.Component {
         style={style.section}
         fullWidth={true}
         label={'add ' + (query ? query : 'contact')}
-        onTouchTap={this.props.onDbContactSelect.bind(this, { name: query })}
+        onTouchTap={this.props.onDbContactSelect.bind(this, { firstName: query })}
       />
       {
         searchResults.length > 0 || suggestions.length > 0 ?

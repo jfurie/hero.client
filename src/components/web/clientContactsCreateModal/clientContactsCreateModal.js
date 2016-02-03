@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IconButton, ToolbarGroup, FlatButton, TextField, ToolbarTitle, Toolbar } from 'material-ui';
 import {Dialog} from '../';
-import { createCompanyContact } from '../../../modules/companyContacts';
+import { createCompanyContact } from '../../../modules/contacts';
 import phoneFormatter from 'phone-formatter';
 
 import validateContact from '../../../validators/contact';

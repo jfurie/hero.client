@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 
 import { ContactSearchModal } from '../../../components/web';
 
-import { searchContacts } from '../../../modules/contacts';
+import { searchContacts, createTempContact } from '../../../modules/contacts';
 
 let debounce = require('debounce');
 
 @connect(state => ({
   contacts: state.contacts,
-}), { searchContacts }, null, { withRef: true })
+}), { searchContacts, createTempContact }, null, { withRef: true })
 class ContactSearchContainer extends React.Component {
 
   constructor(props) {
@@ -91,21 +91,47 @@ class ContactSearchContainer extends React.Component {
 
   onSearchModalClose() {
     this.setState(this._getResetState());
-    this.props.onClose();
+    if(this.props.onClose){
+      this.props.onClose();
+    } else {
+      this.props.history.goBack();
+    }
+  }
+
+  onSelect(contact){
+    if(this.props.onContactSelect){
+      this.props.onContactSelect(contact);
+    } else {
+      let id = contact.id ? contact.id : 'tmp_' + this._guid();
+      contact.id = id;
+      this.props.createTempContact(contact);
+
+      this.props.history.replaceState(null,`/contacts/${id}/create`);
+    }
   }
 
   onDbContactSelect(dbContact) {
     let contact = dbContact ? (dbContact.toObject ? dbContact.toObject() : dbContact) : {};
 
     this._resetState();
-    this.props.onContactSelect(contact);
+    this.onSelect(contact);
+  }
+
+  _guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
   }
 
   render() {
     return (
       <div>
         <ContactSearchModal
-          open={this.props.open}
+          open={true}
           query={this.state.query}
           searchResults={this.state.searchResults}
           suggestions={this.state.suggestions}

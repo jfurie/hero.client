@@ -6,7 +6,6 @@ import contacts from './contacts';
 import companies from './companies/index';
 import leftNav from './leftNav';
 import locations from './locations';
-import companyContacts from './companyContacts';
 import jobs from './jobs';
 import notes from './notes';
 import resources from './resources';
@@ -21,7 +20,6 @@ export default combineReducers({
   leftNav,
   companies,
   locations,
-  companyContacts,
   jobs,
   notes,
   resources,
