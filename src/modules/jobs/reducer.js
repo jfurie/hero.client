@@ -4,22 +4,7 @@ const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
   localJob: new Immutable.Map(),
-};
-
-// TMP FAKE JOBS
-
-let FAKEJOBS = {};
-
-FAKEJOBS['1a'] = {
-  title: 'Android Mobile Engineer',
-  location: 'Santa Monica, CA',
-  id: '1a',
-};
-
-FAKEJOBS['2b'] = {
-  title: 'Software Ruby Engineer',
-  location: 'Venice, CA',
-  id: '2b',
+  myJobIds: new Immutable.List()
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -30,10 +15,11 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.GET_JOBS_SUCCESS: {
-    return {
-      ...state,
-      list: state.list.mergeDeep(FAKEJOBS),
-    };
+    return state;
+    // return {
+    //   ...state,
+    //   list: state.list.mergeDeep(FAKEJOBS),
+    // };
   }
   case constants.GET_JOBS_FAIL: {
     return {
@@ -68,16 +54,32 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.GET_JOBS_BY_COMPANY_SUCCESS:{
-    let byCompanyMap = {};
-    byCompanyMap[action.result.companyId] = action.result.map((job)=>job.id);
-    let companyMap = {};
-    action.result.map((c) => {
-      companyMap[c.id] = c;
-    });
+
+    let companyId = null;
+
+    if (action.result.length) {
+      companyId = action.result[0].companyId;
+    }
+
+    if (companyId) {
+      let byCompanyMap = {};
+      byCompanyMap[companyId] = action.result.map((job) => job.id);
+      let companyMap = {};
+      action.result.map((c) => {
+        companyMap[c.id] = c;
+      });
+
+      return {
+        ...state,
+        byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
+        list: state.list.mergeDeep(companyMap),
+        loading:false,
+      };
+
+    }
+
     return {
       ...state,
-      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
-      list: state.list.mergeDeep(companyMap),
       loading:false,
     };
   }
@@ -96,12 +98,17 @@ export default function reducer(state = initialState, action = {}) {
   case constants.CREATE_JOB_SUCCESS:{
     let jobMap = {};
     jobMap[action.result.id] = action.result;
-    let byCompanyMap ={};
-    byCompanyMap[action.result.companyId] = [action.result.id];
+
+    let companyId = action.result.companyId;
+    let byCompanyMapNew = {};
+
+    byCompanyMapNew[companyId] = state.byCompanyId.get(companyId) || new Immutable.List();
+    byCompanyMapNew[companyId] = byCompanyMapNew[companyId].push(action.result.id);
+
     return {
       ...state,
       list: state.list.mergeDeep(jobMap),
-      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
+      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMapNew),
       loading:false,
       localJob: state.localJob.mergeDeep({success:true}),
     };
@@ -120,11 +127,17 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.UPDATE_JOB_LOCAL:{
-
-    return {
-      ...state,
-      localJob: state.localJob.mergeDeep(action.result),
-    };
+    if(action.dontMergeDeep){
+      return {
+        ...state,
+        localJob: state.localJob.merge(action.result),
+      };
+    } else {
+      return {
+        ...state,
+        localJob: state.localJob.mergeDeep(action.result),
+      };
+    }
   }
   case constants.REPLACE_JOB_LOCAL:{
     return {
@@ -162,6 +175,19 @@ export default function reducer(state = initialState, action = {}) {
     return{
       ...state,
       localJob: state.localJob.mergeDeep(image),
+    };
+  }
+  case constants.GET_MY_JOBS_SUCCESS:{
+    let myJobIds = [];
+    let jobList = {};
+    myJobIds = action.result.map(job =>{
+      jobList[job.id] = job;
+      return job.id;
+    });
+    return{
+      ...state,
+      myJobIds: new Immutable.List(myJobIds),
+      list: state.list.mergeDeep(jobList)
     };
   }
   case constants.UPDATE_JOB_IMAGE_LOCAL_FAIL:{

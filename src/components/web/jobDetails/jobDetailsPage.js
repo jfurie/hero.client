@@ -1,13 +1,9 @@
 import React from 'react';
-import { Header, ClientContactsCreateModal, JobDetails, CandidateSearchModal } from '../../../components/web';
-import { IconMenu, IconButton } from 'material-ui';
-let MenuItem = require('material-ui/lib/menus/menu-item');
+import { Header, ClientContactsCreateModal, JobDetails, ShareJobModal } from '../../../components/web';
 
-// const style = {
-//   slide: {
-//     minHeight: `${window.innerHeight - 112}px`,
-//   },
-// };
+import IconButton from 'material-ui/lib/icon-button';
+import IconMenu from 'material-ui/lib/menus/icon-menu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 
 class JobDetailsPage extends React.Component {
 
@@ -16,7 +12,6 @@ class JobDetailsPage extends React.Component {
 
     this.state = {
       createContactModalOpen: false,
-      candidateSearchOpen: false
     };
   }
 
@@ -50,33 +45,30 @@ class JobDetailsPage extends React.Component {
     console.log('save contact');
   }
 
-  candidateSearchModalClose(){
-    this.setState({
-      candidateSearchOpen: false,
-    });
-  }
-  candidateSearchModalOpen(){
-    this.setState({
-      candidateSearchOpen: true,
-    });
+  shareJobModalOpen() {
+    this.refs.shareJobModal.show();
   }
 
   render() {
 
-    let { job } = this.props;
+    let { job, company } = this.props;
+    let jobId = ((job) ? (job.get('id')) : (null));
     //let heroContact = '/img/rameet.jpg';
+
     return (
       <div>
-        <CandidateSearchModal open={this.state.candidateSearchOpen} closeModal={this.candidateSearchModalClose.bind(this)} candidates={this.props.contacts.list}/>
-        <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen}></ClientContactsCreateModal>
+        <ClientContactsCreateModal onSubmit={this.saveContact.bind(this)} closeModal={this.createContactModalClose.bind(this)} open={this.state.createContactModalOpen} />
+        <ShareJobModal ref="shareJobModal" jobId={jobId} companyContacts={company.get('contacts')}/>
+
         <Header iconRight={
           <IconMenu iconButtonElement={
-            <IconButton  iconClassName='material-icons'>more_vert</IconButton>
+            <IconButton iconClassName='material-icons'>more_vert</IconButton>
           }>
-            <MenuItem index={0} onTouchTap={this.candidateSearchModalOpen.bind(this)} primaryText='Find Candidates' />
+            <MenuItem index={0} primaryText='Find Candidates' />
             <MenuItem index={1} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Candidate" />
+            <MenuItem index={2} onTouchTap={this.shareJobModalOpen.bind(this)} primaryText="Share This Job" />
           </IconMenu>
-        } title={job?job.get('title'):''} />
+        } title={job ? job.get('title') : '' } />
         <JobDetails {...this.props} />
       </div>
     );

@@ -1,7 +1,9 @@
 import React from 'react';
-import { login } from '../../../modules/auth';
+import { login, resetLoginError } from '../../../modules/auth';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
+
+import Config from '../../../utils/config';
 
 import './loginContainer.scss';
 import { RaisedButton, TextField, Styles, Snackbar } from 'material-ui';
@@ -25,14 +27,16 @@ const style = {
 
 @connect(state => ({
   user: state.auth.user,
-}), {login, pushState})
+  auth: state.auth,
+}), {login, resetLoginError, pushState})
 class LogoutPage extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      loginError: '',
+      userNameError: '',
       passwordError: '',
+      loginError: false,
     };
   }
 
@@ -45,8 +49,10 @@ class LogoutPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
 
-    if (!this.props.user && !nextProps.user) { // fail to log
-      this.refs.snackbar.show();
+    if (nextProps.auth && nextProps.auth.loginError) { // fail to log
+      this.setState({
+        loginError: true,
+      });
     } else if (!this.props.user && nextProps.user) { // login
       let param = this.getParameterByName('redirect');
 
@@ -70,13 +76,14 @@ class LogoutPage extends React.Component {
     }
 
     this.setState({
-      loginError: null,
+      userNameError: null,
       passwordError: null,
+      loginError: false,
     });
 
     if (!this.state.email) {
       this.setState({
-        loginError: 'Login is required.',
+        userNameError: 'Login is required.',
       });
     }
 
@@ -91,6 +98,19 @@ class LogoutPage extends React.Component {
     }
   }
 
+  handleLoginErrorClose () {
+    this.setState({
+      loginError: false,
+    });
+
+    this.props.resetLoginError();
+  }
+
+  linkedinConnect() {
+    let url = Config.get('apiBaseUrl') + '/auth/linkedin?redirect=' + window.location.origin;
+    window.location.replace(url);
+  }
+
   handleChange (item, e) {
     let newState = {};
     newState[item] = e.target.value;
@@ -100,7 +120,7 @@ class LogoutPage extends React.Component {
   render () {
     return (
       <div>
-        <div id="login-box" className="row center-xs center-md">
+        <div id="login-box" className="row center-xs center-md row-top">
 
           <form className="col-xs-10 col-md-4" onSubmit={this.onSubmit.bind(this)}>
 
@@ -111,11 +131,12 @@ class LogoutPage extends React.Component {
 
             <TextField
                 errorStyle={style.error}
-                errorText={this.state.loginError || ''}
+                errorText={this.state.userNameError || ''}
                 fullWidth
-                hintText="Login"
+                hintText="Email Address"
                 onChange={this.handleChange.bind(this, 'email')}
                 underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
+                name="username"
             />
 
             <TextField
@@ -126,6 +147,7 @@ class LogoutPage extends React.Component {
                 onChange={this.handleChange.bind(this, 'password')}
                 underlineFocusStyle={{borderColor: Styles.Colors.blue800}}
                 type="password"
+                name="password"
             />
 
             <RaisedButton
@@ -139,6 +161,7 @@ class LogoutPage extends React.Component {
                 label="Sign In with Linkedin"
                 labelColor="#FFF"
                 style={style.linkedinButton}
+                onTouchTap={this.linkedinConnect.bind(this)}
             />
 
           </form>
@@ -146,9 +169,12 @@ class LogoutPage extends React.Component {
 
         <Snackbar
             action="ok"
-            autoHideDuration={2500}
-            message="Invalid username or password."
+            open={this.state.loginError}
+            onRequestClose={this.handleLoginErrorClose.bind(this)}
+            autoHideDuration={250000}
+            message="Invalid email address or password."
             ref="snackbar"
+            className="snackbar"
         />
 
       </div>

@@ -25,7 +25,7 @@ body {
     width: 100%;
     height: 100%;
     position: absolute;
-    z-index: 500;
+    z-index: 1500;
 }
 
 #splash .center {
@@ -151,4 +151,10 @@ body {
 
 #innerView {
     padding: 8px;
+}
+
+/* fix for snackbars on mobile */
+
+.snackbar div button {
+    min-width: auto !important;
 }

@@ -8,6 +8,7 @@ var env = process.env.NODE_ENV || 'development';
 var isDEV =  env = 'development';
 module.exports = {
   debug: true,
+  //watch:true,
   devtool: 'source-map',
   entry: {
     //'index.ios': ['./src/main.ios.js'],
@@ -17,6 +18,9 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'web/dist/public/js'),
     filename: '[name].js',
+  },
+  externals:{
+    google:'google'
   },
   module: {
     preLoaders: [

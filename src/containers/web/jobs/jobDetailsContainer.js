@@ -1,21 +1,23 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { getOneJob } from '../../../modules/jobs/index';
 import { getAllContacts } from '../../../modules/contacts';
+//import { getAllJobCandidates } from '../../../modules/candidates';
 import { getOneLocation } from '../../../modules/locations';
 import { JobDetailsPage } from '../../../components/web';
 
 import './jobDetailsContainer.scss';
 
-
 function getData(state, id) {
   let location = ((state.locations.list.size > 0) ? (state.locations.list.get('566791aa15d3e38a0cbdecb6')) : (null));
   let job = state.jobs.list.get(id);
-  let jobImage = state.resources.list.get(job.imageId);
+  let jobImage =job ? state.resources.list.get(job.imageId) : new Immutable.Map();
   return {
     job,
     jobImage,
     contacts: state.contacts,
+    candidates: state.candidates,
     location,
   };
 }
@@ -36,7 +38,8 @@ class JobDetailsContainer extends React.Component {
   componentDidMount() {
     this.props.getOneJob(this.props.params.id);
     this.props.getAllContacts();
-    this.props.getOneLocation('566791aa15d3e38a0cbdecb6');
+    //this.props.getOneLocation('566791aa15d3e38a0cbdecb6');
+    //this.props.getAllCandidates(this.props.params.id);
   }
 
   contactDetailsModalOpen(contact) {
@@ -72,7 +75,7 @@ class JobDetailsContainer extends React.Component {
   render(){
     return (
       <div>
-        <JobDetailsPage {...this.props}></JobDetailsPage>
+        <JobDetailsPage {...this.props} />
       </div>
     );
   }

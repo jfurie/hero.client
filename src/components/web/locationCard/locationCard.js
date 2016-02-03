@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, CardMedia, CardTitle } from 'material-ui';
-//import {GoogleMap, Marker, GoogleMapLoader} from 'react-google-maps';
 import GoogleMap from 'google-map-react';
 
 class LocationCard extends React.Component {
@@ -19,7 +18,7 @@ class LocationCard extends React.Component {
 
   render() {
 
-    let {location} = this.props;
+    let {location, marker} = this.props;
 
     if (location) {
 
@@ -31,7 +30,6 @@ class LocationCard extends React.Component {
       let countrySubDivisionCode = location.get('countrySubDivisionCode');
       let geoField = location.get('geoField').toJSON();
 
-      //let title = location.get('name') || 'Location';
       let subtitle = `${addressLine}` || '';
 
       if (city) {
@@ -48,6 +46,16 @@ class LocationCard extends React.Component {
         subtitle += `, ${countrySubDivisionCode}`;
       }
 
+      // update the marker with the geoField lat lng
+      if (marker) {
+        let markersProps = marker.props;
+        marker = React.cloneElement(marker, {
+          ...markersProps,
+          lat: geoField.lat,
+          lng: geoField.lng,
+        });
+      }
+
       return (
         <Card>
           <CardMedia>
@@ -55,7 +63,12 @@ class LocationCard extends React.Component {
               <GoogleMap
                 center={geoField}
                 defaultZoom={13}
-                options={this.createMapOptions} />
+                options={this.createMapOptions}
+              >
+              {(marker) ? (
+                marker
+              ) : (null)}
+              </GoogleMap>
             </div>
           </CardMedia>
           <CardTitle title={name} subtitle={subtitle}/>
@@ -69,6 +82,7 @@ class LocationCard extends React.Component {
 
 LocationCard.propTypes = {
   location: React.PropTypes.object,
+  marker: React.PropTypes.element,
 };
 
 export default LocationCard;

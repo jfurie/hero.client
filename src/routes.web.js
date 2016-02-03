@@ -7,8 +7,9 @@ import LocalStorageClient from './utils/localStorageClient';
 import Home from './containers/web/homeContainer';
 import LoginPage from './containers/web/login/loginContainer';
 import LogoutPage from './containers/web/logoutContainer';
-//import InvitedPage from './containers/web/invitedContainer';
+import InvitedPage from './containers/web/invited/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
+import EmptyPage from './containers/web/emptyContainer';
 import Layout from './containers/web/layoutContainer';
 
 // settings containers
@@ -18,19 +19,34 @@ import SettingsAccountPage from './containers/web/settings/settingsAccountContai
 // account containers
 import AccountHomePage from './containers/web/account/accountHomeContainer';
 
+// contacts
+import ContactDetailsPage from './containers/web/contacts/contactDetailsContainer';
+
 // candidates
 import MyCandidatesPage from './containers/web/candidates/myCandidatesContainer';
 import CandidateSearchContainer from './containers/web/candidates/candidateSearchContainer';
+
 // clients
 import ClientsPage from './containers/web/clients/clientsContainer';
 import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
+import ClientSearchContainer from './containers/web/clients/clientSearchContainer';
+import ClientCreatePage from './containers/web/clients/clientCreateContainer';
 
 //jobs
 import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
 import MyJobsPage from './containers/web/jobs/myJobsContainer';
-
+// contacts
+import ContactSearchContainer from './containers/web/contacts/contactSearchContainer';
+import ContactCreatePage from './containers/web/contacts/contactCreateContainer';
 
 const localStorage = new LocalStorageClient('Auth');
+
+function getParameterByName(name) {
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+  let results = regex.exec(location.search);
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
 
 export default(store) => {
 
@@ -42,7 +58,9 @@ export default(store) => {
 
       if (!user) {
         let auth = localStorage.get('Auth');
+
         if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
+          store.dispatch(authActions.checkAuthServer(auth.id));
           store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
             cb();
           });
@@ -80,8 +98,14 @@ export default(store) => {
       const { auth: { user } } = ((store) ? (store.getState()) : (null));
       if (!user) {
         let auth = localStorage.get('Auth');
+        let tokenParam = getParameterByName('accessToken');
+
         if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
           store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
+            cb();
+          });
+        } else if (tokenParam) {
+          store.dispatch(authActions.logginWithAccessToken(tokenParam)).then(() => {
             cb();
           });
         } else {
@@ -113,7 +137,7 @@ export default(store) => {
 
   return (
 
-    <Route path="/" onEnter={loadUser}>
+    <Route path="/" onUpdate={() => window.scrollTo(0, 0)} onEnter={loadUser}>
       <Route component={Layout}>
 
         <Route path="login" onEnter={checkLogin} component={LoginPage}/>
@@ -121,20 +145,48 @@ export default(store) => {
 
         {/* Routes requiring login  */}
         <Route onEnter={requireLogin}>
-          <IndexRoute component={Home}/>
+          <Route component={Home}>
+            <IndexRoute component={EmptyPage}/>
+          </Route>
+
           <Route path="logout" component={LogoutPage}/>
+
 
           {/* Clients */}
           <Route path="clients">
             <IndexRoute component={ClientsPage}/>
-            <Route path=":id" component={ClientDetailsPage} />
-              <Route path=":id/jobs" component={ClientDetailsPage}
-                onEnter={(nextState, replaceState) =>{
-                  nextState.params.tab = 'jobs';
+
+            <Route component={Home}>
+              <Route path="search" component={ClientSearchContainer}/>
+              <Route path=":companyId/create" component={ClientCreatePage}/>
+              <Route path=":companyId" component={ClientDetailsPage}
+                onEnter={(nextState) => {
+                  nextState.params.clientDetailsOpen = true;
                 }} />
+              <Route path=":companyId/contacts/search" component={ContactSearchContainer}></Route>
+              <Route path=":companyId/contacts/:contactId/create" component={ContactCreatePage}></Route>
+            </Route>
+            <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
+              nextState.params.tab = 'jobs';
+            }} />
             <Route path=":id/jobs/:jobId" component={ClientDetailsPage} />
             <Route path=":id/jobs(/:create)" component={ClientDetailsPage} />
+            <Route path=":id" component={ClientDetailsPage} />
+              <Route path=":id/notes" component={ClientDetailsPage}
+                onEnter={(nextState) => {
+                  nextState.params.tab = 'notes';
+                }} />
+          </Route>
 
+          {/* Contacts */}
+          <Route path="contacts">
+            <IndexRoute component={ClientsPage}/>
+
+            <Route component={Home}>
+              <Route path="search" component={ContactSearchContainer}/>
+              <Route path=":contactId" component={ContactDetailsPage}/>
+              <Route path=":contactId/create" component={ContactCreatePage}/>
+            </Route>
           </Route>
 
           <Route path="jobs">
@@ -154,6 +206,7 @@ export default(store) => {
             <Route path="account" onEnter={requireAccount} component={SettingsAccountPage}/>
           </Route>
 
+
           {/* Account  */}
           <Route path="/account" onEnter={requireAccount}>
             <IndexRoute component={AccountHomePage}/>
@@ -162,9 +215,9 @@ export default(store) => {
 
         </Route>
 
-        {/* <Route path="invited" component={InvitedPage}/> */}
+        <Route path="invited" component={InvitedPage}/>
         {/* Catch all route */}
-        {/*  <Route path="*" component={NotFound} status={404} /> */}
+        <Route path="*" component={ErrorPage} status={404} />
 
       </Route>
     </Route>

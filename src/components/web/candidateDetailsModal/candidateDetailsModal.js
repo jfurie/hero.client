@@ -1,8 +1,12 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
-  List, ListItem, FontIcon, Divider, FlatButton, CardText } from 'material-ui';
-import { CustomTabsSwipe, ResumePDFViewer, JobsList, Gravatar } from '../../../components/web';
-import Immutable from 'immutable';
+//import Immutable from 'immutable';
+
+import {
+  Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup,
+  List, ListItem, FontIcon, Divider, FlatButton, CardText, Styles,
+} from 'material-ui';
+
+import { CustomTabsSwipe, Gravatar } from '../../../components/web';
 
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -27,6 +31,8 @@ const style = {
   },
   content: {
     height: `${clientHeight}px`,
+    overflowY:'scroll',
+    WebkitOverflowScrolling: 'touch',
   },
   toolBar: {
     backgroundColor:'#ffffff',
@@ -42,10 +48,23 @@ const style = {
     lineHeight:'64px',
     float:'left',
   },
-  statusButton: {
-    backgroundColor: '#40bb3f',
+  statusNotInterestedButton: {
+    backgroundColor: Styles.Colors.red600,
     color: '#FFF',
     margin: '14px 0px',
+  },
+  statusInterestedButton: {
+    backgroundColor: Styles.Colors.lightGreen600,
+    color: '#FFF',
+    margin: '14px 0px',
+  },
+  createCandidate: {
+    marginTop:'14px',
+    marginRight:'-16px',
+    marginLeft:'auto',
+  },
+  slide: {
+    // marginTop: '48px',
   },
 };
 
@@ -53,75 +72,105 @@ class CandidateDetailsModal extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      open: false,
-      candidate: null,
-    };
   }
 
   componentDidMount() {
     //this.props.getAllJobs();
   }
 
-  show(candidate) {
-    this.setState({
-      open: true,
-      candidate,
-    });
+  // _handleJobClick(){
+  //   this.props.pushState(null,'/jobs/1a');
+  // }
+
+  _openResume(resumeLink) {
+    window.open(resumeLink);
   }
 
-  closeModal() {
-    this.setState({
-      open: false,
-      candidate: null,
-    });
-  }
-
-  _handleJobClick(){
-    this.props.pushState(null,'/jobs/1a');
+  createCandidate() {
+    if (this.props.createCandidate) this.props.createCandidate();
   }
 
   render() {
 
-    //let { jobs } = this.props;
+    // let jobs = {};
+    // jobs.list = new Immutable.Map();
+    //
+    // let job = {};
+    // job['1a'] = {
+    //   title: 'Android Mobile Engineer',
+    //   location: 'Santa Monica, CA',
+    //   id: '1a',
+    // };
+    //
+    // jobs.list = jobs.list.mergeDeep(job);
 
-    let jobs = {};
-    jobs.list = new Immutable.Map();
-
-    let job = {};
-    job['1a'] = {
-      title: 'Android Mobile Engineer',
-      location: 'Santa Monica, CA',
-      id: '1a',
-    };
-
-    jobs.list = jobs.list.mergeDeep(job);
-
-    //let picture = null;
     let email = null;
     let phone = null;
     let address = null;
     let city = null;
     let source = null;
     let displayName = null;
+    let candidateStatus = 'notset';
+    let resumeLink = null;
+    let candidateId = null;
+    let currentSalary = null;
+    let currentHourly = null;
+    let desiredHourly = null;
+    let desiredSalary = null;
+    let bonusNotes = null;
+    let pitch = null;
 
-    if (this.state.candidate) {
-      displayName = this.state.candidate.get('displayName') || null;
-      //picture = 'http://www.material-ui.com/images/kerem-128.jpg';
-      email = this.state.candidate.get('email') || null;
-      phone = this.state.candidate.get('phone') || null;
-      address = '1316 3rd St #103';
-      city = 'Santa Monica, CA 90401';
-      source = 'facebook.com';
+    if (this.props.candidate) {
+      candidateId = this.props.candidate.get('id') || null;
+
+      candidateStatus = this.props.candidate.get('status') || 'notset';
+      let contact = this.props.candidate.get('contact');
+
+
+      // TMP
+      resumeLink = null;
+      let resume = contact.get('resume');
+      if(resume){
+        resumeLink = resume.get('item');
+      }
+      if (contact) {
+        displayName = contact.get('displayName') || null;
+        email = contact.get('email') || null;
+        phone = contact.get('phone') || null;
+
+        // define address and city
+        address = contact.get('_address').get('addressLine') || null;
+        city = contact.get('_address').get('city') || null;
+
+        let postalCode = contact.get('_address').get('postalCode') || null;
+        let countrySubDivisionCode = contact.get('_address').get('countrySubDivisionCode') || null;
+        if (city && countrySubDivisionCode) {
+          city += `, ${countrySubDivisionCode}`;
+        }
+
+        if (city && postalCode) {
+          city += ` ${postalCode}`;
+        }
+
+        // get source
+
+        if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
+          source = contact.get('sourceInfo').get('referrer');
+        }
+
+        currentSalary = contact.get('currentSalary') || null;
+        currentHourly = contact.get('currentHourly') || null;
+        desiredHourly = contact.get('desiredHourly') || null;
+        desiredSalary = contact.get('desiredSalary') || null;
+        bonusNotes = contact.get('bonusNotes') || null;
+        pitch = contact.get('pitch') || null;
+      }
     }
-
-    //console.log(this.props.open);
 
     return (
       <div>
         <Dialog
-            open={this.state.open}
+            open={this.props.open}
             autoDetectWindowHeight={false}
             autoScrollBodyContent={false}
             repositionOnUpdate={false}
@@ -134,23 +183,40 @@ class CandidateDetailsModal extends React.Component {
           <div style={style.content}>
             <Toolbar style={style.toolBar}>
               <ToolbarGroup key={0} float="left">
-                <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
-                <ToolbarTitle style={style.detailsTitle} text={'Candidate Details'} />
+                <IconButton onTouchTap={this.props.close.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
+                <ToolbarTitle style={style.detailsTitle} text={'Details'} />
               </ToolbarGroup>
-              <ToolbarGroup key={1} float="right">
-                <FlatButton style={style.statusButton} label="Vetted" />
-              </ToolbarGroup>
+
+              {
+                candidateId ?
+
+                <ToolbarGroup key={1} float="right">
+                  {(candidateStatus === 'notinterested') ? (
+                    <FlatButton style={style.statusNotInterestedButton} label="Not Interested" />
+                  ) : (null)}
+                  {(candidateStatus === 'interested') ? (
+                    <FlatButton style={style.statusInterestedButton} label="Interested" />
+                  ) : (null)}
+                </ToolbarGroup>
+
+                :
+
+                <ToolbarGroup key={1} float="right">
+                  <FlatButton onTouchTap={this.createCandidate.bind(this)} style={style.createCandidate}>Add</FlatButton>
+                </ToolbarGroup>
+              }
+
             </Toolbar>
             <CustomTabsSwipe
-                tabs={['Details', 'Resume', 'Infos', 'Applications']}
+                tabs={['Details', 'Info' /*, 'Applications'*/]}
                 isLight
             >
-              <List>
+              <List style={style.slide}>
                 <div>
 
                   {(displayName) ? (
                     <ListItem
-                        leftAvatar={<Gravatar email={this.state.candidate.get('email')} status={'vetted'} />}
+                        leftAvatar={<Gravatar email={email} status={candidateStatus} />}
                         primaryText={displayName}
                         secondaryText={<p>candidate</p>}
                         secondaryTextLines={1}
@@ -174,6 +240,19 @@ class CandidateDetailsModal extends React.Component {
                           primaryText={phone}
                           secondaryText={<p>phone</p>}
                           secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
+
+                  {(resumeLink) ? (
+                    <div>
+                      <Divider inset />
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">insert_drive_file</FontIcon>}
+                          primaryText={'Open resume'}
+                          secondaryText={<p>resume</p>}
+                          secondaryTextLines={1}
+                          onTouchTap={this._openResume.bind(this, resumeLink)}
                       />
                     </div>
                   ) : (null)}
@@ -216,71 +295,88 @@ class CandidateDetailsModal extends React.Component {
 
                 </div>
               </List>
-              <div className="innerView">
-                <ResumePDFViewer file="/sample.pdf" />
-              </div>
-              <div>
-                <CardText>
-                  <div className="description">
-                    <p>Quick Pitch:</p>
-                    <p>Experienced software engineer passionate about creating technology to empower people. Effective communicator able to lead cross-functional teams to achieve innovative results. All challenges considered.</p>
-                  </div>
-                </CardText>
+              <div style={style.slide}>
+                {(pitch) ? (
+                  <CardText>
+                    <div className="description">
+                      <p>Quick Pitch:</p>
+                      <p>{pitch}</p>
+                    </div>
+                  </CardText>
+                ) : (null)}
+
                 <List>
                   <div>
 
-                    <ListItem
-                        leftAvatar={<FontIcon className="material-icons">attach_money</FontIcon>}
-                        primaryText="$130,000"
-                        secondaryText={<p>curent salary</p>}
-                        secondaryTextLines={1}
-                    />
+                    {(!currentSalary && !bonusNotes && !desiredSalary && !currentHourly && !desiredHourly) ? (
+                      <p style={{textAlign: 'center', marginTop: '20px', color: Styles.Colors.grey600}}>
+                        No additional informations
+                      </p>
+                    ) : (null)}
 
-                    <Divider inset />
+                    {(currentSalary) ? (
+                      <ListItem
+                          leftAvatar={<FontIcon className="material-icons">attach_money</FontIcon>}
+                          primaryText={`$${currentSalary}`}
+                          secondaryText={<p>curent salary</p>}
+                          secondaryTextLines={1}
+                      />
+                    ) : (null)}
 
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">star_rate</FontIcon>}
-                        primaryText="401k match, free lunch"
-                        secondaryText={<p>bonus</p>}
-                        secondaryTextLines={1}
-                    />
+                    {(bonusNotes) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">star_rate</FontIcon>}
+                            primaryText={bonusNotes}
+                            secondaryText={<p>bonus</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <Divider inset />
+                    {(desiredSalary) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
+                            primaryText={`$${desiredSalary}`}
+                            secondaryText={<p>desired salary</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">attach_money</FontIcon>}
-                        primaryText="$140,000"
-                        secondaryText={<p>desired salary</p>}
-                        secondaryTextLines={1}
-                    />
+                    {(currentHourly) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">alarm</FontIcon>}
+                            primaryText={`$${currentHourly}`}
+                            secondaryText={<p>current hourly</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <Divider inset />
+                    {(desiredHourly) ? (
+                      <div>
+                        <Divider inset />
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">alarm_on</FontIcon>}
+                            primaryText={`$${desiredHourly}`}
+                            secondaryText={<p>desired hourly</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">alarm</FontIcon>}
-                        primaryText="$67"
-                        secondaryText={<p>current hourly</p>}
-                        secondaryTextLines={1}
-                    />
-
-                    <Divider inset />
-
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">alarm_on</FontIcon>}
-                        primaryText="$72"
-                        secondaryText={<p>desired hourly</p>}
-                        secondaryTextLines={1}
-                    />
                   </div>
                 </List>
               </div>
-              <div>
-                <JobsList
-                    ressourceName="Application"
-                    onJobClick={this._handleJobClick.bind(this)}
-                    jobs={jobs.list}
-                />
-              </div>
+              {/*<div style={style.slide}>
+
+              </div>*/}
             </CustomTabsSwipe>
           </div>
         </Dialog>
@@ -290,7 +386,7 @@ class CandidateDetailsModal extends React.Component {
 }
 
 CandidateDetailsModal.propTypes = {
-  // jobs: React.PropTypes.object.isRequired,
+
 };
 
 export default CandidateDetailsModal;

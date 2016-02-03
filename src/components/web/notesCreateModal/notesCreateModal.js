@@ -1,6 +1,10 @@
 import React from 'react';
-import { Dialog, Toolbar, ToolbarTitle, IconButton, ToolbarGroup, FlatButton, SelectField, TextField } from 'material-ui';
-
+import {
+  Toolbar, ToolbarTitle, IconButton,
+  ToolbarGroup, FlatButton, SelectField, TextField,
+  MenuItem,
+} from 'material-ui';
+import {Dialog} from '../';
 let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
 const style = {
@@ -8,6 +12,7 @@ const style = {
     height: '100%',
     maxHeight: '100%',
     paddingTop: '0px',
+    //zIndex: '50',
   },
   bodyStyle: {
     paddingTop: '0px',
@@ -63,7 +68,7 @@ class NotesCreateModal extends React.Component {
 
     this.state = {
       open: false,
-      privacyValue: 0
+      privacyValue: 0,
     };
   }
 
@@ -75,9 +80,18 @@ class NotesCreateModal extends React.Component {
 
   saveNote() {
     console.log('save note!');
-    this.setState({
-      open: false,
-    });
+
+    this.props.saveNote();
+  }
+
+  _handleSubmit(){
+    console.log('submit!');
+  }
+
+  _handleChange(type, e) {
+    let change = {};
+    change[type] = e.target.value;
+    this.props.onNoteChange(change);
   }
 
   show() {
@@ -86,61 +100,54 @@ class NotesCreateModal extends React.Component {
     });
   }
 
-  _handleSelectValueChange(e) {
-    //e.target.value;
-    this.setState({
-      privacyValue: e.target.value,
-    });
+  _handlePrivacyValueChange(event, index, value) {
+    var change = {};
+    change['privacyValue'] = value;
+    this.props.onNoteChange(change);
   }
-
+  toolbar(){
+    return (
+      <Toolbar style={style.toolBar}>
+        <ToolbarGroup key={0} float="left">
+          <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
+          <ToolbarTitle style={style.detailsTitle} text={this.props.note.get('id') ? 'Edit Note' : 'Create Note'} />
+        </ToolbarGroup>
+        <ToolbarGroup key={1} float="right">
+          <FlatButton onTouchTap={this.saveNote.bind(this)} style={style.save}>Save</FlatButton>
+        </ToolbarGroup>
+      </Toolbar>
+    );
+  }
   render() {
-
-    let privacyItems = [
-       { id: 0, name: 'Only you' },
-       { id: 1, name: 'Within the Organization' },
-    ];
 
     return (
       <Dialog
           open={this.state.open}
-          autoDetectWindowHeight={false}
-          autoScrollBodyContent={false}
-          repositionOnUpdate={false}
-          defaultOpen={false}
-          style={style.dialog}
-          bodyStyle={style.bodyStyle}
-          contentStyle={style.contentStyle}
-          ref="contactDetailsDialog"
+          toolbar = {this.toolbar()}
       >
         <div style={style.content}>
-          <Toolbar style={style.toolBar}>
-            <ToolbarGroup key={0} float="left">
-              <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
-              <ToolbarTitle style={style.detailsTitle} text={'Create Note'} />
-            </ToolbarGroup>
-            <ToolbarGroup key={1} float="right">
-              <FlatButton onTouchTap={this.saveNote.bind(this)} style={style.save}>Save</FlatButton>
-            </ToolbarGroup>
-          </Toolbar>
+
           <div className="row center-xs">
               <div className="col-xs-10 col-md-6">
                   <div className="box">
                     <SelectField
-                        selectedIndex={this.state.privacyValue}
+                        value={this.props.note.get('privacyValue')}
                         floatingLabelText="Privacy"
                         floatingLabelStyle={style.floatLabel}
-                        menuItems={privacyItems}
                         fullWidth
                         style={style.select}
-                        valueMember="id"
-                        displayMember="name"
-                        onChange={this._handleSelectValueChange.bind(this)}
+                        onChange={this._handlePrivacyValueChange.bind(this)}
                         hintText={''}
-                    />
+                    >
+                      <MenuItem value={0} primaryText="Only you"/>
+                      <MenuItem value={1} primaryText="Within the Organization"/>
+                    </SelectField>
                     <TextField
                         hintText="Your note"
                         multiLine
                         fullWidth
+                        value={this.props.note.get('noteText')}
+                        onChange={this._handleChange.bind(this, 'noteText')}
                     />
                   </div>
               </div>

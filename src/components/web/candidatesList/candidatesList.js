@@ -2,24 +2,30 @@ import React from 'react';
 import { List, ListItem, Divider } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { CandidateDetailsModal, Gravatar } from '../../../components/web';
+import { CandidateDetailsModal, Gravatar, CandidatesListItemStatus } from '../../../components/web';
 
 class CandidatesList extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      detailsCandidate: null,
-      detailsModalOpen: false,
+      selectedCandidate: null,
+      candidateDetailsModalOpen: false,
     };
   }
 
   openDetails(candidate){
-    this.refs.candidateDetailsModal.show(candidate);
+    this.setState({
+      selectedCandidate: candidate,
+      candidateDetailsModalOpen: true,
+    });
   }
 
   closeDetails() {
-
+    this.setState({
+      selectedCandidate: null,
+      candidateDetailsModalOpen: false,
+    });
   }
 
   render() {
@@ -29,42 +35,43 @@ class CandidatesList extends React.Component {
 
     return (
       <div>
-        <CandidateDetailsModal ref="candidateDetailsModal"/>
-        <List style={{backgroundColor:'transparant'}} subheader={`${candidates.count()} Candidates`}>
+        <CandidateDetailsModal open={this.state.candidateDetailsModalOpen} candidate={this.state.selectedCandidate} close={this.closeDetails.bind(this)}/>
+        <List style={{backgroundColor:'transparant'}} subheader={`${candidates.length} Candidate${(candidates.length !== 1) ? ('s') : ('')}`}>
           <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
             {candidates.map((candidate, key) => {
 
               let candidateLocation = '';
+              let candidateContact = candidate.get('contact');
 
-              if (candidate.get('_address')) {
+              if (candidateContact && candidateContact.get('_address')) {
 
-                if (candidate.get('_address').get('city')) {
-                  candidateLocation += candidate.get('_address').get('city');
+                if (candidateContact.get('_address').get('city')) {
+                  candidateLocation += candidateContact.get('_address').get('city');
                 }
 
-                if (candidateLocation.length != 0 && candidate.get('_address').get('countrySubDivisionCode')) {
-                  candidateLocation += `, ${candidate.get('_address').get('countrySubDivisionCode')}`;
+                if (candidateLocation.length != 0 && candidateContact.get('_address').get('countrySubDivisionCode')) {
+                  candidateLocation += `, ${candidateContact.get('_address').get('countrySubDivisionCode')}`;
                 } else {
-                  candidateLocation = candidate.get('_address').get('countrySubDivisionCode');
+                  candidateLocation = candidateContact.get('_address').get('countrySubDivisionCode');
                 }
               }
 
-              let secondaryText = candidate.get('label') | '';
+              let secondaryText = candidateContact.get('label') || '';
               if (secondaryText.length && candidateLocation) {
                 secondaryText += ' | ${candidateLocation}';
               } else if (!secondaryText.length && candidateLocation) {
                 secondaryText = candidateLocation;
               }
-              //let p = 'https://cap.stanford.edu/profiles/viewImage?profileId=65672&type=square';
-              let status = 'vetted';
+
               return (
                 <div key={key}>
                   <ListItem
-                    leftAvatar={<Gravatar email={candidate.get('email')} status={status}/>}
-                    primaryText={candidate.get('displayName')}
-                    secondaryText={<p>{secondaryText} <br/> vetted</p>}
-                    secondaryTextLines={2}
-                    onTouchTap={this.openDetails.bind(this, candidate)}
+                      leftAvatar={<Gravatar email={candidateContact.get('email')} status={candidate.get('status')} />}
+                      primaryText={candidateContact.get('displayName')}
+                      secondaryText={<p>{secondaryText}</p>}
+                      secondaryTextLines={1}
+                      rightIcon={<CandidatesListItemStatus status={candidate.get('status')} />}
+                      onTouchTap={this.openDetails.bind(this, candidate)}
                   />
                   <Divider inset={true} />
                 </div>
@@ -78,7 +85,7 @@ class CandidatesList extends React.Component {
 }
 
 CandidatesList.propTypes = {
-  candidates: React.PropTypes.object.isRequired,
+  candidates: React.PropTypes.array.isRequired,
 };
 
 export default CandidatesList;

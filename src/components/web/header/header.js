@@ -1,8 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {AppBar, IconButton} from 'material-ui';
+import {AppBar, IconButton, Styles} from 'material-ui';
 import {toggleNav} from '../../../modules/leftNav';
-const Colors = require('material-ui/lib/styles/colors');
 
 @connect(state => ({
   user: state.auth.user,
@@ -20,10 +19,22 @@ class Header extends React.Component {
 
   render() {
 
+    let transparent = this.props.transparent || false;
 
     let leftIconFont = 'menu';
     if (this.props.goBack) {
       leftIconFont = 'chevron_left';
+    }
+
+    // compile style
+    let style = {
+      position: 'fixed',
+      backgroundColor: Styles.Colors.grey900,
+    };
+
+    if (transparent) {
+      style.background = 'none';
+      style.boxShadow = 'none';
     }
 
     //console.log(this.props.history);
@@ -32,11 +43,11 @@ class Header extends React.Component {
       <div>
         <AppBar
           iconElementRight={this.props.iconRight}
-          style={{position:'fixed', 'backgroundColor': Colors. grey900}}
-          title={this.props.title}
+          style={style}
+          title={this.props.title || ''}
           iconElementLeft={<IconButton onTouchTap={this.menuClicked.bind(this)} iconClassName='material-icons'>{leftIconFont}</IconButton>}
         />
-        <div style={{height: '64px'}}></div>
+      {transparent?(<div ></div>): (<div style={{height: '64px'}}></div>)}
       </div>
     );
   }
@@ -44,6 +55,8 @@ class Header extends React.Component {
 //
 Header.propTypes = {
   goBack: React.PropTypes.func,
+  title: React.PropTypes.string,
+  transparent: React.PropTypes.bool,
 };
 
 

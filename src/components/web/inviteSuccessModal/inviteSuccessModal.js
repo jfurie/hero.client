@@ -24,7 +24,7 @@ const style = {
   },
   content: {
     height: `${clientHeight}px`,
-    zIndex: '50',
+    // zIndex: '50',
   },
   toolBar: {
     backgroundColor:'#ffffff',
@@ -79,14 +79,12 @@ class InviteSuccessModal extends React.Component {
   }
 
   show() {
-    console.log('show!');
     this.setState({
       open: true,
     });
   }
 
   render() {
-
     return (
       <Dialog
           open={this.state.open}
@@ -112,7 +110,7 @@ class InviteSuccessModal extends React.Component {
               <FontIcon style={style.fontIcon} className="material-icons" color={style.fontIcon.color}>done</FontIcon>
             </div>
             <div className="col-xs-12" style={style.centered}>
-              <p>We just invited <bold>romain.sylvian@gmail.com</bold>!</p>
+              <p>We just invited <bold>{this.props.email}</bold>!</p>
             </div>
           </div>
         </div>
@@ -123,6 +121,7 @@ class InviteSuccessModal extends React.Component {
 
 InviteSuccessModal.propTypes = {
   //open: React.PropTypes.bool.isRequired,
+  email: React.PropTypes.string,
 };
 
 export default InviteSuccessModal;
