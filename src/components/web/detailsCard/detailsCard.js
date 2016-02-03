@@ -1,6 +1,5 @@
 import React from 'react';
 import { FontIcon, Styles } from 'material-ui';
-// import md5 from 'md5';
 
 import Card from 'material-ui/lib/card/card';
 import CardActions from 'material-ui/lib/card/card-actions';
@@ -14,7 +13,6 @@ let style = {
     position: 'relative',
   },
   cardTitleComponent: {
-    //backgroundColor: Styles.Colors.indigo500,
     padding: '21px 16px 26px',
   },
   subtitle: {
@@ -58,17 +56,13 @@ class DetailsCard extends React.Component {
     }
   }
 
-  // renderFloatAction() {
-  //   return React.cloneElement(this.props.floatAction, {
-  //     style: style.floatAction,
-  //   });
-  // }
-
   render() {
 
-    style.cardTitleComponent.backgroundColor = this.props.mainColor;
-
-    //console.log(this.props.actions);
+    if (this.props.mainColor) {
+      style.cardTitleComponent.backgroundColor = this.props.mainColor;
+    } else {
+      style.cardTitleComponent.backgroundColor = Styles.Colors.indigo500; // default
+    }
 
     return (
       <Card>
@@ -92,30 +86,6 @@ class DetailsCard extends React.Component {
               </div>
             );
           })}
-          {/*<div className="col-xs" style={style.actionBox}>
-            <div className="box">
-              <FontIcon style={style.actionFontIcon} className="material-icons">phone</FontIcon>
-              <FlatButton style={{minWidth: '0px'}} label="Call" />
-            </div>
-          </div>
-          <div className="col-xs" style={style.actionBox}>
-            <div className="box">
-              <FontIcon style={style.actionFontIcon} className="material-icons">star_rate</FontIcon>
-              <FlatButton style={{minWidth: '0px'}} labelPosition="after" label="Save" />
-            </div>
-          </div>
-          <div className="col-xs" style={style.actionBox}>
-            <div className="box">
-              <FontIcon style={style.actionFontIcon} className="material-icons">email</FontIcon>
-              <FlatButton style={{minWidth: '0px'}} labelPosition="after" label="Email" />
-            </div>
-          </div>
-          <div className="col-xs" style={style.actionBox}>
-            <div className="box">
-              <FontIcon style={style.actionFontIcon} className="material-icons">share</FontIcon>
-              <FlatButton style={{minWidth: '0px'}} labelPosition="after" label="Share" />
-            </div>
-          </div> */}
         </CardActions>
       </Card>
     );
@@ -127,7 +97,7 @@ DetailsCard.propTypes = {
   cover: React.PropTypes.string.isRequired,
   floatActionContent: React.PropTypes.object,
   floatActionOnTap: React.PropTypes.func,
-  mainColor: React.PropTypes.string.isRequired,
+  mainColor: React.PropTypes.string,
   subtitle: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
 };

@@ -87,20 +87,6 @@ export default class ClientDetails extends React.Component {
     //console.log(contact.get('id'));
     this.props.pushState('', `/contacts/${contact.get('id')}`);
   }
-  _handleCall(){
-    window.location.href='tel:13104980963';
-  }
-  _handleEmail(){
-    let email = this.props.company.get('email');
-    if(email){
-      window.location.href=`mailto:${email}`;
-    }
-  }
-  _handleShare(){
-    let subject = 'Check out '+ this.props.company.get('name')+ ' on HERO';
-    let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
-  }
 
   _handleDirections(){
 
@@ -182,44 +168,7 @@ export default class ClientDetails extends React.Component {
               floatActionOnTap={this._handleDirections.bind(this)}
               floatActionContent={<MapsDirections color={Styles.Colors.indigo500}/>}
           />
-          {/*<Card>
-            <CardMedia>
-              <img src="http://southerncaliforniabeaches.org/img/santa-monica-beach-path.jpg" />
-            </CardMedia>
-            <div style={style.cardTitle}>
-              <FloatingActionButton onTouchTap={this._handleDirections.bind(this)} style={style.direction} backgroundColor={Styles.Colors.white}>
-                <MapsDirections color={Styles.Colors.grey900}/>
-              </FloatingActionButton>
-              <CardTitle style={style.cardTitleComponent} subtitleColor={Styles.Colors.white} titleColor={Styles.Colors.white} subtitleStyle={style.subtitle} title={company.get('name')} subtitle={<a target="_blank" href={company.get('website')}>{company.get('website')}</a>} />
-            </div>
-            <CardActions className="row center-xs">
-              <div className="col-xs" style={style.actionBox}>
-                <div className="box">
-                  <FontIcon style={style.actionFontIcon} className="material-icons">phone</FontIcon>
-                  <FlatButton onTouchTap={this._handleCall.bind(this)} style={{minWidth: '0px'}} label="Call" />
-                </div>
-              </div>
-              <div className="col-xs" style={style.actionBox}>
-                <div className="box">
-                  <FontIcon style={style.actionFontIcon} className="material-icons">star_rate</FontIcon>
-                  <FlatButton style={{minWidth: '0px'}} labelPosition="after" label="Save" />
-                </div>
-              </div>
-              <div className="col-xs" style={style.actionBox}>
-                <div className="box">
-                  <FontIcon style={style.actionFontIcon} className="material-icons">email</FontIcon>
-                  <FlatButton onTouchTap={this._handleEmail.bind(this)} style={{minWidth: '0px'}} labelPosition="after" label="Email" />
-                </div>
-              </div>
-              <div className="col-xs" style={style.actionBox}>
-                <div className="box">
-                  <FontIcon style={style.actionFontIcon} className="material-icons">share</FontIcon>
-                  <FlatButton onTouchTap={this._handleShare.bind(this)} style={{minWidth: '0px'}} labelPosition="after" label="Share" />
-                </div>
-              </div>
-            </CardActions>
-          </Card> */}
-
+        
           <CustomTabsSwipe isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>
             <List>
               <div>
