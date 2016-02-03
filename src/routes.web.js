@@ -35,7 +35,9 @@ import ClientCreatePage from './containers/web/clients/clientCreateContainer';
 //jobs
 import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
 import MyJobsPage from './containers/web/jobs/myJobsContainer';
-
+// contacts
+import ContactSearchContainer from './containers/web/contacts/contactSearchContainer';
+import ContactCreatePage from './containers/web/contacts/contactCreateContainer';
 
 const localStorage = new LocalStorageClient('Auth');
 
@@ -183,6 +185,16 @@ export default(store) => {
                 onEnter={(nextState) => {
                   nextState.params.tab = 'notes';
                 }} />
+          </Route>
+
+          {/* Contacts */}
+          <Route path="contacts">
+            <IndexRoute component={ClientsPage}/>
+
+            <Route component={Home}>
+              <Route path="search" component={ContactSearchContainer}/>
+              <Route path=":contactId/create" component={ContactCreatePage}/>
+            </Route>
           </Route>
 
           <Route path="jobs">
