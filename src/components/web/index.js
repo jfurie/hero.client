@@ -27,12 +27,12 @@ export ActionButton from './actionButton/actionButton';
 export ActionButtonItem from './actionButtonItem/actionButtonItem';
 export Location from './location/location';
 export ClientDetails from './clientDetails/clientDetails';
+export ContactDetails from './contactDetails/contactDetails';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
 export ClientsCreateModal from './clientsCreateModal/clientsCreateModal';
 export ClientsEditModal from './clientsEditModal/clientsEditModal';
-export ContactDetailsModal from './contactDetailsModal/contactDetailsModal';
 export CandidateDetailsModal from './candidateDetailsModal/candidateDetailsModal';
 export InviteSuccessModal from './inviteSuccessModal/inviteSuccessModal';
 export NotesCreateModal from './notesCreateModal/notesCreateModal';

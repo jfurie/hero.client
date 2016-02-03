@@ -2,7 +2,7 @@ import React from 'react';
 import { List, ListItem, Divider } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { ContactDetailsModal, Gravatar } from '../../../components/web';
+import { /*ContactDetailsModal,*/ Gravatar } from '../../../components/web';
 
 class ContactsList extends React.Component {
 
@@ -79,7 +79,7 @@ class ContactsList extends React.Component {
             })}
           </Infinite>
         </List>
-        <ContactDetailsModal open={this.state.detailsModalOpen} contact={this.state.detailsContact}/>
+        {/*<ContactDetailsModal open={this.state.detailsModalOpen} contact={this.state.detailsContact}/>*/}
       </div>
     );
   }

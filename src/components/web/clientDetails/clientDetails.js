@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { pushState } from 'redux-router';
 import {
   List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog
 } from 'material-ui';
@@ -15,10 +17,6 @@ import {
 } from '../../../components/web';
 
 const style = {
-  // slide: {
-  //   minHeight: `${window.innerHeight - 160}px`,
-  //   // marginTop: '48px',
-  // },
   viewContent: {
   },
   cardTitle: {
@@ -88,54 +86,66 @@ const style = {
   },
 };
 
+@connect(() => (
+{}), {pushState})
 export default class ClientDetails extends React.Component {
+
   constructor(props){
     super(props);
   }
+
   editClientModalOpen(){
 
   }
+
   createContactModalOpen(){
 
   }
+
   createJobModalOpen(){
 
   }
+
   createNoteModalOpen(){
 
   }
+
   _handleJobClick(){
 
   }
-  contactDetailsModalOpen(){
 
+  contactDetailsModalOpen(contact){
+    //console.log(contact.get('id'));
+    this.props.pushState('', `/contacts/${contact.get('id')}`);
   }
 
   _handleDirections(){
     var link = 'https://maps.google.com?saddr=Current+Location&daddr=Hero.jobs';
     window.open(link,'_blank');
   }
+
   closeModal(){
 
   }
+
   goBack(){
     if(this.props.onClientDetailsClose)
       this.props.onClientDetailsClose();
   }
-  onSwipe(index){
-    let tab = '';
-    switch (index) {
-    case 1:
-      tab = 'jobs';
-      break;
-    case 3:
-      tab = 'notes';
-      break;
-    default:
-      tab = '';
-    }
-    this.props.pushState('', `/clients/${this.props.params.id}/${tab}`);
-  }
+  // onSwipe(index){
+  //   let tab = '';
+  //   switch (index) {
+  //   case 1:
+  //     tab = 'jobs';
+  //     break;
+  //   case 3:
+  //     tab = 'notes';
+  //     break;
+  //   default:
+  //     tab = '';
+  //   }
+  //   this.props.pushState('', `/clients/${this.props.params.id}/${tab}`);
+  // }
   renderContent(company){
 
     let inline = true;
@@ -182,7 +192,7 @@ export default class ClientDetails extends React.Component {
             </CardActions>
           </Card>
 
-          <CustomTabsSwipe isInline={inline} ref='customTabsSwipe' onSwipeEnd={this.onSwipe.bind(this)} startingTab={this.props.tabId} tabs={['Details', 'Jobs', 'Contacts']}>
+          <CustomTabsSwipe isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>
             <List>
               <div>
 
