@@ -2,53 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog,
 } from 'material-ui';
-import Card from 'material-ui/lib/card/card';
-import CardActions from 'material-ui/lib/card/card-actions';
-import CardMedia from 'material-ui/lib/card/card-media';
-import CardTitle from 'material-ui/lib/card/card-title';
-import FlatButton from 'material-ui/lib/flat-button';
-import FloatingActionButton from 'material-ui/lib/floating-action-button';
+
 import MapsDirections from 'material-ui/lib/svg-icons/maps/directions';
 
-
 import {
-  Header, CustomTabsSwipe, ContactsList,
-  CompanyJobsList
+  Header, CustomTabsSwipe, ContactsList, CompanyJobsList, DetailsCard,
 } from '../../../components/web';
 
 const style = {
-  viewContent: {
-  },
-  cardTitle: {
-    position: 'relative',
-  },
-  cardTitleComponent: {
-    backgroundColor: Styles.Colors.indigo500,
-    padding: '21px 16px 26px',
-  },
-  subtitle: {
-    fontWeight: 200,
-    opacity: 0.5,
-  },
-  direction: {
-    position: 'absolute',
-    right: '10px',
-    top: '-28px',
-    zIndex: '50',
-  },
-  actionFontIcon: {
-    position: 'relative',
-    // left: '-5px',
-    top: '8px',
-    marginLeft: '0px',
-    width: '24px',
-    height: '24px',
-  },
-  actionBox: {
-    marginRight: '0px',
-  },
   dialog: {
     height: '100%',
     maxHeight: '100%',
@@ -126,6 +89,9 @@ export default class ClientDetails extends React.Component {
   }
 
   _handleDirections(){
+
+    console.log('_handleDirections');
+
     let { company } = this.props;
     let location  = company.get('location');
     if(location){
@@ -137,41 +103,72 @@ export default class ClientDetails extends React.Component {
         window.open(link,'_blank');
       }
     }
+  }
 
+  _onTouchTapSave() {
+    console.log('_onTouchTapSave');
+  }
 
+  _onTouchTapCall() {
+    console.log('_onTouchTapCall');
+  }
+
+  _onTouchTapEmail() {
+    console.log('_onTouchTapEmail');
+  }
+
+  _onTouchTapShare() {
+    console.log('_onTouchTapShare');
   }
 
   closeModal(){
 
   }
 
-  goBack(){
-    if(this.props.onClientDetailsClose)
+  goBack() {
+    if (this.props.onClientDetailsClose) {
       this.props.onClientDetailsClose();
+    }
   }
-  // onSwipe(index){
-  //   let tab = '';
-  //   switch (index) {
-  //   case 1:
-  //     tab = 'jobs';
-  //     break;
-  //   case 3:
-  //     tab = 'notes';
-  //     break;
-  //   default:
-  //     tab = '';
-  //   }
-  //   this.props.pushState('', `/clients/${this.props.params.id}/${tab}`);
-  // }
-  renderContent(company){
+
+  renderContent(company) {
 
     let inline = true;
-    if(company){
+    if (company) {
+
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
+
+      let actions = [{
+        materialIcon: 'phone',
+        text: 'Call',
+        onTouchTap: this._onTouchTapCall.bind(this),
+      }, {
+        materialIcon: 'star_rate',
+        text: 'Save',
+        onTouchTap: this._onTouchTapSave.bind(this),
+      }, {
+        materialIcon: 'email',
+        text: 'Email',
+        onTouchTap: this._onTouchTapEmail.bind(this),
+      }, {
+        materialIcon: 'share',
+        text: 'Share',
+        onTouchTap: this._onTouchTapShare.bind(this),
+      }];
+
       return (
         <div className="viewContent" style={style.viewContent}>
-          <Card>
+          <DetailsCard
+              title={company.get('name')}
+              subtitle={company.get('website')}
+              cover={'http://southerncaliforniabeaches.org/img/santa-monica-beach-path.jpg'}
+              mainColor={Styles.Colors.indigo500}
+              actions={actions}
+              floatActionOnTap={this._handleDirections.bind(this)}
+              floatActionContent={<MapsDirections color={Styles.Colors.indigo500}/>}
+          />
+          {/*<Card>
             <CardMedia>
               <img src="http://southerncaliforniabeaches.org/img/santa-monica-beach-path.jpg" />
             </CardMedia>
@@ -207,7 +204,7 @@ export default class ClientDetails extends React.Component {
                 </div>
               </div>
             </CardActions>
-          </Card>
+          </Card> */}
 
           <CustomTabsSwipe isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>
             <List>
