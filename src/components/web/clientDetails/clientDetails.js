@@ -95,7 +95,9 @@ export default class ClientDetails extends React.Component {
     super(props);
   }
   editClientModalOpen(){
-
+    if(this.props.editClientModalOpen){
+      this.props.editClientModalOpen();
+    }
   }
   createContactModalOpen(){
 
@@ -284,3 +286,7 @@ export default class ClientDetails extends React.Component {
     }
   }
 }
+ClientDetails.propTypes = {
+  onClientDetailsClose: React.PropTypes.func,
+  editClientModalOpen: React.PropTypes.func,
+};

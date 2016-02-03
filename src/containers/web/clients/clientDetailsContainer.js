@@ -129,9 +129,6 @@ class ClientDetailsPage extends React.Component {
     this.refs.clientContactsCreateModal.getWrappedInstance().show();
   }
 
-  editClientModalOpen() {
-    this.refs.clientEditModal.getWrappedInstance().show();
-  }
 
   contactDetailsModalOpen(contact) {
     this.setState({
@@ -203,6 +200,9 @@ class ClientDetailsPage extends React.Component {
     } else{
       this.props.history.goBack();
     }
+  }
+  editClientModalOpen(){
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
   }
 
   onSwipe(index){
@@ -309,7 +309,7 @@ class ClientDetailsPage extends React.Component {
        <JobCreateModal heroContacts={heroContacts} contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
         */}
 
-        <ClientDetails onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={true} tabId={0} company={company} ></ClientDetails>
+        <ClientDetails editClientModalOpen={this.editClientModalOpen.bind(this)} onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={true} tabId={0} company={company} ></ClientDetails>
 
       </div>
     );
