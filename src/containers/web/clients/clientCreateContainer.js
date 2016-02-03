@@ -7,8 +7,8 @@ import { editCompany, createCompany, getOneCompany } from '../../../modules/comp
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 let getData = (state, props) => {
   let company = null;
-  if(props.companyId){
-    company = state.companies.list.get(props.companyId);
+  if(props.params.companyId){
+    company = state.companies.list.get(props.params.companyId);
   }
   //filter hero contacts
   let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
@@ -36,7 +36,10 @@ export default class ClientCreateContainer extends React.Component {
   componentDidMount() {
     //get the hero compnay contacts
     this.props.getContactsByCompany(HEROCOMPANYID);
-    this.props.getOneCompany(this.props.companyId);
+    //console.log('this.props.getOneCompany', this.props.companyId);
+    if (this.props.params.companyId) {
+      this.props.getOneCompany(this.props.params.companyId);
+    }
     // let self = this;
     // setTimeout(() => {
     //   self.props.getAllCompanies();
@@ -44,17 +47,25 @@ export default class ClientCreateContainer extends React.Component {
 
   }
   componentWillReceiveProps(newProps){
-    if((newProps.company && !this.props.company)
-    || (newProps.company && newProps.company.get('id') != this.props.company.get('id') )){
-      this.setState({company: newProps.company});
-    }
+    this.setState({company: newProps.company});
+    
     if( newProps.company && newProps.company.get('saving') == false
-    && this.props.company && this.props.company.get('saving') == true){
-      this.props.onSave(newProps.company.get('id'));
+    && this.props.company && this.props.company.get('saving') == true
+    && !newProps.company.get('savingError')){
+      if(this.props.onSave){
+        this.props.onSave(newProps.company.get('id'));
+      } else {
+        let self = this;
+        let id =newProps.company.get('id');
+        setTimeout(function () {
+          self.props.history.replaceState(null, `/clients/${id}`);
+        }, 500);
+      }
+
     }
 
-    if(newProps.companyId != this.props.companyId && newProps.companyId.indexOf('tmp')<=-1 ){
-      this.props.getOneCompany(newProps.companyId);
+    if(newProps.params.companyId != this.props.params.companyId && newProps.params.companyId.indexOf('tmp')<=-1 ){
+      this.props.getOneCompany(newProps.params.companyId);
     }
   }
   _handleChange(company){
@@ -71,7 +82,12 @@ export default class ClientCreateContainer extends React.Component {
   }
   _handleClose(){
     this.setState({open:false});
-    this.props.onClose();
+    if(this.props.onClose){
+      this.props.onClose();
+    } else {
+      this.props.history.goBack();
+    }
+
   }
 
 
@@ -84,8 +100,8 @@ export default class ClientCreateContainer extends React.Component {
         company={this.state.company}
         onSubmit={this._handleSave.bind(this)} o
         onCompanyChange={this._handleChange.bind(this)}
-        open={this.props.open}
-        inline={this.props.inline}  />
+        open={true}
+        inline={false}  />
     );
   }
 }

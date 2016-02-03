@@ -10,12 +10,12 @@ let getData = (state, props) => {
   let contact = null;
   let company = null;
 
-  if (props.contactId) {
-    contact = state.contacts.list.get(props.contactId);
+  if (props.params.contactId) {
+    contact = state.contacts.list.get(props.params.contactId);
   }
 
-  if (props.companyId) {
-    company = state.companies.myCompanyIds.get(props.companyId);
+  if (props.params.companyId) {
+    company = state.companies.myCompanyIds.get(props.params.companyId);
   }
 
   return {
@@ -36,23 +36,31 @@ export default class ContactCreateContainer extends React.Component {
   }
 
   componentDidMount() {
-    //this.props.getOneContact(this.props.contactId);
+    if (this.props.params.contactId) {
+      this.props.getOneContact(this.props.params.contactId);
+    }
   }
 
   componentWillReceiveProps(newProps){
-    if((newProps.contact && !this.props.contact)
-    || (newProps.contact && newProps.contact.get('id') != this.props.contact.get('id') )){
-      this.setState({
-        contact: newProps.contact,
-      });
-    }
+    this.setState({company: newProps.contact});
+
     if( newProps.contact && newProps.contact.get('saving') == false
-    && this.props.contact && this.props.contact.get('saving') == true){
-      this.props.onSave(newProps.contact.get('id'));
+    && this.props.contact && this.props.contact.get('saving') == true
+    && !newProps.contact.get('savingError')){
+      if(this.props.onSave){
+        this.props.onSave(newProps.contact.get('id'));
+      } else {
+        let self = this;
+        let id =newProps.contact.get('id');
+        setTimeout(function () {
+          self.props.history.replaceState(null, `/clients/${id}`);
+        }, 500);
+      }
+
     }
 
-    if(newProps.contactId != this.props.contactId && newProps.contactId.indexOf('tmp')<=-1 ){
-      this.props.getOneContact(newProps.contactId);
+    if(newProps.params.contactId != this.props.params.contactId && newProps.params.contactId.indexOf('tmp')<=-1 ){
+      this.props.getOneContact(newProps.params.contactId);
     }
   }
 
@@ -84,11 +92,12 @@ export default class ContactCreateContainer extends React.Component {
   }
 
   _handleClose(){
-    this.setState({
-      open:false,
-    });
-
-    this.props.onClose();
+    this.setState({open:false});
+    if(this.props.onClose){
+      this.props.onClose();
+    } else {
+      this.props.history.goBack();
+    }
   }
 
   render(){
@@ -99,8 +108,8 @@ export default class ContactCreateContainer extends React.Component {
         closeModal={this._handleClose.bind(this)}
         onSubmit={this._handleSave.bind(this)}
         onContactChange={this._handleChange.bind(this)}
-        open={this.props.open}
-        inline={this.props.inline}  />
+        open={true}
+        inline={false}  />
     );
   }
 }

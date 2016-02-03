@@ -9,6 +9,7 @@ import LoginPage from './containers/web/login/loginContainer';
 import LogoutPage from './containers/web/logoutContainer';
 import InvitedPage from './containers/web/invited/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
+import EmptyPage from './containers/web/emptyContainer';
 import Layout from './containers/web/layoutContainer';
 
 // settings containers
@@ -25,11 +26,13 @@ import CandidateSearchContainer from './containers/web/candidates/candidateSearc
 import ClientsPage from './containers/web/clients/clientsContainer';
 import ClientDetailsPage from './containers/web/clients/clientDetailsContainer';
 import ClientSearchContainer from './containers/web/clients/clientSearchContainer';
-
+import ClientCreatePage from './containers/web/clients/clientCreateContainer';
 //jobs
 import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
 import MyJobsPage from './containers/web/jobs/myJobsContainer';
-
+// contacts
+import ContactSearchContainer from './containers/web/contacts/contactSearchContainer';
+import ContactCreatePage from './containers/web/contacts/contactCreateContainer';
 
 const localStorage = new LocalStorageClient('Auth');
 
@@ -129,7 +132,7 @@ export default(store) => {
 
   return (
 
-    <Route path="/" onEnter={loadUser}>
+    <Route path="/" onUpdate={() => window.scrollTo(0, 0)} onEnter={loadUser}>
       <Route component={Layout}>
 
         <Route path="login" onEnter={checkLogin} component={LoginPage}/>
@@ -137,14 +140,24 @@ export default(store) => {
 
         {/* Routes requiring login  */}
         <Route onEnter={requireLogin}>
-          <IndexRoute component={Home}/>
+          <Route component={Home}>
+            <IndexRoute component={EmptyPage}/>
+          </Route>
+
           <Route path="logout" component={LogoutPage}/>
 
           {/* Clients */}
           <Route path="clients">
             <IndexRoute component={ClientsPage}/>
-            <Route path="search" component={ClientSearchContainer}/>
-            <Route path=":id" component={ClientDetailsPage} />
+
+            <Route component={Home}>
+              <Route path="search" component={ClientSearchContainer}/>
+              <Route path=":companyId/create" component={ClientCreatePage}/>
+              <Route path=":companyId" component={ClientDetailsPage}
+                onEnter={(nextState) => {
+                  nextState.params.clientDetailsOpen = true;
+                }} />
+            </Route>
             <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
               nextState.params.tab = 'jobs';
             }} />
@@ -155,6 +168,16 @@ export default(store) => {
                 onEnter={(nextState) => {
                   nextState.params.tab = 'notes';
                 }} />
+          </Route>
+
+          {/* Contacts */}
+          <Route path="contacts">
+            <IndexRoute component={ClientsPage}/>
+
+            <Route component={Home}>
+              <Route path="search" component={ContactSearchContainer}/>
+              <Route path=":contactId/create" component={ContactCreatePage}/>
+            </Route>
           </Route>
 
           <Route path="jobs">

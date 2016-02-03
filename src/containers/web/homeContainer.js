@@ -7,10 +7,6 @@ import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
 import { createTempContact } from '../../modules/contacts';
-import ClientCreateContainer from './clients/clientCreateContainer';
-import ClientSearchContainer from './clients/clientSearchContainer';
-import ContactSearchContainer from './contacts/contactSearchContainer';
-import ContactCreateContainer from './contacts/contactCreateContainer';
 
 import { Styles } from 'material-ui';
 
@@ -123,14 +119,16 @@ class HomePage extends React.Component {
       companyId:id,
       openClientCreate:false,
     });
+    var self = this;
+    setTimeout(function () {
+      self.props.pushState(null, `/clients/${id}`);
+    }, 500);
+
   }
 
   onClientSearchOpen() {
     this.refs.actionButtons.close();
-
-    this.setState({
-      clientSearchModalOpen: true,
-    });
+    this.props.history.pushState(null,`/clients/search`);
   }
 
   onClientSearchClose() {
@@ -156,13 +154,16 @@ class HomePage extends React.Component {
       openClientCreate: false,
     });
   }
+  onClientDetailsClose(){
+    var self = this;
+    setTimeout(function () {
+      self.props.history.goBack();
+    }, 10);
+  }
 
   onContactSearchOpen() {
     this.refs.actionButtons.close();
-
-    this.setState({
-      contactSearchModalOpen: true,
-    });
+    this.props.history.pushState(null,`/contacts/search`);
   }
 
   onContactSearchClose() {
@@ -179,8 +180,15 @@ class HomePage extends React.Component {
     this.setState({
       contactId: id,
       contactSearchModalOpen: false,
-      openContactCreate: true,
     });
+    var self = this;
+    setTimeout(function () {
+      self.setState({
+        contactId: id,
+        openContactCreate: true
+      });
+
+    }, 10);
   }
 
   onContactCreateClose() {
@@ -237,12 +245,19 @@ class HomePage extends React.Component {
           </div>
         </CustomTabsSwipe>
         <ActionButton ref='actionButtons' actions={actions}/>
-        <ClientSearchContainer open={this.state.clientSearchModalOpen} onClientSelect={this.onClientSelect.bind(this)} onClose={this.onClientSearchClose.bind(this)} />
-        <ClientCreateContainer onSave={this._handleClientSave.bind(this)} companyId={this.state.companyId} inline={false} open={this.state.openClientCreate} onClose={this.onClientCreateClose.bind(this)}></ClientCreateContainer>
-
-        <ContactSearchContainer open={this.state.contactSearchModalOpen} onContactSelect={this.onContactSelect.bind(this)} onClose={this.onContactSearchClose.bind(this)} />
-        <ContactCreateContainer contactId={this.state.contactId} companyId={this.state.companyId} onCompanyChange={this.onContactCompanyChange.bind(this)} inline={false} open={this.state.openContactCreate} onClose={this.onContactCreateClose.bind(this)}></ContactCreateContainer>
-      </div>
+      {
+        /*
+        <ClientDetailsContainer
+            open={this.props.params.clientDetailsOpen}
+            companyId={this.props.params.companyId}
+            inline={false}
+            onClose={this.onClientDetailsClose.bind(this)}></ClientDetailsContainer>
+        */
+      }
+        <div>
+            {this.props.children}
+        </div>
+    </div>
     );
   }
 }

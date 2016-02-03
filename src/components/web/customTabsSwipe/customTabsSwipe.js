@@ -167,7 +167,6 @@ class CustomTabsSwipe extends React.Component {
 }
 
 CustomTabsSwipe.propTypes = {
-  isInline: React.PropTypes.boolean,
   onSwipeEnd: React.PropTypes.func,
   startingTab: React.PropTypes.number,
   tabs: React.PropTypes.array.isRequired,
