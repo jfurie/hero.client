@@ -81,7 +81,7 @@ class ContactSearchContainer extends React.Component {
   }
 
   onQueryChangeImmediate(e){
-    e.persist()
+    e.persist();
     this.onQueryChange(e);
   }
 
