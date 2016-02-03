@@ -48,7 +48,7 @@ export default class ClientCreateContainer extends React.Component {
   }
   componentWillReceiveProps(newProps){
     this.setState({company: newProps.company});
-    
+
     if( newProps.company && newProps.company.get('saving') == false
     && this.props.company && this.props.company.get('saving') == true
     && !newProps.company.get('savingError')){
@@ -58,7 +58,11 @@ export default class ClientCreateContainer extends React.Component {
         let self = this;
         let id =newProps.company.get('id');
         setTimeout(function () {
-          self.props.history.replaceState(null, `/clients/${id}`);
+          if(self.props.location.query.returnUrl){
+            self.props.history.replaceState(null, self.props.location.query.returnUrl);
+          } else{
+            self.props.history.replaceState(null, `/clients/${id}`);
+          }
         }, 500);
       }
 
