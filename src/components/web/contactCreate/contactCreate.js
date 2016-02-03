@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import {
-  Dialog, IconButton, ToolbarGroup, Toolbar, Toggle,
+  Dialog, IconButton, ToolbarGroup, Toolbar, Toggle, SelectField, MenuItem,
   FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles
 } from 'material-ui';
 import {
@@ -140,13 +140,15 @@ export default class ContactCreate extends React.Component {
   }
 
   _renderContents() {
-    let { contact } = this.props;
+    let { contact, companies } = this.props;
 
     contact = contact || new Immutable.Map({errors:new Immutable.Map()});
 
     let isCandidate = contact.get('isCandidate');
 
     if (isCandidate === undefined) isCandidate = false;
+
+    let companyId = this.props.company ? this.props.company.get('id') : null;
 
     return (
       <div className="row center-xs">
@@ -169,7 +171,7 @@ export default class ContactCreate extends React.Component {
                     />
                   </div>
 
-                  {/*}<div className="col-xs-10 ">
+                  <div className="col-xs-10 ">
                     <SelectField
                         floatingLabelText="Company"
                         floatingLabelStyle={style.floatLabel}
@@ -177,7 +179,7 @@ export default class ContactCreate extends React.Component {
                         style={style.select}
                         onChange={this._handleCompanySelectValueChange.bind(this)}
                         hintText={''}
-                        value={this.props.companyId}
+                        value={companyId}
                     >
                       {companies.map((company, index) => {
                         return (
@@ -188,7 +190,7 @@ export default class ContactCreate extends React.Component {
                         );
                       })}
                     </SelectField>
-                  </div>*/}
+                  </div>
 
                   <div className="col-xs-10 ">
                     <TextField
