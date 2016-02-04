@@ -2,17 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog,CardText, CardHeader
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog,CardText
 } from 'material-ui';
 import Card from 'material-ui/lib/card/card';
-import CardActions from 'material-ui/lib/card/card-actions';
-import CardMedia from 'material-ui/lib/card/card-media';
-import CardTitle from 'material-ui/lib/card/card-title';
-import FlatButton from 'material-ui/lib/flat-button';
-import FloatingActionButton from 'material-ui/lib/floating-action-button';
+
 import MapsDirections from 'material-ui/lib/svg-icons/maps/directions';
 import Avatar from 'material-ui/lib/avatar';
-import FileFolder from 'material-ui/lib/svg-icons/file/folder';
 
 import {
   Header, CustomTabsSwipe, ContactsList, CompanyJobsList, DetailsCard,
@@ -136,6 +131,7 @@ export default class ClientDetails extends React.Component {
 
   }
 
+
   contactDetailsModalOpen(contact){
     //console.log(contact.get('id'));
     this.props.pushState('', `/contacts/${contact.get('id')}`);
@@ -163,15 +159,20 @@ export default class ClientDetails extends React.Component {
   }
 
   _onTouchTapCall() {
-    console.log('_onTouchTapCall');
+    window.location.href='tel:'+this.props.company.get('phone');
   }
 
   _onTouchTapEmail() {
-    console.log('_onTouchTapEmail');
+    let email = this.props.company.get('email');
+    if(email){
+      window.location.href=`mailto:${email}`;
+    }
   }
 
   _onTouchTapShare() {
-    console.log('_onTouchTapShare');
+    let subject = 'Check out '+ this.props.company.get('name')+ ' on HERO';
+    let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
+    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
   closeModal(){
