@@ -81,6 +81,19 @@ const style = {
 export default class ClientsCreateModal extends React.Component {
   constructor(props){
     super(props);
+    this.state = {windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight};
+  }
+
+  handleResize() {
+    this.setState({windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight});
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize.bind(this));
   }
 
   componentWillReceiveProps(newProps) {
@@ -365,6 +378,60 @@ export default class ClientsCreateModal extends React.Component {
                         floatingLabelStyle={{left:'0px'}}
                         floatingLabelText="What is the leadership team? (optional)" />
                   </div>
+                  <div className="col-xs-12">
+                    <Divider style={style.divider} />
+                    <div style={style.subheader}>Recruiter Data</div>
+                  </div>
+
+                  <div className="col-xs-10 ">
+                    <TextField
+                        pattern="\d*"
+                        type="number"
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['feeAgreement'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'feeAgreement')}
+                        value={company.get('feeAgreement')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="Fee Agreement %" />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['payableTerms'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'payableTerms')}
+                        value={company.get('payableTerms')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="Payable Terms" />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['guarantee'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'guarantee')}
+                        value={company.get('guarantee')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="Guarentee Length" />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        multiLine={true}
+                        rows={3}
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['generalNotes'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'generalNotes')}
+                        value={company.get('generalNotes')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="General Notes" />
+                  </div>
+
                   <div className="col-xs-10 " style={{marginTop:'20px', marginBottom:'20px'}}>
                     <RaisedButton primary={true} label='Save' onTouchTap={this._handleSubmit.bind(this)}></RaisedButton>
                   </div>
@@ -381,7 +448,7 @@ export default class ClientsCreateModal extends React.Component {
     );
   }
   render(){
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    let clientHeight = this.state.windowHeight;
     let contentHeight = clientHeight - 64;
     if(this.props.inline){
       return (
