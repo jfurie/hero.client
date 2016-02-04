@@ -25,6 +25,9 @@ let style = {
     top: '-28px',
     zIndex: '50',
   },
+  actionButton: {
+    minWidth: '0px',
+  },
   actionFontIcon: {
     display: 'block',
     maxWidth: '25px',
@@ -80,7 +83,7 @@ class DetailsCard extends React.Component {
             return (
               <div className="col-xs" style={style.actionBox}>
                 <div className="box" onTouchTap={this._onTouchTapAction.bind(this, action)}>
-                  <FlatButton>
+                  <FlatButton style={style.actionButton}>
                     <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
                     <span>{action.text}</span>
                   </FlatButton>
