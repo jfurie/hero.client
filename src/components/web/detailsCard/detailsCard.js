@@ -26,12 +26,12 @@ let style = {
     zIndex: '50',
   },
   actionFontIcon: {
+    display: 'block',
+    maxWidth: '25px',
     position: 'relative',
-    // left: '-5px',
-    top: '8px',
-    marginLeft: '0px',
-    width: '24px',
-    height: '24px',
+    left: '50%',
+    marginLeft: '-13px',
+    top: '6px',
   },
   actionBox: {
     marginRight: '0px',
@@ -80,8 +80,10 @@ class DetailsCard extends React.Component {
             return (
               <div className="col-xs" style={style.actionBox}>
                 <div className="box" onTouchTap={this._onTouchTapAction.bind(this, action)}>
-                  <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
-                  <FlatButton style={{minWidth: '0px'}} label={action.text} />
+                  <FlatButton>
+                    <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
+                    <span>{action.text}</span>
+                  </FlatButton>
                 </div>
               </div>
             );

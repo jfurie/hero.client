@@ -168,8 +168,8 @@ export default class ClientDetails extends React.Component {
               floatActionOnTap={this._handleDirections.bind(this)}
               floatActionContent={<MapsDirections color={Styles.Colors.indigo500}/>}
           />
-        
-          <CustomTabsSwipe isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>
+
+          <CustomTabsSwipe isLight isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>
             <List>
               <div>
 

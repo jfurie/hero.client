@@ -128,6 +128,7 @@ class CustomTabsSwipe extends React.Component {
     if (isInline) {
       style.inkBar.display = 'none';
       tabsStyle.position = 'relative';
+      tabsStyle.top = '4px';
     }
 
     return (
@@ -167,6 +168,7 @@ class CustomTabsSwipe extends React.Component {
 }
 
 CustomTabsSwipe.propTypes = {
+  isLight: React.PropTypes.bool,
   onSwipeEnd: React.PropTypes.func,
   startingTab: React.PropTypes.number,
   tabs: React.PropTypes.array.isRequired,
