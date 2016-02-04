@@ -105,6 +105,8 @@ export default class ClientDetails extends React.Component {
 
   constructor(props){
     super(props);
+    this.handleResize.bind(this);
+    this.state = {windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight};
   }
 
   editClientModalOpen(){
@@ -381,6 +383,19 @@ export default class ClientDetails extends React.Component {
       return (<div></div>);
     }
   }
+
+  handleResize() {
+    this.setState({windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight});
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize.bind(this));
+  }
+
   render(){
     let { company } = this.props;
     if(this.props.inline){
@@ -403,8 +418,8 @@ export default class ClientDetails extends React.Component {
         </div>
       );
     } else {
-      let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-      let contentHeight = clientHeight;
+      let clientHeight = this.state.windowHeight;
+      let contentHeight =this.state.windowHeight;
       return (
         <div>
           <Dialog
