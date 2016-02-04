@@ -10,6 +10,7 @@ import _ from 'lodash';
 
 @connect(state => ({
   jobs: state.jobs,
+  companies: state.companies.myCompanyIds,
 }), { searchJobs, createTempJob }, null, { withRef: true })
 class JobSearchContainer extends React.Component {
 
@@ -113,18 +114,15 @@ class JobSearchContainer extends React.Component {
     } else {
       let id = job.id ? job.id : 'tmp_' + this._guid();
       job.id = id;
-      job.companyId = this.props.params.companyId || job.companyId;
+      job.companyId = this.props.params.companyId || job.companyId || this.props.companies.first().get('id');
+
       this.props.createTempJob(job);
 
       let self = this;
       this.setState({open:false});
 
       setTimeout(function () {
-        if(job.companyId){
-          self.props.history.replaceState(null,`/clients/${job.companyId}/jobs/${id}/create`);
-        } else {
-          self.props.history.replaceState(null,`/jobs/${id}/create`);
-        }
+        self.props.history.replaceState(null,`/clients/${job.companyId}/jobs/${id}/create`);
       },500);
     }
   }
