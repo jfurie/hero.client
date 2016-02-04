@@ -113,46 +113,19 @@ class CustomTabsSwipe extends React.Component {
       tabStyle.borderBottom = '1px solid #cccccc';
     }
 
-    //console.log(isLight, isInline, tabsStyle);
-
-    //let startSlide = startingTab || 0;
-    // let tabsStyle = style.tabs;
-    // let tabStyle = style.tab;
-    // let tabStyleSelected = style.tab2Selected;
-    //
-    // if (isLight) {
-    //   tabsStyle = style.tabs2;
-    //   tabStyle = style.tab2;
-    //   tabStyleSelected = style.tab2Selected;
-    // }
-    //
-    // let isInline = this.props.isInline || false;
-    //
-    // if (isInline) {
-    //   style.inkBar.display = 'none';
-    //   tabsStyle.position = 'relative';
-    //   tabsStyle.top = '4px';
-    // }
-
-
     let inkBarStyle = style.inkBar;
-
     if (isInline) {
       inkBarStyle.display = 'none';
     } else {
       inkBarStyle.display = 'block';
     }
 
-    // console.log(isInline, inkBarStyle);
-
     return (
       <div>
         <Tabs
             tabItemContainerStyle={tabsStyle}
             onChange={this._handleChangeTabs.bind(this)}
-            /*value={`${this.state.slideIndex}`}*/
             initialSelectedIndex={(this.props.startingTab || 0)}
-            // style={style.tabsContainer}
             inkBarStyle={inkBarStyle}
         >
           {tabs.map((tab, key) => {
