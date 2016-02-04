@@ -2,16 +2,64 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog,
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog,CardText
 } from 'material-ui';
+import Card from 'material-ui/lib/card/card';
 
 import MapsDirections from 'material-ui/lib/svg-icons/maps/directions';
+import Avatar from 'material-ui/lib/avatar';
 
 import {
   Header, CustomTabsSwipe, ContactsList, CompanyJobsList, DetailsCard,
 } from '../../../components/web';
 
 const style = {
+  viewContent: {
+  },
+  cardTitle: {
+    position: 'relative',
+  },
+  cardTitleComponent: {
+    backgroundColor: Styles.Colors.indigo500,
+    padding: '21px 16px 26px',
+  },
+  subtitle: {
+    fontWeight: 200,
+    opacity: 0.5,
+  },
+  direction: {
+    position: 'absolute',
+    right: '10px',
+    top: '-28px',
+    zIndex: '50',
+  },
+  subheader:{
+    color:'rgba(0, 0, 0, 0.54)',
+    lineHeight: '48px',
+    fontWeight:'500',
+    fontSize:'16px'
+  },
+  title:{
+    color:'rgba(0, 0, 0, 0.87)',
+    fontSize:'15px',
+    fontWeight:'500',
+  },
+  content:{
+    color:'rgba(0, 0, 0, 0.54)',
+    fontSize:'14px',
+    fontWeight:'500',
+  },
+  actionFontIcon: {
+    position: 'relative',
+    // left: '-5px',
+    top: '8px',
+    marginLeft: '0px',
+    width: '24px',
+    height: '24px',
+  },
+  actionBox: {
+    marginRight: '0px',
+  },
   dialog: {
     height: '100%',
     maxHeight: '100%',
@@ -83,6 +131,7 @@ export default class ClientDetails extends React.Component {
 
   }
 
+
   contactDetailsModalOpen(contact){
     //console.log(contact.get('id'));
     this.props.pushState('', `/contacts/${contact.get('id')}`);
@@ -110,53 +159,74 @@ export default class ClientDetails extends React.Component {
   }
 
   _onTouchTapCall() {
-    console.log('_onTouchTapCall');
+    window.location.href='tel:'+this.props.company.get('phone');
   }
 
   _onTouchTapEmail() {
-    console.log('_onTouchTapEmail');
+    let email = this.props.company.get('email');
+    if(email){
+      window.location.href=`mailto:${email}`;
+    }
   }
 
   _onTouchTapShare() {
-    console.log('_onTouchTapShare');
+    let subject = 'Check out '+ this.props.company.get('name')+ ' on HERO';
+    let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
+    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
   closeModal(){
 
   }
 
-  goBack() {
-    if (this.props.onClientDetailsClose) {
+  renderBigListItem(title,content,avatar){
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display:'inline-block'}}>
+          <div style={style.title}>{title}</div>
+          <div style={style.content}>{content}</div>
+        </div>
+      </div>
+    );
+  }
+
+  goBack(){
+    if(this.props.onClientDetailsClose)
       this.props.onClientDetailsClose();
-    }
   }
 
   renderContent(company) {
-
+    let actions = [{
+      materialIcon: 'phone',
+      text: 'Call',
+      onTouchTap: this._onTouchTapCall.bind(this),
+    }, {
+      materialIcon: 'star_rate',
+      text: 'Save',
+      onTouchTap: this._onTouchTapSave.bind(this),
+    }, {
+      materialIcon: 'email',
+      text: 'Email',
+      onTouchTap: this._onTouchTapEmail.bind(this),
+    }, {
+      materialIcon: 'share',
+      text: 'Share',
+      onTouchTap: this._onTouchTapShare.bind(this),
+    }];
     let inline = true;
     if (company) {
 
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
-
-      let actions = [{
-        materialIcon: 'phone',
-        text: 'Call',
-        onTouchTap: this._onTouchTapCall.bind(this),
-      }, {
-        materialIcon: 'star_rate',
-        text: 'Save',
-        onTouchTap: this._onTouchTapSave.bind(this),
-      }, {
-        materialIcon: 'email',
-        text: 'Email',
-        onTouchTap: this._onTouchTapEmail.bind(this),
-      }, {
-        materialIcon: 'share',
-        text: 'Share',
-        onTouchTap: this._onTouchTapShare.bind(this),
-      }];
-
+      let angelList = company.get('angelList');
+      let crunchbase = company.get('crunchbase');
+      let jobboard = company.get('jobboard');
+      let ziprecruiter = company.get('ziprecruiter');
+      let indeed = company.get('indeed');
+      let colors = Styles.Colors;
       return (
         <div className="viewContent" style={style.viewContent}>
           <DetailsCard
@@ -170,34 +240,133 @@ export default class ClientDetails extends React.Component {
           />
 
           <CustomTabsSwipe isLight isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>
-            <List>
-              <div>
+            <Card>
+              <CardText>
+                {this.renderBigListItem('Company Mission',company.get('productSolution'),<Avatar
+                icon={<FontIcon className="material-icons">store</FontIcon>}
+                color={colors.grey600}
+                backgroundColor={colors.white}
+                />)}
+              </CardText>
+              <CardText>
+                {this.renderBigListItem('Culture',company.get('culture'),<Avatar
+                icon={<FontIcon className="material-icons">face</FontIcon>}
+                color={colors.grey600}
+                backgroundColor={colors.white}
+                />)}
+              </CardText>
+              <CardText>
+                {this.renderBigListItem('Benefits',company.get('benefits'),<Avatar
+                icon={<FontIcon className="material-icons">redeem</FontIcon>}
+                color={colors.grey600}
+                backgroundColor={colors.white}
+                />)}
+              </CardText>
+              <CardText>
+                {this.renderBigListItem('Tech Stack',company.get('techstack'),<Avatar
+                  icon={<FontIcon className="material-icons">storage</FontIcon>}
+                  color={colors.grey600}
+                  backgroundColor={colors.white}
+                />)}
+              </CardText>
+              <CardText>
+                {this.renderBigListItem('Leadership',company.get('leadership'),<Avatar
+                icon={<FontIcon className="material-icons">stars</FontIcon>}
+                color={colors.grey600}
+                backgroundColor={colors.white}
+                />)}
+              </CardText>
+              <Divider></Divider>
+              <div style={{padding:'8px'}}>
+                <List subheader={'Social'}>
+                    {(twitter) ? (
+                      <div>
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                            primaryText={`@${twitter}`}
+                            secondaryText={<p>twitter</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                {(twitter) ? (
-                  <div>
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={`@${twitter}`}
-                        secondaryText={<p>twitter</p>}
-                        secondaryTextLines={1}
-                    />
-                  </div>
-                ) : (null)}
+                    {(facebook) ? (
+                      <div>
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                            primaryText={`facebook.com/${facebook}`}
+                            secondaryText={<p>facebook</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
+                    {(angelList) ? (
+                      <div>
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                            primaryText={`${angelList}`}
+                            secondaryText={<p>angel list</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
+                    {(crunchbase) ? (
+                      <div>
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                            primaryText={`${crunchbase}`}
+                            secondaryText={<p>Crunchbase</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
 
-                {(facebook) ? (
-                  <div>
-                    <Divider inset />
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={`facebook.com/${facebook}`}
-                        secondaryText={<p>facebook</p>}
-                        secondaryTextLines={1}
-                    />
-                  </div>
-                ) : (null)}
-
+                </List>
               </div>
-            </List>
+
+              <Divider></Divider>
+              <div style={{padding:'8px'}}>
+                <List subheader={'Job Boards'}>
+                  <div>
+
+                    {(jobboard) ? (
+                      <div>
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                            primaryText={`${jobboard}`}
+                            secondaryText={<p>Jobboard</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
+
+                    {(ziprecruiter) ? (
+                      <div>
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                            primaryText={`${ziprecruiter}`}
+                            secondaryText={<p>ziprecruiter</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
+                    {(indeed) ? (
+                      <div>
+                        <ListItem
+                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                            primaryText={`${indeed}`}
+                            secondaryText={<p>indeed</p>}
+                            secondaryTextLines={1}
+                        />
+                      </div>
+                    ) : (null)}
+                  </div>
+                </List>
+              </div>
+
+
+            </Card>
+
             <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() !== 1) ? ('s') : (''))}`}>
               <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
             </List>
