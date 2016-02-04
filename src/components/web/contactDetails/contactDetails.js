@@ -1,44 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
+import md5 from 'md5';
 
-import { Gravatar, Header } from '../../../components/web';
+import { Gravatar, Header, DetailsCard } from '../../../components/web';
 import {
   Dialog, IconButton, List, ListItem, FontIcon,
   Divider, Styles, IconMenu, MenuItem,
 } from 'material-ui';
 
 const style = {
-  viewContent: {
-  },
-  cardTitle: {
-    position: 'relative',
-  },
-  cardTitleComponent: {
-    backgroundColor: Styles.Colors.indigo500,
-    padding: '21px 16px 26px',
-  },
-  subtitle: {
-    fontWeight: 200,
-    opacity: 0.5,
-  },
-  direction: {
-    position: 'absolute',
-    right: '10px',
-    top: '-28px',
-    zIndex: '50',
-  },
-  actionFontIcon: {
-    position: 'relative',
-    // left: '-5px',
-    top: '8px',
-    marginLeft: '0px',
-    width: '24px',
-    height: '24px',
-  },
-  actionBox: {
-    marginRight: '0px',
-  },
   dialog: {
     height: '100%',
     maxHeight: '100%',
@@ -56,25 +27,6 @@ const style = {
     maxHeight: '100%',
     paddingTop: '0px',
     top: '-64px',
-  },
-  toolbar: {
-    backgroundColor: '#ffffff',
-    height: '64px',
-  },
-  toolbarIcon: {
-    marginTop:'8px',
-    float:'left',
-    marginRight:'8px',
-    marginLeft:'-16px',
-  },
-  toolbarFlat: {
-    marginTop:'14px',
-    marginRight:'-16px',
-    marginLeft:'auto',
-  },
-  toolbarTitle: {
-    lineHeight:'64px',
-    float:'left',
   },
 };
 
@@ -115,6 +67,26 @@ export default class ContactDetails extends React.Component {
 
   inviteToHero() {
     this.setState({confirmOpen: true});
+  }
+
+  _onTouchTapSearch() {
+    console.log('_onTouchTapSearch');
+  }
+
+  _onTouchTapSave() {
+    console.log('_onTouchTapSave');
+  }
+
+  _onTouchTapHot() {
+    console.log('_onTouchTapHot');
+  }
+
+  _onTouchTapShare() {
+    console.log('_onTouchTapShare');
+  }
+
+  _handleTapOnApplications() {
+    console.log('_handleTapOnApplications');
   }
 
   renderContent(contact) {
@@ -159,19 +131,48 @@ export default class ContactDetails extends React.Component {
         }
       }
 
+      // build cover from gravatar
+      if (email) {
+        cover = md5(email);
+      } else {
+        cover = '00000000000000000000000000000000';
+      }
+
+      let cover = `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`;
+
+      // define action for the details card
+      let actions = [{
+        materialIcon: 'search',
+        text: 'Find',
+        onTouchTap: this._onTouchTapSearch.bind(this),
+      }, {
+        materialIcon: 'star_rate',
+        text: 'Save',
+        onTouchTap: this._onTouchTapSave.bind(this),
+      }, {
+        materialIcon: 'favorite',
+        text: 'Hot!',
+        onTouchTap: this._onTouchTapHot.bind(this),
+      }, {
+        materialIcon: 'share',
+        text: 'Share',
+        onTouchTap: this._onTouchTapShare.bind(this),
+      }];
+
       return (
 
         <div>
-          <List>
+          <DetailsCard
+              title={displayName}
+              subtitle={city}
+              cover={cover}
+              mainColor={Styles.Colors.indigo500}
+              actions={actions}
+              floatActionOnTap={this._handleTapOnApplications.bind(this)}
+              floatActionContent={<span style={{color: Styles.Colors.indigo500, fontSize: '15px !important'}}>9</span>}
+          />
+          <List style={{position: 'relative', top: '3px'}}>
             <div>
-              {(displayName) ? (
-                <ListItem
-                  leftAvatar={<Gravatar email={email} />}
-                  primaryText={displayName}
-                  secondaryText={<p>contact</p>}
-                  secondaryTextLines={1}
-                />
-              ) : (null)}
 
               {(email) ? (
                 <ListItem
@@ -282,7 +283,7 @@ export default class ContactDetails extends React.Component {
             contentStyle={style.contentStyle}
         >
           <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
-            <Header title="Contact details" goBack={this.goBack.bind(this)} iconRight={
+            <Header transparent goBack={this.goBack.bind(this)} iconRight={
               <IconMenu iconButtonElement={
                 <IconButton iconClassName="material-icons">more_vert</IconButton>
               }>

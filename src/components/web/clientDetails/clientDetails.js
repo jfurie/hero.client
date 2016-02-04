@@ -199,6 +199,7 @@ export default class ClientDetails extends React.Component {
   }
 
   renderContent(company) {
+
     let actions = [{
       materialIcon: 'phone',
       text: 'Call',
@@ -216,6 +217,7 @@ export default class ClientDetails extends React.Component {
       text: 'Share',
       onTouchTap: this._onTouchTapShare.bind(this),
     }];
+
     let inline = true;
     if (company) {
 

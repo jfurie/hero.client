@@ -39,6 +39,10 @@ let style = {
   actionBox: {
     marginRight: '0px',
   },
+  cardmedia: {
+    maxHeight: '250px',
+    overflow: 'hidden',
+  },
 };
 
 class DetailsCard extends React.Component {
@@ -69,7 +73,7 @@ class DetailsCard extends React.Component {
 
     return (
       <Card>
-        <CardMedia>
+        <CardMedia style={style.cardmedia}>
           <img src={this.props.cover} />
         </CardMedia>
         <div style={style.cardTitle}>
