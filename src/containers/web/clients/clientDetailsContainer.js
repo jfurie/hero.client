@@ -205,7 +205,9 @@ class ClientDetailsPage extends React.Component {
   addContactModalOpen(){
     this.props.pushState({}, `/clients/${this.props.params.companyId}/contacts/search?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
   }
-
+  addJobModalOpen(){
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/jobs/search?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+  }
   render() {
 
     let {company} = this.props;
@@ -226,7 +228,7 @@ class ClientDetailsPage extends React.Component {
        <JobCreateModal heroContacts={heroContacts} contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
         */}
 
-        <ClientDetails addContactModalOpen={this.addContactModalOpen.bind(this)} editClientModalOpen={this.editClientModalOpen.bind(this)} onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={true} tabId={0} company={company} ></ClientDetails>
+        <ClientDetails addJobModalOpen={this.addJobModalOpen.bind(this)} addContactModalOpen={this.addContactModalOpen.bind(this)} editClientModalOpen={this.editClientModalOpen.bind(this)} onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={true} tabId={0} company={company} ></ClientDetails>
 
       </div>
     );

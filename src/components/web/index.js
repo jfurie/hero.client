@@ -29,6 +29,7 @@ export ActionButtonItem from './actionButtonItem/actionButtonItem';
 export Location from './location/location';
 export ClientDetails from './clientDetails/clientDetails';
 export ContactDetails from './contactDetails/contactDetails';
+export JobCreate from './jobCreate/jobCreate';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
@@ -44,3 +45,4 @@ export CandidateCreateModal from './candidateCreateModal/candidateCreateModal';
 export ShareJobModal from './shareJobModal/shareJobModal';
 export ClientSearchModal from './clientSearch/clientSearchModal';
 export ContactSearchModal from './contactSearch/contactSearchModal';
+export JobSearchModal from './jobSearch/jobSearchModal';

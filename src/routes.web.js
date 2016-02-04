@@ -33,8 +33,11 @@ import ClientSearchContainer from './containers/web/clients/clientSearchContaine
 import ClientCreatePage from './containers/web/clients/clientCreateContainer';
 
 //jobs
-import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
+import JobSearchContainer from './containers/web/jobs/jobSearchContainer';
+//import JobsDetailsPage from './containers/web/jobs/jobDetailsContainer';
 import MyJobsPage from './containers/web/jobs/myJobsContainer';
+import JobCreatePage from './containers/web/jobs/jobCreateContainer';
+
 // contacts
 import ContactSearchContainer from './containers/web/contacts/contactSearchContainer';
 import ContactCreatePage from './containers/web/contacts/contactCreateContainer';
@@ -165,6 +168,8 @@ export default(store) => {
                 }} />
               <Route path=":companyId/contacts/search" component={ContactSearchContainer}></Route>
               <Route path=":companyId/contacts/:contactId/create" component={ContactCreatePage}></Route>
+              <Route path=":companyId/jobs/search" component={JobSearchContainer}></Route>
+              <Route path=":companyId/jobs/:jobId/create" component={JobCreatePage}></Route>
             </Route>
             <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
               nextState.params.tab = 'jobs';
@@ -191,7 +196,8 @@ export default(store) => {
 
           <Route path="jobs">
             <IndexRoute component={MyJobsPage}/>
-            <Route path=":id" component={JobsDetailsPage} />
+            <Route path="search" component={JobSearchContainer}/>
+            <Route path=":jobId/create" component={JobCreatePage}/>
           </Route>
 
           {/*<Route path="/myjobs" component={MyJobsPage}/>*/}
