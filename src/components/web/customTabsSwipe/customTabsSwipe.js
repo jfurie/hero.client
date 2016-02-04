@@ -9,32 +9,26 @@ import { connect } from 'react-redux';
 /* CODE MIGHT STILL BE HERE */
 
 const style = {
-  tabsContainer: {
-  },
   tabs: {
     backgroundColor: Styles.Colors.grey900,
     position: 'fixed',
     width: '100%',
     zIndex: '10',
   },
-  tabs2: {
+  tabsLight: {
     backgroundColor: '#ffffff',
     position: 'fixed',
     width: '100%',
     zIndex: '10',
-
   },
-  tab2Selected:{
-    color:Styles.Colors.grey900,
+  tabsInline: {
+    position: 'relative',
+    top: '4px',
+  },
+  tabLightSelected: {
     fontWeight:'800',
     borderBottom:'2px solid #505050',
-  },
-  tab:{
-    // marginTop: '48px',
-  },
-  tab2:{
-    color:Styles.Colors.grey900,
-    borderBottom:'1px solid #cccccc',
+    color: Styles.Colors.grey900,
   },
   inkBar: {
     marginTop: '0px',
@@ -105,24 +99,51 @@ class CustomTabsSwipe extends React.Component {
 
   render() {
 
-    let { tabs, /*startingTab,*/ isLight } = this.props;
-    //let startSlide = startingTab || 0;
+    let { tabs, isLight, isInline } = this.props;
+
+    isInline = isInline || false;
+    isLight = isLight || false;
+
     let tabsStyle = style.tabs;
-    let tabStyle = style.tab;
-    let tabStyleSelected = style.tab2Selected;
+    let tabStyle = {};
+
     if (isLight) {
-      tabsStyle = style.tabs2;
-      tabStyle = style.tab2;
-      tabStyleSelected = style.tab2Selected;
+      tabsStyle = style.tabsLight;
+      tabStyle.color = Styles.Colors.grey900;
+      tabStyle.borderBottom = '1px solid #cccccc';
     }
 
-    let isInline = this.props.isInline || false;
+    //console.log(isLight, isInline, tabsStyle);
+
+    //let startSlide = startingTab || 0;
+    // let tabsStyle = style.tabs;
+    // let tabStyle = style.tab;
+    // let tabStyleSelected = style.tab2Selected;
+    //
+    // if (isLight) {
+    //   tabsStyle = style.tabs2;
+    //   tabStyle = style.tab2;
+    //   tabStyleSelected = style.tab2Selected;
+    // }
+    //
+    // let isInline = this.props.isInline || false;
+    //
+    // if (isInline) {
+    //   style.inkBar.display = 'none';
+    //   tabsStyle.position = 'relative';
+    //   tabsStyle.top = '4px';
+    // }
+
+
+    let inkBarStyle = style.inkBar;
 
     if (isInline) {
-      style.inkBar.display = 'none';
-      tabsStyle.position = 'relative';
-      tabsStyle.top = '4px';
+      inkBarStyle.display = 'none';
+    } else {
+      inkBarStyle.display = 'block';
     }
+
+    // console.log(isInline, inkBarStyle);
 
     return (
       <div>
@@ -131,14 +152,16 @@ class CustomTabsSwipe extends React.Component {
             onChange={this._handleChangeTabs.bind(this)}
             /*value={`${this.state.slideIndex}`}*/
             initialSelectedIndex={(this.props.startingTab || 0)}
-            style={style.tabsContainer}
-            inkBarStyle={style.inkBar}
+            // style={style.tabsContainer}
+            inkBarStyle={inkBarStyle}
         >
           {tabs.map((tab, key) => {
+
             let tabStyleItem = tabStyle;
-            if(this.state.slideIndex == key){
-              tabStyleItem= tabStyleSelected;
+            if (this.state.slideIndex == key && isLight) {
+              tabStyleItem = style.tabLightSelected;
             }
+
             return (
               <Tab label={tab} key={key} style={tabStyleItem} value={`${key}`}>
                 <div style={{paddingTop: (isInline) ? ('0px') : ('48px')}}>
