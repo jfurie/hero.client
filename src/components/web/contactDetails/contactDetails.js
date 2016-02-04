@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import md5 from 'md5';
 
-import { Gravatar, Header, DetailsCard } from '../../../components/web';
+import { Header, DetailsCard } from '../../../components/web';
 import {
   Dialog, IconButton, List, ListItem, FontIcon,
   Divider, Styles, IconMenu, MenuItem,
