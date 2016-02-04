@@ -29,6 +29,7 @@ export ActionButtonItem from './actionButtonItem/actionButtonItem';
 export Location from './location/location';
 export ClientDetails from './clientDetails/clientDetails';
 export ContactDetails from './contactDetails/contactDetails';
+export DetailsCard from './detailsCard/detailsCard';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';

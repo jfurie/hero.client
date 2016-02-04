@@ -15,8 +15,7 @@ import Avatar from 'material-ui/lib/avatar';
 import FileFolder from 'material-ui/lib/svg-icons/file/folder';
 
 import {
-  Header, CustomTabsSwipe, ContactsList,
-  CompanyJobsList
+  Header, CustomTabsSwipe, ContactsList, CompanyJobsList, DetailsCard,
 } from '../../../components/web';
 
 const style = {
@@ -141,22 +140,11 @@ export default class ClientDetails extends React.Component {
     //console.log(contact.get('id'));
     this.props.pushState('', `/contacts/${contact.get('id')}`);
   }
-  _handleCall(){
-    window.location.href='tel:13104980963';
-  }
-  _handleEmail(){
-    let email = this.props.company.get('email');
-    if(email){
-      window.location.href=`mailto:${email}`;
-    }
-  }
-  _handleShare(){
-    let subject = 'Check out '+ this.props.company.get('name')+ ' on HERO';
-    let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
-  }
 
   _handleDirections(){
+
+    console.log('_handleDirections');
+
     let { company } = this.props;
     let location  = company.get('location');
     if(location){
@@ -168,8 +156,22 @@ export default class ClientDetails extends React.Component {
         window.open(link,'_blank');
       }
     }
+  }
 
+  _onTouchTapSave() {
+    console.log('_onTouchTapSave');
+  }
 
+  _onTouchTapCall() {
+    console.log('_onTouchTapCall');
+  }
+
+  _onTouchTapEmail() {
+    console.log('_onTouchTapEmail');
+  }
+
+  _onTouchTapShare() {
+    console.log('_onTouchTapShare');
   }
 
   closeModal(){
@@ -194,24 +196,28 @@ export default class ClientDetails extends React.Component {
     if(this.props.onClientDetailsClose)
       this.props.onClientDetailsClose();
   }
-  // onSwipe(index){
-  //   let tab = '';
-  //   switch (index) {
-  //   case 1:
-  //     tab = 'jobs';
-  //     break;
-  //   case 3:
-  //     tab = 'notes';
-  //     break;
-  //   default:
-  //     tab = '';
-  //   }
-  //   this.props.pushState('', `/clients/${this.props.params.id}/${tab}`);
-  // }
-  renderContent(company){
 
+  renderContent(company) {
+    let actions = [{
+      materialIcon: 'phone',
+      text: 'Call',
+      onTouchTap: this._onTouchTapCall.bind(this),
+    }, {
+      materialIcon: 'star_rate',
+      text: 'Save',
+      onTouchTap: this._onTouchTapSave.bind(this),
+    }, {
+      materialIcon: 'email',
+      text: 'Email',
+      onTouchTap: this._onTouchTapEmail.bind(this),
+    }, {
+      materialIcon: 'share',
+      text: 'Share',
+      onTouchTap: this._onTouchTapShare.bind(this),
+    }];
     let inline = true;
-    if(company){
+    if (company) {
+
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
       let angelList = company.get('angelList');
@@ -222,45 +228,15 @@ export default class ClientDetails extends React.Component {
       let colors = Styles.Colors;
       return (
         <div className="viewContent" style={style.viewContent}>
-          <Card>
-            <CardMedia>
-              <img src="http://southerncaliforniabeaches.org/img/santa-monica-beach-path.jpg" />
-            </CardMedia>
-            <div style={style.cardTitle}>
-              <FloatingActionButton onTouchTap={this._handleDirections.bind(this)} style={style.direction} backgroundColor={Styles.Colors.white}>
-                <MapsDirections color={Styles.Colors.grey900}/>
-              </FloatingActionButton>
-              <CardTitle style={style.cardTitleComponent} subtitleColor={Styles.Colors.white} titleColor={Styles.Colors.white} subtitleStyle={style.subtitle} title={company.get('name')} subtitle={<a style={{color:'#ffffff'}} target="_blank" href={company.get('website')}>{company.get('website')}</a>} />
-            </div>
-            <CardActions className="row center-xs">
-              <div className="col-xs" style={style.actionBox}>
-                <div className="box">
-                  <FontIcon style={style.actionFontIcon} className="material-icons">phone</FontIcon>
-                  <FlatButton onTouchTap={this._handleCall.bind(this)} style={{minWidth: '0px'}} label="Call" >
-
-                  </FlatButton>
-                </div>
-              </div>
-              <div className="col-xs" style={style.actionBox}>
-                <div className="box">
-                  <FontIcon style={style.actionFontIcon} className="material-icons">star_rate</FontIcon>
-                  <FlatButton style={{minWidth: '0px'}} labelPosition="after" label="Save" />
-                </div>
-              </div>
-              <div className="col-xs" style={style.actionBox}>
-                <div className="box">
-                  <FontIcon style={style.actionFontIcon} className="material-icons">email</FontIcon>
-                  <FlatButton onTouchTap={this._handleEmail.bind(this)} style={{minWidth: '0px'}} labelPosition="after" label="Email" />
-                </div>
-              </div>
-              <div className="col-xs" style={style.actionBox}>
-                <div className="box">
-                  <FontIcon style={style.actionFontIcon} className="material-icons">share</FontIcon>
-                  <FlatButton onTouchTap={this._handleShare.bind(this)} style={{minWidth: '0px'}} labelPosition="after" label="Share" />
-                </div>
-              </div>
-            </CardActions>
-          </Card>
+          <DetailsCard
+              title={company.get('name')}
+              subtitle={company.get('website')}
+              cover={'http://southerncaliforniabeaches.org/img/santa-monica-beach-path.jpg'}
+              mainColor={Styles.Colors.indigo500}
+              actions={actions}
+              floatActionOnTap={this._handleDirections.bind(this)}
+              floatActionContent={<MapsDirections color={Styles.Colors.indigo500}/>}
+          />
 
           <CustomTabsSwipe isLight={true} isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>
             <Card>
@@ -302,8 +278,6 @@ export default class ClientDetails extends React.Component {
               <Divider></Divider>
               <div style={{padding:'8px'}}>
                 <List subheader={'Social'}>
-                  <div>
-
                     {(twitter) ? (
                       <div>
                         <ListItem
@@ -346,7 +320,6 @@ export default class ClientDetails extends React.Component {
                       </div>
                     ) : (null)}
 
-                  </div>
                 </List>
               </div>
 
