@@ -25,16 +25,23 @@ let style = {
     top: '-28px',
     zIndex: '50',
   },
+  actionButton: {
+    minWidth: '0px',
+  },
   actionFontIcon: {
+    display: 'block',
+    maxWidth: '25px',
     position: 'relative',
-    // left: '-5px',
-    top: '8px',
-    marginLeft: '0px',
-    width: '24px',
-    height: '24px',
+    left: '50%',
+    marginLeft: '-13px',
+    top: '6px',
   },
   actionBox: {
     marginRight: '0px',
+  },
+  cardmedia: {
+    maxHeight: '250px',
+    overflow: 'hidden',
   },
 };
 
@@ -66,7 +73,7 @@ class DetailsCard extends React.Component {
 
     return (
       <Card>
-        <CardMedia>
+        <CardMedia style={style.cardmedia}>
           <img src={this.props.cover} />
         </CardMedia>
         <div style={style.cardTitle}>
@@ -80,8 +87,10 @@ class DetailsCard extends React.Component {
             return (
               <div className="col-xs" style={style.actionBox}>
                 <div className="box" onTouchTap={this._onTouchTapAction.bind(this, action)}>
-                  <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
-                  <FlatButton style={{minWidth: '0px'}} label={action.text} />
+                  <FlatButton style={style.actionButton}>
+                    <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
+                    <span>{action.text}</span>
+                  </FlatButton>
                 </div>
               </div>
             );

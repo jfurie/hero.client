@@ -27,17 +27,14 @@ const style = {
   tab2Selected:{
     color:Styles.Colors.grey900,
     fontWeight:'800',
-    borderTop:'1px solid #cccccc;',
-    borderBottom:'1px solid #cccccc;',
+    borderBottom:'2px solid #505050',
   },
   tab:{
     // marginTop: '48px',
   },
   tab2:{
     color:Styles.Colors.grey900,
-    borderTop:'1px solid #cccccc;',
-    borderBottom:'1px solid #cccccc;',
-    // marginTop: '48px',
+    borderBottom:'1px solid #cccccc',
   },
   inkBar: {
     marginTop: '0px',
@@ -124,6 +121,7 @@ class CustomTabsSwipe extends React.Component {
     if (isInline) {
       style.inkBar.display = 'none';
       tabsStyle.position = 'relative';
+      tabsStyle.top = '4px';
     }
 
     return (
@@ -167,6 +165,7 @@ class CustomTabsSwipe extends React.Component {
 }
 
 CustomTabsSwipe.propTypes = {
+  isLight: React.PropTypes.bool,
   onSwipeEnd: React.PropTypes.func,
   startingTab: React.PropTypes.number,
   tabs: React.PropTypes.array.isRequired,

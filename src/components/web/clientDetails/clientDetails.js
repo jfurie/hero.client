@@ -201,6 +201,7 @@ export default class ClientDetails extends React.Component {
   }
 
   renderContent(company) {
+
     let actions = [{
       materialIcon: 'phone',
       text: 'Call',
@@ -218,6 +219,7 @@ export default class ClientDetails extends React.Component {
       text: 'Share',
       onTouchTap: this._onTouchTapShare.bind(this),
     }];
+
     let inline = true;
     if (company) {
 
@@ -241,7 +243,7 @@ export default class ClientDetails extends React.Component {
               floatActionContent={<MapsDirections color={Styles.Colors.indigo500}/>}
           />
 
-          <CustomTabsSwipe isLight={true} isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>
+          <CustomTabsSwipe isLight isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>
             <Card>
               <CardText>
                 {this.renderBigListItem('Company Mission',company.get('productSolution'),<Avatar
