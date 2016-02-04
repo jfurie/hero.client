@@ -10,23 +10,7 @@ const constraints = {
     },
   },
   'website': {
-    presence: true,
-    url: true,
-  },
-  'angelList': {
-    url: true,
-  },
-  'crunchbase': {
-    url: true,
-  },
-  'jobboard': {
-    url: true,
-  },
-  'ziprecruiter': {
-    url: true,
-  },
-  'indeed': {
-    url: true,
+    presence: true
   },
   'twitterHandle': {
     length: {
