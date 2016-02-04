@@ -22,13 +22,19 @@ const style = {
     position: 'fixed',
     width: '100%',
     zIndex: '10',
+
+  },
+  tab2Selected:{
+    color:Styles.Colors.grey900,
+    fontWeight:'800',
+    borderBottom:'2px solid #505050',
   },
   tab:{
     // marginTop: '48px',
   },
   tab2:{
     color:Styles.Colors.grey900,
-    // marginTop: '48px',
+    borderBottom:'1px solid #cccccc',
   },
   inkBar: {
     marginTop: '0px',
@@ -88,24 +94,9 @@ class CustomTabsSwipe extends React.Component {
 
     let index = ~~(value);
 
-    if (this.state.slideIndex !== index) {
-      this.setState({
-        slideIndex: index,
-      });
-
-      // if (index === 1) {
-      //   this.props.disableSwipeToOpen();
-      // }
-      //
-      // if (index === 0) {
-      //   this.props.enableSwipeToOpen();
-      // }
-
-      // notify parent of a swipe event
-      if (this.props.onSwipeEnd) {
-        this.props.onSwipeEnd(index);
-      }
-    }
+    this.setState({
+      slideIndex: index,
+    });
   }
 
   // _reactSwipeShouldUpdate() {
@@ -118,9 +109,11 @@ class CustomTabsSwipe extends React.Component {
     //let startSlide = startingTab || 0;
     let tabsStyle = style.tabs;
     let tabStyle = style.tab;
+    let tabStyleSelected = style.tab2Selected;
     if (isLight) {
       tabsStyle = style.tabs2;
       tabStyle = style.tab2;
+      tabStyleSelected = style.tab2Selected;
     }
 
     let isInline = this.props.isInline || false;
@@ -128,21 +121,26 @@ class CustomTabsSwipe extends React.Component {
     if (isInline) {
       style.inkBar.display = 'none';
       tabsStyle.position = 'relative';
+      tabsStyle.top = '4px';
     }
 
     return (
       <div>
         <Tabs
             tabItemContainerStyle={tabsStyle}
-            /*onChange={this._handleChangeTabs.bind(this)}
-            value={`${this.state.slideIndex}`}*/
+            onChange={this._handleChangeTabs.bind(this)}
+            /*value={`${this.state.slideIndex}`}*/
             initialSelectedIndex={(this.props.startingTab || 0)}
             style={style.tabsContainer}
             inkBarStyle={style.inkBar}
         >
           {tabs.map((tab, key) => {
+            let tabStyleItem = tabStyle;
+            if(this.state.slideIndex == key){
+              tabStyleItem= tabStyleSelected;
+            }
             return (
-              <Tab label={tab} key={key} style={tabStyle} value={`${key}`}>
+              <Tab label={tab} key={key} style={tabStyleItem} value={`${key}`}>
                 <div style={{paddingTop: (isInline) ? ('0px') : ('48px')}}>
                   {this.props.children[key]}
                 </div>
@@ -167,6 +165,7 @@ class CustomTabsSwipe extends React.Component {
 }
 
 CustomTabsSwipe.propTypes = {
+  isLight: React.PropTypes.bool,
   onSwipeEnd: React.PropTypes.func,
   startingTab: React.PropTypes.number,
   tabs: React.PropTypes.array.isRequired,
