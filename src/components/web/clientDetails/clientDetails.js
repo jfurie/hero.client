@@ -382,7 +382,7 @@ export default class ClientDetails extends React.Component {
     }
   }
 
-  handleResize(e) {
+  handleResize() {
     this.setState({windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight});
   }
 
