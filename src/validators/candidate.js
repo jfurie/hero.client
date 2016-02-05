@@ -20,10 +20,16 @@ const constraints = {
     presence: true,
     email: true,
   },
+  // 'phone': {
+  //   format: {
+  //     pattern: /^(\([0-9]{3}\)|[0-9]{3}) ([0-9]{3})-([0-9]{4})$/g,
+  //     message: 'must be (XXX) YYY-ZZZZ',
+  //   },
+  // },
   'phone': {
-    format: {
-      pattern: /^(\([0-9]{3}\)|[0-9]{3}) ([0-9]{3})-([0-9]{4})$/g,
-      message: 'must be (XXX) YYY-ZZZZ',
+    length: {
+      minimum: 10,
+      message: 'must be valid',
     },
   },
   'addressLine': {
