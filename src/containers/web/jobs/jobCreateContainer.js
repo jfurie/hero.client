@@ -55,6 +55,7 @@ export default class JobCreateContainer extends React.Component {
 
   componentDidMount() {
     this.props.getContactsByCompany(HEROCOMPANYID);
+    this.props.getContactsByCompany(this.props.params.companyId);
   }
 
   componentWillReceiveProps(newProps){
