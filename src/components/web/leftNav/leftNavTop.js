@@ -44,7 +44,7 @@ class LeftNavTop extends React.Component {
       this.props.getUserContact(this.props.user.id);
 
     if (this.props.authToken)
-      this.props.getUserStats(this.props.authToken.accountInfo.account.id);
+      this.props.getUserStats(this.props.authToken.accountInfo.account.id, this.props.user.id);
   }
 
   render(){
