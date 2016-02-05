@@ -65,12 +65,13 @@ export default class JobCreateContainer extends React.Component {
         this.props.onSave(newProps.job.get('id'));
       } else {
         let self = this;
-        let id = newProps.job.get('id');
+        //let id = newProps.job.get('id');
         setTimeout(function () {
           if(self.props.location.query.returnUrl){
             self.props.history.replaceState(null, self.props.location.query.returnUrl);
           } else{
-            self.props.history.replaceState(null, `/jobs/${id}`);
+            // self.props.history.replaceState(null, `/jobs/${id}`);
+            self.props.history.replaceState(null, `/clients/${newProps.job.get('companyId')}`); // for now
           }
         }, 500);
 
