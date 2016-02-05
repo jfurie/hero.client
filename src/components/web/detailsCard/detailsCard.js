@@ -83,9 +83,9 @@ class DetailsCard extends React.Component {
           <CardTitle style={style.cardTitleComponent} subtitleColor={Styles.Colors.white} titleColor={Styles.Colors.white} subtitleStyle={style.subtitle} title={this.props.title} subtitle={this.props.subtitle} />
         </div>
         <CardActions className="row center-xs">
-          {this.props.actions.map((action) => {
+          {this.props.actions.map((action, key) => {
             return (
-              <div className="col-xs" style={style.actionBox}>
+              <div className="col-xs" style={style.actionBox} key={key}>
                 <div className="box" onTouchTap={this._onTouchTapAction.bind(this, action)}>
                   <FlatButton style={style.actionButton}>
                     <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
