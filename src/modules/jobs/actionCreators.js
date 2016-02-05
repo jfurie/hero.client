@@ -42,9 +42,28 @@ export function getAllJobs() {
 }
 
 export function createJob(job){
+  let id = job.get('id');
+  if(id && id.indexOf('tmp') > -1){
+    job = job.remove('id');
+  }
   return {
+    id,
+    job,
     types: [constants.CREATE_JOB, constants.CREATE_JOB_SUCCESS, constants.CREATE_JOB_FAIL],
     promise: (client, auth) => client.api.post('/jobs', {
+      authToken: auth.authToken,
+      data:job,
+    }),
+  };
+}
+
+export function editJob(job){
+  let id = job.get('id');
+  return {
+    id,
+    job,
+    types: [constants.EDIT_JOB, constants.EDIT_JOB_SUCCESS, constants.EDIT_JOB_FAIL],
+    promise: (client, auth) => client.api.put(`/jobs/${job.get('id')}`, {
       authToken: auth.authToken,
       data:job,
     }),
@@ -120,7 +139,13 @@ export function updateJobImageLocal(file) {
 export function saveLocalJob(){
   return (dispatch, getState) => {
     let current = getState().jobs.localJob;
-    dispatch(createJob(current));
+    let id = current.get('id');
+    if(!id || (id.indexOf('tmp') > -1)){
+      dispatch(createJob(current));
+    }
+    else {
+      dispatch(editJob(current));
+    }
   };
 }
 
@@ -142,5 +167,21 @@ export function getOneJob(id) {
         id,
       },
     }),
+  };
+}
+
+export function searchJobs(query) {
+  return {
+    types: [constants.SEARCH_JOBS, constants.SEARCH_JOBS_SUCCESS, constants.SEARCH_JOBS_FAIL],
+    promise: (client, auth) => client.api.get(`/jobs/search?query=${query}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function createTempJob(job){
+  return {
+    type: constants.CREATE_TEMP_JOB,
+    result: job,
   };
 }
