@@ -119,13 +119,15 @@ export default class ClientsCreateModal extends React.Component {
   }
 
   _handleSubmit(){
-    if(this.props.company.get('saving') == true)
+
+    if (this.props.company.get('saving') == true) {
       return;
+    }
+
     let errors = validateCompany(this.props.company.toJSON());
 
     let newCompany = this.props.company.set('errors',errors);
     if (errors.validationErrors === 0) {
-
       // and post ...
       this.props.onSubmit(newCompany);
     } else {
@@ -143,12 +145,16 @@ export default class ClientsCreateModal extends React.Component {
     }
     this.props.onCompanyChange(newCompany);
   }
+
   renderContents(){
-    let {heroContacts, company } = this.props;
-    if(!heroContacts){
+    let { heroContacts, company } = this.props;
+
+    if (!heroContacts) {
       heroContacts = new Immutable.Map();
     }
+
     company = company || new Immutable.Map({errors:new Immutable.Map()});
+
     return (
       <div className="row center-xs">
           <div className="col-xs-12 col-md-8">
