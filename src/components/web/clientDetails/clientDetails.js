@@ -14,31 +14,6 @@ import {
 } from '../../../components/web';
 
 const style = {
-  viewContent: {
-  },
-  cardTitle: {
-    position: 'relative',
-  },
-  cardTitleComponent: {
-    backgroundColor: Styles.Colors.indigo500,
-    padding: '21px 16px 26px',
-  },
-  subtitle: {
-    fontWeight: 200,
-    opacity: 0.5,
-  },
-  direction: {
-    position: 'absolute',
-    right: '10px',
-    top: '-28px',
-    zIndex: '50',
-  },
-  subheader:{
-    color:'rgba(0, 0, 0, 0.54)',
-    lineHeight: '48px',
-    fontWeight:'500',
-    fontSize:'16px'
-  },
   title:{
     color:'rgba(0, 0, 0, 0.87)',
     fontSize:'15px',
@@ -48,17 +23,6 @@ const style = {
     color:'rgba(0, 0, 0, 0.54)',
     fontSize:'14px',
     fontWeight:'500',
-  },
-  actionFontIcon: {
-    position: 'relative',
-    // left: '-5px',
-    top: '8px',
-    marginLeft: '0px',
-    width: '24px',
-    height: '24px',
-  },
-  actionBox: {
-    marginRight: '0px',
   },
   dialog: {
     height: '100%',
@@ -131,13 +95,12 @@ export default class ClientDetails extends React.Component {
 
   }
 
-  _handleJobClick(){
-
+  _handleJobClick(job){
+    this.props.pushState('', `/jobs/${job.get('id')}`);
   }
 
 
   contactDetailsModalOpen(contact){
-    //console.log(contact.get('id'));
     this.props.pushState('', `/contacts/${contact.get('id')}`);
   }
 

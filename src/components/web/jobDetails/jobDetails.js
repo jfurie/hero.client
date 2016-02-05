@@ -1,187 +1,257 @@
 import React from 'react';
-import Immutable from 'immutable';
-import { CustomTabsSwipe, CandidatesList, LocationCard, ContactDetailsModal, Gravatar } from '../../../components/web';
-import { List , ListItem, Card, CardText, CardMedia, RaisedButton } from 'material-ui';
-import marked from 'marked';
+import { connect } from 'react-redux';
+import { pushState } from 'redux-router';
+import md5 from 'md5';
 
-import './jobDetails.scss';
+import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
+
+import { Header, DetailsCard } from '../../../components/web';
+import {
+  Dialog, IconButton, List, ListItem, FontIcon,
+  Divider, Styles, IconMenu, MenuItem,
+} from 'material-ui';
 
 const style = {
-  slide: {
-    minHeight: `${window.innerHeight - 160}px`,
-    // marginTop: '48px',
+  dialog: {
+    height: '100%',
+    maxHeight: '100%',
+    paddingTop: '0px',
+  },
+  bodyStyle: {
+    paddingTop: '0px',
+    height: '100%',
+    padding: '0',
+  },
+  contentStyle: {
+    width: '100%',
+    maxWidth: 'none',
+    height: '100%',
+    maxHeight: '100%',
+    paddingTop: '0px',
+    top: '-64px',
   },
 };
 
-class JobDetails extends React.Component {
+@connect(() => (
+{}), {pushState})
+export default class JobDetails extends React.Component {
 
-  constructor(props) {
+  constructor(props){
     super(props);
 
     this.state = {
-      contactDetailsModalOpen: false,
+      justInvited: false,
+      confirmOpen: false,
     };
   }
-  contactDetailsModalOpen(contact) {
-    this.setState({
-      contactDetailsModalOpen: true,
-      detailsContact: contact,
-    });
+
+  // editContactModalOpen(){
+  //   console.log('yo!');
+  // }
+
+  goBack() {
+    if (this.props.onContactDetailsClose) {
+      this.props.onContactDetailsClose();
+    }
   }
 
-  contactDetailsModalClose() {
-    this.setState({
-      contactDetailsModalOpen: false,
-      detailsContact: null,
-    });
-  }
-  candidateSearchModalClose(){
-
+  _onTouchTapSave() {
+    console.log('_onTouchTapSave');
   }
 
-  saveContact(){
-    console.log('save contact');
+  _onTouchTapShare() {
+    console.log('_onTouchTapShare');
+  }
+
+  _onTouchTapSearch() {
+    console.log('_onTouchTapSearch');
+  }
+
+  // _handleTapOnApplications() {
+  //   console.log('_handleTapOnApplications');
+  // }
+
+  renderContent(job) {
+
+    // //let picture = null;
+    // let email = null;
+    // let phone = null;
+    // let addressLine = null;
+    // let city = null;
+    // let postalCode = null;
+    // //let countryCode = null;
+    // let countrySubDivisionCode = null;
+    // let source = null;
+    // let displayName = null;
+    // //let invited = false;
+    //
+    if (job) {
+    //   displayName = contact.get('displayName') || null;
+    //   email = contact.get('email') || null;
+    //   phone = contact.get('phone') || null;
+    //   //invited = contact.get('isInvited');
+    //
+    //   if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
+    //     source = contact.get('sourceInfo').get('referrer');
+    //   }
+    //
+    //   // location stuff
+    //   let address = contact.get('_address');
+    //
+    //   if (address) {
+    //     addressLine = address.get('addressLine') || null;
+    //     city = address.get('city') || null;
+    //     postalCode = address.get('postalCode') || null;
+    //     countrySubDivisionCode = address.get('countrySubDivisionCode') || null;
+    //
+    //     if (city && countrySubDivisionCode) {
+    //       city += `, ${countrySubDivisionCode}`;
+    //     }
+    //
+    //     if (city && postalCode) {
+    //       city += ` ${postalCode}`;
+    //     }
+    //   }
+
+      // build cover
+      let cover = 'https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11410518_112057692469780_1792210714_n.jpg';
+
+      let actions = [{
+        materialIcon: 'search',
+        text: 'Find',
+        onTouchTap: this._onTouchTapSearch.bind(this),
+      }, {
+        materialIcon: 'star_rate',
+        text: 'Save',
+        onTouchTap: this._onTouchTapSave.bind(this),
+      }, {
+        materialIcon: 'share',
+        text: 'Share',
+        onTouchTap: this._onTouchTapShare.bind(this),
+      }];
+
+      return (
+
+        <div>
+          <DetailsCard
+              title={job.get('title')}
+              subtitle={job.get('title')}
+              cover={cover}
+              mainColor={Styles.Colors.indigo500}
+              actions={actions}
+              floatActionOnTap={this._onTouchTapShare.bind(this)}
+              floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
+          />
+          {/* <List style={{position: 'relative', top: '3px'}}>
+            <div>
+
+              {(email) ? (
+                <ListItem
+                  leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
+                  primaryText={email}
+                  secondaryText={<p>email</p>}
+                  secondaryTextLines={1}
+                />
+              ) : (null)}
+
+              {(phone) ? (
+                <div>
+                  <Divider inset />
+                  <ListItem
+                    leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                    primaryText={phone}
+                    secondaryText={<p>phone</p>}
+                    secondaryTextLines={1}
+                  />
+                </div>
+              ) : (null)}
+
+              {(addressLine) ? (
+                <div>
+                  <Divider inset />
+                  <ListItem
+                    leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                    primaryText={addressLine}
+                    secondaryText={<p>address</p>}
+                    secondaryTextLines={1}
+                  />
+                </div>
+              ) : (null)}
+
+              {(city) ? (
+                <div>
+                  <Divider inset />
+                  <ListItem
+                    leftIcon={<FontIcon className="material-icons">business</FontIcon>}
+                    primaryText={city}
+                    secondaryText={<p>city</p>}
+                    secondaryTextLines={1}
+                  />
+                </div>
+              ) : (null)}
+
+              {(source) ? (
+                <div>
+                  <Divider inset />
+                  <ListItem
+                    leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                    primaryText={source}
+                    secondaryText={<p>source</p>}
+                    secondaryTextLines={1}
+                  />
+                </div>
+              ) : (null)}
+
+            </div>
+          </List> */}
+        </div>
+      );
+
+    }
+    else {
+      return (<div></div>);
+    }
   }
 
   render() {
-    let { location, isLight, job } = this.props;
-    job =  job || new Immutable.Map();
-    let jobImage = ((job) ? (job.get('image')) : (null));
-    let jobCandidates = ((job) ? (job.get('candidates')) : ([]));
-    jobCandidates = jobCandidates || [];
 
-    // mardown to html
-    //let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
-    let description = job.get('description')?marked(job.get('description')):'';
-    let pitch = job.get('quickPitch')?marked(job.get('quickPitch')) : '';
-  //  let range = '$'+job?job.get('minSalary'):'' + 'to $'+ job?job.get('maxSalary'):'';
+    let { job } = this.props;
+    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    let contentHeight = clientHeight;
+
     return (
       <div>
-        <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-        <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates']} >
-          <div style={style.slide}>
-            <Card>
-              {(jobImage) ? (
-                <div className="mediawrap">
-                  <CardMedia>
-                    <img src={jobImage.get('item')} />
-                  </CardMedia>
-                  {/*<div className="button-right-bottom">
-                    <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}} label="Apply" />
-                  </div>
-                  <div className="button-left-bottom">
-                    <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}}  label="Share" />
-                  </div>*/}
-                </div>
-              ) : (null)}
-              <CardText>
-                <Card>
-                  <CardText>
-                    <div className='row center-xs'>
-                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'><div>${job?job.get('minSalary'):''}</div> <div style={{fontSize:'11px', color:'rgba(0,0,0,0.54)'}}>to</div> <div>${job?job.get('maxSalary'):''}</div> <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>salary</div></div>
-                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>{job?job.get('employmentType'):''} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>position</div></div>
-                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>{jobCandidates.length} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>candidates</div></div>
-                    </div>
-                  </CardText>
-                </Card>
-              </CardText>
-              <CardText>
-                <div>Skills</div>
-                {job.get('skills')? job.get('skills').map(function(skill){
-                  return (<span><RaisedButton style={{marginBottom:'5px'}} secondary={true} label={skill}>
-                  </RaisedButton> &nbsp;</span>
-                );
-                }): null}
-              </CardText>
-              <CardText >
-                Quick Pitch
-                <div className="description">
-                  <p dangerouslySetInnerHTML={{__html: pitch}}>
-                  </p>
-                </div>
-              </CardText>
-
-              <CardText>
-                <LocationCard style={{height: '200px'}} location={location} />
-              </CardText>
-
-              {
-                /*
-                <CardText>
-                  <Card>
-                    <List subheader='Compensation Details'>
-                      <ListItem
-                          leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
-                          primaryText={range}
-                          secondaryText={<p>salary</p>}
-                          secondaryTextLines={1}
-                          disabled
-                      />
-                      <ListItem
-                          leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
-                          primaryText={job?job.get('fee'):''}
-                          secondaryText={<p>fee</p>}
-                          secondaryTextLines={1}
-                          disabled
-                      />
-                      <ListItem
-                          leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
-                          primaryText={'$30,000'}
-                          secondaryText={<p>estimated fee</p>}
-                          secondaryTextLines={1}
-                          disabled
-                      />
-                      <ListItem
-                          leftIcon={<FontIcon className='material-icons'>person</FontIcon>}
-                          primaryText={'Permanent'}
-                          secondaryText={<p>position type</p>}
-                          secondaryTextLines={1}
-                          disabled
-                      />
-                    </List>
-                  </Card>
-                </CardText>
-                */
-              }
-              <List subheader='Job Contact'>
-                {(job.get('contact')) ? (
-                  <ListItem
-                    leftAvatar={<Gravatar email={job.get('contact').get('email')} status={'vetted'} />}
-                    primaryText={job.get('contact').get('displayName')}
-                    secondaryText={<p>Job Contact</p>}
-                    secondaryTextLines={1}
-                  />
-                ) : (null)}
-              </List>
-              <List subheader='Your HERO talent advocate'>
-                {(job.get('talentAdvocate')) ? (
-                  <ListItem
-                    leftAvatar={<Gravatar email={job.get('talentAdvocate').get('email')} status={'vetted'} />}
-                    primaryText={job.get('talentAdvocate').get('displayName')}
-                    secondaryText={<p>Hero Talent Advocate</p>}
-                    secondaryTextLines={1}
-                  />
-                ) : (null)}
-              </List>
-            </Card>
+        <Dialog
+            open={this.props.open}
+            autoDetectWindowHeight={false}
+            autoScrollBodyContent={false}
+            repositionOnUpdate={false}
+            defaultOpen={false}
+            style={style.dialog}
+            bodyStyle={style.bodyStyle}
+            contentStyle={style.contentStyle}
+        >
+          <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
+            <Header transparent goBack={this.goBack.bind(this)} iconRight={
+              <IconMenu iconButtonElement={
+                <IconButton iconClassName="material-icons">more_vert</IconButton>
+              }>
+                <MenuItem index={0} primaryText="Edit Job" />
+              </IconMenu>
+            }
+            />
+            <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
+              {this.renderContent(job)}
+            </div>
           </div>
-          <div style={style.slide}>
-            <Card>
-              <CardText >
-                <div className='description'>
-                  <h3>Job Description</h3>
-                  <div dangerouslySetInnerHTML={{__html: description}} />
-                </div>
-              </CardText>
-            </Card>
-          </div>
-          <div style={style.slide}>
-            <CandidatesList candidates={jobCandidates} />
-          </div>
-        </CustomTabsSwipe>
+        </Dialog>
       </div>
     );
   }
 }
 
-export default JobDetails;
+JobDetails.propTypes = {
+  job: React.PropTypes.object,
+  onJobDetailsClose: React.PropTypes.func,
+  open: React.PropTypes.bool.isRequired,
+};
