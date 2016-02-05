@@ -279,7 +279,7 @@ export default class JobCreate extends React.Component {
                         multiLine
                         fullWidth
                         floatingLabelStyle={style.floatLabel}
-                        onChange={(e) => this._handleChange.bind(this, 'quickPitch')}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'quickPitch')}
                         value={job.get('quickPitch')}
                     />
                   </div>
@@ -298,7 +298,7 @@ export default class JobCreate extends React.Component {
                         pattern="[0-9]*"
                         fullWidth
                         errorText={''}
-                        onChange={(e) => this._handleChange.bind(this, 'minSalary')}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'minSalary')}
                         floatingLabelText="Min Salary"
                         type="number"
                         value={job.get('minSalary')}
