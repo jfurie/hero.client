@@ -116,8 +116,10 @@ class CustomTabsSwipe extends React.Component {
     let inkBarStyle = style.inkBar;
     if (isInline) {
       inkBarStyle.display = 'none';
+      tabsStyle.position = 'relative';
     } else {
       inkBarStyle.display = 'block';
+      tabsStyle.position = 'fixed';
     }
 
     return (
