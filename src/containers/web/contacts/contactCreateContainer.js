@@ -36,9 +36,7 @@ export default class ContactCreateContainer extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.params.contactId) {
-      this.props.getOneContact(this.props.params.contactId);
-    }
+    
   }
 
   componentWillReceiveProps(newProps){
