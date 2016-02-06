@@ -40,5 +40,15 @@ class Root extends React.Component {
     );
   }
 }
-
-ReactDOM.render(<Root/>, document.getElementById('app'));
+function startApp(){
+  ReactDOM.render(<Root/>, document.getElementById('app'));
+}
+var url = document.URL;
+   var isSmart = (url.indexOf("http://") === -1 && url.indexOf("https://") === -1);
+   if( isSmart ){
+       alert('isSmart')
+       document.addEventListener('deviceready', startApp, false);
+   }
+   else{
+      startApp();
+   }

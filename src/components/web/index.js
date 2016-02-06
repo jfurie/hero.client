@@ -30,6 +30,8 @@ export Location from './location/location';
 export ClientDetails from './clientDetails/clientDetails';
 export ContactDetails from './contactDetails/contactDetails';
 export DetailsCard from './detailsCard/detailsCard';
+export ClientListItem from './clientListItem/clientListItem';
+export Stars from './stars/stars';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
