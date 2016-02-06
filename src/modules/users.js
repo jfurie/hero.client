@@ -101,10 +101,10 @@ export function getUserContact(id) {
   };
 }
 
-export function getUserStats(id) {
+export function getUserStats(accountId, userId) {
   return {
     types: [GET_USER_STATS, GET_USER_STATS_SUCCESS, GET_USER_STATS_FAIL],
-    promise: (client, auth) => client.api.get(`/users/stats?id=${id}`, {
+    promise: (client, auth) => client.api.get(`/users/stats?accountId=${accountId}&userId=${userId}`, {
       authToken: auth.authToken,
     }),
   };

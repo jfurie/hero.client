@@ -203,6 +203,11 @@ class HomePage extends React.Component {
     });
   }
 
+  onJobSearchOpen() {
+    this.refs.actionButtons.close();
+    this.props.history.pushState(null,'/jobs/search');
+  }
+
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -221,7 +226,7 @@ class HomePage extends React.Component {
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
         <ContentAdd />
       </ActionButtonItem>,
-      <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this._createJob}>
+      <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this.onJobSearchOpen.bind(this)}>
         <ContentAdd />
       </ActionButtonItem>,
       <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this.onClientSearchOpen.bind(this)}>

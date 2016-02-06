@@ -24,6 +24,12 @@ const constraints = {
       message: 'must be at least 1 characters',
     },
   },
+  'phone': {
+    length: {
+      minimum: 10,
+      message: 'must be valid',
+    },
+  },
 };
 
 export default function validateCompany(company) {

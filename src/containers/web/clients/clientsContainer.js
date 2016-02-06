@@ -7,7 +7,6 @@ import { getAllCompanies, getMyCompanies, createCompany, searchCompany } from '.
 import { getCurrentAccount } from '../../../modules/currentAccount';
 import { getContactsByCompany } from '../../../modules/contacts';
 
-import { IconButton } from 'material-ui';
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 @connect((state) => {
   let visibleCompanies = new Immutable.Map();
@@ -104,11 +103,7 @@ class ClientPage extends React.Component {
     return (
       <div>
         <ClientsCreateModal heroContacts={heroContacts} onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen} />
-        <Header
-            iconRight={<IconButton onTouchTap={this.openModal.bind(this)}
-            iconClassName='material-icons'>add</IconButton>}
-            title={'Clients'}
-        />
+        <Header title={'Clients'} />
         <ClientsList clients={visibleCompanies} />
 
       </div>);
