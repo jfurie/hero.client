@@ -2,23 +2,25 @@
 
 var path = require('path');
 var webpack = require('webpack');
-
+var _ = require('lodash');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var env = process.env.NODE_ENV || 'development';
 var isDEV =  env = 'development';
-module.exports = {
+
+var original = {
   debug: true,
-  //watch:true,
+  watch:true,
   devtool: 'source-map',
   entry: {
     //'index.ios': ['./src/main.ios.js'],
     //'index.android': ['./src/main.android.js'],
     'index.web': ['./src/main.web.js'],
   },
-  output: {
-    path: path.resolve(__dirname, 'web/dist/public/js'),
-    filename: '[name].js',
-  },
+  output:
+    {
+      path: path.resolve(__dirname, 'web/dist/public/js'),
+      filename: '[name].js',
+    },
   externals:{
     google:'google'
   },
@@ -57,3 +59,10 @@ module.exports = {
     }),
   ],
 };
+var web = _.extend({},original);
+var cordova = _.extend({},original);
+cordova.output =  {
+  path: path.resolve(__dirname, 'cordova/www/js'),
+  filename: '[name].js',
+};
+module.exports = web;

@@ -1,6 +1,6 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { Card, CardText, FontIcon, Divider, IconButton,CardActions, Styles } from 'material-ui';
+import { Card, CardText, FontIcon, Divider, IconButton,CardActions, Styles,Avatar } from 'material-ui';
 import { CompanyAvatar, Gravatar, Stars } from '../../../components/web';
 let style = {
   layout:{
@@ -15,7 +15,7 @@ let style = {
     flex:'0 0 56px',
   },
   contactsLayout:{
-    flex:'0 0 150px',
+    flex:'0 0 200px',
     marginTop:'16px',
   },
   starLayout:{
@@ -76,6 +76,15 @@ let style = {
     width: '30px',
     height: '30px',
   },
+  plusAvatar: {
+    display: 'inline',
+    width: '30px',
+    height: '30px',
+    padding: '7px 8px 7px 7px',
+    fontSize: '16px',
+    position: 'relative',
+    top: '-11px',
+  },
   accountOwnerGravatar:{
     display: 'inline',
     width: '25px',
@@ -127,7 +136,11 @@ export default class ClientListItem extends React.Component {
     }
 
     return (
-      <Card onTouchTap={this.clickClient.bind(this)}>
+      <Card
+        style={{
+          height: type !=='mini'?'277px':'88px',
+          marginBottom:'5px',
+        }} onTouchTap={this.clickClient.bind(this)}>
         <CardText>
           {type !=='mini'?(<div>
             <div>
@@ -146,7 +159,7 @@ export default class ClientListItem extends React.Component {
                       {company && company.get('name')}
                   </div>
                   <div style={style.subtitle}>
-                      Software Startup
+                      {company.get('businessType')|| 'Company'}
                   </div>
                   <div style={style.subtitle}>
                       <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
@@ -157,7 +170,7 @@ export default class ClientListItem extends React.Component {
 
                 </div>
                 <div style={{position: 'absolute', bottom:'0', right:'0'}}>
-                  <Stars score={4.8}></Stars>
+                  <Stars score={company.get('rating')}></Stars>
                 </div>
             </div>
             {type !== 'mini'?
@@ -176,13 +189,13 @@ export default class ClientListItem extends React.Component {
                       <div style={{marginTop:'8px'}}>
 
                         <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
-                        2
+                        {company.get('stats') && company.get('stats').get('jobCount')|| 0}
                         <FontIcon style={style.status} className="material-icons">assignment_ui</FontIcon>
-                        3
+                        { company.get('stats') && company.get('stats').get('candidateCount')|| 0}
                         <FontIcon style={style.statusRed} className="material-icons">assignment_late</FontIcon>
-                        4
+                        {company.get('stats') && company.get('stats').get('actionsCount')|| 0}
                         <FontIcon style={style.statusGreen} className="material-icons">assignment_turned_in</FontIcon>
-                        1
+                        {company.get('stats') && company.get('stats').get('hiredCount')|| 0}
                       </div>
                   </div>
 
