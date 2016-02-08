@@ -93,7 +93,10 @@ export default class ClientListItem extends React.Component {
   constructor(props){
     super(props);
   }
-
+  clickClient(){
+    let {company} = this.props;
+    this.props.onClientClick(company.get('id'));
+  }
   render(){
     let {company, type} = this.props;
 
@@ -124,7 +127,7 @@ export default class ClientListItem extends React.Component {
     }
 
     return (
-      <Card>
+      <Card onTouchTap={this.clickClient.bind(this)}>
         <CardText>
           {type !=='mini'?(<div>
             <div>

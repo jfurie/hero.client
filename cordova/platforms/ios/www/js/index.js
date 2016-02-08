@@ -40,21 +40,13 @@ var app = {
           alert('connection none');
           navigator.notification.alert('An internet connection is required to continue');
         } else {
-          //window.location="http://hero-client.herokuapp.com";
-          window.location="http://localhost:5455";
+          window.location="http://hero-client.herokuapp.com";
+          //window.location="http://localhost:5455";
         }
 
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
     }
 };
 

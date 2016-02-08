@@ -34,6 +34,10 @@
     <feature name="Notification">
         <param name="ios-package" value="CDVNotification" />
     </feature>
+    <feature name="File">
+        <param name="ios-package" value="CDVFile" />
+        <param name="onload" value="true" />
+    </feature>
     <feature name="NetworkStatus">
         <param name="ios-package" value="CDVConnection" />
     </feature>
@@ -43,6 +47,10 @@
     </feature>
     <preference name="StatusBarOverlaysWebView" value="true" />
     <preference name="StatusBarStyle" value="lightcontent" />
+    <feature name="CDVWKWebViewEngine">
+        <param name="ios-package" value="CDVWKWebViewEngine" />
+    </feature>
+    <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
     <icon height="180" src="platforms/ios/HERO/Resources/icons/icon-60@3x.png" width="180" />
@@ -81,6 +89,8 @@
     <access origin="*" />
     <allow-navigation href="*://hero-client.herokuapp.com/*" />
     <allow-navigation href="*://localhost:*/*" />
+    <allow-navigation href="gap://ready" />
+    <allow-navigation href="about:blank" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />

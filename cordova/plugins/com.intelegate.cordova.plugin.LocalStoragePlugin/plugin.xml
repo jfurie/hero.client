@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
+            id="com.intelegate.cordova.plugin.LocalStoragePlugin" version="0.0.4">
+        <name>LocalStorage</name>
+        <description>Local storage plugin</description>
+        <license>Apache 2.0</license>
+        <keywords>cordova,local,storage</keywords>
+
+        <engines>
+            <engine name="cordova" version=">=3.2.0" />
+        </engines>
+
+        <js-module src="www/LocalStoragePlugin.js" name="LocalStoragePlugin">
+            <clobbers target="LocalStoragePlugin" />
+        </js-module>
+        
+    <platform name="android">
+
+    <config-file target="res/xml/config.xml" parent="/*">
+        <feature name="LocalStoragePlugin">
+            <param name="android-package" value="com.intelegate.cordova.plugin.LocalStoragePlugin"/>
+        </feature>
+
+    </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        </config-file>
+
+    <source-file src="src/android/LocalStoragePlugin.java" target-dir="src/com/intelegate/cordova/plugin" />
+
+    </platform>
+</plugin>

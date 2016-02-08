@@ -31740,11 +31740,11 @@
 	  };
 	}
 	
-	function getUserStats(id) {
+	function getUserStats(accountId, userId) {
 	  return {
 	    types: [GET_USER_STATS, GET_USER_STATS_SUCCESS, GET_USER_STATS_FAIL],
 	    promise: function promise(client, auth) {
-	      return client.api.get('/users/stats?id=' + id, {
+	      return client.api.get('/users/stats?accountId=' + accountId + '&userId=' + userId, {
 	        authToken: auth.authToken
 	      });
 	    }
@@ -37379,6 +37379,20 @@
 	exports.SHARE_JOB_SUCCESS = SHARE_JOB_SUCCESS;
 	var SHARE_JOB_FAIL = 'hero.client/jobs/SHARE_JOB_FAIL';
 	exports.SHARE_JOB_FAIL = SHARE_JOB_FAIL;
+	var EDIT_JOB = 'hero.client/jobs/EDIT_JOB';
+	exports.EDIT_JOB = EDIT_JOB;
+	var EDIT_JOB_SUCCESS = 'hero.client/jobs/EDIT_JOB_SUCCESS';
+	exports.EDIT_JOB_SUCCESS = EDIT_JOB_SUCCESS;
+	var EDIT_JOB_FAIL = 'hero.client/jobs/EDIT_JOB_FAIL';
+	exports.EDIT_JOB_FAIL = EDIT_JOB_FAIL;
+	var SEARCH_JOBS = 'hero.client/jobs/SEARCH_JOBS';
+	exports.SEARCH_JOBS = SEARCH_JOBS;
+	var SEARCH_JOBS_SUCCESS = 'hero.client/jobs/SEARCH_JOBS_SUCCESS';
+	exports.SEARCH_JOBS_SUCCESS = SEARCH_JOBS_SUCCESS;
+	var SEARCH_JOBS_FAIL = 'hero.client/jobs/SEARCH_JOBS_FAIL';
+	exports.SEARCH_JOBS_FAIL = SEARCH_JOBS_FAIL;
+	var CREATE_TEMP_JOB = 'hero.client/jobs/CREATE_TEMP_JOB';
+	exports.CREATE_TEMP_JOB = CREATE_TEMP_JOB;
 
 /***/ },
 /* 403 */
@@ -38059,6 +38073,7 @@
 	exports.getJobsByCompany = getJobsByCompany;
 	exports.getAllJobs = getAllJobs;
 	exports.createJob = createJob;
+	exports.editJob = editJob;
 	exports.shareJob = shareJob;
 	exports.updateJobLocal = updateJobLocal;
 	exports.replaceJobLocal = replaceJobLocal;
@@ -38066,6 +38081,8 @@
 	exports.saveLocalJob = saveLocalJob;
 	exports.getMyJobs = getMyJobs;
 	exports.getOneJob = getOneJob;
+	exports.searchJobs = searchJobs;
+	exports.createTempJob = createTempJob;
 	
 	var _superagent = __webpack_require__(415);
 	
@@ -38118,10 +38135,31 @@
 	}
 	
 	function createJob(job) {
+	  var id = job.get('id');
+	  if (id && id.indexOf('tmp') > -1) {
+	    job = job.remove('id');
+	  }
 	  return {
+	    id: id,
+	    job: job,
 	    types: [constants.CREATE_JOB, constants.CREATE_JOB_SUCCESS, constants.CREATE_JOB_FAIL],
 	    promise: function promise(client, auth) {
 	      return client.api.post('/jobs', {
+	        authToken: auth.authToken,
+	        data: job
+	      });
+	    }
+	  };
+	}
+	
+	function editJob(job) {
+	  var id = job.get('id');
+	  return {
+	    id: id,
+	    job: job,
+	    types: [constants.EDIT_JOB, constants.EDIT_JOB_SUCCESS, constants.EDIT_JOB_FAIL],
+	    promise: function promise(client, auth) {
+	      return client.api.put('/jobs/' + job.get('id'), {
 	        authToken: auth.authToken,
 	        data: job
 	      });
@@ -38205,7 +38243,12 @@
 	function saveLocalJob() {
 	  return function (dispatch, getState) {
 	    var current = getState().jobs.localJob;
-	    dispatch(createJob(current));
+	    var id = current.get('id');
+	    if (!id || id.indexOf('tmp') > -1) {
+	      dispatch(createJob(current));
+	    } else {
+	      dispatch(editJob(current));
+	    }
 	  };
 	}
 	
@@ -38231,6 +38274,24 @@
 	        }
 	      });
 	    }
+	  };
+	}
+	
+	function searchJobs(query) {
+	  return {
+	    types: [constants.SEARCH_JOBS, constants.SEARCH_JOBS_SUCCESS, constants.SEARCH_JOBS_FAIL],
+	    promise: function promise(client, auth) {
+	      return client.api.get('/jobs/search?query=' + query, {
+	        authToken: auth.authToken
+	      });
+	    }
+	  };
+	}
+	
+	function createTempJob(job) {
+	  return {
+	    type: constants.CREATE_TEMP_JOB,
+	    result: job
 	  };
 	}
 
@@ -39669,7 +39730,8 @@
 	  list: new _immutable2['default'].Map(),
 	  byCompanyId: new _immutable2['default'].Map(),
 	  localJob: new _immutable2['default'].Map(),
-	  myJobIds: new _immutable2['default'].List()
+	  myJobIds: new _immutable2['default'].List(),
+	  queries: new _immutable2['default'].Map()
 	};
 	
 	function reducer() {
@@ -39764,14 +39826,24 @@
 	      }
 	    case constants.CREATE_JOB:
 	      {
+	        var job = {};
+	        action.job = action.job.set('saving', true);
+	        action.job = action.job.set('savingError', null);
+	        job[action.id] = action.job;
 	        return _extends({}, state, {
-	          loading: true
+	          saving: true,
+	          savingError: '',
+	          list: state.list.mergeDeep(job),
+	          localJob: action.job
 	        });
 	      }
 	    case constants.CREATE_JOB_SUCCESS:
 	      {
 	        var jobMap = {};
+	        action.result.saving = false;
+	        action.result.savingError = '';
 	        jobMap[action.result.id] = action.result;
+	        jobMap[action.id] = jobMap[action.result.id];
 	
 	        var companyId = action.result.companyId;
 	        var byCompanyMapNew = {};
@@ -39783,13 +39855,66 @@
 	          list: state.list.mergeDeep(jobMap),
 	          byCompanyId: state.byCompanyId.mergeDeep(byCompanyMapNew),
 	          loading: false,
-	          localJob: state.localJob.mergeDeep({ success: true })
+	          localJob: new _immutable2['default'].Map(action.result),
+	          saving: false,
+	          savingError: ''
 	        });
 	      }
 	    case constants.CREATE_JOB_FAIL:
 	      {
+	        var job = {};
+	        action.job = action.job.set('saving', true);
+	        action.job = action.job.set('savingError', action.error && action.error.error && action.error.error.message || 'Failed to create job');
+	
+	        job[action.id] = action.job;
 	        return _extends({}, state, {
-	          loading: false
+	          saving: false,
+	          savingError: 'Failed to create job',
+	          list: state.list.mergeDeep(job),
+	          localJob: action.job
+	        });
+	      }
+	    case constants.EDIT_JOB:
+	      {
+	        var job = {};
+	        action.job = action.job.set('saving', true);
+	        action.job = action.job.set('savingError', null);
+	        job[action.id] = action.job;
+	        return _extends({}, state, {
+	          saving: true,
+	          savingError: '',
+	          list: state.list.mergeDeep(job),
+	          localJob: action.job
+	        });
+	      }
+	    case constants.EDIT_JOB_SUCCESS:
+	      {
+	        var jobMap = {};
+	        action.result.saving = false;
+	        action.result.savingError = '';
+	        jobMap[action.result.id] = action.result;
+	        jobMap[action.id] = jobMap[action.result.id];
+	
+	        return _extends({}, state, {
+	          list: state.list.mergeDeep(jobMap),
+	          loading: false,
+	          localJob: state.localJob.mergeDeep(action.result),
+	          saving: false,
+	          savingError: ''
+	        });
+	      }
+	    case constants.EDIT_JOB_FAIL:
+	      {
+	        var job = {};
+	        action.job = action.job.set('saving', true);
+	        action.job = action.job.set('savingError', action.error && action.error.error && action.error.error.message || 'Failed to edit job');
+	
+	        job[action.id] = action.job;
+	        return _extends({}, state, {
+	          saving: false,
+	          savingError: 'Failed to edit job',
+	          list: state.list.mergeDeep(job),
+	          localJob: action.job
 	        });
 	      }
 	    case constants.CREATE_JOB_LOCAL:
@@ -39871,6 +39996,26 @@
 	    case constants.UPDATE_JOB_IMAGE_LOCAL_FAIL:
 	      {
 	        return _extends({}, state);
+	      }
+	    case constants.SEARCH_JOBS_SUCCESS:
+	      {
+	        var query = action.result.query;
+	
+	        var queriesMap = {};
+	        queriesMap[query] = action.result.results;
+	
+	        return _extends({}, state, {
+	          queries: state.queries.mergeDeep(queriesMap)
+	        });
+	      }
+	    case constants.CREATE_TEMP_JOB:
+	      {
+	        var contactsMap = {};
+	        contactsMap[action.result.id] = action.result;
+	        return _extends({}, state, {
+	          list: state.list.mergeDeep(contactsMap),
+	          localJob: new _immutable2['default'].Map(action.result)
+	        });
 	      }
 	    default:
 	      return state;
@@ -48259,6 +48404,10 @@
 	
 	//jobs
 	
+	var _containersWebJobsJobSearchContainer = __webpack_require__(972);
+	
+	var _containersWebJobsJobSearchContainer2 = _interopRequireDefault(_containersWebJobsJobSearchContainer);
+	
 	var _containersWebJobsJobDetailsContainer = __webpack_require__(963);
 	
 	var _containersWebJobsJobDetailsContainer2 = _interopRequireDefault(_containersWebJobsJobDetailsContainer);
@@ -48266,6 +48415,10 @@
 	var _containersWebJobsMyJobsContainer = __webpack_require__(965);
 	
 	var _containersWebJobsMyJobsContainer2 = _interopRequireDefault(_containersWebJobsMyJobsContainer);
+	
+	var _containersWebJobsJobCreateContainer = __webpack_require__(973);
+	
+	var _containersWebJobsJobCreateContainer2 = _interopRequireDefault(_containersWebJobsJobCreateContainer);
 	
 	// contacts
 	
@@ -48417,7 +48570,9 @@
 	                nextState.params.clientDetailsOpen = true;
 	              } }),
 	            _react2['default'].createElement(_reactRouter.Route, { path: ':companyId/contacts/search', component: _containersWebContactsContactSearchContainer2['default'] }),
-	            _react2['default'].createElement(_reactRouter.Route, { path: ':companyId/contacts/:contactId/create', component: _containersWebContactsContactCreateContainer2['default'] })
+	            _react2['default'].createElement(_reactRouter.Route, { path: ':companyId/contacts/:contactId/create', component: _containersWebContactsContactCreateContainer2['default'] }),
+	            _react2['default'].createElement(_reactRouter.Route, { path: ':companyId/jobs/search', component: _containersWebJobsJobSearchContainer2['default'] }),
+	            _react2['default'].createElement(_reactRouter.Route, { path: ':companyId/jobs/:jobId/create', component: _containersWebJobsJobCreateContainer2['default'] })
 	          ),
 	          _react2['default'].createElement(_reactRouter.Route, { path: ':id/jobs', component: _containersWebClientsClientDetailsContainer2['default'], onEnter: function (nextState) {
 	              nextState.params.tab = 'jobs';
@@ -48446,7 +48601,9 @@
 	          _reactRouter.Route,
 	          { path: 'jobs' },
 	          _react2['default'].createElement(_reactRouter.IndexRoute, { component: _containersWebJobsMyJobsContainer2['default'] }),
-	          _react2['default'].createElement(_reactRouter.Route, { path: ':id', component: _containersWebJobsJobDetailsContainer2['default'] })
+	          _react2['default'].createElement(_reactRouter.Route, { path: 'search', component: _containersWebJobsJobSearchContainer2['default'] }),
+	          _react2['default'].createElement(_reactRouter.Route, { path: ':jobId', component: _containersWebJobsJobDetailsContainer2['default'] }),
+	          _react2['default'].createElement(_reactRouter.Route, { path: ':jobId/create', component: _containersWebJobsJobCreateContainer2['default'] })
 	        ),
 	        _react2['default'].createElement(
 	          _reactRouter.Route,
@@ -48729,6 +48886,12 @@
 	      });
 	    }
 	  }, {
+	    key: 'onJobSearchOpen',
+	    value: function onJobSearchOpen() {
+	      this.refs.actionButtons.close();
+	      this.props.history.pushState(null, '/jobs/search');
+	    }
+	  }, {
 	    key: '_guid',
 	    value: function _guid() {
 	      function s4() {
@@ -48752,7 +48915,7 @@
 	        _react2['default'].createElement(_materialUiLibSvgIconsContentAdd2['default'], null)
 	      ), _react2['default'].createElement(
 	        _componentsWeb.ActionButtonItem,
-	        { title: 'Job', color: _materialUi.Styles.Colors.purple500, itemTapped: this._createJob },
+	        { title: 'Job', color: _materialUi.Styles.Colors.purple500, itemTapped: this.onJobSearchOpen.bind(this) },
 	        _react2['default'].createElement(_materialUiLibSvgIconsContentAdd2['default'], null)
 	      ), _react2['default'].createElement(
 	        _componentsWeb.ActionButtonItem,
@@ -49006,6 +49169,12 @@
 	
 	exports.ContactDetails = _contactDetailsContactDetails2['default'];
 	
+	var _jobCreateJobCreate = __webpack_require__(969);
+	
+	var _jobCreateJobCreate2 = _interopRequireDefault(_jobCreateJobCreate);
+	
+	exports.JobCreate = _jobCreateJobCreate2['default'];
+	
 	var _detailsCardDetailsCard = __webpack_require__(922);
 	
 	var _detailsCardDetailsCard2 = _interopRequireDefault(_detailsCardDetailsCard);
@@ -49103,6 +49272,12 @@
 	var _contactSearchContactSearchModal2 = _interopRequireDefault(_contactSearchContactSearchModal);
 	
 	exports.ContactSearchModal = _contactSearchContactSearchModal2['default'];
+	
+	var _jobSearchJobSearchModal = __webpack_require__(970);
+	
+	var _jobSearchJobSearchModal2 = _interopRequireDefault(_jobSearchJobSearchModal);
+	
+	exports.JobSearchModal = _jobSearchJobSearchModal2['default'];
 
 /***/ },
 /* 612 */
@@ -86731,7 +86906,7 @@
 	    value: function refresh() {
 	      if (this.props.user) this.props.getUserContact(this.props.user.id);
 	
-	      if (this.props.authToken) this.props.getUserStats(this.props.authToken.accountInfo.account.id);
+	      if (this.props.authToken) this.props.getUserStats(this.props.authToken.accountInfo.account.id, this.props.user.id);
 	    }
 	  }, {
 	    key: 'render',
@@ -86882,31 +87057,26 @@
 	/* CODE MIGHT STILL BE HERE */
 	
 	var style = {
-	  tabsContainer: {},
 	  tabs: {
 	    backgroundColor: _materialUi.Styles.Colors.grey900,
 	    position: 'fixed',
 	    width: '100%',
 	    zIndex: '10'
 	  },
-	  tabs2: {
+	  tabsLight: {
 	    backgroundColor: '#ffffff',
 	    position: 'fixed',
 	    width: '100%',
 	    zIndex: '10'
-	
 	  },
-	  tab2Selected: {
-	    color: _materialUi.Styles.Colors.grey900,
+	  tabsInline: {
+	    position: 'relative',
+	    top: '4px'
+	  },
+	  tabLightSelected: {
 	    fontWeight: '800',
-	    borderBottom: '2px solid #505050'
-	  },
-	  tab: {
-	    // marginTop: '48px',
-	  },
-	  tab2: {
-	    color: _materialUi.Styles.Colors.grey900,
-	    borderBottom: '1px solid #cccccc'
+	    borderBottom: '2px solid #505050',
+	    color: _materialUi.Styles.Colors.grey900
 	  },
 	  inkBar: {
 	    marginTop: '0px',
@@ -86986,24 +87156,28 @@
 	
 	      var _props = this.props;
 	      var tabs = _props.tabs;
-	      var /*startingTab,*/isLight = _props.isLight;
+	      var isLight = _props.isLight;
+	      var isInline = _props.isInline;
 	
-	      //let startSlide = startingTab || 0;
+	      isInline = isInline || false;
+	      isLight = isLight || false;
+	
 	      var tabsStyle = style.tabs;
-	      var tabStyle = style.tab;
-	      var tabStyleSelected = style.tab2Selected;
+	      var tabStyle = {};
+	
 	      if (isLight) {
-	        tabsStyle = style.tabs2;
-	        tabStyle = style.tab2;
-	        tabStyleSelected = style.tab2Selected;
+	        tabsStyle = style.tabsLight;
+	        tabStyle.color = _materialUi.Styles.Colors.grey900;
+	        tabStyle.borderBottom = '1px solid #cccccc';
 	      }
 	
-	      var isInline = this.props.isInline || false;
-	
+	      var inkBarStyle = style.inkBar;
 	      if (isInline) {
-	        style.inkBar.display = 'none';
+	        inkBarStyle.display = 'none';
 	        tabsStyle.position = 'relative';
-	        tabsStyle.top = '4px';
+	      } else {
+	        inkBarStyle.display = 'block';
+	        tabsStyle.position = 'fixed';
 	      }
 	
 	      return _react2['default'].createElement(
@@ -87014,16 +87188,16 @@
 	          {
 	            tabItemContainerStyle: tabsStyle,
 	            onChange: this._handleChangeTabs.bind(this),
-	            /*value={`${this.state.slideIndex}`}*/
 	            initialSelectedIndex: this.props.startingTab || 0,
-	            style: style.tabsContainer,
-	            inkBarStyle: style.inkBar
+	            inkBarStyle: inkBarStyle
 	          },
 	          tabs.map(function (tab, key) {
+	
 	            var tabStyleItem = tabStyle;
-	            if (_this.state.slideIndex == key) {
-	              tabStyleItem = tabStyleSelected;
+	            if (_this.state.slideIndex == key && isLight) {
+	              tabStyleItem = style.tabLightSelected;
 	            }
+	
 	            return _react2['default'].createElement(
 	              _materialUi.Tab,
 	              { label: tab, key: key, style: tabStyleItem, value: '' + key },
@@ -90548,12 +90722,15 @@
 	  }, {
 	    key: '_handleSubmit',
 	    value: function _handleSubmit() {
-	      if (this.props.company.get('saving') == true) return;
+	
+	      if (this.props.company.get('saving') == true) {
+	        return;
+	      }
+	
 	      var errors = (0, _validatorsCompany2['default'])(this.props.company.toJSON());
 	
 	      var newCompany = this.props.company.set('errors', errors);
 	      if (errors.validationErrors === 0) {
-	
 	        // and post ...
 	        this.props.onSubmit(newCompany);
 	      } else {
@@ -90584,7 +90761,9 @@
 	      if (!heroContacts) {
 	        heroContacts = new _immutable2['default'].Map();
 	      }
+	
 	      company = company || new _immutable2['default'].Map({ errors: new _immutable2['default'].Map() });
+	
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'row center-xs' },
@@ -91108,6 +91287,12 @@
 	    length: {
 	      minimum: 1,
 	      message: 'must be at least 1 characters'
+	    }
+	  },
+	  'phone': {
+	    length: {
+	      minimum: 10,
+	      message: 'must be valid'
 	    }
 	  }
 	};
@@ -92948,14 +93133,20 @@
 	    presence: true,
 	    email: true
 	  },
+	  // 'phone': {
+	  //   length: {
+	  //     is: 14,
+	  //     message: 'must be valid',
+	  //   },
+	  //   format: {
+	  //     pattern: /^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$/,
+	  //     message: 'must be (XXX) YYY-ZZZZ',
+	  //   },
+	  // },
 	  'phone': {
 	    length: {
-	      is: 14,
+	      minimum: 10,
 	      message: 'must be valid'
-	    },
-	    format: {
-	      pattern: /^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$/,
-	      message: 'must be (XXX) YYY-ZZZZ'
 	    }
 	  },
 	  'addressLine': {
@@ -93672,7 +93863,11 @@
 	    }
 	  }, {
 	    key: 'createJobModalOpen',
-	    value: function createJobModalOpen() {}
+	    value: function createJobModalOpen() {
+	      if (this.props.addJobModalOpen) {
+	        this.props.addJobModalOpen();
+	      }
+	    }
 	  }, {
 	    key: 'createNoteModalOpen',
 	    value: function createNoteModalOpen() {}
@@ -94728,10 +94923,10 @@
 	        _react2['default'].createElement(
 	          _materialUiLibCardCardActions2['default'],
 	          { className: 'row center-xs' },
-	          this.props.actions.map(function (action) {
+	          this.props.actions.map(function (action, key) {
 	            return _react2['default'].createElement(
 	              'div',
-	              { className: 'col-xs', style: style.actionBox },
+	              { className: 'col-xs', style: style.actionBox, key: key },
 	              _react2['default'].createElement(
 	                'div',
 	                { className: 'box', onTouchTap: _this._onTouchTapAction.bind(_this, action) },
@@ -98308,10 +98503,16 @@
 	    presence: true,
 	    email: true
 	  },
+	  // 'phone': {
+	  //   format: {
+	  //     pattern: /^(\([0-9]{3}\)|[0-9]{3}) ([0-9]{3})-([0-9]{4})$/g,
+	  //     message: 'must be (XXX) YYY-ZZZZ',
+	  //   },
+	  // },
 	  'phone': {
-	    format: {
-	      pattern: /^(\([0-9]{3}\)|[0-9]{3}) ([0-9]{3})-([0-9]{4})$/g,
-	      message: 'must be (XXX) YYY-ZZZZ'
+	    length: {
+	      minimum: 10,
+	      message: 'must be valid'
 	    }
 	  },
 	  'addressLine': {
@@ -100048,7 +100249,7 @@
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
 	      if (nextProps.auth.logoutReady) {
-	        window.location.href = '/login';
+	        window.location.href = cordova.file.applicationDirectory + '/login';
 	      }
 	
 	      if (nextProps.leftNav.open != this.props.leftNav.open) {
@@ -100076,7 +100277,7 @@
 	  }, {
 	    key: 'clickLogin',
 	    value: function clickLogin() {
-	      this.props.pushState(null, '/login');
+	      this.props.pushState(null, 'login');
 	      this.setState({
 	        open: false
 	      });
@@ -100774,8 +100975,6 @@
 	
 	var _modulesContacts = __webpack_require__(399);
 	
-	var _materialUi = __webpack_require__(613);
-	
 	var HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 	
 	var ClientPage = (function (_React$Component) {
@@ -100859,15 +101058,7 @@
 	        'div',
 	        null,
 	        _react2['default'].createElement(_componentsWeb.ClientsCreateModal, { heroContacts: heroContacts, onSubmit: this.saveCompany.bind(this), closeModal: this.closeModal.bind(this), open: this.state.createModalOpen }),
-	        _react2['default'].createElement(_componentsWeb.Header, {
-	          iconRight: _react2['default'].createElement(
-	            _materialUi.IconButton,
-	            { onTouchTap: this.openModal.bind(this),
-	              iconClassName: 'material-icons' },
-	            'add'
-	          ),
-	          title: 'Clients'
-	        }),
+	        _react2['default'].createElement(_componentsWeb.Header, { title: 'Clients' }),
 	        _react2['default'].createElement(_componentsWeb.ClientsList, { clients: visibleCompanies })
 	      );
 	    }
@@ -101177,6 +101368,11 @@
 	      this.props.pushState({}, '/clients/' + this.props.params.companyId + '/contacts/search?returnUrl=' + encodeURIComponent(window.location.pathname + window.location.search));
 	    }
 	  }, {
+	    key: 'addJobModalOpen',
+	    value: function addJobModalOpen() {
+	      this.props.pushState({}, '/clients/' + this.props.params.companyId + '/jobs/search?returnUrl=' + encodeURIComponent(window.location.pathname + window.location.search));
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var company = this.props.company;
@@ -101186,7 +101382,7 @@
 	      return _react2['default'].createElement(
 	        'div',
 	        null,
-	        _react2['default'].createElement(_componentsWeb.ClientDetails, { addContactModalOpen: this.addContactModalOpen.bind(this), editClientModalOpen: this.editClientModalOpen.bind(this), onClientDetailsClose: this.onClientDetailsClose.bind(this), open: true, tabId: 0, company: company })
+	        _react2['default'].createElement(_componentsWeb.ClientDetails, { addJobModalOpen: this.addJobModalOpen.bind(this), addContactModalOpen: this.addContactModalOpen.bind(this), editClientModalOpen: this.editClientModalOpen.bind(this), onClientDetailsClose: this.onClientDetailsClose.bind(this), open: true, tabId: 0, company: company })
 	      );
 	    }
 	  }]);
@@ -101751,16 +101947,7 @@
 	  _createClass(ClientCreateContainer, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      //get the hero compnay contacts
 	      this.props.getContactsByCompany(HEROCOMPANYID);
-	      //console.log('this.props.getOneCompany', this.props.companyId);
-	      if (this.props.params.companyId) {
-	        this.props.getOneCompany(this.props.params.companyId);
-	      }
-	      // let self = this;
-	      // setTimeout(() => {
-	      //   self.props.getAllCompanies();
-	      // }, 500);
 	    }
 	  }, {
 	    key: 'componentWillReceiveProps',
@@ -114729,11 +114916,7 @@
 	
 	  _createClass(ContactCreateContainer, [{
 	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      if (this.props.params.contactId) {
-	        this.props.getOneContact(this.props.params.contactId);
-	      }
-	    }
+	    value: function componentDidMount() {}
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(newProps) {
@@ -114834,6 +115017,1349 @@
 	exports['default'] = ContactCreateContainer;
 	
 	ContactCreateContainer.propTypes = {
+	  inline: _react2['default'].PropTypes.bool,
+	  onClose: _react2['default'].PropTypes.func,
+	  onSave: _react2['default'].PropTypes.func,
+	  open: _react2['default'].PropTypes.bool
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 969 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _get = __webpack_require__(2)['default'];
+	
+	var _inherits = __webpack_require__(18)['default'];
+	
+	var _createClass = __webpack_require__(27)['default'];
+	
+	var _classCallCheck = __webpack_require__(30)['default'];
+	
+	var _interopRequireDefault = __webpack_require__(31)['default'];
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(63);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _immutable = __webpack_require__(398);
+	
+	var _immutable2 = _interopRequireDefault(_immutable);
+	
+	var _materialUi = __webpack_require__(613);
+	
+	var _ = __webpack_require__(611);
+	
+	var style = {
+	  error: {
+	    float: 'left'
+	  },
+	  divider: {
+	    marginTop: '16px'
+	  },
+	  subheader: {
+	    color: _materialUi.Styles.Colors.grey600,
+	    fontSize: '14px',
+	    marginTop: '16px',
+	    marginBottom: '16px',
+	    marginLeft: '16px',
+	    textAlign: 'left'
+	  },
+	  textField: {
+	    'width': '100%'
+	  },
+	  dialog: {
+	    height: '100%',
+	    maxHeight: '100%',
+	    paddingTop: '0px'
+	  },
+	  bodyStyle: {
+	    paddingTop: '0px',
+	    height: '100%',
+	    padding: '0'
+	  },
+	  contentStyle: {
+	    width: '100%',
+	    maxWidth: 'none',
+	    height: '100%',
+	    maxHeight: '100%',
+	    paddingTop: '0px',
+	    top: '-64px'
+	  },
+	  toolbar: {
+	    backgroundColor: '#ffffff',
+	    height: '64px'
+	  },
+	  toolbarIcon: {
+	    marginTop: '8px',
+	    float: 'left',
+	    marginRight: '8px',
+	    marginLeft: '-16px'
+	  },
+	  toolbarFlat: {
+	    marginTop: '14px',
+	    marginRight: '-16px',
+	    marginLeft: 'auto'
+	  },
+	  toolbarTitle: {
+	    lineHeight: '64px',
+	    float: 'left'
+	  },
+	  select: {
+	    textAlign: 'left',
+	    color: '#000'
+	  },
+	  floatLabel: {
+	    top: '12px',
+	    color: 'rgba(0, 0, 0, 0.298039)',
+	    fontSize: '12px',
+	    transform: 'none'
+	  }
+	};
+	
+	var JobCreate = (function (_React$Component) {
+	  _inherits(JobCreate, _React$Component);
+	
+	  function JobCreate(props) {
+	    _classCallCheck(this, JobCreate);
+	
+	    _get(Object.getPrototypeOf(JobCreate.prototype), 'constructor', this).call(this, props);
+	  }
+	
+	  _createClass(JobCreate, [{
+	    key: '_handleClose',
+	    value: function _handleClose() {
+	      this.props.closeModal();
+	    }
+	  }, {
+	    key: '_handleChange',
+	    value: function _handleChange(e, field) {
+	      var newJob = this.props.job;
+	      var value = e.target.value === '' ? null : e.target.value;
+	
+	      if (value) {
+	        newJob = newJob.set(field, value);
+	      } else {
+	        newJob = newJob['delete'](field);
+	      }
+	
+	      this.props.onJobChange(newJob);
+	    }
+	  }, {
+	    key: '_handleLocationChange',
+	    value: function _handleLocationChange(field, value) {
+	      var newJob = this.props.job;
+	
+	      if (value) {
+	        newJob = newJob.set(field, value);
+	      } else {
+	        newJob = newJob['delete'](field);
+	      }
+	
+	      this.props.onJobChange(newJob);
+	    }
+	  }, {
+	    key: '_handleCompanySelectValueChange',
+	    value: function _handleCompanySelectValueChange(event, index, value) {
+	      this.props.onCompanyChange(value);
+	    }
+	  }, {
+	    key: '_handleSubmit',
+	    value: function _handleSubmit() {
+	      if (this.props.job.get('saving') == true) return;
+	
+	      this.props.onSubmit(this.props.job);
+	    }
+	  }, {
+	    key: 'onImageChange',
+	    value: function onImageChange(value) {
+	      this.props.onImageChange(value);
+	    }
+	  }, {
+	    key: '_handleHeroValueChange',
+	    value: function _handleHeroValueChange(event, index, value) {
+	      var newJob = this.props.job;
+	
+	      if (value) {
+	        newJob = newJob.set('talentAdvocateId', value);
+	      } else {
+	        newJob = newJob['delete']('talentAdvocateId');
+	      }
+	
+	      this.props.onJobChange(newJob);
+	    }
+	  }, {
+	    key: '_handleSelectValueChange',
+	    value: function _handleSelectValueChange(event, index, value) {
+	      var newJob = this.props.job;
+	
+	      if (value) {
+	        newJob = newJob.set('contactId', value);
+	      } else {
+	        newJob = newJob['delete']('contactId');
+	      }
+	
+	      this.props.onJobChange(newJob);
+	    }
+	  }, {
+	    key: '_handleSkillsChange',
+	    value: function _handleSkillsChange(skills) {
+	      var newJob = this.props.job;
+	
+	      if (skills) {
+	        newJob = newJob.set('skills', skills);
+	      } else {
+	        newJob = newJob['delete']('skills');
+	      }
+	
+	      this.props.onJobChange(newJob, true);
+	    }
+	  }, {
+	    key: '_handleStartDateChange',
+	    value: function _handleStartDateChange(e, value) {
+	      var newJob = this.props.job;
+	
+	      if (value) {
+	        newJob = newJob.set('startDate', value);
+	      } else {
+	        newJob = newJob['delete']('startDate');
+	      }
+	
+	      this.props.onJobChange(newJob);
+	    }
+	  }, {
+	    key: '_handleEmploymentTypeValueChange',
+	    value: function _handleEmploymentTypeValueChange(e, key, payload) {
+	      var newJob = this.props.job;
+	
+	      if (payload) {
+	        newJob = newJob.set('employmentType', payload);
+	      } else {
+	        newJob = newJob['delete']('employmentType');
+	      }
+	
+	      this.props.onJobChange(newJob);
+	    }
+	  }, {
+	    key: '_datePickerClose',
+	    value: function _datePickerClose() {
+	      console.log('close!');
+	    }
+	  }, {
+	    key: '_datePickerOpen',
+	    value: function _datePickerOpen() {
+	      console.log('show!');
+	    }
+	  }, {
+	    key: '_renderContents',
+	    value: function _renderContents() {
+	      var _this = this;
+	
+	      var _props = this.props;
+	      var job = _props.job;
+	      var companies = _props.companies;
+	      var contacts = _props.contacts;
+	      var heroContacts = _props.heroContacts;
+	
+	      job = job || new _immutable2['default'].Map({ errors: new _immutable2['default'].Map() });
+	
+	      var isCandidate = job.get('isCandidate');
+	
+	      if (isCandidate === undefined) isCandidate = false;
+	
+	      var companyId = this.props.company ? this.props.company.get('id') : null;
+	
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'row center-xs' },
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'col-xs-12 col-md-8' },
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'box' },
+	            _react2['default'].createElement(
+	              'form',
+	              { onSubmit: this._handleSubmit.bind(this) },
+	              _react2['default'].createElement(
+	                'div',
+	                { className: 'row center-xs' },
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-12' },
+	                  _react2['default'].createElement(_materialUi.Divider, { style: style.divider }),
+	                  _react2['default'].createElement(
+	                    'div',
+	                    { style: style.subheader },
+	                    'Primary'
+	                  )
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(
+	                    _materialUi.SelectField,
+	                    {
+	                      floatingLabelText: 'Company',
+	                      floatingLabelStyle: style.floatLabel,
+	                      fullWidth: true,
+	                      style: style.select,
+	                      onChange: this._handleCompanySelectValueChange.bind(this),
+	                      hintText: '',
+	                      value: companyId
+	                    },
+	                    companies.map(function (company, index) {
+	                      return _react2['default'].createElement(_materialUi.MenuItem, {
+	                        value: index,
+	                        primaryText: company.get('name')
+	                      });
+	                    })
+	                  )
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(
+	                    _materialUi.Card,
+	                    null,
+	                    _react2['default'].createElement(
+	                      _materialUi.CardMedia,
+	                      null,
+	                      (function () {
+	                        if (_this.props.jobImage) {
+	                          return _react2['default'].createElement(
+	                            'div',
+	                            null,
+	                            _react2['default'].createElement('img', { style: { maxWidth: '100%', maxHeight: '300px' }, src: _this.props.jobImage.get('item') })
+	                          );
+	                        } else {
+	                          return _react2['default'].createElement('div', null);
+	                        }
+	                      })()
+	                    ),
+	                    _react2['default'].createElement(
+	                      _materialUi.CardText,
+	                      null,
+	                      _react2['default'].createElement(_materialUi.LinearProgress, { mode: 'determinate', value: job.get('percentUploaded') }),
+	                      _react2['default'].createElement(_.FileInput, { label: this.props.jobImage ? 'Change Photo' : 'Add Photo', onFileChanged: this.onImageChange.bind(this) })
+	                    )
+	                  )
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(_materialUi.TextField, {
+	                    fullWidth: true,
+	                    errorText: '',
+	                    onChange: function (e) {
+	                      return _this._handleChange.bind(_this)(e, 'title');
+	                    },
+	                    floatingLabelText: 'Job Title',
+	                    value: job.get('title')
+	                  })
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(
+	                    _materialUi.SelectField,
+	                    { value: job.get('employmentType'), floatingLabelText: 'Employment Type', fullWidth: true, onChange: this._handleEmploymentTypeValueChange.bind(this) },
+	                    _react2['default'].createElement(_materialUi.MenuItem, { value: 'Permanent', primaryText: 'Permanent' }),
+	                    _react2['default'].createElement(_materialUi.MenuItem, { value: 'Contract To Hire', primaryText: 'Contract to Hire' }),
+	                    _react2['default'].createElement(_materialUi.MenuItem, { value: 'Contract', primaryText: 'Contract' })
+	                  )
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(_materialUi.TextField, {
+	                    floatingLabelText: 'Quick Pitch',
+	                    multiLine: true,
+	                    fullWidth: true,
+	                    floatingLabelStyle: style.floatLabel,
+	                    onChange: function (e) {
+	                      return _this._handleChange.bind(_this)(e, 'quickPitch');
+	                    },
+	                    value: job.get('quickPitch')
+	                  })
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-12' },
+	                  _react2['default'].createElement(_materialUi.Divider, { style: style.divider }),
+	                  _react2['default'].createElement(
+	                    'div',
+	                    { style: style.subheader },
+	                    'Location'
+	                  )
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10' },
+	                  _react2['default'].createElement(_.Location, { location: job.get('location'), onChange: this._handleLocationChange.bind(this, 'location') })
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(_materialUi.TextField, {
+	                    pattern: '[0-9]*',
+	                    fullWidth: true,
+	                    errorText: '',
+	                    onChange: function (e) {
+	                      return _this._handleChange.bind(_this)(e, 'minSalary');
+	                    },
+	                    floatingLabelText: 'Min Salary',
+	                    type: 'number',
+	                    value: job.get('minSalary')
+	                  })
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(_materialUi.TextField, {
+	                    pattern: '[0-9]*',
+	                    fullWidth: true,
+	                    errorText: '',
+	                    onChange: function (e) {
+	                      return _this._handleChange.bind(_this)(e, 'maxSalary');
+	                    },
+	                    floatingLabelText: 'Max Salary',
+	                    type: 'number',
+	                    value: job.get('maxSalary')
+	                  })
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(_materialUi.TextField, {
+	                    floatingLabelText: 'Bonus + Perks',
+	                    multiLine: true,
+	                    fullWidth: true,
+	                    floatingLabelStyle: style.floatLabel,
+	                    onChange: function (e) {
+	                      return _this._handleChange.bind(_this)(e, 'bonusPerks');
+	                    },
+	                    value: job.get('bonusPerks')
+	                  })
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(_materialUi.TextField, {
+	                    floatingLabelText: 'Job Description',
+	                    multiLine: true,
+	                    fullWidth: true,
+	                    floatingLabelStyle: style.floatLabel,
+	                    onChange: function (e) {
+	                      return _this._handleChange.bind(_this)(e, 'description');
+	                    },
+	                    value: job.get('description')
+	                  })
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(_materialUi.DatePicker, {
+	                    hintText: 'Estimated Start Date',
+	                    textFieldStyle: style.datePicker,
+	                    onShow: this._datePickerOpen,
+	                    onRequestClose: this._datePickerClose,
+	                    onChange: this._handleStartDateChange.bind(this),
+	                    value: job.get('startDate'),
+	                    ref: 'startDate'
+	                  })
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(_materialUi.TextField, {
+	                    pattern: '[0-9]*',
+	                    fullWidth: true,
+	                    errorText: '',
+	                    floatingLabelText: 'Fee %',
+	                    onChange: function (e) {
+	                      return _this._handleChange.bind(_this)(e, 'feePercent');
+	                    },
+	                    type: 'number',
+	                    value: job.get('feePercent')
+	                  })
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(_.TagsInput, { value: job.get('skills'), onChange: this._handleSkillsChange.bind(this), title: 'Skills' })
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(
+	                    _materialUi.SelectField,
+	                    {
+	                      ref: 'selectValue',
+	                      fullWidth: true,
+	                      floatingLabelText: 'Select Primary Contact',
+	                      value: job.get('contactId'),
+	                      onChange: this._handleSelectValueChange.bind(this)
+	                    },
+	                    contacts.map(function (contact, index) {
+	                      return _react2['default'].createElement(_materialUi.MenuItem, {
+	                        value: index,
+	                        primaryText: contact.get('displayName')
+	                      });
+	                    })
+	                  )
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ' },
+	                  _react2['default'].createElement(
+	                    _materialUi.SelectField,
+	                    {
+	                      ref: 'selectValue',
+	                      fullWidth: true,
+	                      floatingLabelText: 'Select Talent Advocate',
+	                      value: job.get('talentAdvocateId'),
+	                      onChange: this._handleHeroValueChange.bind(this)
+	                    },
+	                    heroContacts.map(function (contact, index) {
+	                      return _react2['default'].createElement(_materialUi.MenuItem, {
+	                        value: index,
+	                        primaryText: contact.get('displayName')
+	                      });
+	                    })
+	                  )
+	                ),
+	                _react2['default'].createElement(
+	                  'div',
+	                  { className: 'col-xs-10 ', style: { marginTop: '20px', marginBottom: '20px' } },
+	                  _react2['default'].createElement(_materialUi.RaisedButton, { primary: true, label: 'Save', onTouchTap: this._handleSubmit.bind(this) })
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+	      var contentHeight = clientHeight - 64;
+	      if (this.props.inline) {
+	        return _react2['default'].createElement(
+	          'div',
+	          null,
+	          this._renderContents()
+	        );
+	      } else {
+	        return _react2['default'].createElement(
+	          'div',
+	          null,
+	          _react2['default'].createElement(
+	            _.Dialog,
+	            {
+	              open: this.props.open,
+	              autoDetectWindowHeight: false,
+	              autoScrollBodyContent: false,
+	              repositionOnUpdate: false,
+	              defaultOpen: false,
+	              style: style.dialog,
+	              bodyStyle: style.bodyStyle,
+	              contentStyle: style.contentStyle
+	            },
+	            _react2['default'].createElement(
+	              'div',
+	              { style: { minHeight: clientHeight + 'px', overflowY: 'scroll' } },
+	              _react2['default'].createElement(
+	                _materialUi.Toolbar,
+	                { style: style.toolbar },
+	                _react2['default'].createElement(
+	                  _materialUi.ToolbarGroup,
+	                  { key: 0, float: 'left' },
+	                  _react2['default'].createElement(
+	                    _materialUi.IconButton,
+	                    { onTouchTap: this._handleClose.bind(this), style: style.toolbarIcon, iconClassName: 'material-icons' },
+	                    'close'
+	                  ),
+	                  _react2['default'].createElement(_materialUi.ToolbarTitle, { style: style.toolbarTitle, text: 'Create Job' })
+	                ),
+	                _react2['default'].createElement(
+	                  _materialUi.ToolbarGroup,
+	                  { key: 1, float: 'right' },
+	                  _react2['default'].createElement(
+	                    _materialUi.FlatButton,
+	                    { onTouchTap: this._handleSubmit.bind(this), style: style.toolbarFlat },
+	                    'Save'
+	                  )
+	                )
+	              ),
+	              _react2['default'].createElement(
+	                'div',
+	                { style: { height: contentHeight + 'px', overflowY: 'scroll', WebkitOverflowScrolling: 'touch' } },
+	                this._renderContents()
+	              )
+	            )
+	          )
+	        );
+	      }
+	    }
+	  }]);
+	
+	  return JobCreate;
+	})(_react2['default'].Component);
+	
+	exports['default'] = JobCreate;
+	module.exports = exports['default'];
+
+/***/ },
+/* 970 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _get = __webpack_require__(2)['default'];
+	
+	var _inherits = __webpack_require__(18)['default'];
+	
+	var _createClass = __webpack_require__(27)['default'];
+	
+	var _classCallCheck = __webpack_require__(30)['default'];
+	
+	var _interopRequireDefault = __webpack_require__(31)['default'];
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(63);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _ = __webpack_require__(611);
+	
+	var _jobSearch = __webpack_require__(971);
+	
+	var _jobSearch2 = _interopRequireDefault(_jobSearch);
+	
+	var style = {
+	  dialog: {
+	    height: '100%',
+	    maxHeight: '100%',
+	    paddingTop: '0px'
+	  },
+	  bodyStyle: {
+	    paddingTop: '0px',
+	    height: '100%',
+	    padding: '0'
+	  },
+	  contentStyle: {
+	    width: '100%',
+	    maxWidth: 'none',
+	    height: '100%',
+	    maxHeight: '100%',
+	    paddingTop: '0px'
+	  },
+	  toolbar: {
+	    backgroundColor: '#ffffff',
+	    position: 'fixed',
+	    zIndex: '10'
+	  },
+	  box: {
+	    marginTop: '67px'
+	  }
+	};
+	
+	var JobSearchModal = (function (_React$Component) {
+	  _inherits(JobSearchModal, _React$Component);
+	
+	  function JobSearchModal(props) {
+	    _classCallCheck(this, JobSearchModal);
+	
+	    _get(Object.getPrototypeOf(JobSearchModal.prototype), 'constructor', this).call(this, props);
+	  }
+	
+	  _createClass(JobSearchModal, [{
+	    key: 'render',
+	    value: function render() {
+	
+	      var clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+	
+	      return _react2['default'].createElement(
+	        _.Dialog,
+	        {
+	          open: this.props.open,
+	          autoDetectWindowHeight: false,
+	          autoScrollBodyContent: false,
+	          repositionOnUpdate: false,
+	          defaultOpen: false,
+	          style: style.dialog,
+	          bodyStyle: style.bodyStyle,
+	          contentStyle: style.contentStyle
+	        },
+	        _react2['default'].createElement(
+	          'div',
+	          { style: { height: clientHeight + 'px' } },
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2['default'].createElement(
+	              'div',
+	              { className: 'col-xs-12 col-md-10' },
+	              _react2['default'].createElement(_jobSearch2['default'], this.props)
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return JobSearchModal;
+	})(_react2['default'].Component);
+	
+	exports['default'] = JobSearchModal;
+	module.exports = exports['default'];
+
+/***/ },
+/* 971 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _get = __webpack_require__(2)['default'];
+	
+	var _inherits = __webpack_require__(18)['default'];
+	
+	var _createClass = __webpack_require__(27)['default'];
+	
+	var _classCallCheck = __webpack_require__(30)['default'];
+	
+	var _interopRequireDefault = __webpack_require__(31)['default'];
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(63);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _materialUi = __webpack_require__(613);
+	
+	var _reactInfinite = __webpack_require__(824);
+	
+	var _reactInfinite2 = _interopRequireDefault(_reactInfinite);
+	
+	var style = {
+	  overflow: {
+	    maxWidth: '300px',
+	    overflow: 'hidden',
+	    textOverflow: 'ellipsis',
+	    whiteSpace: 'nowrap'
+	  },
+	  container: {
+	    padding: '10px'
+	  },
+	  search: {
+	    bar: {
+	      backgroundColor: 'rgba(0, 0, 0, 0)'
+	    },
+	    input: {
+	      fontSize: '0.8em'
+	    }
+	  },
+	  card: {
+	    cursor: 'pointer',
+	    gravatar: {
+	      display: 'inline'
+	    }
+	  },
+	  section: {
+	    margin: '10px 0'
+	  },
+	  heading: {
+	    container: {
+	      color: 'rgba(0, 0, 0, 0.54)'
+	    },
+	    label: {
+	      color: 'rgba(0, 0, 0, 0.87)'
+	    }
+	  }
+	};
+	
+	var JobSearch = (function (_React$Component) {
+	  _inherits(JobSearch, _React$Component);
+	
+	  function JobSearch(props) {
+	    _classCallCheck(this, JobSearch);
+	
+	    _get(Object.getPrototypeOf(JobSearch.prototype), 'constructor', this).call(this, props);
+	  }
+	
+	  _createClass(JobSearch, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.refs.queryTextField._getInputNode().setAttribute('autocomplete', 'off');
+	    }
+	  }, {
+	    key: 'onQueryClear',
+	    value: function onQueryClear() {
+	      this.props.onQueryClear(this.refs.queryTextField);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this = this;
+	
+	      var clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+	
+	      var _props = this.props;
+	      var query = _props.query;
+	      var searchResults = _props.searchResults;
+	      var suggestions = _props.suggestions;
+	
+	      return _react2['default'].createElement(
+	        'div',
+	        { style: style.container },
+	        _react2['default'].createElement(_materialUi.AppBar, {
+	          style: style.search.bar,
+	          iconElementLeft: _react2['default'].createElement(
+	            _materialUi.IconButton,
+	            { iconStyle: { color: 'rgba(0, 0, 0, 0.54)' }, onTouchTap: this.props.onSearchModalClose.bind(this), iconClassName: 'material-icons' },
+	            'arrow_back'
+	          ),
+	          iconElementRight: query ? _react2['default'].createElement(
+	            _materialUi.IconButton,
+	            { iconStyle: { color: 'rgba(0, 0, 0, 0.54)' }, onTouchTap: this.onQueryClear.bind(this), iconClassName: 'material-icons' },
+	            'close'
+	          ) : _react2['default'].createElement('div', null),
+	          zDepth: 1,
+	          title: _react2['default'].createElement(_materialUi.TextField, {
+	            ref: 'queryTextField',
+	            style: style.search.input,
+	            underlineShow: false,
+	            onEnterKeyDown: this.props.onQuerySubmit.bind(this),
+	            onChange: this.props.onQueryChange.bind(this),
+	            hintText: 'Search Jobs',
+	            fullWidth: true
+	          })
+	        }),
+	        _react2['default'].createElement(_materialUi.RaisedButton, {
+	          style: style.section,
+	          fullWidth: true,
+	          label: 'add ' + (query ? query : 'job'),
+	          onTouchTap: this.props.onDbJobSelect.bind(this, { title: query })
+	        }),
+	        searchResults.length > 0 || suggestions.length > 0 ? _react2['default'].createElement(
+	          'div',
+	          null,
+	          searchResults.length > 0 || query.length > 1 && suggestions.length == 0 ? _react2['default'].createElement(
+	            'div',
+	            null,
+	            _react2['default'].createElement(
+	              'div',
+	              { style: style.heading.container },
+	              _react2['default'].createElement(
+	                'span',
+	                { style: style.heading.label },
+	                'Search Results: '
+	              ),
+	              searchResults.length + ' Job' + (searchResults.length == 1 ? '' : 's')
+	            ),
+	            _react2['default'].createElement(
+	              _reactInfinite2['default'],
+	              { containerHeight: clientHeight - (56 + 64), elementHeight: 88, useWindowAsScrollContainer: true },
+	              searchResults.map(function (job, key) {
+	                return _react2['default'].createElement(
+	                  'div',
+	                  { key: key, style: style.section },
+	                  _react2['default'].createElement(
+	                    _materialUi.Card,
+	                    {
+	                      style: style.card,
+	                      onTouchTap: _this.props.onDbJobSelect.bind(_this, job)
+	                    },
+	                    _react2['default'].createElement(_materialUi.CardHeader, {
+	                      title: job.get('title')
+	                    })
+	                  )
+	                );
+	              })
+	            )
+	          ) : _react2['default'].createElement('div', null),
+	          suggestions.length > 0 || query.length > 1 && searchResults.length == 0 ? _react2['default'].createElement(
+	            'div',
+	            null,
+	            _react2['default'].createElement(
+	              'div',
+	              { style: style.heading.container },
+	              _react2['default'].createElement(
+	                'span',
+	                { style: style.heading.label },
+	                'Suggestions: '
+	              ),
+	              suggestions.length + ' Job' + (suggestions.length == 1 ? '' : 's')
+	            ),
+	            _react2['default'].createElement(
+	              _reactInfinite2['default'],
+	              { containerHeight: clientHeight - (56 + 64), elementHeight: 88, useWindowAsScrollContainer: true },
+	              suggestions.map(function (job, key) {
+	                return _react2['default'].createElement(
+	                  'div',
+	                  { key: key, style: style.section },
+	                  _react2['default'].createElement(
+	                    _materialUi.Card,
+	                    {
+	                      style: style.card,
+	                      onTouchTap: _this.props.onDbJobSelect.bind(_this, job)
+	                    },
+	                    _react2['default'].createElement(_materialUi.CardHeader, {
+	                      title: job.get('title')
+	                    })
+	                  )
+	                );
+	              })
+	            )
+	          ) : _react2['default'].createElement('div', null)
+	        ) : _react2['default'].createElement(
+	          'div',
+	          null,
+	          query.length > 1 ? _react2['default'].createElement(
+	            'div',
+	            { style: style.heading.container },
+	            _react2['default'].createElement(
+	              'span',
+	              { style: style.heading.label },
+	              'No results found for "',
+	              query,
+	              '"'
+	            )
+	          ) : _react2['default'].createElement('div', null)
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return JobSearch;
+	})(_react2['default'].Component);
+	
+	exports['default'] = JobSearch;
+	module.exports = exports['default'];
+
+/***/ },
+/* 972 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _get = __webpack_require__(2)['default'];
+	
+	var _inherits = __webpack_require__(18)['default'];
+	
+	var _createClass = __webpack_require__(27)['default'];
+	
+	var _classCallCheck = __webpack_require__(30)['default'];
+	
+	var _interopRequireDefault = __webpack_require__(31)['default'];
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(63);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(61);
+	
+	var _componentsWeb = __webpack_require__(611);
+	
+	var _modulesJobs = __webpack_require__(406);
+	
+	//let debounce = require('debounce');
+	
+	var _lodash = __webpack_require__(967);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var JobSearchContainer = (function (_React$Component) {
+	  _inherits(JobSearchContainer, _React$Component);
+	
+	  function JobSearchContainer(props) {
+	    _classCallCheck(this, _JobSearchContainer);
+	
+	    _get(Object.getPrototypeOf(_JobSearchContainer.prototype), 'constructor', this).call(this, props);
+	    this.state = this._getResetState();
+	    this.onQueryChangeImmediate = this.onQueryChangeImmediate.bind(this);
+	    this.onQueryChange = _lodash2['default'].debounce(this.onQueryChange.bind(this), 500);
+	  }
+	
+	  _createClass(JobSearchContainer, [{
+	    key: '_getResetState',
+	    value: function _getResetState() {
+	      return {
+	        open: true,
+	        query: '',
+	        searchResults: [],
+	        suggestions: [],
+	        position: {
+	          lat: 34.016483,
+	          lng: -118.496859
+	        }
+	      };
+	    }
+	  }, {
+	    key: '_resetState',
+	    value: function _resetState() {
+	      this.setState(this._getResetState());
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var self = this;
+	
+	      if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function (position) {
+	          self.setState({
+	            position: {
+	              lat: position.coords.latitude,
+	              lng: position.coords.longitude
+	            }
+	          });
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      var results = nextProps.jobs.queries.get(this.state.query);
+	
+	      this.setState({
+	        searchResults: results ? results.toArray() : []
+	      });
+	    }
+	  }, {
+	    key: 'onQuerySubmit',
+	    value: function onQuerySubmit() {
+	      if (this.state.query.length > 1) {
+	        this.props.searchJobs(this.state.query);
+	      } else {
+	        this.setState({
+	          searchResults: [],
+	          suggestions: []
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'onQueryChange',
+	    value: function onQueryChange(e) {
+	      this.setState({
+	        query: e.target.value ? e.target.value : ''
+	      });
+	
+	      this.onQuerySubmit();
+	    }
+	  }, {
+	    key: 'onQueryChangeImmediate',
+	    value: function onQueryChangeImmediate(e) {
+	      e.persist();
+	      this.onQueryChange(e);
+	    }
+	  }, {
+	    key: 'onQueryClear',
+	    value: function onQueryClear(e) {
+	      this.setState({
+	        query: ''
+	      });
+	
+	      e.setValue('');
+	
+	      this.setState({
+	        searchResults: [],
+	        suggestions: []
+	      });
+	    }
+	  }, {
+	    key: 'onSearchModalClose',
+	    value: function onSearchModalClose() {
+	      this.setState(this._getResetState());
+	      if (this.props.onClose) {
+	        this.props.onClose();
+	      } else {
+	        this.props.history.goBack();
+	      }
+	    }
+	  }, {
+	    key: 'onSelect',
+	    value: function onSelect(job) {
+	      var _this = this;
+	
+	      if (this.props.onJobSelect) {
+	        this.props.onJobSelect(job);
+	      } else {
+	        (function () {
+	          var id = job.id ? job.id : 'tmp_' + _this._guid();
+	          job.id = id;
+	          job.companyId = _this.props.params.companyId || job.companyId || _this.props.companies.first().get('id');
+	
+	          _this.props.createTempJob(job);
+	
+	          var self = _this;
+	          _this.setState({ open: false });
+	
+	          setTimeout(function () {
+	            self.props.history.replaceState(null, '/clients/' + job.companyId + '/jobs/' + id + '/create');
+	          }, 500);
+	        })();
+	      }
+	    }
+	  }, {
+	    key: 'onDbJobSelect',
+	    value: function onDbJobSelect(dbJob) {
+	      var job = dbJob ? dbJob.toObject ? dbJob.toObject() : dbJob : {};
+	
+	      this._resetState();
+	      this.onSelect(job);
+	    }
+	  }, {
+	    key: '_guid',
+	    value: function _guid() {
+	      function s4() {
+	        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+	      }
+	      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2['default'].createElement(
+	        'div',
+	        null,
+	        _react2['default'].createElement(_componentsWeb.JobSearchModal, {
+	          open: this.state.open,
+	          query: this.state.query,
+	          searchResults: this.state.searchResults,
+	          suggestions: this.state.suggestions,
+	          onQueryChange: this.onQueryChangeImmediate,
+	          onQuerySubmit: this.onQuerySubmit.bind(this),
+	          onQueryClear: this.onQueryClear.bind(this),
+	          onSearchModalClose: this.onSearchModalClose.bind(this),
+	          onDbJobSelect: this.onDbJobSelect.bind(this)
+	        })
+	      );
+	    }
+	  }]);
+	
+	  var _JobSearchContainer = JobSearchContainer;
+	  JobSearchContainer = (0, _reactRedux.connect)(function (state) {
+	    return {
+	      jobs: state.jobs,
+	      companies: state.companies.myCompanyIds
+	    };
+	  }, { searchJobs: _modulesJobs.searchJobs, createTempJob: _modulesJobs.createTempJob }, null, { withRef: true })(JobSearchContainer) || JobSearchContainer;
+	  return JobSearchContainer;
+	})(_react2['default'].Component);
+	
+	exports['default'] = JobSearchContainer;
+	module.exports = exports['default'];
+
+/***/ },
+/* 973 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _get = __webpack_require__(2)['default'];
+	
+	var _inherits = __webpack_require__(18)['default'];
+	
+	var _createClass = __webpack_require__(27)['default'];
+	
+	var _classCallCheck = __webpack_require__(30)['default'];
+	
+	var _extends = __webpack_require__(280)['default'];
+	
+	var _interopRequireDefault = __webpack_require__(31)['default'];
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(63);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(61);
+	
+	var _immutable = __webpack_require__(398);
+	
+	var _immutable2 = _interopRequireDefault(_immutable);
+	
+	var _reduxRouter = __webpack_require__(235);
+	
+	var _modulesCompaniesIndex = __webpack_require__(403);
+	
+	var _modulesJobsIndex = __webpack_require__(406);
+	
+	var _modulesContacts = __webpack_require__(399);
+	
+	var _componentsWeb = __webpack_require__(611);
+	
+	var _dataHelpersCompany = __webpack_require__(959);
+	
+	var _dataHelpersCompany2 = _interopRequireDefault(_dataHelpersCompany);
+	
+	var HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
+	
+	var getData = function getData(state, props) {
+	  var job = state.jobs.localJob;
+	
+	  var company = null;
+	
+	  if (props.params.companyId) {
+	    company = (0, _dataHelpersCompany2['default'])(state, props.params.companyId);
+	  }
+	
+	  var heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+	  var heroContacts = null;
+	  if (heroContactIds) {
+	    heroContacts = state.contacts.list.filter(function (x) {
+	      return heroContactIds.indexOf(x.get('id')) > -1;
+	    });
+	  }
+	
+	  var jobImage = null;
+	  var imageId = state.jobs.localJob.get('imageId');
+	  if (imageId) {
+	    jobImage = state.resources.list.get(imageId);
+	  }
+	
+	  return {
+	    job: job,
+	    company: company,
+	    companies: state.companies.myCompanyIds,
+	    jobImage: jobImage,
+	    heroContacts: heroContacts ? heroContacts : new _immutable2['default'].Map(),
+	    contacts: company ? company.get('contacts') : new _immutable2['default'].Map()
+	  };
+	};
+	
+	var JobCreateContainer = (function (_React$Component) {
+	  _inherits(JobCreateContainer, _React$Component);
+	
+	  function JobCreateContainer(props) {
+	    _classCallCheck(this, _JobCreateContainer);
+	
+	    _get(Object.getPrototypeOf(_JobCreateContainer.prototype), 'constructor', this).call(this, props);
+	    this.state = {
+	      open: true
+	    };
+	  }
+	
+	  _createClass(JobCreateContainer, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.props.getContactsByCompany(HEROCOMPANYID);
+	      this.props.getContactsByCompany(this.props.params.companyId);
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(newProps) {
+	      var _this = this;
+	
+	      if (newProps.job && newProps.job.get('saving') == false && this.props.job && this.props.job.get('saving') == true && !newProps.job.get('savingError')) {
+	        if (this.props.onSave) {
+	          this.props.onSave(newProps.job.get('id'));
+	        } else {
+	          (function () {
+	            var self = _this;
+	            //let id = newProps.job.get('id');
+	            setTimeout(function () {
+	              if (self.props.location.query.returnUrl) {
+	                self.props.history.replaceState(null, self.props.location.query.returnUrl);
+	              } else {
+	                // self.props.history.replaceState(null, `/jobs/${id}`);
+	                self.props.history.replaceState(null, '/clients/' + newProps.job.get('companyId')); // for now
+	              }
+	            }, 500);
+	
+	            _this.props.getMyJobs();
+	          })();
+	        }
+	      }
+	
+	      if (newProps.params.jobId != this.props.params.jobId && newProps.params.jobId.indexOf('tmp') <= -1) {
+	        this.props.getOneJob(newProps.params.jobId);
+	      }
+	    }
+	  }, {
+	    key: '_handleChange',
+	    value: function _handleChange(job, dontMergeDeep) {
+	      this.props.updateJobLocal(job, dontMergeDeep);
+	    }
+	  }, {
+	    key: '_handleCompanyChange',
+	    value: function _handleCompanyChange(companyId) {
+	      var job = this.props.job.set('companyId', companyId);
+	      this._handleChange(job);
+	      var self = this;
+	      setTimeout(function () {
+	        self.props.history.replaceState(null, '/clients/' + companyId + '/jobs/' + self.props.job.get('id') + '/create');
+	      }, 500);
+	    }
+	  }, {
+	    key: '_handleSave',
+	    value: function _handleSave(job) {
+	      this.props.saveLocalJob(job);
+	    }
+	  }, {
+	    key: '_handleClose',
+	    value: function _handleClose() {
+	      this.setState({ open: false });
+	      if (this.props.onClose) {
+	        this.props.onClose();
+	      } else {
+	        this.props.history.goBack();
+	      }
+	    }
+	  }, {
+	    key: 'onJobCreateImageChange',
+	    value: function onJobCreateImageChange(imageArray) {
+	      this.props.updateJobImageLocal(imageArray);
+	    }
+	  }, {
+	    key: 'onJobCreateChange',
+	    value: function onJobCreateChange(job, dontMergeDeep) {
+	      this.props.updateJobLocal(job, dontMergeDeep);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2['default'].createElement(_componentsWeb.JobCreate, _extends({}, this.props, {
+	        job: this.props.job,
+	        closeModal: this._handleClose.bind(this),
+	        onSubmit: this._handleSave.bind(this),
+	        onJobChange: this._handleChange.bind(this),
+	        onCompanyChange: this._handleCompanyChange.bind(this),
+	        open: this.state.open,
+	        onImageChange: this.onJobCreateImageChange.bind(this),
+	        inline: false }));
+	    }
+	  }]);
+	
+	  var _JobCreateContainer = JobCreateContainer;
+	  JobCreateContainer = (0, _reactRedux.connect)(getData, { pushState: _reduxRouter.pushState, getJobsByCompany: _modulesJobsIndex.getJobsByCompany, updateJobLocal: _modulesJobsIndex.updateJobLocal, updateJobImageLocal: _modulesJobsIndex.updateJobImageLocal, saveLocalJob: _modulesJobsIndex.saveLocalJob, replaceJobLocal: _modulesJobsIndex.replaceJobLocal, getOneJob: _modulesJobsIndex.getOneJob, getOneCompany: _modulesCompaniesIndex.getOneCompany, getContactsByCompany: _modulesContacts.getContactsByCompany, getMyJobs: _modulesJobsIndex.getMyJobs })(JobCreateContainer) || JobCreateContainer;
+	  return JobCreateContainer;
+	})(_react2['default'].Component);
+	
+	exports['default'] = JobCreateContainer;
+	
+	JobCreateContainer.propTypes = {
 	  inline: _react2['default'].PropTypes.bool,
 	  onClose: _react2['default'].PropTypes.func,
 	  onSave: _react2['default'].PropTypes.func,

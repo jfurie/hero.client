@@ -85,12 +85,12 @@ class ClientsList extends React.Component {
           </ToolbarGroup>
         </Toolbar>*/}
         <List style={style.list} subheader={`${count} ${ressourceName}`}>
-          <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
+          <Infinite containerHeight={clientHeight - (56+64)} elementHeight={231} useWindowAsScrollContainer>
             {clients.map((company) => {
               return (
                 <div>
 
-                  <ClientListItem onTouchTap={this._showClientDetails.bind(this, company.get('id'))} company={company} / >
+                  <ClientListItem onClientClick={this._showClientDetails.bind(this)} company={company} / >
                 {/*
                   <ListItem
                       leftAvatar={<CompanyAvatar url={company.get('website')} />}

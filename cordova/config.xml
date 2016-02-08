@@ -12,6 +12,8 @@
     <access origin="*" />
     <allow-navigation href="*://hero-client.herokuapp.com/*" />
     <allow-navigation href="*://localhost:*/*" />
+    <allow-navigation href="gap://ready" />
+    <allow-navigation href="about:blank"/>
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -22,6 +24,9 @@
     <platform name="android">
         <allow-intent href="market:*" />
     </platform>
+    <feature name="LocalStorage">
+        <param name="ios-package" value="CDVLocalStorage" />
+    </feature>
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
