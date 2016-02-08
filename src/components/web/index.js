@@ -14,7 +14,7 @@ export CompanyNotesList from './companyNotesList/companyNotesList';
 export LeftNavTop from './leftNav/leftNavTop';
 export CustomTabsSwipe from './customTabsSwipe/customTabsSwipe';
 export JobDetails from './jobDetails/jobDetails';
-export JobDetailsPage from './jobDetails/jobDetailsPage';
+//export JobDetailsPage from './jobDetails/jobDetailsPage';
 export Dialog from './dialog/dialog';
 export ClientsList from './clientsList/clientsList';
 export Gravatar from './gravatar/gravatar';
@@ -40,7 +40,7 @@ export CandidateDetailsModal from './candidateDetailsModal/candidateDetailsModal
 export InviteSuccessModal from './inviteSuccessModal/inviteSuccessModal';
 export NotesCreateModal from './notesCreateModal/notesCreateModal';
 export JobCreateModal from './jobCreateModal/jobCreateModal';
-export JobDetailsModal from './jobDetails/jobDetailsModal';
+//export JobDetailsModal from './jobDetails/jobDetailsModal';
 export CandidateSearchModal from './candidateSearch/candidateSearchModal';
 export CandidateCreateModal from './candidateCreateModal/candidateCreateModal';
 export ShareJobModal from './shareJobModal/shareJobModal';
