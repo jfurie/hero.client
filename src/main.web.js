@@ -8,8 +8,8 @@ import FakeApiClient from './utils/fakeApiClient';
 import LocalStorageClient from './utils/localStorageClient';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import getRoutes from './routes.web';
-import createHistory from 'history/lib/createBrowserHistory'
-import useScroll from 'scroll-behavior/lib/useStandardScroll'
+import createHistory from 'history/lib/createBrowserHistory';
+import useScroll from 'scroll-behavior/lib/useStandardScroll';
 
 const history = useScroll(createHistory);
 //import DevTools from './utils/devTools';
@@ -46,11 +46,10 @@ function startApp(){
   ReactDOM.render(<Root/>, document.getElementById('app'));
 }
 var url = document.URL;
-   var isSmart = (url.indexOf("http://") === -1 && url.indexOf("https://") === -1);
-   if( isSmart ){
-       alert('isSmart')
-       document.addEventListener('deviceready', startApp, false);
-   }
-   else{
-      startApp();
-   }
+let isSmart = (url.indexOf('http://') === -1 && url.indexOf('https://') === -1);
+if( isSmart ){
+  document.addEventListener('deviceready', startApp, false);
+}
+else{
+  startApp();
+}
