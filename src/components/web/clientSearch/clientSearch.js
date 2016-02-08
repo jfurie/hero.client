@@ -3,7 +3,7 @@ import React from 'react';
 import { AppBar, Card, CardHeader, IconButton, TextField, RaisedButton } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { CompanyAvatar, ClientListItem } from '../../../components/web';
+import { ClientListItem } from '../../../components/web';
 
 const style = {
   overflow: {
