@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 //import md5 from 'md5';
 
-import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
+//import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
 import { Header, DetailsCard, CustomTabsSwipe } from '../../../components/web';
 import {
@@ -113,8 +113,8 @@ export default class JobDetails extends React.Component {
     //     }
     //   }
 
-      // build cover
-      let cover = 'https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e15/11410518_112057692469780_1792210714_n.jpg';
+      // get cover
+      let cover = ((job.get('image')) ? (job.get('image').get('item')) : ('/img/default-job.jpg'));
 
       let actions = [{
         materialIcon: 'search',
@@ -135,12 +135,12 @@ export default class JobDetails extends React.Component {
         <div>
           <DetailsCard
               title={job.get('title')}
-              subtitle={'Hero.Jobs'}
+              subtitle={job.get('company').get('name')}
               cover={cover}
-              mainColor={Styles.Colors.indigo500}
+              mainColor={Styles.Colors.amber700}
               actions={actions}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
-              floatActionContent={<div><p style={{color: `${Styles.Colors.indigo500}`, fontSize: '20px', fontWeight: '500'}}>12</p></div>}
+              floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
           />
           <CustomTabsSwipe isLight isInline ref='customTabsSwipe' tabs={['Details', 'Desc', 'Applicants']}>
             <div><p>toto</p></div>

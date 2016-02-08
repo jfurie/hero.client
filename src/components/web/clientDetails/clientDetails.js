@@ -105,12 +105,9 @@ export default class ClientDetails extends React.Component {
   }
 
   _handleDirections(){
-
-    console.log('_handleDirections');
-
     let { company } = this.props;
     let location  = company.get('location');
-    if(location){
+    if (location) {
       let locationObj = location.toJSON();
       if(locationObj && locationObj.geoField && locationObj.geoField.lat && locationObj.geoField.lng){
         let lat = locationObj.geoField.lat;
@@ -201,11 +198,11 @@ export default class ClientDetails extends React.Component {
           <DetailsCard
               title={company.get('name')}
               subtitle={company.get('website')}
-              cover={'http://southerncaliforniabeaches.org/img/santa-monica-beach-path.jpg'}
-              mainColor={Styles.Colors.indigo500}
+              cover={'/img/default-company.jpg'}
+              mainColor={Styles.Colors.deepPurple500}
               actions={actions}
               floatActionOnTap={this._handleDirections.bind(this)}
-              floatActionContent={<MapsDirections color={Styles.Colors.indigo500}/>}
+              floatActionContent={<MapsDirections color={Styles.Colors.deepPurple500}/>}
           />
 
           <CustomTabsSwipe isLight isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>

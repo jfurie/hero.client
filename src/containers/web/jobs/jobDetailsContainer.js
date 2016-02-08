@@ -2,14 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { JobDetails } from '../../../components/web';
 import { getOneJob } from '../../../modules/jobs';
+import { getAllJobCandidates } from '../../../modules/candidates';
+import { getImageByJobId } from '../../../modules/resources';
 
-function getData(state, props) {
+//import Immutable from 'immutable';
+import getJobDataFromState from '../../../dataHelpers/job';
+
+function getData(state, jobId) {
   return {
-    job: state.jobs.list.get(props.params.jobId) || null,
+    job: getJobDataFromState(state, jobId),
   };
 }
 
-@connect((state, props) => (getData(state, props)), {getOneJob})
+@connect((state, props) => (getData(state, props.params.jobId)), {getOneJob, getAllJobCandidates, getImageByJobId})
 class JobDetailsPage extends React.Component {
 
   constructor(props) {
@@ -20,6 +25,8 @@ class JobDetailsPage extends React.Component {
     let self = this;
     setTimeout(() => {
       self.props.getOneJob(self.props.params.jobId);
+      self.props.getAllJobCandidates(self.props.params.jobId);
+      self.props.getImageByJobId(self.props.params.jobId);
     }, 500);
   }
 
@@ -39,11 +46,13 @@ class JobDetailsPage extends React.Component {
 
     let { job } = this.props;
 
-    //console.log(job);
+    // if (job) {
+    //   console.log(job.toJS());
+    // }
 
     return (
       <div>
-        <JobDetails onJobDetailsClose={this.onJobDetailsClose.bind(this)} open={true} job={job} />
+        <JobDetails onJobDetailsClose={this.onJobDetailsClose.bind(this)} open job={job} />
       </div>
     );
   }
