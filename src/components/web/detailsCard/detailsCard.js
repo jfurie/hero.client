@@ -67,9 +67,11 @@ class DetailsCard extends React.Component {
 
     if (this.props.mainColor) {
       style.cardTitleComponent.backgroundColor = this.props.mainColor;
+      style.floatActionButton.color = this.props.mainColor;
     } else {
       style.cardTitleComponent.backgroundColor = Styles.Colors.indigo500; // default
-    }
+      style.floatActionButton.color = Styles.Colors.indigo500; // default
+    } 
 
     return (
       <Card>

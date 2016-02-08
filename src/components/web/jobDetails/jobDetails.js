@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import md5 from 'md5';
+//import md5 from 'md5';
 
 import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe } from '../../../components/web';
 import {
   Dialog, IconButton, List, ListItem, FontIcon,
   Divider, Styles, IconMenu, MenuItem,
@@ -50,8 +50,8 @@ export default class JobDetails extends React.Component {
   // }
 
   goBack() {
-    if (this.props.onContactDetailsClose) {
-      this.props.onContactDetailsClose();
+    if (this.props.onJobDetailsClose) {
+      this.props.onJobDetailsClose();
     }
   }
 
@@ -135,13 +135,18 @@ export default class JobDetails extends React.Component {
         <div>
           <DetailsCard
               title={job.get('title')}
-              subtitle={job.get('title')}
+              subtitle={'Hero.Jobs'}
               cover={cover}
               mainColor={Styles.Colors.indigo500}
               actions={actions}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
-              floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
+              floatActionContent={<div><p style={{color: `${Styles.Colors.indigo500}`, fontSize: '20px', fontWeight: '500'}}>12</p></div>}
           />
+          <CustomTabsSwipe isLight isInline ref='customTabsSwipe' tabs={['Details', 'Desc', 'Applicants']}>
+            <div><p>toto</p></div>
+            <div><p>toto2</p></div>
+            <div><p>toto3</p></div>
+          </CustomTabsSwipe>
           {/* <List style={{position: 'relative', top: '3px'}}>
             <div>
 
