@@ -1,0 +1,39 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "com.intelegate.cordova.plugin.LocalStoragePlugin": {
+            "PACKAGE_NAME": "jobs.hero.herojobs"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "jobs.hero.herojobs"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "jobs.hero.herojobs"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "jobs.hero.herojobs"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "jobs.hero.herojobs"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "jobs.hero.herojobs"
+        },
+        "cordova-plugin-webserver": {
+            "PACKAGE_NAME": "jobs.hero.herojobs"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "jobs.hero.herojobs"
+        },
+        "cordova-plugin-wkwebview-engine": {
+            "PACKAGE_NAME": "jobs.hero.herojobs"
+        }
+    },
+    "dependent_plugins": {}
+}

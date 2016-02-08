@@ -51,14 +51,14 @@ class Layout extends React.Component {
   }
 
   clickLogin () {
-    this.props.pushState(null, '/login');
+    this.props.pushState(null,'login');
     this.setState({
       open: false,
     });
   }
 
   clickClients() {
-    this.props.pushState(null, '/clients');
+    this.props.pushState(null, 'clients');
     this.setState({
       open: false,
     });

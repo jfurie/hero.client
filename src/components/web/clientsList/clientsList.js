@@ -1,10 +1,9 @@
 import React from 'react';
-import { List, ListItem, Divider } from 'material-ui';
+import { List } from 'material-ui';
 import Infinite from 'react-infinite';
-import { CompanyAvatar } from '../../../components/web';
+import { ClientListItem } from '../../../components/web';
 import { pushState } from 'redux-router';
 import { connect } from 'react-redux';
-
 //import { ContactDetailsModal } from '../../../components/web';
 
 const style = {
@@ -86,10 +85,13 @@ class ClientsList extends React.Component {
           </ToolbarGroup>
         </Toolbar>*/}
         <List style={style.list} subheader={`${count} ${ressourceName}`}>
-          <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
+          <Infinite containerHeight={clientHeight - (56+64)} elementHeight={231} useWindowAsScrollContainer>
             {clients.map((company) => {
               return (
                 <div>
+
+                  <ClientListItem onClientClick={this._showClientDetails.bind(this)} company={company} / >
+                {/*
                   <ListItem
                       leftAvatar={<CompanyAvatar url={company.get('website')} />}
                       primaryText={company.get('name')}
@@ -97,7 +99,8 @@ class ClientsList extends React.Component {
                       secondaryTextLines={2}
                       onTouchTap={this._showClientDetails.bind(this, company.get('id'))}
                   />
-                  <Divider inset />
+                  */}
+
                 </div>
               );
             })}

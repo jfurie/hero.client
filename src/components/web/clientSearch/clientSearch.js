@@ -3,7 +3,7 @@ import React from 'react';
 import { AppBar, Card, CardHeader, IconButton, TextField, RaisedButton } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { CompanyAvatar } from '../../../components/web';
+import { ClientListItem } from '../../../components/web';
 
 const style = {
   overflow: {
@@ -98,16 +98,7 @@ export default class ClientSearch extends React.Component {
               {searchResults.map((client, key) => {
                 return (
                   <div key={key} style={style.section}>
-                  <Card
-                    style={style.card}
-                    onTouchTap={this.props.onDbClientSelect.bind(this, client)}
-                  >
-                    <CardHeader
-                      title={client.get('name')}
-                      subtitle={<p>{client.get('jobs').size} Job{client.get('jobs').size == 1 ? '' : 's'} | {client.get('candidates').size} Candidate{client.get('candidates').size == 1 ? '' : 's'}</p>}
-                      avatar={<CompanyAvatar url={client.get('website')} />}
-                    />
-                  </Card>
+                    <ClientListItem company={client} />
                   </div>
                 );
               })}

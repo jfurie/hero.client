@@ -51,7 +51,7 @@ class LeftNavTop extends React.Component {
     let contact = this.props.users.userContact;
     let stats = this.props.users.stats;
 
-    if (contact && stats) {
+    if (contact) {
       return (
         <div className="leftNavTop row center-xs">
           <div className="leftNavTop-image col-xs-12">
@@ -66,19 +66,19 @@ class LeftNavTop extends React.Component {
           </div>
           <div className="leftNavTop-tab col-xs-4" style={{marginLeft: '-12px'}}>
             <div className="box">
-              <div>{stats.companyCount}</div>
+              <div>{stats && stats.companyCount}</div>
               <div className="leftNavTop-label">Clients</div>
             </div>
           </div>
           <div className="leftNavTop-tab col-xs-4">
             <div className="box">
-              <div>{stats.jobCount}</div>
+              <div>{stats && stats.jobCount}</div>
               <div className="leftNavTop-label">Jobs</div>
             </div>
           </div>
           <div className="leftNavTop-tab col-xs-4">
             <div className="box">
-              <div>{stats.candidateCount}</div>
+              <div>{stats && stats.candidateCount}</div>
               <div className="leftNavTop-label">Candidates</div>
             </div>
           </div>

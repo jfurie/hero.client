@@ -27,7 +27,8 @@ class CompanyAvatar extends React.Component {
 
     if (style) {
       style.borderRadius = '0px';
-      style.width = '40px';
+      if(!style.width)
+        style.width = '40px';
     }
 
     return (
