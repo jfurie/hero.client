@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
+import Immutable from 'immutable';
 
 import { ClientDetails } from '../../../components/web';
 
@@ -208,15 +209,15 @@ class ClientDetailsPage extends React.Component {
   }
   addNoteModalOpen(note){
     if (!note) {
-      note = {
+      note = new Immutable.Map({
         id: 'tmp_' + this._guid(),
         privacyValue: 0,
-      };
+      });
     }
 
     this.props.replaceNoteLocal(note);
 
-    this.props.pushState({}, `/clients/${this.props.params.companyId}/notes/${note.id}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
   }
   _guid() {
     function s4() {
