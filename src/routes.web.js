@@ -215,6 +215,7 @@ export default(store) => {
           <Route path="candidates">
             <IndexRoute component={MyCandidatesPage}/>
             <Route path="search" component={CandidateSearchContainer} />
+            <Route path=":contactId" component={ContactDetailsPage}/>
           </Route>
 
           {/* Settings  */}
