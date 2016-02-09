@@ -13,11 +13,24 @@ let style = {
     position: 'relative',
   },
   cardTitleComponent: {
-    padding: '21px 16px 26px',
+    padding: '11px 16px 26px',
   },
   subtitle: {
     fontWeight: 200,
     opacity: 0.5,
+    position: 'relative',
+    top: '-3px',
+  },
+  extraLeftLine: {
+    color: Styles.Colors.white,
+    position: 'relative',
+    top: '11px',
+  },
+  extraRightLine: {
+    color: Styles.Colors.white,
+    float: 'right',
+    position: 'relative',
+    top: '11px',
   },
   floatActionButton: {
     position: 'absolute',
@@ -71,7 +84,7 @@ class DetailsCard extends React.Component {
     } else {
       style.cardTitleComponent.backgroundColor = Styles.Colors.indigo500; // default
       style.floatActionButton.color = Styles.Colors.indigo500; // default
-    } 
+    }
 
     return (
       <Card>
@@ -82,7 +95,18 @@ class DetailsCard extends React.Component {
           <FloatingActionButton onTouchTap={this._onTouchTapFloatAction.bind(this)} style={style.floatActionButton} backgroundColor={Styles.Colors.white}>
             {this.props.floatActionContent}
           </FloatingActionButton>
-          <CardTitle style={style.cardTitleComponent} subtitleColor={Styles.Colors.white} titleColor={Styles.Colors.white} subtitleStyle={style.subtitle} title={this.props.title} subtitle={this.props.subtitle} />
+          {/* <div style={style.cardTitleComponent}>
+            <h2>{this.props.title}</h2>
+            <p>{this.props.subtitle}</p>
+          </div>*/}
+          <CardTitle style={style.cardTitleComponent} subtitleColor={Styles.Colors.white} titleColor={Styles.Colors.white} subtitleStyle={style.subtitle} title={this.props.title} subtitle={this.props.subtitle}>
+            {(this.props.extraLeftLine) ? (
+              <span style={style.extraLeftLine}>{this.props.extraLeftLine}</span>
+            ) : (null)}
+            {(this.props.extraRightLine) ? (
+              <span style={style.extraRightLine}>{this.props.extraRightLine}</span>
+            ) : (null)}
+          </CardTitle>
         </div>
         <CardActions className="row center-xs">
           {this.props.actions.map((action, key) => {
@@ -106,6 +130,8 @@ class DetailsCard extends React.Component {
 DetailsCard.propTypes = {
   actions: React.PropTypes.array.isRequired,
   cover: React.PropTypes.string.isRequired,
+  extraLeftLine: React.PropTypes.string,
+  extraRightLine: React.PropTypes.string,
   floatActionContent: React.PropTypes.object,
   floatActionOnTap: React.PropTypes.func,
   mainColor: React.PropTypes.string,

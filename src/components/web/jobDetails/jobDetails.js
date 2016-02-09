@@ -107,7 +107,19 @@ export default class JobDetails extends React.Component {
       }
 
       // markdown to html
-      let description = job.get('description') ? marked(job.get('description')) : '' ;
+      let description = job.get('description') ? marked(job.get('description')) : '';
+
+      // salary
+      let salaryMin = '$?';
+      let salaryMax = '$?';
+
+      if (job.get('minSalary')) {
+        salaryMin = `$${~~(job.get('minSalary')) / 1000}k`;
+      }
+
+      if (job.get('maxSalary')) {
+        salaryMax = `$${~~(job.get('maxSalary')) / 1000}k`;
+      }
 
       let actions = [{
         materialIcon: 'search',
@@ -129,6 +141,8 @@ export default class JobDetails extends React.Component {
           <DetailsCard
               title={job.get('title')}
               subtitle={job.get('company').get('name')}
+              extraLeftLine={`${salaryMin} - ${salaryMax}`}
+              extraRightLine={job.get('employmentType')}
               cover={cover}
               mainColor={Styles.Colors.amber700}
               actions={actions}
