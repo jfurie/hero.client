@@ -19,6 +19,7 @@ export function getAllNotes() {
 
 export function createCompanyNote(companyId, note){
   return {
+    note,
     types: [constants.CREATE_NOTE, constants.CREATE_NOTE_SUCCESS, constants.CREATE_NOTE_FAIL],
     promise: (client, auth) => client.api.post(`/companies/${companyId}/notes`, {
       authToken: auth.authToken,
@@ -29,6 +30,7 @@ export function createCompanyNote(companyId, note){
 
 export function updateNote(note){
   return {
+    note,
     types: [constants.UPDATE_NOTE, constants.UPDATE_NOTE_SUCCESS, constants.UPDATE_NOTE_FAIL],
     promise: (client, auth) => client.api.put('/notes', {
       authToken: auth.authToken,
@@ -61,14 +63,20 @@ export function replaceNoteLocal(note){
 
 export function saveLocalNote(notableId, notableType){
   return (dispatch, getState) => {
-    let current = getState().notes.localNote;
-    if (current.get('id')) {
-      dispatch(updateNote(current));
+    let note = getState().notes.localNote;
+
+    let id = note.get('id');
+    if(id && id.indexOf('tmp') > -1){
+      note = note.remove('id');
+    }
+
+    if (note.get('id')) {
+      dispatch(updateNote(note));
     }
     else {
       switch (notableType) {
       case 'company':
-        dispatch(createCompanyNote(notableId, current));
+        dispatch(createCompanyNote(notableId, note));
         break;
       default:
       }
