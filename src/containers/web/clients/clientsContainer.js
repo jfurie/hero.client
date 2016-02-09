@@ -45,7 +45,7 @@ class ClientPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getAllCompanies();
+    //this.props.getAllCompanies();
     this.props.getMyCompanies();
     this.props.getCurrentAccount();
 

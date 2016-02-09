@@ -15,7 +15,7 @@ var test = 'true';
 
 test = test;
 
-
+console.log('hello from hero');
 
 test = test;
 

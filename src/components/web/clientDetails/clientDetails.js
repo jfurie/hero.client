@@ -363,7 +363,7 @@ export default class ClientDetails extends React.Component {
     if(this.props.inline){
       return (
         <div>
-          <Header iconRight={
+          <Header goBack={this.goBack.bind(this)} iconRight={
             <IconMenu iconButtonElement={
               <IconButton  iconClassName="material-icons">more_vert</IconButton>
             }>

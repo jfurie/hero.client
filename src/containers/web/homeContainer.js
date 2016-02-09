@@ -219,7 +219,7 @@ class HomePage extends React.Component {
   }
 
   render () {
-
+    console.log(window);
     let { candidates, companies, myJobs } = this.props;
     //let { query } = this.props.location;
     let actions = [

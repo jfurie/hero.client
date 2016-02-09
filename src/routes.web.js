@@ -160,16 +160,17 @@ export default(store) => {
 
             <Route component={Home}>
               <Route path="search" component={ClientSearchContainer}/>
-              <Route path=":companyId/create" component={ClientCreatePage}/>
-              <Route path=":companyId" component={ClientDetailsPage}
-                onEnter={(nextState) => {
-                  nextState.params.clientDetailsOpen = true;
-                }} />
+
               <Route path=":companyId/contacts/search" component={ContactSearchContainer}></Route>
               <Route path=":companyId/contacts/:contactId/create" component={ContactCreatePage}></Route>
               <Route path=":companyId/jobs/search" component={JobSearchContainer}></Route>
               <Route path=":companyId/jobs/:jobId/create" component={JobCreatePage}></Route>
             </Route>
+            <Route path=":companyId/create" component={ClientCreatePage}/>
+            <Route path=":companyId" component={ClientDetailsPage}
+              onEnter={(nextState) => {
+                nextState.params.clientDetailsOpen = true;
+              }} />
             <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
               nextState.params.tab = 'jobs';
             }} />
