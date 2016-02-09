@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import md5 from 'md5';
 
+import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
+
 import { Header, DetailsCard } from '../../../components/web';
 import {
   Dialog, IconButton, List, ListItem, FontIcon,
@@ -69,25 +71,33 @@ export default class ContactDetails extends React.Component {
     this.setState({confirmOpen: true});
   }
 
-  _onTouchTapSearch() {
-    console.log('_onTouchTapSearch');
+  _onTouchTapCall() {
+    console.log('_onTouchTapCall');
   }
 
   _onTouchTapSave() {
     console.log('_onTouchTapSave');
   }
 
-  _onTouchTapHot() {
-    console.log('_onTouchTapHot');
+  _onTouchTapEmail() {
+    console.log('_onTouchTapEmail');
   }
 
-  _onTouchTapShare() {
-    console.log('_onTouchTapShare');
+  _onTouchTapWeb() {
+    console.log('_onTouchTapWeb');
   }
 
-  _handleTapOnApplications() {
-    console.log('_handleTapOnApplications');
+  _handleTapOnChat() {
+    console.log('_handleTapOnChat');
   }
+
+  // _onTouchTapShare() {
+  //   console.log('_onTouchTapShare');
+  // }
+
+  // _handleTapOnApplications() {
+  //   console.log('_handleTapOnApplications');
+  // }
 
   renderContent(contact) {
 
@@ -141,22 +151,40 @@ export default class ContactDetails extends React.Component {
       let cover = `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`;
 
       // define action for the details card
+      // let actions = [{
+      //   materialIcon: 'search',
+      //   text: 'Find',
+      //   onTouchTap: this._onTouchTapSearch.bind(this),
+      // }, {
+      //   materialIcon: 'star_rate',
+      //   text: 'Save',
+      //   onTouchTap: this._onTouchTapSave.bind(this),
+      // }, {
+      //   materialIcon: 'favorite',
+      //   text: 'Hot!',
+      //   onTouchTap: this._onTouchTapHot.bind(this),
+      // }, {
+      //   materialIcon: 'share',
+      //   text: 'Share',
+      //   onTouchTap: this._onTouchTapShare.bind(this),
+      // }];
+
       let actions = [{
-        materialIcon: 'search',
-        text: 'Find',
-        onTouchTap: this._onTouchTapSearch.bind(this),
+        materialIcon: 'phone',
+        text: 'Call',
+        onTouchTap: this._onTouchTapCall.bind(this),
+      }, {
+        materialIcon: 'email',
+        text: 'Email',
+        onTouchTap: this._onTouchTapEmail.bind(this),
       }, {
         materialIcon: 'star_rate',
         text: 'Save',
         onTouchTap: this._onTouchTapSave.bind(this),
       }, {
-        materialIcon: 'favorite',
-        text: 'Hot!',
-        onTouchTap: this._onTouchTapHot.bind(this),
-      }, {
-        materialIcon: 'share',
-        text: 'Share',
-        onTouchTap: this._onTouchTapShare.bind(this),
+        materialIcon: 'public',
+        text: 'Web',
+        onTouchTap: this._onTouchTapWeb.bind(this),
       }];
 
       return (
@@ -168,8 +196,8 @@ export default class ContactDetails extends React.Component {
               cover={cover}
               mainColor={Styles.Colors.indigo500}
               actions={actions}
-              floatActionOnTap={this._handleTapOnApplications.bind(this)}
-              floatActionContent={<span style={{color: Styles.Colors.indigo500, fontSize: '15px !important'}}>9</span>}
+              floatActionOnTap={this._handleTapOnChat.bind(this)}
+              floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
           />
           <List style={{position: 'relative', top: '3px'}}>
             <div>

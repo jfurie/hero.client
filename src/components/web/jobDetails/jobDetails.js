@@ -1,187 +1,234 @@
 import React from 'react';
-import Immutable from 'immutable';
-import { CustomTabsSwipe, CandidatesList, LocationCard, ContactDetailsModal, Gravatar } from '../../../components/web';
-import { List , ListItem, Card, CardText, CardMedia, RaisedButton } from 'material-ui';
+import { connect } from 'react-redux';
+import { pushState } from 'redux-router';
 import marked from 'marked';
+//import md5 from 'md5';
 
-import './jobDetails.scss';
+//import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
+
+import { Header, DetailsCard, CustomTabsSwipe, CandidatesList } from '../../../components/web';
+import {
+  Dialog, IconButton, FontIcon, Styles,
+  IconMenu, MenuItem, Card, CardText, Avatar,
+} from 'material-ui';
 
 const style = {
-  slide: {
-    minHeight: `${window.innerHeight - 160}px`,
-    // marginTop: '48px',
+  dialog: {
+    height: '100%',
+    maxHeight: '100%',
+    paddingTop: '0px',
+  },
+  bodyStyle: {
+    paddingTop: '0px',
+    height: '100%',
+    padding: '0',
+  },
+  contentStyle: {
+    width: '100%',
+    maxWidth: 'none',
+    height: '100%',
+    maxHeight: '100%',
+    paddingTop: '0px',
+    top: '-64px',
+  },
+  title:{
+    color:'rgba(0, 0, 0, 0.87)',
+    fontSize:'15px',
+    fontWeight:'500',
+  },
+  content:{
+    color:'rgba(0, 0, 0, 0.54)',
+    fontSize:'14px',
+    fontWeight:'500',
+  },
+  card: {
+    paddingTop: '4px',
   },
 };
 
-class JobDetails extends React.Component {
+@connect(() => (
+{}), {pushState})
+export default class JobDetails extends React.Component {
 
-  constructor(props) {
+  constructor(props){
     super(props);
 
     this.state = {
-      contactDetailsModalOpen: false,
+      justInvited: false,
+      confirmOpen: false,
     };
   }
-  contactDetailsModalOpen(contact) {
-    this.setState({
-      contactDetailsModalOpen: true,
-      detailsContact: contact,
-    });
+
+  renderBigListItem(title,content,avatar){
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display:'inline-block'}}>
+          <div style={style.title}>{title}</div>
+          <div style={style.content}>{content}</div>
+        </div>
+      </div>
+    );
   }
 
-  contactDetailsModalClose() {
-    this.setState({
-      contactDetailsModalOpen: false,
-      detailsContact: null,
-    });
-  }
-  candidateSearchModalClose(){
-
+  goBack() {
+    if (this.props.onJobDetailsClose) {
+      this.props.onJobDetailsClose();
+    }
   }
 
-  saveContact(){
-    console.log('save contact');
+  _onTouchTapSave() {
+    console.log('_onTouchTapSave');
+  }
+
+  _onTouchTapShare() {
+    console.log('_onTouchTapShare');
+  }
+
+  _onTouchTapSearch() {
+    console.log('_onTouchTapSearch');
+  }
+
+  renderContent(job) {
+
+    if (job) {
+
+      // get cover
+      let cover = ((job.get('image')) ? (job.get('image').get('item')) : ('/img/default-job.jpg'));
+
+      // fee percentages
+      let feePercent = job.get('feePercent');
+      if (!feePercent) {
+        feePercent = 'not set';
+      } else {
+        feePercent += '%';
+      }
+
+      // markdown to html
+      let description = job.get('description') ? marked(job.get('description')) : '';
+
+      // salary
+      let salaryMin = '$?';
+      let salaryMax = '$?';
+
+      if (job.get('minSalary')) {
+        salaryMin = `$${~~(job.get('minSalary')) / 1000}k`;
+      }
+
+      if (job.get('maxSalary')) {
+        salaryMax = `$${~~(job.get('maxSalary')) / 1000}k`;
+      }
+
+      let actions = [{
+        materialIcon: 'search',
+        text: 'Find',
+        onTouchTap: this._onTouchTapSearch.bind(this),
+      }, {
+        materialIcon: 'star_rate',
+        text: 'Save',
+        onTouchTap: this._onTouchTapSave.bind(this),
+      }, {
+        materialIcon: 'share',
+        text: 'Share',
+        onTouchTap: this._onTouchTapShare.bind(this),
+      }];
+
+      return (
+
+        <div>
+          <DetailsCard
+              title={job.get('title')}
+              subtitle={job.get('company').get('name')}
+              extraLeftLine={`${salaryMin} - ${salaryMax}`}
+              extraRightLine={job.get('employmentType')}
+              cover={cover}
+              mainColor={Styles.Colors.amber700}
+              actions={actions}
+              floatActionOnTap={this._onTouchTapShare.bind(this)}
+              floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
+          />
+          <CustomTabsSwipe isLight isInline ref='customTabsSwipe' tabs={['Details', 'Desc', 'Applicants']}>
+            <Card style={style.card}>
+              <CardText>
+                {this.renderBigListItem('Quick Pitch', job.get('quickPitch'), <Avatar
+                icon={<FontIcon className="material-icons">info_outline</FontIcon>}
+                color={Styles.Colors.grey600}
+                backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
+              <CardText>
+                {this.renderBigListItem('Fee Percentage', feePercent, <Avatar
+                icon={<FontIcon className="material-icons">equalizer</FontIcon>}
+                color={Styles.Colors.grey600}
+                backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
+            </Card>
+            <div>
+              <Card>
+                <CardText >
+                  <div className='description'>
+                    <h3>Job Description</h3>
+                    <div dangerouslySetInnerHTML={{__html: description}} />
+                  </div>
+                </CardText>
+              </Card>
+            </div>
+            <div>
+              <CandidatesList candidates={job.get('candidates')} />
+            </div>
+          </CustomTabsSwipe>
+
+        </div>
+      );
+
+    }
+    else {
+      return (<div></div>);
+    }
   }
 
   render() {
-    let { location, isLight, job } = this.props;
-    job =  job || new Immutable.Map();
-    let jobImage = ((job) ? (job.get('image')) : (null));
-    let jobCandidates = ((job) ? (job.get('candidates')) : ([]));
-    jobCandidates = jobCandidates || [];
 
-    // mardown to html
-    //let fakeDescription = 'I am using __markdown__.\n\nRendered bold **marked**. ![https://media.giphy.com/media/wranrCRq3f90A/giphy.gif](https://media.giphy.com/media/wranrCRq3f90A/giphy.gif)';
-    let description = job.get('description')?marked(job.get('description')):'';
-    let pitch = job.get('quickPitch')?marked(job.get('quickPitch')) : '';
-  //  let range = '$'+job?job.get('minSalary'):'' + 'to $'+ job?job.get('maxSalary'):'';
+    let { job } = this.props;
+    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    let contentHeight = clientHeight;
+
     return (
       <div>
-        <ContactDetailsModal open={this.state.contactDetailsModalOpen} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-        <CustomTabsSwipe isLight={isLight} tabs={['Details', 'Description', 'Candidates']} >
-          <div style={style.slide}>
-            <Card>
-              {(jobImage) ? (
-                <div className="mediawrap">
-                  <CardMedia>
-                    <img src={jobImage.get('item')} />
-                  </CardMedia>
-                  {/*<div className="button-right-bottom">
-                    <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}} label="Apply" />
-                  </div>
-                  <div className="button-left-bottom">
-                    <FlatButton className='ghost' style={{backgroundColor:'rgba(0,0,0,0.70)',border:'1px solid rgba(255,255,255,0.70)', color:'rgba(255,255,255,0.97)', borderRadius:'5px'}}  label="Share" />
-                  </div>*/}
-                </div>
-              ) : (null)}
-              <CardText>
-                <Card>
-                  <CardText>
-                    <div className='row center-xs'>
-                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'><div>${job?job.get('minSalary'):''}</div> <div style={{fontSize:'11px', color:'rgba(0,0,0,0.54)'}}>to</div> <div>${job?job.get('maxSalary'):''}</div> <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>salary</div></div>
-                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>{job?job.get('employmentType'):''} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>position</div></div>
-                      <div style={{fontSize:'16px','color':'green'}} className='col-xs-4'>{jobCandidates.length} <div style={{fontSize:'11px','color':'rgba(0,0,0,0.54)'}}>candidates</div></div>
-                    </div>
-                  </CardText>
-                </Card>
-              </CardText>
-              <CardText>
-                <div>Skills</div>
-                {job.get('skills')? job.get('skills').map(function(skill){
-                  return (<span><RaisedButton style={{marginBottom:'5px'}} secondary={true} label={skill}>
-                  </RaisedButton> &nbsp;</span>
-                );
-                }): null}
-              </CardText>
-              <CardText >
-                Quick Pitch
-                <div className="description">
-                  <p dangerouslySetInnerHTML={{__html: pitch}}>
-                  </p>
-                </div>
-              </CardText>
-
-              <CardText>
-                <LocationCard style={{height: '200px'}} location={location} />
-              </CardText>
-
-              {
-                /*
-                <CardText>
-                  <Card>
-                    <List subheader='Compensation Details'>
-                      <ListItem
-                          leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
-                          primaryText={range}
-                          secondaryText={<p>salary</p>}
-                          secondaryTextLines={1}
-                          disabled
-                      />
-                      <ListItem
-                          leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
-                          primaryText={job?job.get('fee'):''}
-                          secondaryText={<p>fee</p>}
-                          secondaryTextLines={1}
-                          disabled
-                      />
-                      <ListItem
-                          leftIcon={<FontIcon className='material-icons'>attach_money</FontIcon>}
-                          primaryText={'$30,000'}
-                          secondaryText={<p>estimated fee</p>}
-                          secondaryTextLines={1}
-                          disabled
-                      />
-                      <ListItem
-                          leftIcon={<FontIcon className='material-icons'>person</FontIcon>}
-                          primaryText={'Permanent'}
-                          secondaryText={<p>position type</p>}
-                          secondaryTextLines={1}
-                          disabled
-                      />
-                    </List>
-                  </Card>
-                </CardText>
-                */
-              }
-              <List subheader='Job Contact'>
-                {(job.get('contact')) ? (
-                  <ListItem
-                    leftAvatar={<Gravatar email={job.get('contact').get('email')} status={'vetted'} />}
-                    primaryText={job.get('contact').get('displayName')}
-                    secondaryText={<p>Job Contact</p>}
-                    secondaryTextLines={1}
-                  />
-                ) : (null)}
-              </List>
-              <List subheader='Your HERO talent advocate'>
-                {(job.get('talentAdvocate')) ? (
-                  <ListItem
-                    leftAvatar={<Gravatar email={job.get('talentAdvocate').get('email')} status={'vetted'} />}
-                    primaryText={job.get('talentAdvocate').get('displayName')}
-                    secondaryText={<p>Hero Talent Advocate</p>}
-                    secondaryTextLines={1}
-                  />
-                ) : (null)}
-              </List>
-            </Card>
+        <Dialog
+            open={this.props.open}
+            autoDetectWindowHeight={false}
+            autoScrollBodyContent={false}
+            repositionOnUpdate={false}
+            defaultOpen={false}
+            style={style.dialog}
+            bodyStyle={style.bodyStyle}
+            contentStyle={style.contentStyle}
+        >
+          <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
+            <Header transparent goBack={this.goBack.bind(this)} iconRight={
+              <IconMenu iconButtonElement={
+                <IconButton iconClassName="material-icons">more_vert</IconButton>
+              }>
+                <MenuItem index={0} primaryText="Edit Job" />
+              </IconMenu>
+            }
+            />
+            <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
+              {this.renderContent(job)}
+            </div>
           </div>
-          <div style={style.slide}>
-            <Card>
-              <CardText >
-                <div className='description'>
-                  <h3>Job Description</h3>
-                  <div dangerouslySetInnerHTML={{__html: description}} />
-                </div>
-              </CardText>
-            </Card>
-          </div>
-          <div style={style.slide}>
-            <CandidatesList candidates={jobCandidates} />
-          </div>
-        </CustomTabsSwipe>
+        </Dialog>
       </div>
     );
   }
 }
 
-export default JobDetails;
+JobDetails.propTypes = {
+  job: React.PropTypes.object,
+  onJobDetailsClose: React.PropTypes.func,
+  open: React.PropTypes.bool.isRequired,
+};
