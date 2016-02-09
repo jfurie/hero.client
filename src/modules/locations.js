@@ -42,3 +42,10 @@ export function getOneLocation(id) {
     }),
   };
 }
+
+export function saveLocationByCompanyResult(location){
+  return {
+    type: GET_LOCATION_SUCCESS,
+    result: location,
+  };
+}

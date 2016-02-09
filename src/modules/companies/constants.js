@@ -17,3 +17,6 @@ export const GET_MY_COMPANIES_FAIL = 'hero.client/clients/GET_MY_COMPANIES_FAIL'
 export const SEARCH_COMPANIES = 'hero.client/clients/SEARCH_COMPANIES';
 export const SEARCH_COMPANIES_SUCCESS = 'hero.client/clients/SEARCH_COMPANIES_SUCCESS';
 export const SEARCH_COMPANIES_FAIL = 'hero.client/clients/SEARCH_COMPANIES_FAIL';
+export const GET_COMPANY_DETAIL = 'hero.client/clients/GET_COMPANY_DETAIL';
+export const GET_COMPANY_DETAIL_SUCCESS = 'hero.client/clients/GET_COMPANY_DETAIL_SUCCESS';
+export const GET_COMPANY_DETAIL_FAIL = 'hero.client/clients/GET_COMPANY_DETAIL_FAIL';

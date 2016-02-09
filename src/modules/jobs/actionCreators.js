@@ -185,3 +185,10 @@ export function createTempJob(job){
     result: job,
   };
 }
+
+export function saveJobsByCompanyResult(jobs){
+  return {
+    type: constants.GET_JOBS_BY_COMPANY_SUCCESS,
+    result: jobs,
+  };
+}
