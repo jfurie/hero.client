@@ -69,25 +69,28 @@ class ClientsList extends React.Component {
       ressourceName += 's';
     }
     var heights = clients.map(company =>{
+
       var height = 198;
       var tags = company.get('tags');
       if(tags && tags.length >0){
         height = height +26;
       }
-      var talentAdvocate = company.get('talentAdvocate');
+      var clientAdvocate = company.get('clientAdvocate');
       var contacts = company.get('contacts');
-      if(talentAdvocate){
+      if(clientAdvocate){
         height = height +37;
       }
       else if(contacts && contacts.length >0){
         height = height +25;
       }
+      console.log(company.get('name'),': ',height);
       return height;
     });
     heights = heights.toArray();
     if(!heights || heights.length <= 0){
       heights = 261;
     }
+    console.log('heights: ', heights);
     return (
 
       <div>
