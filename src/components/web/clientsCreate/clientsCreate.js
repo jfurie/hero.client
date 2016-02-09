@@ -323,7 +323,18 @@ export default class ClientsCreateModal extends React.Component {
 
                   <div className="col-xs-12">
                     <Divider style={style.divider} />
-                    <div style={style.subheader}>About Us</div>
+                    <div style={style.subheader}>About</div>
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        fullWidth={true}
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors')['businessType'] || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'businessType')}
+                        value={company.get('businessType')}
+                        floatingLabelStyle={{left:'0px'}}
+                        floatingLabelText="Business Type (optional)" />
                   </div>
                   <div className="col-xs-10 ">
                     <TextField

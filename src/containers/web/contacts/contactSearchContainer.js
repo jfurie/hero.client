@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ContactSearchModal } from '../../../components/web';
+import { ContactSearch } from '../../../components/web';
 
 import { searchContacts, createTempContact } from '../../../modules/contacts';
 
@@ -148,7 +148,7 @@ class ContactSearchContainer extends React.Component {
   render() {
     return (
       <div>
-        <ContactSearchModal
+        <ContactSearch
           open={this.state.open}
           query={this.state.query}
           searchResults={this.state.searchResults}

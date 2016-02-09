@@ -48,5 +48,8 @@ export CandidateSearchModal from './candidateSearch/candidateSearchModal';
 export CandidateCreateModal from './candidateCreateModal/candidateCreateModal';
 export ShareJobModal from './shareJobModal/shareJobModal';
 export ClientSearchModal from './clientSearch/clientSearchModal';
+export ClientSearch from './clientSearch/clientSearch';
 export ContactSearchModal from './contactSearch/contactSearchModal';
+export ContactSearch from './contactSearch/contactSearch';
 export JobSearchModal from './jobSearch/jobSearchModal';
+export JobSearch from './jobSearch/jobSearch';

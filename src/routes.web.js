@@ -160,16 +160,12 @@ export default(store) => {
           {/* Clients */}
           <Route path="clients">
             <IndexRoute component={ClientsPage}/>
-
-            <Route component={Home}>
-              <Route path="search" component={ClientSearchContainer}/>
-
-              <Route path=":companyId/contacts/search" component={ContactSearchContainer}></Route>
-              <Route path=":companyId/contacts/:contactId/create" component={ContactCreatePage}></Route>
-              <Route path=":companyId/jobs/search" component={JobSearchContainer}></Route>
-              <Route path=":companyId/jobs/:jobId/create" component={JobCreatePage}></Route>
-              <Route path=":companyId/notes/:noteId/create" component={NoteCreatePage}></Route>
-            </Route>
+            <Route path="search" component={ClientSearchContainer}/>
+            <Route path=":companyId/contacts/search" component={ContactSearchContainer}></Route>
+            <Route path=":companyId/contacts/:contactId/create" component={ContactCreatePage}></Route>
+            <Route path=":companyId/jobs/search" component={JobSearchContainer}></Route>
+            <Route path=":companyId/jobs/:jobId/create" component={JobCreatePage}></Route>
+			<Route path=":companyId/notes/:noteId/create" component={NoteCreatePage}></Route>
             <Route path=":companyId/create" component={ClientCreatePage}/>
             <Route path=":companyId" component={ClientDetailsPage}
               onEnter={(nextState) => {
@@ -191,22 +187,17 @@ export default(store) => {
           <Route path="contacts">
             {/* <IndexRoute component={ClientsPage}/> */}
 
-            <Route component={Home}>
               <Route path="search" component={ContactSearchContainer}/>
               <Route path=":contactId" component={ContactDetailsPage}/>
               <Route path=":contactId/create" component={ContactCreatePage}/>
-            </Route>
           </Route>
 
           {/* Contacts */}
           <Route path="jobs">
             {/* <IndexRoute component={ClientsPage}/> */}
-
-            <Route component={Home}>
               <Route path="search" component={JobSearchContainer}/>
               <Route path=":jobId" component={JobDetailsPage}/>
               <Route path=":jobId/create" component={JobCreatePage}/>
-            </Route>
           </Route>
 
           {/*<Route path="jobs">
