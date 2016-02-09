@@ -191,12 +191,9 @@ export default(store) => {
           {/* Contacts */}
           <Route path="jobs">
             {/* <IndexRoute component={ClientsPage}/> */}
-
-            <Route component={Home}>
               <Route path="search" component={JobSearchContainer}/>
               <Route path=":jobId" component={JobDetailsPage}/>
               <Route path=":jobId/create" component={JobCreatePage}/>
-            </Route>
           </Route>
 
           {/*<Route path="jobs">

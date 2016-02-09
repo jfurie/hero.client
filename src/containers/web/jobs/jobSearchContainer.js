@@ -114,7 +114,7 @@ class JobSearchContainer extends React.Component {
     } else {
       let id = job.id ? job.id : 'tmp_' + this._guid();
       job.id = id;
-      job.companyId = this.props.params.companyId || job.companyId || this.props.companies.first().get('id');
+      job.companyId = this.props.params.companyId || job.companyId || (this.props.companies.first() && this.props.companies.first().get('id'));
 
       this.props.createTempJob(job);
 
