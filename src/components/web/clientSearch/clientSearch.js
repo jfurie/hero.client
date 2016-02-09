@@ -98,7 +98,7 @@ export default class ClientSearch extends React.Component {
               {searchResults.map((client, key) => {
                 return (
                   <div key={key} style={style.section}>
-                    <ClientListItem company={client} />
+                    <ClientListItem type='mini' onClientClick={this.props.onDbClientSelect.bind(this, client)} company={client} />
                   </div>
                 );
               })}

@@ -85,7 +85,7 @@ class ClientsList extends React.Component {
           </ToolbarGroup>
         </Toolbar>*/}
         <List style={style.list} subheader={`${count} ${ressourceName}`}>
-          <Infinite containerHeight={clientHeight - (56+64)} elementHeight={280} useWindowAsScrollContainer>
+          <Infinite containerHeight={clientHeight - (56+64)} elementHeight={285} useWindowAsScrollContainer>
             {clients.map((company) => {
               return (
                 <div>
