@@ -89,52 +89,75 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.CREATE_NOTE:{
+    action.note = action.note.set('saving',true);
+    action.note = action.note.set('savingError',null);
     return {
       ...state,
-      loading:true,
+      saving:true,
+      savingError:'',
+      localNote: action.note,
     };
   }
   case constants.CREATE_NOTE_SUCCESS:{
     let noteMap = {};
+    action.result.saving = false;
+    action.result.savingError = '';
     noteMap[action.result.id] = action.result;
-    let byCompanyMap ={};
-
-    if (state.byCompanyId.size > 0) {
-      byCompanyMap[action.result.notableId] = state.byCompanyId.get(action.result.notableId).push(action.result.id);
-    }
-    else {
-      byCompanyMap[action.result.notableId] = [action.result.id];
-    }
 
     return {
       ...state,
       list: state.list.mergeDeep(noteMap),
-      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
       loading:false,
-      localNote: state.localNote.mergeDeep({success:true}),
+      localNote: new Immutable.Map(action.result),
+      saving:false,
+      savingError:'',
     };
   }
   case constants.CREATE_NOTE_FAIL:{
+    action.note = action.note.set('saving',true);
+    action.note = action.note.set('savingError', (action.error && action.error.error && action.error.error.message) || 'Failed to create note');
+
     return {
       ...state,
-      loading:false,
+      saving:false,
+      savingError:'Failed to create note',
+      localNote: action.note,
+    };
+  }
+  case constants.UPDATE_NOTE:{
+    action.note = action.note.set('saving',true);
+    action.note = action.note.set('savingError',null);
+    return {
+      ...state,
+      saving:true,
+      savingError:'',
+      localNote: action.note,
     };
   }
   case constants.UPDATE_NOTE_SUCCESS:{
     let noteMap = {};
+    action.result.saving = false;
+    action.result.savingError = '';
     noteMap[action.result.id] = action.result;
 
     return {
       ...state,
       list: state.list.mergeDeep(noteMap),
       loading:false,
-      localNote: state.localNote.mergeDeep({success:true}),
+      localNote: new Immutable.Map(action.result),
+      saving:false,
+      savingError:'',
     };
   }
   case constants.UPDATE_NOTE_FAIL:{
+    action.note = action.note.set('saving',true);
+    action.note = action.note.set('savingError', (action.error && action.error.error && action.error.error.message) || 'Failed to create note');
+
     return {
       ...state,
-      loading:false,
+      saving:false,
+      savingError:'Failed to create note',
+      localNote: action.note,
     };
   }
   case constants.DELETE_NOTE_SUCCESS: {

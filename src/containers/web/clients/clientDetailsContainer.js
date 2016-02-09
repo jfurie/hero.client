@@ -11,6 +11,7 @@ import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, re
 import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { getAllJobCandidates, createCandidate } from '../../../modules/candidates';
+
 import { invite } from '../../../modules/users';
 import getCompanyDataFromState from '../../../dataHelpers/company';
 
@@ -205,6 +206,27 @@ class ClientDetailsPage extends React.Component {
   addJobModalOpen(){
     this.props.pushState({}, `/clients/${this.props.params.companyId}/jobs/search?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
   }
+  addNoteModalOpen(note){
+    if (!note) {
+      note = {
+        id: 'tmp_' + this._guid(),
+        privacyValue: 0,
+      };
+    }
+
+    this.props.replaceNoteLocal(note);
+
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/notes/${note.id}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+  }
+  _guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  }
   render() {
 
     let {company} = this.props;
@@ -225,7 +247,7 @@ class ClientDetailsPage extends React.Component {
        <JobCreateModal heroContacts={heroContacts} contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
         */}
 
-        <ClientDetails addJobModalOpen={this.addJobModalOpen.bind(this)} addContactModalOpen={this.addContactModalOpen.bind(this)} editClientModalOpen={this.editClientModalOpen.bind(this)} onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={true} tabId={0} company={company} inline={true} ></ClientDetails>
+        <ClientDetails deleteNote={this._handleDeleteNote.bind(this)} addNoteModalOpen={this.addNoteModalOpen.bind(this)} addJobModalOpen={this.addJobModalOpen.bind(this)} addContactModalOpen={this.addContactModalOpen.bind(this)} editClientModalOpen={this.editClientModalOpen.bind(this)} onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={true} tabId={0} company={company} inline={true} ></ClientDetails>
 
       </div>
     );
