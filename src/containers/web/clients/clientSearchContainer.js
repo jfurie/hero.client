@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ClientSearchModal } from '../../../components/web';
+import { ClientSearch } from '../../../components/web';
 
 import { searchCompanies, createTempCompany } from '../../../modules/companies';
 
@@ -293,7 +293,7 @@ class ClientSearchContainer extends React.Component {
   render() {
     return (
       <div>
-        <ClientSearchModal
+        <ClientSearch
           open={true}
           query={this.state.query}
           searchResults={this.state.searchResults}

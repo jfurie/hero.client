@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState } from 'redux-router';
 
-import { createContact, createCompanyContact, getOneContact, getContactsByCompany, editContact } from '../../../modules/contacts';
+import { createContact, getOneContact, getContactsByCompany, editContact } from '../../../modules/contacts';
+import {createCompanyContact} from '../../../modules/companyContacts';
 import { ContactCreate } from '../../../components/web';
 
 let getData = (state, props) => {
@@ -36,7 +37,7 @@ export default class ContactCreateContainer extends React.Component {
   }
 
   componentDidMount() {
-    
+
   }
 
   componentWillReceiveProps(newProps){

@@ -38,6 +38,12 @@ const style = {
     height: '100%',
     padding: '0',
   },
+  toolbarInline:{
+    backgroundColor: '#ffffff',
+    height: '64px',
+    position:'fixed',
+    zIndex:'1000',
+  },
   contentStyle: {
     width: '100%',
     maxWidth: 'none',
@@ -45,6 +51,7 @@ const style = {
     maxHeight: '100%',
     paddingTop: '0px',
     top: '-64px',
+    backgroundColor: '#ffffff',
   },
   toolbar: {
     backgroundColor: '#ffffff',
@@ -205,7 +212,7 @@ export default class JobCreate extends React.Component {
     let companyId = this.props.company ? this.props.company.get('id') : null;
 
     return (
-      <div className="row center-xs">
+      <div style={{backgroundColor:'#ffffff'}} className="row center-xs">
           <div className="col-xs-12 col-md-8">
               <div className="box">
                 <form onSubmit={this._handleSubmit.bind(this)}>
@@ -421,7 +428,19 @@ export default class JobCreate extends React.Component {
     if(this.props.inline){
       return (
       <div>
-        {this._renderContents()}
+        <Toolbar style={style.toolbarInline}>
+          <ToolbarGroup key={0} float="left">
+            <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
+            <ToolbarTitle style={style.toolbarTitle} text="Create Job" />
+          </ToolbarGroup>
+          <ToolbarGroup key={1} float="right">
+            <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
+          </ToolbarGroup>
+        </Toolbar>
+        <div style={{height:'64px'}}></div>
+        <div>
+          {this._renderContents()}
+        </div>
       </div>);
     } else {
       return (

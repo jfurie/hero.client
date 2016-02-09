@@ -16,7 +16,7 @@ let style = {
   },
   contactsLayout:{
     flex:'0 0 150px',
-    marginTop:'16px',
+    marginTop:'8px',
   },
   starLayout:{
     flex:'0 0 150px',
@@ -43,7 +43,7 @@ let style = {
     borderRadius:'6px',
     display:'inline-block',
     padding:'0px 16px',
-    marginBottom:'16px',
+    marginBottom:'8px',
     height:'18px'
   },
   starOn:{
@@ -101,6 +101,67 @@ let style = {
 
   },
 };
+
+class PhoneButton extends React.Component {
+  _onTouchTapCall() {
+    window.location.href='tel:'+this.props.phone;
+  }
+  render(){
+    if(this.props.phone){
+      return (
+        <IconButton onTouchTap={this._onTouchTapCall.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Call">
+          <FontIcon style={{width:'24px'}} className="material-icons">phone</FontIcon>
+        </IconButton>
+      );
+    } else {
+      return (<span></span>);
+    }
+  }
+}
+class EmailButton extends React.Component {
+  _onTouchTapEmail() {
+    let email = this.props.email;
+    if(email){
+      window.location.href=`mailto:${email}`;
+    }
+  }
+  render(){
+    if(this.props.email){
+      return (
+        <IconButton onTouchTap={this._onTouchTapEmail.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Email">
+          <FontIcon style={{width:'24px'}} className="material-icons">email</FontIcon>
+        </IconButton>
+      );
+    } else {
+      return (<span></span>);
+    }
+  }
+}
+
+class FavoriteButton extends React.Component {
+  render(){
+    return (
+      <IconButton iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Star">
+        <FontIcon style={{width:'24px'}} className="material-icons">star_rate</FontIcon>
+      </IconButton>
+    );
+  }
+}
+class ShareButton extends React.Component {
+  _onTouchTapShare() {
+    let subject = 'Check out '+ this.props.company.get('name')+ ' on HERO';
+    let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
+    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
+  }
+  render(){
+    return (
+      <IconButton onTouchTap={this._onTouchTapShare.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Share">
+        <FontIcon style={{width:'24px'}} className="material-icons">share</FontIcon>
+      </IconButton>
+    );
+  }
+}
+
 export default class ClientListItem extends React.Component {
   constructor(props){
     super(props);
@@ -109,9 +170,7 @@ export default class ClientListItem extends React.Component {
     let {company} = this.props;
     this.props.onClientClick(company.get('id'));
   }
-  _onTouchTapCall() {
-    window.location.href='tel:'+this.props.company.get('phone');
-  }
+
 
   _onTouchTapEmail() {
     let email = this.props.company.get('email');
@@ -157,14 +216,14 @@ export default class ClientListItem extends React.Component {
     return (
       <Card
         style={{
-          height: type !=='mini'?'277px':'88px',
+          height: type !=='mini'?'auto':'80px',
           marginBottom:'8px',
           marginLeft:'8px',
           marginRight:'8px',
         }}>
         <CardText
           style={{
-            height: type !=='mini'?'181px':'auto'
+            height: type !=='mini'?'auto':'auto'
           }}>
           {type !=='mini'?(<div>
             <div>
@@ -210,14 +269,14 @@ export default class ClientListItem extends React.Component {
             </div>
             {type !== 'mini'?
             (<div>
-              <Divider style={{marginTop:'16px'}}></Divider>
+              <Divider style={{marginTop:'8px'}}></Divider>
               <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
                 <div className="row between-xs" style={style.layoutCompanyDetails}>
                   <div style={style.contactsLayout} >
                     {secondaryText}
                   </div>
                   <div>
-                  <div style={{lineHeight:'25px', height:'70px', marginTop:'8px', textAlign:'right'}}>
+                  <div style={{lineHeight:'25px', marginTop:'0px', textAlign:'right'}}>
                       {company.get('clientAdvocate')?(<div>
                         <Gravatar url={company.get('clientAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}></Gravatar> <div style={{display:'inline-block',lineHeight:'25px'}}>{company.get('clientAdvocate').get('displayName')}</div>
                       </div>):(<div></div>)}
@@ -249,18 +308,10 @@ export default class ClientListItem extends React.Component {
             boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)'
 
           }}>
-            <IconButton onTouchTap={this._onTouchTapCall.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Call">
-              <FontIcon style={{width:'24px'}} className="material-icons">phone</FontIcon>
-            </IconButton>
-            <IconButton onTouchTap={this._onTouchTapEmail.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Email">
-              <FontIcon style={{width:'24px'}} className="material-icons">email</FontIcon>
-            </IconButton>
-            <IconButton iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Star">
-              <FontIcon style={{width:'24px'}} className="material-icons">star_rate</FontIcon>
-            </IconButton>
-            <IconButton onTouchTap={this._onTouchTapShare.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Share">
-              <FontIcon style={{width:'24px'}} className="material-icons">share</FontIcon>
-            </IconButton>
+            <PhoneButton phone={this.props.company && this.props.company.get('phone')} />
+            <EmailButton email={this.props.company && this.props.company.get('email')} />
+            <FavoriteButton />
+            <ShareButton />
           </CardActions>
         </div>):(<div></div>)}
 
