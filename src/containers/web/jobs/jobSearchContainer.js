@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { JobSearchModal } from '../../../components/web';
+import { JobSearch } from '../../../components/web';
 
 import { searchJobs, createTempJob } from '../../../modules/jobs';
 
@@ -147,7 +147,7 @@ class JobSearchContainer extends React.Component {
   render() {
     return (
       <div>
-        <JobSearchModal
+        <JobSearch
           open={this.state.open}
           query={this.state.query}
           searchResults={this.state.searchResults}

@@ -140,7 +140,9 @@ export default function reducer(state = initialState, action = {}) {
     {
       let companyList =  {};
       action.result.map(job =>{
-        companyList[job.company.id] = job.company;
+        if(job.company){
+          companyList[job.company.id] = job.company;
+        }
       });
       return {
         ...state,

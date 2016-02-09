@@ -1,9 +1,10 @@
 import TagsInput from 'react-tagsinput';
 import React from 'react';
-//import Style from './tagsInput.scss';
+import Style from './tagsInput.scss';
 export default class Tags extends React.Component {
   constructor() {
     super();
+    let colors = Style.colors;
     this.state = {tags: []};
   }
   handleChange(tags) {
@@ -13,7 +14,7 @@ export default class Tags extends React.Component {
   }
 
   render() {
-    let tags = this.props.value?this.props.value.toJSON():[];
+    let tags = this.props.value?this.props.value:[];
     return (
       <div className="tags-wrap">
         <label>{this.props.title}</label>

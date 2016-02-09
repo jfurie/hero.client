@@ -27,13 +27,16 @@ class JobsList extends React.Component {
     jobs.map(function(job){
       let companyMap = {};
       let jobMap = {};
-      companyMap[job.get('company').get('id')] = job.get('company');
-      var companyJobs = jobsByCompany.get(job.get('company').get('id'));
-      companyJobs = companyJobs || new Immutable.List();
-      companyJobs = companyJobs.push(job);
-      jobMap[job.get('company').get('id')] = companyJobs;
-      companies = companies.mergeDeep(companyMap);
-      jobsByCompany = jobsByCompany.mergeDeep(jobMap);
+      if(job.get('company')){
+        companyMap[job.get('company').get('id')] = job.get('company');
+        var companyJobs = jobsByCompany.get(job.get('company').get('id'));
+        companyJobs = companyJobs || new Immutable.List();
+        companyJobs = companyJobs.push(job);
+        jobMap[job.get('company').get('id')] = companyJobs;
+        companies = companies.mergeDeep(companyMap);
+        jobsByCompany = jobsByCompany.mergeDeep(jobMap);
+      }
+
     });
 
     let subheader = `${jobs.count()} ${(jobs.count() !== 1) ? (ressourceNamePlurial) : (ressourceName)}`;
