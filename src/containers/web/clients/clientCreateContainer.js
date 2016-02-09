@@ -33,9 +33,12 @@ export default class ClientCreateContainer extends React.Component {
       open:true
     };
   }
-  
+
   componentDidMount() {
     this.props.getContactsByCompany(HEROCOMPANYID);
+    if(this.props.params.companyId && this.props.params.companyId.indexOf('tmp')<=-1 ){
+      this.props.getOneCompany(this.props.params.companyId);
+    }
   }
 
   componentWillReceiveProps(newProps){
@@ -99,7 +102,7 @@ export default class ClientCreateContainer extends React.Component {
         onSubmit={this._handleSave.bind(this)} o
         onCompanyChange={this._handleChange.bind(this)}
         open={true}
-        inline={false}  />
+        inline={true}  />
     );
   }
 }

@@ -51,6 +51,12 @@ const style = {
     backgroundColor: '#ffffff',
     height: '64px',
   },
+  toolbarInline:{
+    backgroundColor: '#ffffff',
+    height: '64px',
+    position:'fixed',
+    zIndex:'1000',
+  },
   toolbarIcon: {
     marginTop:'8px',
     float:'left',
@@ -169,7 +175,7 @@ export default class ClientsCreateModal extends React.Component {
     company = company || new Immutable.Map({errors:new Immutable.Map()});
 
     return (
-      <div className="row center-xs">
+      <div style={{backgroundColor:'#ffffff'}} className="row center-xs">
           <div className="col-xs-12 col-md-8">
               <div className="box">
                 <form onSubmit={this._handleSubmit.bind(this)}>
@@ -459,7 +465,19 @@ export default class ClientsCreateModal extends React.Component {
     if(this.props.inline){
       return (
       <div>
-        {this.renderContents()}
+        <Toolbar style={style.toolbarInline}>
+          <ToolbarGroup key={0} float="left">
+            <IconButton onTouchTap={this.closeModal.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
+            <ToolbarTitle style={style.toolbarTitle} text="Create Client" />
+          </ToolbarGroup>
+          <ToolbarGroup key={1} float="right">
+            <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
+          </ToolbarGroup>
+        </Toolbar>
+        <div style={{height:'64px'}}></div>
+        <div>
+          {this.renderContents()}
+        </div>
       </div>);
     } else {
       return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { Card, CardText, FontIcon, Divider, IconButton,CardActions, Styles } from 'material-ui';
+import { Card, CardText, FontIcon, Divider, IconButton,CardActions, Styles,Avatar } from 'material-ui';
 import { CompanyAvatar, Gravatar, Stars } from '../../../components/web';
 let style = {
   layout:{
@@ -43,7 +43,8 @@ let style = {
     borderRadius:'6px',
     display:'inline-block',
     padding:'0px 16px',
-    marginBottom:'16px'
+    marginBottom:'16px',
+    height:'18px'
   },
   starOn:{
     color:'#F5A623',
@@ -76,6 +77,17 @@ let style = {
     width: '30px',
     height: '30px',
   },
+  plusAvatar: {
+    display: 'inline',
+    width: '30px',
+    height: '30px',
+    padding: '7px 8px 7px 7px',
+    fontSize: '16px',
+    position: 'relative',
+    top: '-11px',
+  },
+  badgeWrap:{
+  },
   accountOwnerGravatar:{
     display: 'inline',
     width: '25px',
@@ -97,6 +109,22 @@ export default class ClientListItem extends React.Component {
     let {company} = this.props;
     this.props.onClientClick(company.get('id'));
   }
+  _onTouchTapCall() {
+    window.location.href='tel:'+this.props.company.get('phone');
+  }
+
+  _onTouchTapEmail() {
+    let email = this.props.company.get('email');
+    if(email){
+      window.location.href=`mailto:${email}`;
+    }
+  }
+
+  _onTouchTapShare() {
+    let subject = 'Check out '+ this.props.company.get('name')+ ' on HERO';
+    let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
+    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
+  }
   render(){
     let {company, type} = this.props;
 
@@ -107,7 +135,7 @@ export default class ClientListItem extends React.Component {
     let limit = contacts.count();
 
     if (contacts.count() > 4) {
-      limit = 4;
+      limit = 2;
     }
 
     contacts.forEach(function(c, key) {
@@ -127,15 +155,35 @@ export default class ClientListItem extends React.Component {
     }
 
     return (
-      <Card onTouchTap={this.clickClient.bind(this)}>
-        <CardText>
+      <Card
+        style={{
+          height: type !=='mini'?'277px':'88px',
+          marginBottom:'8px',
+          marginLeft:'8px',
+          marginRight:'8px',
+        }}>
+        <CardText
+          style={{
+            height: type !=='mini'?'181px':'auto'
+          }}>
           {type !=='mini'?(<div>
             <div>
-              <span style={style.badge} >HOT!</span>
+              <div style={style.badgeWrap}>
+                {company.get('tags') && company.get('tags').map(function(tag, i){
+                  if(i <=3){
+                    return (
+                      <span style={style.badge} >{tag}!</span>
+                    );
+                  }
+                  return (
+                    <span></span>
+                  );
+                })}
+              </div>
             </div>
           </div>):(<div></div>)}
 
-            <div style={style.layout}>
+            <div onTouchTap={this.clickClient.bind(this)} style={style.layout}>
 
 
                 <div style={style.imageLayout}>
@@ -146,7 +194,7 @@ export default class ClientListItem extends React.Component {
                       {company && company.get('name')}
                   </div>
                   <div style={style.subtitle}>
-                      Software Startup
+                      {company.get('businessType')|| 'Company'}
                   </div>
                   <div style={style.subtitle}>
                       <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
@@ -157,7 +205,7 @@ export default class ClientListItem extends React.Component {
 
                 </div>
                 <div style={{position: 'absolute', bottom:'0', right:'0'}}>
-                  <Stars score={4.8}></Stars>
+                  <Stars score={company.get('rating')}></Stars>
                 </div>
             </div>
             {type !== 'mini'?
@@ -169,20 +217,20 @@ export default class ClientListItem extends React.Component {
                     {secondaryText}
                   </div>
                   <div>
-                  <div style={{lineHeight:'25px', marginTop:'8px', textAlign:'right'}}>
+                  <div style={{lineHeight:'25px', height:'70px', marginTop:'8px', textAlign:'right'}}>
                       {company.get('clientAdvocate')?(<div>
                         <Gravatar url={company.get('clientAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}></Gravatar> <div style={{display:'inline-block',lineHeight:'25px'}}>{company.get('clientAdvocate').get('displayName')}</div>
                       </div>):(<div></div>)}
                       <div style={{marginTop:'8px'}}>
 
                         <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
-                        2
+                        {company.get('stats') && company.get('stats').get('jobCount')|| 0}
                         <FontIcon style={style.status} className="material-icons">assignment_ui</FontIcon>
-                        3
+                        { company.get('stats') && company.get('stats').get('candidateCount')|| 0}
                         <FontIcon style={style.statusRed} className="material-icons">assignment_late</FontIcon>
-                        4
+                        {company.get('stats') && company.get('stats').get('actionsCount')|| 0}
                         <FontIcon style={style.statusGreen} className="material-icons">assignment_turned_in</FontIcon>
-                        1
+                        {company.get('stats') && company.get('stats').get('hiredCount')|| 0}
                       </div>
                   </div>
 
@@ -201,20 +249,16 @@ export default class ClientListItem extends React.Component {
             boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)'
 
           }}>
-            <IconButton iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Call">
+            <IconButton onTouchTap={this._onTouchTapCall.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Call">
               <FontIcon style={{width:'24px'}} className="material-icons">phone</FontIcon>
             </IconButton>
-            <IconButton iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Text">
-              <FontIcon style={{width:'24px'}} className="material-icons">chat</FontIcon>
-            </IconButton>
-
-            <IconButton iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Email">
+            <IconButton onTouchTap={this._onTouchTapEmail.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Email">
               <FontIcon style={{width:'24px'}} className="material-icons">email</FontIcon>
             </IconButton>
             <IconButton iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Star">
               <FontIcon style={{width:'24px'}} className="material-icons">star_rate</FontIcon>
             </IconButton>
-            <IconButton iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Share">
+            <IconButton onTouchTap={this._onTouchTapShare.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Share">
               <FontIcon style={{width:'24px'}} className="material-icons">share</FontIcon>
             </IconButton>
           </CardActions>
