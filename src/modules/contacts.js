@@ -428,3 +428,10 @@ export function createCompanyContact(companyId, contact) {
     });
   };
 }
+
+export function saveContactsByCompanyResult(contacts){
+  return {
+    type: GET_CONTACTS_BY_COMPANY_SUCCESS,
+    result: contacts,
+  };
+}

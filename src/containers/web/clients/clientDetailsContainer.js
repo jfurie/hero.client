@@ -4,7 +4,7 @@ import { pushState } from 'redux-router';
 
 import { ClientDetails } from '../../../components/web';
 
-import { getOneCompany } from '../../../modules/companies/index';
+import { getOneCompany, getCompanyDetail } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
@@ -65,7 +65,7 @@ function getData(state, props) {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite, createCandidate })
+{getOneCompany, getCompanyDetail, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite, createCandidate })
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -83,10 +83,7 @@ class ClientDetailsPage extends React.Component {
 
     setTimeout(() => {
       if(self.props.params.companyId){
-        self.props.getOneCompany(self.props.params.companyId);
-        self.props.getContactsByCompany(self.props.params.companyId);
-        self.props.getJobsByCompany(self.props.params.companyId);
-        self.props.getNotesByCompany(self.props.params.companyId);
+        self.props.getCompanyDetail(self.props.params.companyId);
       }
 
 
