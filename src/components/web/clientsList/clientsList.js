@@ -68,7 +68,26 @@ class ClientsList extends React.Component {
     if (count !== 1) {
       ressourceName += 's';
     }
-
+    var heights = clients.map(company =>{
+      var height = 198;
+      var tags = company.get('tags')
+      if(tags && tags.length >0){
+        height = height +26;
+      }
+      var talentAdvocate = company.get('talentAdvocate');
+      var contacts = company.get('contacts');
+      if(talentAdvocate){
+        height = height +37;
+      }
+      else if(contacts && contacts.length >0){
+        height = height +25;
+      }
+      return height;
+    });
+    heights = heights.toArray();
+    if(!heights || heights.length <= 0){
+      heights = 261;
+    }
     return (
 
       <div>
@@ -85,7 +104,7 @@ class ClientsList extends React.Component {
           </ToolbarGroup>
         </Toolbar>*/}
         <List style={style.list} subheader={`${count} ${ressourceName}`}>
-          <Infinite containerHeight={clientHeight - (56+64)} elementHeight={285} useWindowAsScrollContainer>
+          <Infinite containerHeight={clientHeight - (56+64)} elementHeight={heights} useWindowAsScrollContainer>
             {clients.map((company) => {
               return (
                 <div>

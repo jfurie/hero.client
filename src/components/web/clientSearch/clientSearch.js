@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { AppBar, Card, CardHeader, IconButton, TextField, RaisedButton } from 'material-ui';
-import Infinite from 'react-infinite';
 
 import { ClientListItem } from '../../../components/web';
 
@@ -95,7 +94,6 @@ export default class ClientSearch extends React.Component {
             <div style={style.heading.container}>
               <span style={style.heading.label}>Search Results: </span>{`${searchResults.length} Client${(searchResults.length == 1) ? ('') : ('s')}`}
             </div>
-            <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
               {searchResults.map((client, key) => {
                 return (
                   <div key={key} style={style.section}>
@@ -103,7 +101,6 @@ export default class ClientSearch extends React.Component {
                   </div>
                 );
               })}
-            </Infinite>
           </div>
           : <div></div>
         }
@@ -113,7 +110,6 @@ export default class ClientSearch extends React.Component {
             <div style={style.heading.container}>
               <span style={style.heading.label}>Suggestions: </span>{`${suggestions.length} Client${(suggestions.length == 1) ? ('') : ('s')}`}
             </div>
-            <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
               {suggestions.map((client, key) => {
                 let photo = client.photos ? client.photos[0].getUrl({'maxWidth': 100, 'maxHeight': 100}) : null;
 
@@ -133,7 +129,6 @@ export default class ClientSearch extends React.Component {
                   </div>
                 );
               })}
-            </Infinite>
           </div>
           : <div></div>
         }
