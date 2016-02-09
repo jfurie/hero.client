@@ -54,7 +54,7 @@ export default class ClientSearch extends React.Component {
 
   render(){
 
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+  //  let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     let { query, searchResults, suggestions } = this.props;
 

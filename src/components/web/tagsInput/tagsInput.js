@@ -4,7 +4,8 @@ import Style from './tagsInput.scss';
 export default class Tags extends React.Component {
   constructor() {
     super();
-    let colors = Style.colors;
+    let colors = Style.Colors;
+    colors = colors;
     this.state = {tags: []};
   }
   handleChange(tags) {

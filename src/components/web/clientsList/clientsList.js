@@ -70,7 +70,7 @@ class ClientsList extends React.Component {
     }
     var heights = clients.map(company =>{
       var height = 198;
-      var tags = company.get('tags')
+      var tags = company.get('tags');
       if(tags && tags.length >0){
         height = height +26;
       }

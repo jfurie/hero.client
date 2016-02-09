@@ -112,9 +112,9 @@ class PhoneButton extends React.Component {
         <IconButton onTouchTap={this._onTouchTapCall.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Call">
           <FontIcon style={{width:'24px'}} className="material-icons">phone</FontIcon>
         </IconButton>
-      )
+      );
     } else {
-      return (<span></span>)
+      return (<span></span>);
     }
   }
 }
@@ -131,9 +131,9 @@ class EmailButton extends React.Component {
         <IconButton onTouchTap={this._onTouchTapEmail.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Email">
           <FontIcon style={{width:'24px'}} className="material-icons">email</FontIcon>
         </IconButton>
-      )
+      );
     } else {
-      return (<span></span>)
+      return (<span></span>);
     }
   }
 }
@@ -144,7 +144,7 @@ class FavoriteButton extends React.Component {
       <IconButton iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Star">
         <FontIcon style={{width:'24px'}} className="material-icons">star_rate</FontIcon>
       </IconButton>
-    )
+    );
   }
 }
 class ShareButton extends React.Component {
@@ -158,7 +158,7 @@ class ShareButton extends React.Component {
       <IconButton onTouchTap={this._onTouchTapShare.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Share">
         <FontIcon style={{width:'24px'}} className="material-icons">share</FontIcon>
       </IconButton>
-    )
+    );
   }
 }
 
