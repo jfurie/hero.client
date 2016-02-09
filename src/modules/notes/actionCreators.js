@@ -87,3 +87,10 @@ export function getOneNote(id) {
     }),
   };
 }
+
+export function saveNotesByCompanyResult(notes){
+  return {
+    type: constants.GET_NOTES_BY_COMPANY_SUCCESS,
+    result: notes,
+  };
+}
