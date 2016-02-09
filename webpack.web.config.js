@@ -9,7 +9,7 @@ var isDEV =  env = 'development';
 
 var original = {
   debug: true,
-  watch:true,
+  //watch:true,
   devtool: 'source-map',
   entry: {
     //'index.ios': ['./src/main.ios.js'],
