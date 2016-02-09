@@ -1,14 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
+import marked from 'marked';
 //import md5 from 'md5';
 
 //import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard, CustomTabsSwipe } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, CandidatesList } from '../../../components/web';
 import {
-  Dialog, IconButton, List, ListItem, FontIcon,
-  Divider, Styles, IconMenu, MenuItem,
+  Dialog, IconButton, FontIcon, Styles,
+  IconMenu, MenuItem, Card, CardText, Avatar,
 } from 'material-ui';
 
 const style = {
@@ -30,6 +31,19 @@ const style = {
     paddingTop: '0px',
     top: '-64px',
   },
+  title:{
+    color:'rgba(0, 0, 0, 0.87)',
+    fontSize:'15px',
+    fontWeight:'500',
+  },
+  content:{
+    color:'rgba(0, 0, 0, 0.54)',
+    fontSize:'14px',
+    fontWeight:'500',
+  },
+  card: {
+    paddingTop: '4px',
+  },
 };
 
 @connect(() => (
@@ -45,9 +59,19 @@ export default class JobDetails extends React.Component {
     };
   }
 
-  // editContactModalOpen(){
-  //   console.log('yo!');
-  // }
+  renderBigListItem(title,content,avatar){
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display:'inline-block'}}>
+          <div style={style.title}>{title}</div>
+          <div style={style.content}>{content}</div>
+        </div>
+      </div>
+    );
+  }
 
   goBack() {
     if (this.props.onJobDetailsClose) {
@@ -67,54 +91,23 @@ export default class JobDetails extends React.Component {
     console.log('_onTouchTapSearch');
   }
 
-  // _handleTapOnApplications() {
-  //   console.log('_handleTapOnApplications');
-  // }
-
   renderContent(job) {
 
-    // //let picture = null;
-    // let email = null;
-    // let phone = null;
-    // let addressLine = null;
-    // let city = null;
-    // let postalCode = null;
-    // //let countryCode = null;
-    // let countrySubDivisionCode = null;
-    // let source = null;
-    // let displayName = null;
-    // //let invited = false;
-    //
     if (job) {
-    //   displayName = contact.get('displayName') || null;
-    //   email = contact.get('email') || null;
-    //   phone = contact.get('phone') || null;
-    //   //invited = contact.get('isInvited');
-    //
-    //   if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
-    //     source = contact.get('sourceInfo').get('referrer');
-    //   }
-    //
-    //   // location stuff
-    //   let address = contact.get('_address');
-    //
-    //   if (address) {
-    //     addressLine = address.get('addressLine') || null;
-    //     city = address.get('city') || null;
-    //     postalCode = address.get('postalCode') || null;
-    //     countrySubDivisionCode = address.get('countrySubDivisionCode') || null;
-    //
-    //     if (city && countrySubDivisionCode) {
-    //       city += `, ${countrySubDivisionCode}`;
-    //     }
-    //
-    //     if (city && postalCode) {
-    //       city += ` ${postalCode}`;
-    //     }
-    //   }
 
       // get cover
       let cover = ((job.get('image')) ? (job.get('image').get('item')) : ('/img/default-job.jpg'));
+
+      // fee percentages
+      let feePercent = job.get('feePercent');
+      if (!feePercent) {
+        feePercent = 'not set';
+      } else {
+        feePercent += '%';
+      }
+
+      // markdown to html
+      let description = job.get('description') ? marked(job.get('description')) : '' ;
 
       let actions = [{
         materialIcon: 'search',
@@ -143,72 +136,37 @@ export default class JobDetails extends React.Component {
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
           />
           <CustomTabsSwipe isLight isInline ref='customTabsSwipe' tabs={['Details', 'Desc', 'Applicants']}>
-            <div><p>toto</p></div>
-            <div><p>toto2</p></div>
-            <div><p>toto3</p></div>
-          </CustomTabsSwipe>
-          {/* <List style={{position: 'relative', top: '3px'}}>
+            <Card style={style.card}>
+              <CardText>
+                {this.renderBigListItem('Quick Pitch', job.get('quickPitch'), <Avatar
+                icon={<FontIcon className="material-icons">info_outline</FontIcon>}
+                color={Styles.Colors.grey600}
+                backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
+              <CardText>
+                {this.renderBigListItem('Fee Percentage', feePercent, <Avatar
+                icon={<FontIcon className="material-icons">equalizer</FontIcon>}
+                color={Styles.Colors.grey600}
+                backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
+            </Card>
             <div>
-
-              {(email) ? (
-                <ListItem
-                  leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
-                  primaryText={email}
-                  secondaryText={<p>email</p>}
-                  secondaryTextLines={1}
-                />
-              ) : (null)}
-
-              {(phone) ? (
-                <div>
-                  <Divider inset />
-                  <ListItem
-                    leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                    primaryText={phone}
-                    secondaryText={<p>phone</p>}
-                    secondaryTextLines={1}
-                  />
-                </div>
-              ) : (null)}
-
-              {(addressLine) ? (
-                <div>
-                  <Divider inset />
-                  <ListItem
-                    leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                    primaryText={addressLine}
-                    secondaryText={<p>address</p>}
-                    secondaryTextLines={1}
-                  />
-                </div>
-              ) : (null)}
-
-              {(city) ? (
-                <div>
-                  <Divider inset />
-                  <ListItem
-                    leftIcon={<FontIcon className="material-icons">business</FontIcon>}
-                    primaryText={city}
-                    secondaryText={<p>city</p>}
-                    secondaryTextLines={1}
-                  />
-                </div>
-              ) : (null)}
-
-              {(source) ? (
-                <div>
-                  <Divider inset />
-                  <ListItem
-                    leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
-                    primaryText={source}
-                    secondaryText={<p>source</p>}
-                    secondaryTextLines={1}
-                  />
-                </div>
-              ) : (null)}
-
+              <Card>
+                <CardText >
+                  <div className='description'>
+                    <h3>Job Description</h3>
+                    <div dangerouslySetInnerHTML={{__html: description}} />
+                  </div>
+                </CardText>
+              </Card>
             </div>
-          </List> */}
+            <div>
+              <CandidatesList candidates={job.get('candidates')} />
+            </div>
+          </CustomTabsSwipe>
+
         </div>
       );
 
