@@ -21,6 +21,8 @@ import AccountHomePage from './containers/web/account/accountHomeContainer';
 
 // contacts
 import ContactDetailsPage from './containers/web/contacts/contactDetailsContainer';
+import ContactSearchContainer from './containers/web/contacts/contactSearchContainer';
+import ContactCreatePage from './containers/web/contacts/contactCreateContainer';
 
 // candidates
 import MyCandidatesPage from './containers/web/candidates/myCandidatesContainer';
@@ -33,14 +35,11 @@ import ClientSearchContainer from './containers/web/clients/clientSearchContaine
 import ClientCreatePage from './containers/web/clients/clientCreateContainer';
 
 //jobs
-import JobSearchContainer from './containers/web/jobs/jobSearchContainer';
 import JobDetailsPage from './containers/web/jobs/jobDetailsContainer';
-import MyJobsPage from './containers/web/jobs/myJobsContainer';
+import JobSearchContainer from './containers/web/jobs/jobSearchContainer';
+//import MyJobsPage from './containers/web/jobs/myJobsContainer';
 import JobCreatePage from './containers/web/jobs/jobCreateContainer';
 
-// contacts
-import ContactSearchContainer from './containers/web/contacts/contactSearchContainer';
-import ContactCreatePage from './containers/web/contacts/contactCreateContainer';
 
 const localStorage = new LocalStorageClient('Auth');
 
@@ -158,23 +157,24 @@ export default(store) => {
           {/* Clients */}
           <Route path="clients">
             <IndexRoute component={ClientsPage}/>
-            <Route path=":companyId" component={ClientDetailsPage}
-              onEnter={(nextState) => {
-                nextState.params.clientDetailsOpen = true;
-              }} />
+
             <Route component={Home}>
               <Route path="search" component={ClientSearchContainer}/>
-              <Route path=":companyId/create" component={ClientCreatePage}/>
 
               <Route path=":companyId/contacts/search" component={ContactSearchContainer}></Route>
               <Route path=":companyId/contacts/:contactId/create" component={ContactCreatePage}></Route>
               <Route path=":companyId/jobs/search" component={JobSearchContainer}></Route>
               <Route path=":companyId/jobs/:jobId/create" component={JobCreatePage}></Route>
             </Route>
+            <Route path=":companyId/create" component={ClientCreatePage}/>
+            <Route path=":companyId" component={ClientDetailsPage}
+              onEnter={(nextState) => {
+                nextState.params.clientDetailsOpen = true;
+              }} />
             <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
               nextState.params.tab = 'jobs';
             }} />
-            <Route path=":id/jobs/:jobId" component={ClientDetailsPage} />
+            <Route path=":id/jobs/:jobId" component={JobDetailsPage} />
             <Route path=":id/jobs(/:create)" component={ClientDetailsPage} />
             <Route path=":id" component={ClientDetailsPage} />
               <Route path=":id/notes" component={ClientDetailsPage}
@@ -185,7 +185,7 @@ export default(store) => {
 
           {/* Contacts */}
           <Route path="contacts">
-            <IndexRoute component={ClientsPage}/>
+            {/* <IndexRoute component={ClientsPage}/> */}
 
             <Route component={Home}>
               <Route path="search" component={ContactSearchContainer}/>
@@ -194,17 +194,29 @@ export default(store) => {
             </Route>
           </Route>
 
+          {/* Contacts */}
           <Route path="jobs">
+            {/* <IndexRoute component={ClientsPage}/> */}
+
+            <Route component={Home}>
+              <Route path="search" component={JobSearchContainer}/>
+              <Route path=":jobId" component={JobDetailsPage}/>
+              <Route path=":jobId/create" component={JobCreatePage}/>
+            </Route>
+          </Route>
+
+          {/*<Route path="jobs">
             <IndexRoute component={MyJobsPage}/>
             <Route path="search" component={JobSearchContainer}/>
             <Route path=":jobId" component={JobDetailsPage}/>
             <Route path=":jobId/create" component={JobCreatePage}/>
-          </Route>
+          </Route>*/}
 
           {/*<Route path="/myjobs" component={MyJobsPage}/>*/}
           <Route path="candidates">
             <IndexRoute component={MyCandidatesPage}/>
             <Route path="search" component={CandidateSearchContainer} />
+            <Route path=":contactId" component={ContactDetailsPage}/>
           </Route>
 
           {/* Settings  */}

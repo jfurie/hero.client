@@ -21,10 +21,10 @@ const style = {
     width: '100%',
     zIndex: '10',
   },
-  tabsInline: {
-    position: 'relative',
-    top: '4px',
-  },
+  // tabsInline: {
+  //   position: 'relative',
+  //   top: '4px',
+  // },
   tabLightSelected: {
     fontWeight:'800',
     borderBottom:'2px solid #505050',
@@ -117,9 +117,11 @@ class CustomTabsSwipe extends React.Component {
     if (isInline) {
       inkBarStyle.display = 'none';
       tabsStyle.position = 'relative';
+      tabsStyle.top = '4px';
     } else {
       inkBarStyle.display = 'block';
       tabsStyle.position = 'fixed';
+      tabStyle.top = '0px';
     }
 
     return (

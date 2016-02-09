@@ -1,31 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { pushState } from 'redux-router';
 import { List, ListItem, Divider } from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { CandidateDetailsModal, Gravatar, CandidatesListItemStatus } from '../../../components/web';
+import { Gravatar, CandidatesListItemStatus } from '../../../components/web';
 
+@connect(() => (
+{}), {pushState})
 class CandidatesList extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      selectedCandidate: null,
-      candidateDetailsModalOpen: false,
-    };
   }
 
-  openDetails(candidate){
-    this.setState({
-      selectedCandidate: candidate,
-      candidateDetailsModalOpen: true,
-    });
-  }
-
-  closeDetails() {
-    this.setState({
-      selectedCandidate: null,
-      candidateDetailsModalOpen: false,
-    });
+  openDetails(candidate) {
+    this.props.pushState(null, `/candidates/${candidate.get('contact').get('id')}`);
   }
 
   render() {
@@ -35,7 +25,7 @@ class CandidatesList extends React.Component {
 
     return (
       <div>
-        <CandidateDetailsModal open={this.state.candidateDetailsModalOpen} candidate={this.state.selectedCandidate} close={this.closeDetails.bind(this)}/>
+        {/*<CandidateDetailsModal open={this.state.candidateDetailsModalOpen} candidate={this.state.selectedCandidate} close={this.closeDetails.bind(this)}/>*/}
         <List style={{backgroundColor:'transparant'}} subheader={`${candidates.length} Candidate${(candidates.length !== 1) ? ('s') : ('')}`}>
           <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
             {candidates.map((candidate, key) => {
@@ -86,6 +76,7 @@ class CandidatesList extends React.Component {
 
 CandidatesList.propTypes = {
   candidates: React.PropTypes.array.isRequired,
+  onOpenCandidateDetails: React.PropTypes.func,
 };
 
 export default CandidatesList;
