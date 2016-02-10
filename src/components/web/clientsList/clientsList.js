@@ -68,15 +68,15 @@ class ClientsList extends React.Component {
     if (count !== 1) {
       ressourceName += 's';
     }
-    var heights = clients.map(company =>{
+    let heights = clients.map(company =>{
 
-      var height = 198;
-      var tags = company.get('tags');
+      let height = 198;
+      let tags = company.get('tags');
       if(tags && tags.count() >0){
         height = height +26;
       }
-      var clientAdvocate = company.get('clientAdvocate');
-      var contacts = company.get('contacts');
+      let clientAdvocate = company.get('clientAdvocate');
+      let contacts = company.get('contacts');
       if(clientAdvocate){
         height = height +37;
       }
