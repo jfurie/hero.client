@@ -6,7 +6,7 @@ import marked from 'marked';
 
 //import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard, CustomTabsSwipe, CandidatesList } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, CandidatesList, CompanyAvatar } from '../../../components/web';
 import {
   Dialog, IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -146,6 +146,7 @@ export default class JobDetails extends React.Component {
               cover={cover}
               mainColor={Styles.Colors.amber700}
               actions={actions}
+              avatar={<CompanyAvatar style={{width: '50px'}} url={job.get('company').get('website')}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
           />
