@@ -4,7 +4,6 @@ import { FontIcon, Styles } from 'material-ui';
 import Card from 'material-ui/lib/card/card';
 import CardActions from 'material-ui/lib/card/card-actions';
 import CardMedia from 'material-ui/lib/card/card-media';
-import CardTitle from 'material-ui/lib/card/card-title';
 import FlatButton from 'material-ui/lib/flat-button';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 
@@ -24,8 +23,6 @@ let style = {
     color: Styles.Colors.white,
     fontWeight: 200,
     opacity: 0.5,
-    // position: 'relative',
-    // top: '-3px',
     fontSize: '13px',
   },
   extraLeftLine: {
@@ -46,7 +43,6 @@ let style = {
     zIndex: '50',
   },
   titlesub: {
-    // paddingLeft: '1px',
     paddingTop: '4px',
     position: 'relative',
     left: '-2px',
@@ -54,10 +50,6 @@ let style = {
   avatar: {
     paddingLeft: '1px',
     paddingRight: '1px',
-    // position: 'absolute',
-    // left: '10px',
-    // top: '-28px',
-    // zIndex: '50',
   },
   actionButton: {
     minWidth: '0px',
@@ -140,10 +132,6 @@ class DetailsCard extends React.Component {
             </div>
           </div>
 
-          {/*(this.props.avatar) ? (
-              <div style={style.avatar}>{this.props.avatar}</div>
-          ) : (null)*/}
-
           {(this.props.extraLeftLine) ? (
             <span style={style.extraLeftLine}>{this.props.extraLeftLine}</span>
           ) : (null)}
@@ -151,16 +139,6 @@ class DetailsCard extends React.Component {
             <span style={style.extraRightLine}>{this.props.extraRightLine}</span>
           ) : (null)}
         </div>
-
-          {/*<CardTitle style={style.cardTitleComponent} subtitleColor={Styles.Colors.white} titleColor={Styles.Colors.white} subtitleStyle={style.subtitle} title={this.props.title} subtitle={this.props.subtitle}>
-            {(this.props.extraLeftLine) ? (
-              <span style={style.extraLeftLine}>{this.props.extraLeftLine}</span>
-            ) : (null)}
-            {(this.props.extraRightLine) ? (
-              <span style={style.extraRightLine}>{this.props.extraRightLine}</span>
-            ) : (null)}
-          </CardTitle>*/}
-
 
         <CardActions className="row center-xs">
           {this.props.actions.map((action, key) => {
