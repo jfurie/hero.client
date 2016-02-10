@@ -192,6 +192,18 @@ export default class JobCreate extends React.Component {
     this.props.onJobChange(newJob);
   }
 
+  _handleDepartmentValueChange(e, key, payload){
+    let newJob = this.props.job;
+
+    if (payload) {
+      newJob = newJob.set('department', payload);
+    } else {
+      newJob = newJob.delete('department');
+    }
+
+    this.props.onJobChange(newJob);
+  }
+
   _datePickerClose() {
     console.log('close!');
   }
@@ -270,6 +282,19 @@ export default class JobCreate extends React.Component {
                         floatingLabelText="Job Title"
                         value={job.get('title')}
                     />
+                  </div>
+
+                  <div className="col-xs-10 ">
+                    <SelectField value={job.get('department')} floatingLabelText="Department" fullWidth onChange={this._handleDepartmentValueChange.bind(this)}>
+                      <MenuItem value={'Tech'} primaryText="Tech"/>
+                      <MenuItem value={'Sales'}  primaryText="Sales"/>
+                      <MenuItem value={'Product'} primaryText="Product"/>
+                      <MenuItem value={'Executive'} primaryText="Executive"/>
+                      <MenuItem value={'Marketing'} primaryText="Marketing"/>
+                      <MenuItem value={'Operations'} primaryText="Operations"/>
+                      <MenuItem value={'Customer Service'} primaryText="Customer Service"/>
+                      <MenuItem value={'Office Mgmt'} primaryText="Office Mgmt"/>
+                    </SelectField>
                   </div>
 
                   <div className="col-xs-10 ">
@@ -364,9 +389,9 @@ export default class JobCreate extends React.Component {
                         fullWidth
                         errorText={''}
                         floatingLabelText="Fee %"
-                        onChange={(e) => this._handleChange.bind(this)(e, 'feePercent')}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'fee')}
                         type="number"
-                        value={job.get('feePercent')}
+                        value={job.get('fee')}
                     />
                   </div>
 
