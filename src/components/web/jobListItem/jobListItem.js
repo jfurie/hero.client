@@ -194,7 +194,7 @@ export default class JobListItem extends React.Component {
           {type !=='mini'?(<div>
             <div style={{textAlign: 'right'}}>
               <div style={style.badgeWrap}>
-                <Tag value={job.get('employmentType')} style={{badge: {backgroundColor: Styles.Colors.green500}}} />
+                <Tag value={job.get('employmentType')} color={'green'} />
               </div>
             </div>
           </div>):(<div></div>)}
