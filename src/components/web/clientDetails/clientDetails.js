@@ -10,8 +10,8 @@ import MapsDirections from 'material-ui/lib/svg-icons/maps/directions';
 import Avatar from 'material-ui/lib/avatar';
 
 import {
-  Header, CustomTabsSwipe, ContactsList,
-  CompanyJobsList, DetailsCard, CompanyAvatar,
+  Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
+  CompanyNotesList, DetailsCard, CompanyAvatar,
 } from '../../../components/web';
 
 const style = {
@@ -93,13 +93,22 @@ export default class ClientDetails extends React.Component {
   }
 
   createNoteModalOpen(){
-
+    if(this.props.addNoteModalOpen){
+      this.props.addNoteModalOpen();
+    }
   }
 
   _handleJobClick(job){
     this.props.pushState('', `/jobs/${job.get('id')}`);
   }
 
+  editNote(note){
+    this.props.addNoteModalOpen(note);
+  }
+
+  deleteNote(note){
+    this.props.deleteNote(note);
+  }
 
   contactDetailsModalOpen(contact){
     this.props.pushState('', `/contacts/${contact.get('id')}`);
@@ -230,7 +239,7 @@ export default class ClientDetails extends React.Component {
               extraLeftLine={recruiterData}
           />
 
-          <CustomTabsSwipe isLight isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts']}>
+          <CustomTabsSwipe isLight isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
             <Card>
               <CardText>
                 {this.renderBigListItem('Company Mission',company.get('productSolution'),<Avatar
@@ -362,6 +371,9 @@ export default class ClientDetails extends React.Component {
               <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
             </List>
             <ContactsList contacts={company.get('contacts')} onOpenContactDetails={this.contactDetailsModalOpen.bind(this)}/>
+            <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
+              <CompanyNotesList company={company} editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={company.get('notes')}/>
+            </List>
           </CustomTabsSwipe>
 
         </div>

@@ -12,6 +12,7 @@ const style = {
   },
   container: {
     padding: '10px',
+    backgroundColor:'#ffffff'
   },
   search: {
     bar: {

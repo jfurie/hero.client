@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState } from 'redux-router';
 
-import { getOneCompany } from '../../../modules/companies/index';
+import { getOneCompany, getMyCompanies } from '../../../modules/companies/index';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getMyJobs } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { JobCreate } from '../../../components/web';
@@ -44,7 +44,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData, { pushState, getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getOneCompany, getContactsByCompany, getMyJobs })
+@connect(getData, { pushState, getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getOneCompany, getContactsByCompany, getMyJobs, getMyCompanies })
 export default class JobCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -56,9 +56,16 @@ export default class JobCreateContainer extends React.Component {
   componentDidMount() {
     this.props.getContactsByCompany(HEROCOMPANYID);
     this.props.getContactsByCompany(this.props.params.companyId);
+    this.props.getMyCompanies();
+    if(this.props.params.jobId && this.props.params.jobId.indexOf('tmp')<=-1 ){
+      this.props.getOneJob(this.props.params.jobId);
+    }
   }
 
   componentWillReceiveProps(newProps){
+    if(newProps.params.companyId && newProps.params.companyId != this.props.params.companyId ){
+      this.props.getContactsByCompany(newProps.params.companyId);
+    }
     if( newProps.job && newProps.job.get('saving') == false
     && this.props.job && this.props.job.get('saving') == true
     && !newProps.job.get('savingError')){
@@ -94,7 +101,7 @@ export default class JobCreateContainer extends React.Component {
     this._handleChange(job);
     let self = this;
     setTimeout(function () {
-      self.props.history.replaceState(null, `/clients/${companyId}/jobs/${self.props.job.get('id')}/create`);
+      self.props.history.replaceState(null, `/clients/${companyId}/jobs/${self.props.params.jobId}/create`);
     }, 500);
   }
 
@@ -130,7 +137,7 @@ export default class JobCreateContainer extends React.Component {
         onCompanyChange={this._handleCompanyChange.bind(this)}
         open={this.state.open}
         onImageChange={this.onJobCreateImageChange.bind(this)}
-        inline={false}  />
+        inline={true}  />
     );
   }
 }
