@@ -94,8 +94,9 @@ export default class ContactCreateContainer extends React.Component {
 
     } else {
       let companyId = this.props.company ? this.props.company.get('id') : null;
-
-      if (companyId) {
+      if(this.props.params.jobId){
+        //This is a candidate creation
+      } else if (companyId) {
         this.props.createCompanyContact(companyId, contact);
       }
       else {

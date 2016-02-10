@@ -180,7 +180,6 @@ export default function reducer(state = initialState, action = {}) {
       saving:false,
       savingError:'Failed to edit job',
       list:state.list.mergeDeep(job),
-      localJob: action.job,
     };
   }
   case constants.CREATE_JOB_LOCAL: {
@@ -190,16 +189,18 @@ export default function reducer(state = initialState, action = {}) {
       localJob: state.localJob.mergeDeep(action.result),
     };
   }
-  case constants.UPDATE_JOB_LOCAL:{
+  case constants.UPDATE_JOB:{
+    let job ={};
+    job[action.id] = action.result;
     if(action.dontMergeDeep){
       return {
         ...state,
-        localJob: state.localJob.merge(action.result),
+        list: state.list.merge(job),
       };
     } else {
       return {
         ...state,
-        localJob: state.localJob.mergeDeep(action.result),
+        list: state.list.mergeDeep(job),
       };
     }
   }
@@ -209,36 +210,41 @@ export default function reducer(state = initialState, action = {}) {
       localJob: new Immutable.Map(action.result),
     };
   }
-  case constants.UPDATE_JOB_IMAGE_LOCAL:{
-
+  case constants.UPDATE_JOB_IMAGE:{
+    let job = {};
+    job[action.id] = {
+      isUploading:true,
+      percentUploaded:0
+    };
     return{
       ...state,
-      localJob: state.localJob.mergeDeep({
-        isUploading:true,
-        percentUploaded:0
-      }),
-
+      list: state.list.mergeDeep(job),
     };
   }
-  case constants.UPDATE_JOB_IMAGE_LOCAL_SUCCESS:{
+  case constants.UPDATE_JOB_IMAGE_SUCCESS:{
+    let job = {};
     let image = {
       imageId:action.result.id,
       isUploading:false,
       percentUploaded:100
     };
+    job[action.id] = image;
     return{
       ...state,
-      localJob: state.localJob.mergeDeep(image),
+      list: state.list.mergeDeep(job),
     };
   }
-  case constants.UPDATE_JOB_IMAGE_LOCAL_PROGRESS:{
+  case constants.UPDATE_JOB_IMAGE_PROGRESS:{
+    let job = {};
+
     let image = {
       isUploading:true,
       percentUploaded:action.result
     };
+    job[action.id] = image;
     return{
       ...state,
-      localJob: state.localJob.mergeDeep(image),
+      list: state.list.mergeDeep(job),
     };
   }
   case constants.GET_MY_JOBS_SUCCESS:{
@@ -254,7 +260,7 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.mergeDeep(jobList)
     };
   }
-  case constants.UPDATE_JOB_IMAGE_LOCAL_FAIL:{
+  case constants.UPDATE_JOB_IMAGE_FAIL:{
     return{
       ...state
     };
@@ -276,7 +282,6 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       list: state.list.mergeDeep(contactsMap),
-      localJob: new Immutable.Map(action.result),
     };
   }
   default:

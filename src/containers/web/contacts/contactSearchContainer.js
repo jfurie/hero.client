@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import { ContactSearch } from '../../../components/web';
 
 import { searchContacts, createTempContact } from '../../../modules/contacts';
+import { createCandidate, resetError } from '../../../modules/candidates';
 
 //let debounce = require('debounce');
 import _ from 'lodash';
 
 @connect(state => ({
   contacts: state.contacts,
-}), { searchContacts, createTempContact }, null, { withRef: true })
+  candidates:state.candidates,
+}), { searchContacts, createTempContact, createCandidate, resetError }, null, { withRef: true })
 class ContactSearchContainer extends React.Component {
 
   constructor(props) {
@@ -53,11 +55,26 @@ class ContactSearchContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    let self = this;
     let results = nextProps.contacts.queries.get(this.state.query);
 
     this.setState({
       searchResults: results ? results.toArray() : [],
     });
+
+    //Check for success or error saving candidate
+    if(nextProps.candidates.saving == false && this.props.candidates.saving == true){
+      //a Save was attempted
+      if(nextProps.candidates.savingError){
+        //Show Snackbar
+        setTimeout(function(){
+          self.props.resetError()
+        },4000);
+      } else {
+        //Redirect to Job
+        self.props.history.replaceState(null,`/clients/${self.props.params.companyId}/jobs/${self.props.params.jobId}`);
+      }
+    }
   }
 
   onQuerySubmit() {
@@ -115,9 +132,17 @@ class ContactSearchContainer extends React.Component {
       contact.id = id;
       this.props.createTempContact(contact);
       let self = this;
-      this.setState({open:false});
+
       setTimeout(function () {
-        if(self.props.params.companyId){
+        if(self.props.params.jobId){
+          if(contact.id.indexOf('tmp') > -1){
+            //this is a temp. need to create
+            self.props.history.replaceState(null,`/clients/${self.props.params.companyId}/jobs/${self.props.params.jobId}/candidates/${id}/create`);
+          } else {
+            self.props.createCandidate(contact, self.props.params.jobId);
+          }
+        }
+        else if(self.props.params.companyId){
           let companyId = self.props.params.companyId;
           self.props.history.replaceState(null,`/clients/${companyId}/contacts/${id}/create`);
         } else {
@@ -131,7 +156,7 @@ class ContactSearchContainer extends React.Component {
   onDbContactSelect(dbContact) {
     let contact = dbContact ? (dbContact.toObject ? dbContact.toObject() : dbContact) : {};
 
-    this._resetState();
+    //this._resetState();
     this.onSelect(contact);
   }
 
@@ -149,6 +174,7 @@ class ContactSearchContainer extends React.Component {
     return (
       <div>
         <ContactSearch
+          {...this.props}
           open={this.state.open}
           query={this.state.query}
           searchResults={this.state.searchResults}

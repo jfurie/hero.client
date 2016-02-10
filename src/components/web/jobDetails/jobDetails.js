@@ -88,7 +88,14 @@ export default class JobDetails extends React.Component {
   }
 
   _onTouchTapSearch() {
-    console.log('_onTouchTapSearch');
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/candidates/search`);
+  }
+  _onTouchAddCandidate(){
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/candidates/search`)
+  }
+
+  _onTouchTabEdit(){
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/create`)
   }
 
   renderContent(job) {
@@ -198,30 +205,18 @@ export default class JobDetails extends React.Component {
 
     return (
       <div>
-        <Dialog
-            open={this.props.open}
-            autoDetectWindowHeight={false}
-            autoScrollBodyContent={false}
-            repositionOnUpdate={false}
-            defaultOpen={false}
-            style={style.dialog}
-            bodyStyle={style.bodyStyle}
-            contentStyle={style.contentStyle}
-        >
-          <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
-            <Header transparent goBack={this.goBack.bind(this)} iconRight={
-              <IconMenu iconButtonElement={
-                <IconButton iconClassName="material-icons">more_vert</IconButton>
-              }>
-                <MenuItem index={0} primaryText="Edit Job" />
-              </IconMenu>
-            }
-            />
-            <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
-              {this.renderContent(job)}
-            </div>
-          </div>
-        </Dialog>
+        <Header transparent goBack={this.goBack.bind(this)} iconRight={
+          <IconMenu iconButtonElement={
+            <IconButton iconClassName="material-icons">more_vert</IconButton>
+          }>
+            <MenuItem onTouchTap={this._onTouchTabEdit.bind(this)} index={0} primaryText="Edit Job" />
+            <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
+          </IconMenu>
+        }
+        />
+        <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
+          {this.renderContent(job)}
+        </div>
       </div>
     );
   }

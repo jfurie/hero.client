@@ -13,7 +13,7 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
 
   switch (action.type) {
-  case jobConstants.UPDATE_JOB_IMAGE_LOCAL_SUCCESS: {
+  case jobConstants.UPDATE_JOB_IMAGE_SUCCESS: {
     let newMap ={};
     newMap[action.result.id] = action.result;
     return {

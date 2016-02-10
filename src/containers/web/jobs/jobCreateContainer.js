@@ -4,7 +4,7 @@ import Immutable from 'immutable';
 import { pushState } from 'redux-router';
 
 import { getOneCompany, getMyCompanies } from '../../../modules/companies/index';
-import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getMyJobs } from '../../../modules/jobs/index';
+import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { JobCreate } from '../../../components/web';
 import getCompanyDataFromState from '../../../dataHelpers/company';
@@ -12,7 +12,7 @@ import getCompanyDataFromState from '../../../dataHelpers/company';
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 let getData = (state, props) => {
-  let job = state.jobs.localJob;
+  let job = state.jobs.list.get(props.params.jobId);
 
   let company = null;
 
@@ -29,10 +29,13 @@ let getData = (state, props) => {
   }
 
   let jobImage = null;
-  let imageId = state.jobs.localJob.get('imageId');
-  if (imageId) {
-    jobImage = state.resources.list.get(imageId);
+  if(job){
+    let imageId = job.get('imageId');
+    if (imageId) {
+      jobImage = state.resources.list.get(imageId);
+    }
   }
+
 
   return {
     job,
@@ -44,7 +47,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData, { pushState, getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getOneCompany, getContactsByCompany, getMyJobs, getMyCompanies })
+@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getOneCompany, getContactsByCompany, getMyJobs, getMyCompanies })
 export default class JobCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -93,7 +96,7 @@ export default class JobCreateContainer extends React.Component {
   }
 
   _handleChange(job, dontMergeDeep){
-    this.props.updateJobLocal(job, dontMergeDeep);
+    this.props.updateJob(job, dontMergeDeep);
   }
 
   _handleCompanyChange(companyId){
@@ -106,7 +109,7 @@ export default class JobCreateContainer extends React.Component {
   }
 
   _handleSave(job){
-    this.props.saveLocalJob(job);
+    this.props.saveJob(job);
   }
 
   _handleClose(){
@@ -119,7 +122,7 @@ export default class JobCreateContainer extends React.Component {
   }
 
   onJobCreateImageChange(imageArray){
-    this.props.updateJobImageLocal(imageArray);
+    this.props.updateJobImage(this.props.params.jobId,imageArray);
   }
 
   onJobCreateChange (job, dontMergeDeep){
