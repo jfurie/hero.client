@@ -122,8 +122,8 @@ export default class ClientDetails extends React.Component {
       if(locationObj && locationObj.geoField && locationObj.geoField.lat && locationObj.geoField.lng){
         let lat = locationObj.geoField.lat;
         let lng = locationObj.geoField.lng;
-        var link = `https://maps.google.com?saddr=Current+Location&daddr=${lat},${lng}`;
-        window.open(link,'_blank');
+        let link = `https://maps.google.com?saddr=Current+Location&daddr=${lat},${lng}`;
+        window.open(link, '_blank');
       }
     }
   }
@@ -133,19 +133,19 @@ export default class ClientDetails extends React.Component {
   }
 
   _onTouchTapCall() {
-    window.location.href='tel:'+this.props.company.get('phone');
+    window.location.href = `tel:${this.props.company.get('phone')}`;
   }
 
   _onTouchTapEmail() {
     let email = this.props.company.get('email');
-    if(email){
-      window.location.href=`mailto:${email}`;
+    if (email) {
+      window.location.href = `mailto:${email}`;
     }
   }
 
   _onTouchTapShare() {
-    let subject = 'Check out '+ this.props.company.get('name')+ ' on HERO';
-    let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
+    let subject = `Check out ${this.props.company.get('name')} on HERO`;
+    let body = `${encodeURIComponent(this.props.company.get('name'))}%0A${encodeURIComponent(window.location.href)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
@@ -190,6 +190,13 @@ export default class ClientDetails extends React.Component {
       materialIcon: 'share',
       text: 'Share',
       onTouchTap: this._onTouchTapShare.bind(this),
+    }];
+
+    let topTags = [{
+      text: 'HOT!',
+    }, {
+      text: 'Lead',
+      color: 'green',
     }];
 
     let inline = true;
@@ -237,6 +244,7 @@ export default class ClientDetails extends React.Component {
               floatActionOnTap={this._handleDirections.bind(this)}
               floatActionContent={<MapsDirections color={Styles.Colors.deepPurple500}/>}
               extraLeftLine={recruiterData}
+              topTags={topTags}
           />
 
           <CustomTabsSwipe isLight isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
@@ -455,6 +463,6 @@ export default class ClientDetails extends React.Component {
   }
 }
 ClientDetails.propTypes = {
-  onClientDetailsClose: React.PropTypes.func,
   editClientModalOpen: React.PropTypes.func,
+  onClientDetailsClose: React.PropTypes.func,
 };
