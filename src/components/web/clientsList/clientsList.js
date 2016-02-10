@@ -72,7 +72,7 @@ class ClientsList extends React.Component {
 
       var height = 198;
       var tags = company.get('tags');
-      if(tags && tags.length >0){
+      if(tags && tags.count() >0){
         height = height +26;
       }
       var clientAdvocate = company.get('clientAdvocate');
@@ -80,7 +80,7 @@ class ClientsList extends React.Component {
       if(clientAdvocate){
         height = height +37;
       }
-      else if(contacts && contacts.length >0){
+      else if(contacts && contacts.count() >0){
         height = height +25;
       }
       return height;
