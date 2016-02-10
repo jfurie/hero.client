@@ -14,6 +14,7 @@ let getData = (state, props) => {
 
   return {
     note,
+    user: state.auth.user
   };
 };
 
@@ -42,7 +43,7 @@ export default class NoteCreateContainer extends React.Component {
           self.props.history.replaceState(null, `/clients/${newProps.note.get('notableId')}`);
         }, 500);
 
-        this.props.getNotesByCompany(newProps.note.get('notableId'));
+        this.props.getNotesByCompany(newProps.note.get('notableId'), newProps.user.id);
       }
     }
 
