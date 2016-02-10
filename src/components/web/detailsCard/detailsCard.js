@@ -121,11 +121,11 @@ class DetailsCard extends React.Component {
           <div className="row">
             {(this.props.avatar) ? (
               <div style={style.avatar} className="col-xs-2">
-                <div class="box">{this.props.avatar}</div>
+                <div className="box">{this.props.avatar}</div>
               </div>
             ) : (null)}
             <div className="col-xs-10" style={style.titlesub}>
-              <div class="box">
+              <div className="box">
                 <h2 style={style.title}>{this.props.title}</h2>
                 <p style={style.subtitle}>{this.props.subtitle}</p>
               </div>

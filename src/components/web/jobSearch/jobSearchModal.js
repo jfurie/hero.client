@@ -57,7 +57,7 @@ export default class JobSearchModal extends React.Component {
         <div style={{height: `${clientHeight}px`}}>
           <div className="row">
               <div className="col-xs-12 col-md-10">
-                  <JobSearch {...this.props}></JobSearch>
+                  <JobSearch {...this.props} />
               </div>
           </div>
         </div>
