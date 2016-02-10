@@ -1,8 +1,22 @@
 import React from 'react';
 import { List } from 'material-ui';
-import { CompanyJobsList } from '../../../components/web';
-import Immutable from 'immutable';
+import Infinite from 'react-infinite';
+import { JobListItem } from '../../../components/web';
+import { pushState } from 'redux-router';
+import { connect } from 'react-redux';
 
+const style = {
+  textField: {
+    float:'left',
+    marginTop:'4px',
+  },
+  list: {
+    backgroundColor: 'transparant',
+  },
+};
+
+@connect(() => (
+{}), {pushState})
 class JobsList extends React.Component {
 
   _handleJobClick(job, company){
@@ -11,44 +25,82 @@ class JobsList extends React.Component {
     }
   }
 
+  _showJobDetails(job) {
+    this.props.pushState(null, `/clients/${job.get('companyId')}/jobs/${job.get('id')}`);
+  }
+
   render() {
+    // let { jobs, ressourceName, ressourceNamePlurial } = this.props;
+    //
+    // ressourceName = ressourceName || 'Job';
+    // ressourceNamePlurial = ressourceNamePlurial || 'Jobs';
+    //
+    // if (ressourceName !== 'Job' && ressourceNamePlurial === 'Jobs') {
+    //   ressourceNamePlurial = `${ressourceName}s`;
+    // }
+    //
+    // let companies = new Immutable.Map();
+    // let jobsByCompany = new Immutable.Map();
+    // jobs.map(function(job){
+    //   let companyMap = {};
+    //   let jobMap = {};
+    //   if(job.get('company')){
+    //     companyMap[job.get('company').get('id')] = job.get('company');
+    //     var companyJobs = jobsByCompany.get(job.get('company').get('id'));
+    //     companyJobs = companyJobs || new Immutable.List();
+    //     companyJobs = companyJobs.push(job);
+    //     jobMap[job.get('company').get('id')] = companyJobs;
+    //     companies = companies.mergeDeep(companyMap);
+    //     jobsByCompany = jobsByCompany.mergeDeep(jobMap);
+    //   }
+    //
+    // });
+    //
+    // let subheader = `${jobs.count()} ${(jobs.count() !== 1) ? (ressourceNamePlurial) : (ressourceName)}`;
+    //
+    // let self = this;
+    let { jobs } = this.props;
 
-    let { jobs, ressourceName, ressourceNamePlurial } = this.props;
+    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
-    ressourceName = ressourceName || 'Job';
-    ressourceNamePlurial = ressourceNamePlurial || 'Jobs';
+    let count = jobs.count();
+    let ressourceName = 'Job';
 
-    if (ressourceName !== 'Job' && ressourceNamePlurial === 'Jobs') {
-      ressourceNamePlurial = `${ressourceName}s`;
+    if (count !== 1) {
+      ressourceName += 's';
     }
+    let heights = jobs.map(job =>{
+      let height = 272;
+      let tags = job.get('tags') || job.get('employmentType');
 
-    let companies = new Immutable.Map();
-    let jobsByCompany = new Immutable.Map();
-    jobs.map(function(job){
-      let companyMap = {};
-      let jobMap = {};
-      if(job.get('company')){
-        companyMap[job.get('company').get('id')] = job.get('company');
-        var companyJobs = jobsByCompany.get(job.get('company').get('id'));
-        companyJobs = companyJobs || new Immutable.List();
-        companyJobs = companyJobs.push(job);
-        jobMap[job.get('company').get('id')] = companyJobs;
-        companies = companies.mergeDeep(companyMap);
-        jobsByCompany = jobsByCompany.mergeDeep(jobMap);
+      if(tags){
+        height = height +26;
       }
 
+      return height;
     });
-
-    let subheader = `${jobs.count()} ${(jobs.count() !== 1) ? (ressourceNamePlurial) : (ressourceName)}`;
-
-    let self = this;
+    heights = heights.toArray();
+    if(!heights || heights.length <= 0){
+      heights = 261;
+    }
     return (
-      <List subheader={subheader}>
+      /*<List subheader={subheader}>
         {companies.map(function(company){
           var jobs = jobsByCompany.get(company.get('id'));
           jobs = jobs || new Immutable.Map();
           return (<CompanyJobsList jobs={jobs} onJobClick={self._handleJobClick.bind(self)} company={company} />);
         })}
+      </List>*/
+      <List style={style.list} subheader={`${count} ${ressourceName}`}>
+        <Infinite containerHeight={clientHeight - (56+64)} elementHeight={heights} useWindowAsScrollContainer>
+          {jobs.map((job) => {
+            return (
+              <div>
+                <JobListItem onJobClick={this._showJobDetails.bind(this)} job={job} / >
+              </div>
+            );
+          })}
+        </Infinite>
       </List>
     );
   }
