@@ -74,6 +74,14 @@ export default class ClientDetails extends React.Component {
     this.state = {windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight};
   }
 
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize.bind(this));
+  }
+
   editClientModalOpen(){
     if(this.props.editClientModalOpen){
       this.props.editClientModalOpen();
@@ -237,25 +245,21 @@ export default class ClientDetails extends React.Component {
       // location stuff
       let location = company.get('location');
 
-
-
       if (location) {
-        addressLine = location.get('addressLine') || null;
+        let address = location.get('addressLine') || '';
         let city = location.get('city') || null;
-        //let postalCode = location.get('postalCode') || null;
         let countrySubDivisionCode = location.get('countrySubDivisionCode') || null;
 
         if (city && countrySubDivisionCode) {
           city += `, ${countrySubDivisionCode}`;
         }
 
-        if (city) {
+        addressLine = address;
+        if (addressLine.length) {
           addressLine += `. ${city}`;
+        } else {
+          addressLine = city;
         }
-        // if (city && postalCode) {
-        //   city += ` ${postalCode}`;
-        // }
-
 
       }
 
@@ -275,7 +279,7 @@ export default class ClientDetails extends React.Component {
               topTags={topTags}
           />
 
-          <CustomTabsSwipe isLight isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
+          <CustomTabsSwipe isLight isInline={inline} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
             <div>
 
               <List>
@@ -283,10 +287,10 @@ export default class ClientDetails extends React.Component {
                 {(addressLine) ? (
                   <div>
                     <ListItem
-                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                      primaryText={addressLine}
-                      secondaryText={<p>address</p>}
-                      secondaryTextLines={1}
+                        leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                        primaryText={addressLine}
+                        secondaryText={<p>address</p>}
+                        secondaryTextLines={1}
                     />
                     <Divider />
                   </div>
@@ -295,10 +299,10 @@ export default class ClientDetails extends React.Component {
                 {(website) ? (
                   <div>
                     <ListItem
-                      leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                      primaryText={website}
-                      secondaryText={<p>website</p>}
-                      secondaryTextLines={1}
+                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                        primaryText={website}
+                        secondaryText={<p>website</p>}
+                        secondaryTextLines={1}
                     />
                     <Divider />
                   </div>
@@ -307,10 +311,10 @@ export default class ClientDetails extends React.Component {
                 {(phone) ? (
                   <div>
                     <ListItem
-                      leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                      primaryText={phone}
-                      secondaryText={<p>phone</p>}
-                      secondaryTextLines={1}
+                        leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                        primaryText={phone}
+                        secondaryText={<p>phone</p>}
+                        secondaryTextLines={1}
                     />
                   </div>
                 ) : (null)}
@@ -318,41 +322,46 @@ export default class ClientDetails extends React.Component {
 
               <Card>
                 <CardText>
-                  {this.renderBigListItem('Company Mission',company.get('productSolution'),<Avatar
-                  icon={<FontIcon className="material-icons">store</FontIcon>}
-                  color={Styles.Colors.grey600}
-                  backgroundColor={Styles.Colors.white}
+                  {this.renderBigListItem('Company Mission',company.get('productSolution'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">store</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
                   />)}
                 </CardText>
                 <CardText>
-                  {this.renderBigListItem('Culture',company.get('culture'),<Avatar
-                  icon={<FontIcon className="material-icons">face</FontIcon>}
-                  color={Styles.Colors.grey600}
-                  backgroundColor={Styles.Colors.white}
+                  {this.renderBigListItem('Culture',company.get('culture'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">face</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
                   />)}
                 </CardText>
                 <CardText>
-                  {this.renderBigListItem('Benefits',company.get('benefits'),<Avatar
-                  icon={<FontIcon className="material-icons">redeem</FontIcon>}
-                  color={Styles.Colors.grey600}
-                  backgroundColor={Styles.Colors.white}
+                  {this.renderBigListItem('Benefits',company.get('benefits'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">redeem</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
                   />)}
                 </CardText>
                 <CardText>
-                  {this.renderBigListItem('Tech Stack',company.get('techstack'),<Avatar
-                    icon={<FontIcon className="material-icons">storage</FontIcon>}
-                    color={Styles.Colors.grey600}
-                    backgroundColor={Styles.Colors.white}
+                  {this.renderBigListItem('Tech Stack',company.get('techstack'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">storage</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
                   />)}
                 </CardText>
                 <CardText>
-                  {this.renderBigListItem('Leadership',company.get('leadership'),<Avatar
-                  icon={<FontIcon className="material-icons">stars</FontIcon>}
-                  color={Styles.Colors.grey600}
-                  backgroundColor={Styles.Colors.white}
+                  {this.renderBigListItem('Leadership',company.get('leadership'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">stars</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
                   />)}
                 </CardText>
-                <Divider></Divider>
+                <Divider />
                 <div style={{padding:'8px'}}>
                   <List subheader={'Social'}>
                       {(twitter) ? (
@@ -399,8 +408,7 @@ export default class ClientDetails extends React.Component {
 
                   </List>
                 </div>
-
-                <Divider></Divider>
+                <Divider />
                 <div style={{padding:'8px'}}>
                   <List subheader={'Job Boards'}>
                     <div>
@@ -464,23 +472,13 @@ export default class ClientDetails extends React.Component {
     this.setState({windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight});
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.handleResize.bind(this));
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize.bind(this));
-  }
-
   render(){
     let { company } = this.props;
     if(this.props.inline){
       return (
         <div>
           <Header goBack={this.goBack.bind(this)} iconRight={
-            <IconMenu iconButtonElement={
-              <IconButton  iconClassName="material-icons">more_vert</IconButton>
-            }>
+            <IconMenu iconButtonElement={<IconButton  iconClassName="material-icons">more_vert</IconButton>}>
               <MenuItem index={0} onTouchTap={this.editClientModalOpen.bind(this)} primaryText="Edit Client" />
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
               <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
@@ -499,20 +497,18 @@ export default class ClientDetails extends React.Component {
       return (
         <div>
           <Dialog
-                open={this.props.open}
-                autoDetectWindowHeight={false}
-                autoScrollBodyContent={false}
-                repositionOnUpdate={false}
-                defaultOpen={false}
-                style={style.dialog}
-                bodyStyle={style.bodyStyle}
-                contentStyle={style.contentStyle}
-            >
+              open={this.props.open}
+              autoDetectWindowHeight={false}
+              autoScrollBodyContent={false}
+              repositionOnUpdate={false}
+              defaultOpen={false}
+              style={style.dialog}
+              bodyStyle={style.bodyStyle}
+              contentStyle={style.contentStyle}
+          >
             <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
               <Header goBack={this.goBack.bind(this)} iconRight={
-                <IconMenu iconButtonElement={
-                  <IconButton  iconClassName="material-icons">more_vert</IconButton>
-                }>
+                <IconMenu iconButtonElement={<IconButton  iconClassName="material-icons">more_vert</IconButton>}>
                   <MenuItem index={0} onTouchTap={this.editClientModalOpen.bind(this)} primaryText="Edit Client" />
                   <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
                   <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
