@@ -83,14 +83,12 @@ class ClientsList extends React.Component {
       else if(contacts && contacts.length >0){
         height = height +25;
       }
-      console.log(company.get('name'),': ',height);
       return height;
     });
     heights = heights.toArray();
     if(!heights || heights.length <= 0){
       heights = 261;
     }
-    console.log('heights: ', heights);
     return (
 
       <div>

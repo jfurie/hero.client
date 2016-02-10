@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { Card, CardText, FontIcon, Divider, IconButton,CardActions, Styles,Avatar } from 'material-ui';
-import { CompanyAvatar, Gravatar, Stars } from '../../../components/web';
+import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar } from 'material-ui';
+import { CompanyAvatar, Gravatar, Stars, Tag, PhoneButton, EmailButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
 let style = {
   layout:{
     display:'flex',
@@ -102,66 +102,6 @@ let style = {
   },
 };
 
-class PhoneButton extends React.Component {
-  _onTouchTapCall() {
-    window.location.href='tel:'+this.props.phone;
-  }
-  render(){
-    if(this.props.phone){
-      return (
-        <IconButton onTouchTap={this._onTouchTapCall.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Call">
-          <FontIcon style={{width:'24px'}} className="material-icons">phone</FontIcon>
-        </IconButton>
-      );
-    } else {
-      return (<span></span>);
-    }
-  }
-}
-class EmailButton extends React.Component {
-  _onTouchTapEmail() {
-    let email = this.props.email;
-    if(email){
-      window.location.href=`mailto:${email}`;
-    }
-  }
-  render(){
-    if(this.props.email){
-      return (
-        <IconButton onTouchTap={this._onTouchTapEmail.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Email">
-          <FontIcon style={{width:'24px'}} className="material-icons">email</FontIcon>
-        </IconButton>
-      );
-    } else {
-      return (<span></span>);
-    }
-  }
-}
-
-class FavoriteButton extends React.Component {
-  render(){
-    return (
-      <IconButton iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Star">
-        <FontIcon style={{width:'24px'}} className="material-icons">star_rate</FontIcon>
-      </IconButton>
-    );
-  }
-}
-class ShareButton extends React.Component {
-  _onTouchTapShare() {
-    let subject = 'Check out '+ this.props.company.get('name')+ ' on HERO';
-    let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
-  }
-  render(){
-    return (
-      <IconButton onTouchTap={this._onTouchTapShare.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Share">
-        <FontIcon style={{width:'24px'}} className="material-icons">share</FontIcon>
-      </IconButton>
-    );
-  }
-}
-
 export default class ClientListItem extends React.Component {
   constructor(props){
     super(props);
@@ -212,7 +152,13 @@ export default class ClientListItem extends React.Component {
     if (peopleList.length > 0) {
       secondaryText = (<div style={style.peopleList}>{peopleList}</div>);
     }
-
+    let subTitle2 = (
+      <span>
+        <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
+        {company.get('location')&& company.get('location').get('city') }
+        , {company.get('location')&& company.get('location').get('countrySubDivisionCode')}
+      </span>
+    );
     return (
       <Card
         style={{
@@ -231,7 +177,7 @@ export default class ClientListItem extends React.Component {
                 {company.get('tags') && company.get('tags').map(function(tag, i){
                   if(i <=3){
                     return (
-                      <span style={style.badge} >{tag}!</span>
+                      <Tag value={tag} />
                     );
                   }
                   return (
@@ -241,32 +187,14 @@ export default class ClientListItem extends React.Component {
               </div>
             </div>
           </div>):(<div></div>)}
-
-            <div onTouchTap={this.clickClient.bind(this)} style={style.layout}>
-
-
-                <div style={style.imageLayout}>
-                  <CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />
-                </div>
-                <div>
-                  <div style={style.title}>
-                      {company && company.get('name')}
-                  </div>
-                  <div style={style.subtitle}>
-                      {company.get('businessType')|| 'Company'}
-                  </div>
-                  <div style={style.subtitle}>
-                      <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
-                        {company.get('location')&& company.get('location').get('city') }
-                        , {company.get('location')&& company.get('location').get('countrySubDivisionCode')}
-
-                  </div>
-
-                </div>
-                <div style={{position: 'absolute', bottom:'0', right:'0'}}>
-                  <Stars score={company.get('rating')}></Stars>
-                </div>
-            </div>
+            <CardBasic
+                image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
+                title= {company && company.get('name')}
+                subtitle1={company.get('businessType')|| 'Company'}
+                subtitle2={subTitle2}
+                stars={<Stars score={company.get('rating')}></Stars>}
+                onTouchTap={this.clickClient.bind(this)}
+              ></CardBasic>
             {type !== 'mini'?
             (<div>
               <Divider style={{marginTop:'8px'}}></Divider>
@@ -284,7 +212,7 @@ export default class ClientListItem extends React.Component {
 
                         <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
                         {company.get('stats') && company.get('stats').get('jobCount')|| 0}
-                        <FontIcon style={style.status} className="material-icons">assignment_ui</FontIcon>
+                        <FontIcon style={style.status} className="material-icons">assignment_ind</FontIcon>
                         { company.get('stats') && company.get('stats').get('candidateCount')|| 0}
                         <FontIcon style={style.statusRed} className="material-icons">assignment_late</FontIcon>
                         {company.get('stats') && company.get('stats').get('actionsCount')|| 0}
@@ -304,7 +232,7 @@ export default class ClientListItem extends React.Component {
         </CardText>
         {type !== 'mini'?(<div>
           <CardActions style={{
-            backgroundColor:'rgba(74,144,226,0.5)',
+            backgroundColor:'rgba(100,100,100,0.2)',
             boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)'
 
           }}>

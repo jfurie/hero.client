@@ -33,6 +33,12 @@ export JobCreate from './jobCreate/jobCreate';
 export DetailsCard from './detailsCard/detailsCard';
 export ClientListItem from './clientListItem/clientListItem';
 export Stars from './stars/stars';
+export Tag from './tag/tag';
+export PhoneButton from './actionButtons/phoneButton';
+export EmailButton from './actionButtons/emailButton';
+export FavoriteButton from './actionButtons/favoriteButton';
+export ShareButton from './actionButtons/shareButton';
+export CardBasic from './cardBasic/cardBasic';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
