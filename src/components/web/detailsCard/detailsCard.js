@@ -13,30 +13,51 @@ let style = {
     position: 'relative',
   },
   cardTitleComponent: {
-    padding: '11px 16px 26px',
+    padding: '11px 16px 50px',
+    position: 'relative',
+  },
+  title: {
+    color: Styles.Colors.white,
+    fontSize: '23px',
   },
   subtitle: {
+    color: Styles.Colors.white,
     fontWeight: 200,
     opacity: 0.5,
-    position: 'relative',
-    top: '-3px',
+    // position: 'relative',
+    // top: '-3px',
+    fontSize: '13px',
   },
   extraLeftLine: {
     color: Styles.Colors.white,
     position: 'relative',
-    top: '11px',
+    top: '29px',
   },
   extraRightLine: {
     color: Styles.Colors.white,
     float: 'right',
     position: 'relative',
-    top: '11px',
+    top: '29px',
   },
   floatActionButton: {
     position: 'absolute',
     right: '10px',
     top: '-28px',
     zIndex: '50',
+  },
+  titlesub: {
+    // paddingLeft: '1px',
+    paddingTop: '4px',
+    position: 'relative',
+    left: '-2px',
+  },
+  avatar: {
+    paddingLeft: '1px',
+    paddingRight: '1px',
+    // position: 'absolute',
+    // left: '10px',
+    // top: '-28px',
+    // zIndex: '50',
   },
   actionButton: {
     minWidth: '0px',
@@ -86,28 +107,61 @@ class DetailsCard extends React.Component {
       style.floatActionButton.color = Styles.Colors.indigo500; // default
     }
 
+    if (this.props.avatar) {
+      style.titlesub.paddingLeft = '1px';
+    } else {
+      style.titlesub.paddingLeft = '11px';
+    }
+
     return (
       <Card>
         <CardMedia style={style.cardmedia}>
           <img src={this.props.cover} />
         </CardMedia>
-        <div style={style.cardTitle}>
+        <div style={style.cardTitleComponent}>
+
+
+
           <FloatingActionButton onTouchTap={this._onTouchTapFloatAction.bind(this)} style={style.floatActionButton} backgroundColor={Styles.Colors.white}>
             {this.props.floatActionContent}
           </FloatingActionButton>
-          {/* <div style={style.cardTitleComponent}>
-            <h2>{this.props.title}</h2>
-            <p>{this.props.subtitle}</p>
-          </div>*/}
-          <CardTitle style={style.cardTitleComponent} subtitleColor={Styles.Colors.white} titleColor={Styles.Colors.white} subtitleStyle={style.subtitle} title={this.props.title} subtitle={this.props.subtitle}>
+
+          <div className="row">
+            {(this.props.avatar) ? (
+              <div style={style.avatar} className="col-xs-2">
+                <div class="box">{this.props.avatar}</div>
+              </div>
+            ) : (null)}
+            <div className="col-xs-10" style={style.titlesub}>
+              <div class="box">
+                <h2 style={style.title}>{this.props.title}</h2>
+                <p style={style.subtitle}>{this.props.subtitle}</p>
+              </div>
+            </div>
+          </div>
+
+          {/*(this.props.avatar) ? (
+              <div style={style.avatar}>{this.props.avatar}</div>
+          ) : (null)*/}
+
+          {(this.props.extraLeftLine) ? (
+            <span style={style.extraLeftLine}>{this.props.extraLeftLine}</span>
+          ) : (null)}
+          {(this.props.extraRightLine) ? (
+            <span style={style.extraRightLine}>{this.props.extraRightLine}</span>
+          ) : (null)}
+        </div>
+
+          {/*<CardTitle style={style.cardTitleComponent} subtitleColor={Styles.Colors.white} titleColor={Styles.Colors.white} subtitleStyle={style.subtitle} title={this.props.title} subtitle={this.props.subtitle}>
             {(this.props.extraLeftLine) ? (
               <span style={style.extraLeftLine}>{this.props.extraLeftLine}</span>
             ) : (null)}
             {(this.props.extraRightLine) ? (
               <span style={style.extraRightLine}>{this.props.extraRightLine}</span>
             ) : (null)}
-          </CardTitle>
-        </div>
+          </CardTitle>*/}
+
+
         <CardActions className="row center-xs">
           {this.props.actions.map((action, key) => {
             return (
@@ -129,6 +183,7 @@ class DetailsCard extends React.Component {
 
 DetailsCard.propTypes = {
   actions: React.PropTypes.array.isRequired,
+  avatar: React.PropTypes.object,
   cover: React.PropTypes.string.isRequired,
   extraLeftLine: React.PropTypes.string,
   extraRightLine: React.PropTypes.string,

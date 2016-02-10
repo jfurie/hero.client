@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog,CardText
+  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog, CardText,
 } from 'material-ui';
 import Card from 'material-ui/lib/card/card';
 
@@ -10,7 +10,8 @@ import MapsDirections from 'material-ui/lib/svg-icons/maps/directions';
 import Avatar from 'material-ui/lib/avatar';
 
 import {
-  Header, CustomTabsSwipe, ContactsList, CompanyJobsList, CompanyNotesList, DetailsCard,
+  Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
+  CompanyNotesList, DetailsCard, CompanyAvatar,
 } from '../../../components/web';
 
 const style = {
@@ -201,17 +202,41 @@ export default class ClientDetails extends React.Component {
       let jobboard = company.get('jobboard');
       let ziprecruiter = company.get('ziprecruiter');
       let indeed = company.get('indeed');
-      let colors = Styles.Colors;
+      //let colors = Styles.Colors;
+
+      // build extra line
+      let recruiterDataArray = [];
+
+      if (company.get('feeAgreement')) {
+        recruiterDataArray.push(`${company.get('feeAgreement')}%`);
+      }
+
+      if (company.get('payableTerms')) {
+        recruiterDataArray.push(`net ${company.get('payableTerms')}`);
+      }
+
+      if (company.get('guarantee')) {
+        recruiterDataArray.push(`${company.get('guarantee')} days`);
+      }
+
+      let recruiterData = null;
+      if (recruiterDataArray.length) {
+        recruiterData = recruiterDataArray.join(' | ');
+      }
+
+
       return (
         <div className="viewContent" style={style.viewContent}>
           <DetailsCard
               title={company.get('name')}
-              subtitle={company.get('website')}
+              subtitle={company.get('businessType') || 'Software Company'}
               cover={'/img/default-company.jpg'}
               mainColor={Styles.Colors.deepPurple500}
               actions={actions}
+              avatar={<CompanyAvatar style={{width: '50px'}} url={company.get('website')}/>}
               floatActionOnTap={this._handleDirections.bind(this)}
               floatActionContent={<MapsDirections color={Styles.Colors.deepPurple500}/>}
+              extraLeftLine={recruiterData}
           />
 
           <CustomTabsSwipe isLight isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
@@ -219,36 +244,36 @@ export default class ClientDetails extends React.Component {
               <CardText>
                 {this.renderBigListItem('Company Mission',company.get('productSolution'),<Avatar
                 icon={<FontIcon className="material-icons">store</FontIcon>}
-                color={colors.grey600}
-                backgroundColor={colors.white}
+                color={Styles.Colors.grey600}
+                backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
               <CardText>
                 {this.renderBigListItem('Culture',company.get('culture'),<Avatar
                 icon={<FontIcon className="material-icons">face</FontIcon>}
-                color={colors.grey600}
-                backgroundColor={colors.white}
+                color={Styles.Colors.grey600}
+                backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
               <CardText>
                 {this.renderBigListItem('Benefits',company.get('benefits'),<Avatar
                 icon={<FontIcon className="material-icons">redeem</FontIcon>}
-                color={colors.grey600}
-                backgroundColor={colors.white}
+                color={Styles.Colors.grey600}
+                backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
               <CardText>
                 {this.renderBigListItem('Tech Stack',company.get('techstack'),<Avatar
                   icon={<FontIcon className="material-icons">storage</FontIcon>}
-                  color={colors.grey600}
-                  backgroundColor={colors.white}
+                  color={Styles.Colors.grey600}
+                  backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
               <CardText>
                 {this.renderBigListItem('Leadership',company.get('leadership'),<Avatar
                 icon={<FontIcon className="material-icons">stars</FontIcon>}
-                color={colors.grey600}
-                backgroundColor={colors.white}
+                color={Styles.Colors.grey600}
+                backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
               <Divider></Divider>
