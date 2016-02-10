@@ -240,23 +240,23 @@ export default class ClientDetails extends React.Component {
 
 
       if (location) {
-
-        console.log(location.toJS());
-
         addressLine = location.get('addressLine') || null;
         let city = location.get('city') || null;
-        let postalCode = location.get('postalCode') || null;
+        //let postalCode = location.get('postalCode') || null;
         let countrySubDivisionCode = location.get('countrySubDivisionCode') || null;
 
         if (city && countrySubDivisionCode) {
           city += `, ${countrySubDivisionCode}`;
         }
 
-        if (city && postalCode) {
-          city += ` ${postalCode}`;
+        if (city) {
+          addressLine += `. ${city}`;
         }
+        // if (city && postalCode) {
+        //   city += ` ${postalCode}`;
+        // }
 
-        addressLine += ` ${city}`;
+
       }
 
 
