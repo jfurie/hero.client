@@ -209,6 +209,9 @@ export default class ClientDetails extends React.Component {
       let jobboard = company.get('jobboard');
       let ziprecruiter = company.get('ziprecruiter');
       let indeed = company.get('indeed');
+      let website = company.get('website');
+      let phone = company.get('phone');
+      let addressLine = null;
       //let colors = Styles.Colors;
 
       // build extra line
@@ -231,6 +234,31 @@ export default class ClientDetails extends React.Component {
         recruiterData = recruiterDataArray.join(' | ');
       }
 
+      // location stuff
+      let location = company.get('location');
+
+
+
+      if (location) {
+
+        console.log(location.toJS());
+
+        addressLine = location.get('addressLine') || null;
+        let city = location.get('city') || null;
+        let postalCode = location.get('postalCode') || null;
+        let countrySubDivisionCode = location.get('countrySubDivisionCode') || null;
+
+        if (city && countrySubDivisionCode) {
+          city += `, ${countrySubDivisionCode}`;
+        }
+
+        if (city && postalCode) {
+          city += ` ${postalCode}`;
+        }
+
+        addressLine += ` ${city}`;
+      }
+
 
       return (
         <div className="viewContent" style={style.viewContent}>
@@ -248,132 +276,173 @@ export default class ClientDetails extends React.Component {
           />
 
           <CustomTabsSwipe isLight isInline={inline} ref='customTabsSwipe' tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
-            <Card>
-              <CardText>
-                {this.renderBigListItem('Company Mission',company.get('productSolution'),<Avatar
-                icon={<FontIcon className="material-icons">store</FontIcon>}
-                color={Styles.Colors.grey600}
-                backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-              <CardText>
-                {this.renderBigListItem('Culture',company.get('culture'),<Avatar
-                icon={<FontIcon className="material-icons">face</FontIcon>}
-                color={Styles.Colors.grey600}
-                backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-              <CardText>
-                {this.renderBigListItem('Benefits',company.get('benefits'),<Avatar
-                icon={<FontIcon className="material-icons">redeem</FontIcon>}
-                color={Styles.Colors.grey600}
-                backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-              <CardText>
-                {this.renderBigListItem('Tech Stack',company.get('techstack'),<Avatar
-                  icon={<FontIcon className="material-icons">storage</FontIcon>}
+            <div>
+
+              <List>
+
+                {(addressLine) ? (
+                  <div>
+                    <ListItem
+                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                      primaryText={addressLine}
+                      secondaryText={<p>address</p>}
+                      secondaryTextLines={1}
+                    />
+                    <Divider />
+                  </div>
+                ) : (null)}
+
+                {(website) ? (
+                  <div>
+                    <ListItem
+                      leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                      primaryText={website}
+                      secondaryText={<p>website</p>}
+                      secondaryTextLines={1}
+                    />
+                    <Divider />
+                  </div>
+                ) : (null)}
+
+                {(phone) ? (
+                  <div>
+                    <ListItem
+                      leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                      primaryText={phone}
+                      secondaryText={<p>phone</p>}
+                      secondaryTextLines={1}
+                    />
+                  </div>
+                ) : (null)}
+              </List>
+
+              <Card>
+                <CardText>
+                  {this.renderBigListItem('Company Mission',company.get('productSolution'),<Avatar
+                  icon={<FontIcon className="material-icons">store</FontIcon>}
                   color={Styles.Colors.grey600}
                   backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-              <CardText>
-                {this.renderBigListItem('Leadership',company.get('leadership'),<Avatar
-                icon={<FontIcon className="material-icons">stars</FontIcon>}
-                color={Styles.Colors.grey600}
-                backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-              <Divider></Divider>
-              <div style={{padding:'8px'}}>
-                <List subheader={'Social'}>
-                    {(twitter) ? (
-                      <div>
-                        <ListItem
-                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                            primaryText={`@${twitter}`}
-                            secondaryText={<p>twitter</p>}
-                            secondaryTextLines={1}
-                        />
-                      </div>
-                    ) : (null)}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Culture',company.get('culture'),<Avatar
+                  icon={<FontIcon className="material-icons">face</FontIcon>}
+                  color={Styles.Colors.grey600}
+                  backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Benefits',company.get('benefits'),<Avatar
+                  icon={<FontIcon className="material-icons">redeem</FontIcon>}
+                  color={Styles.Colors.grey600}
+                  backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Tech Stack',company.get('techstack'),<Avatar
+                    icon={<FontIcon className="material-icons">storage</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Leadership',company.get('leadership'),<Avatar
+                  icon={<FontIcon className="material-icons">stars</FontIcon>}
+                  color={Styles.Colors.grey600}
+                  backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <Divider></Divider>
+                <div style={{padding:'8px'}}>
+                  <List subheader={'Social'}>
+                      {(twitter) ? (
+                        <div>
+                          <ListItem
+                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                              primaryText={`@${twitter}`}
+                              secondaryText={<p>twitter</p>}
+                              secondaryTextLines={1}
+                          />
+                        </div>
+                      ) : (null)}
 
-                    {(facebook) ? (
-                      <div>
-                        <ListItem
-                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                            primaryText={`facebook.com/${facebook}`}
-                            secondaryText={<p>facebook</p>}
-                            secondaryTextLines={1}
-                        />
-                      </div>
-                    ) : (null)}
-                    {(angelList) ? (
-                      <div>
-                        <ListItem
-                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                            primaryText={`${angelList}`}
-                            secondaryText={<p>angel list</p>}
-                            secondaryTextLines={1}
-                        />
-                      </div>
-                    ) : (null)}
-                    {(crunchbase) ? (
-                      <div>
-                        <ListItem
-                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                            primaryText={`${crunchbase}`}
-                            secondaryText={<p>Crunchbase</p>}
-                            secondaryTextLines={1}
-                        />
-                      </div>
-                    ) : (null)}
+                      {(facebook) ? (
+                        <div>
+                          <ListItem
+                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                              primaryText={`facebook.com/${facebook}`}
+                              secondaryText={<p>facebook</p>}
+                              secondaryTextLines={1}
+                          />
+                        </div>
+                      ) : (null)}
+                      {(angelList) ? (
+                        <div>
+                          <ListItem
+                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                              primaryText={`${angelList}`}
+                              secondaryText={<p>angel list</p>}
+                              secondaryTextLines={1}
+                          />
+                        </div>
+                      ) : (null)}
+                      {(crunchbase) ? (
+                        <div>
+                          <ListItem
+                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                              primaryText={`${crunchbase}`}
+                              secondaryText={<p>Crunchbase</p>}
+                              secondaryTextLines={1}
+                          />
+                        </div>
+                      ) : (null)}
 
-                </List>
-              </div>
+                  </List>
+                </div>
 
-              <Divider></Divider>
-              <div style={{padding:'8px'}}>
-                <List subheader={'Job Boards'}>
-                  <div>
+                <Divider></Divider>
+                <div style={{padding:'8px'}}>
+                  <List subheader={'Job Boards'}>
+                    <div>
 
-                    {(jobboard) ? (
-                      <div>
-                        <ListItem
-                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                            primaryText={`${jobboard}`}
-                            secondaryText={<p>Jobboard</p>}
-                            secondaryTextLines={1}
-                        />
-                      </div>
-                    ) : (null)}
+                      {(jobboard) ? (
+                        <div>
+                          <ListItem
+                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                              primaryText={`${jobboard}`}
+                              secondaryText={<p>Jobboard</p>}
+                              secondaryTextLines={1}
+                          />
+                        </div>
+                      ) : (null)}
 
-                    {(ziprecruiter) ? (
-                      <div>
-                        <ListItem
-                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                            primaryText={`${ziprecruiter}`}
-                            secondaryText={<p>ziprecruiter</p>}
-                            secondaryTextLines={1}
-                        />
-                      </div>
-                    ) : (null)}
-                    {(indeed) ? (
-                      <div>
-                        <ListItem
-                            leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                            primaryText={`${indeed}`}
-                            secondaryText={<p>indeed</p>}
-                            secondaryTextLines={1}
-                        />
-                      </div>
-                    ) : (null)}
-                  </div>
-                </List>
-              </div>
+                      {(ziprecruiter) ? (
+                        <div>
+                          <ListItem
+                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                              primaryText={`${ziprecruiter}`}
+                              secondaryText={<p>ziprecruiter</p>}
+                              secondaryTextLines={1}
+                          />
+                        </div>
+                      ) : (null)}
+                      {(indeed) ? (
+                        <div>
+                          <ListItem
+                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
+                              primaryText={`${indeed}`}
+                              secondaryText={<p>indeed</p>}
+                              secondaryTextLines={1}
+                          />
+                        </div>
+                      ) : (null)}
+                    </div>
+                  </List>
+                </div>
 
 
-            </Card>
+              </Card>
+            </div>
 
             <List subheader={`${company.get('jobs').count()} Job${((company.get('jobs').count() !== 1) ? ('s') : (''))}`}>
               <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
