@@ -4,6 +4,12 @@ import { getOneLocation } from '../locations';
 
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
+
+import { saveJobsByCompanyResult } from '../jobs';
+import { saveContactsByCompanyResult } from '../contacts';
+import { saveNotesByCompanyResult } from '../notes';
+import { saveLocationByCompanyResult } from '../locations';
+
 const initialState = {
   list: new Immutable.Map(),
   myCompanyIds: new Immutable.Map(),
@@ -301,5 +307,46 @@ export function searchCompanies(query) {
     promise: (client, auth) => client.api.get(`/companies/search?query=${query}`, {
       authToken: auth.authToken,
     }),
+  };
+}
+
+export function saveCompanyResult(company){
+  return {
+    type: constants.GET_COMPANY_SUCCESS,
+    result: company,
+  };
+}
+
+export function getCompanyDetail(id) {
+  return (dispatch) => {
+    dispatch({
+      types: [constants.GET_COMPANY_DETAIL, constants.GET_COMPANY_DETAIL_SUCCESS, constants.GET_COMPANY_DETAIL_FAIL],
+      promise: (client, auth) => client.api.get(`/companies/detail?id=${id}`, {
+        authToken: auth.authToken,
+      }).then((company)=> {
+        dispatch(saveCompanyResult(company));
+
+        if (company.location) {
+          dispatch(saveLocationByCompanyResult(company.location));
+        }
+
+        if (company.jobs && company.jobs.length > 0) {
+          dispatch(saveJobsByCompanyResult(company.jobs));
+        }
+
+        if (company.contacts && company.contacts.length > 0) {
+          dispatch(saveContactsByCompanyResult({
+            companyId: company.id,
+            result: company.contacts,
+          }));
+        }
+
+        if (company.notes && company.notes.length > 0) {
+          dispatch(saveNotesByCompanyResult(company.notes));
+        }
+
+        return company;
+      }),
+    });
   };
 }

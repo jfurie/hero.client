@@ -63,7 +63,6 @@ class CompanyNotesList extends React.Component {
 CompanyNotesList.propTypes = {
   company: React.PropTypes.object,
   notes: React.PropTypes.object.isRequired,
-  onJobClick: React.PropTypes.func,
 };
 
 export default CompanyNotesList;
