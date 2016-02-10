@@ -1,6 +1,8 @@
 import React from 'react';
 import { FontIcon, Styles } from 'material-ui';
 
+import { Tag } from '../';
+
 import Card from 'material-ui/lib/card/card';
 import CardActions from 'material-ui/lib/card/card-actions';
 import CardMedia from 'material-ui/lib/card/card-media';
@@ -12,7 +14,7 @@ let style = {
     position: 'relative',
   },
   cardTitleComponent: {
-    padding: '11px 16px 50px',
+    padding: '11px 16px 20px',
     position: 'relative',
   },
   title: {
@@ -25,16 +27,17 @@ let style = {
     opacity: 0.5,
     fontSize: '13px',
   },
+  extraLine: {
+    marginTop: '25px',
+  },
   extraLeftLine: {
     color: Styles.Colors.white,
-    position: 'relative',
-    top: '29px',
   },
   extraRightLine: {
     color: Styles.Colors.white,
-    float: 'right',
-    position: 'relative',
-    top: '29px',
+  },
+  extraLineCol: {
+    padding: '0px',
   },
   floatActionButton: {
     position: 'absolute',
@@ -69,6 +72,9 @@ let style = {
     maxHeight: '250px',
     overflow: 'hidden',
   },
+  topTags: {
+    paddingLeft: '0px',
+  },
 };
 
 class DetailsCard extends React.Component {
@@ -91,6 +97,9 @@ class DetailsCard extends React.Component {
 
   render() {
 
+    let { actions, topTags } = this.props;
+    topTags = topTags || [];
+
     if (this.props.mainColor) {
       style.cardTitleComponent.backgroundColor = this.props.mainColor;
       style.floatActionButton.color = this.props.mainColor;
@@ -112,12 +121,24 @@ class DetailsCard extends React.Component {
         </CardMedia>
         <div style={style.cardTitleComponent}>
 
-
-
           <FloatingActionButton onTouchTap={this._onTouchTapFloatAction.bind(this)} style={style.floatActionButton} backgroundColor={Styles.Colors.white}>
             {this.props.floatActionContent}
           </FloatingActionButton>
 
+          {/* TOP TAGS */}
+          <div className="row">
+            <div className="col-xs-12" style={style.topTags}>
+              <div className="box">
+                {topTags.map((tag, key) => {
+                  return (
+                    <Tag value={tag.text} color={tag.color} key={key}/>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* avatar (if any) + title and subtitle */}
           <div className="row">
             {(this.props.avatar) ? (
               <div style={style.avatar} className="col-xs-2">
@@ -132,16 +153,30 @@ class DetailsCard extends React.Component {
             </div>
           </div>
 
-          {(this.props.extraLeftLine) ? (
-            <span style={style.extraLeftLine}>{this.props.extraLeftLine}</span>
+          {/* extra line (if any) */}
+          {(this.props.extraLeftLine || this.props.extraRightLine) ? (
+            <div className="row" style={style.extraLine}>
+              {(this.props.extraLeftLine) ? (
+                <div className="col-xs" style={style.extraLineCol}>
+                  <div className="box">
+                    <span style={style.extraLeftLine}>{this.props.extraLeftLine}</span>
+                  </div>
+                </div>
+              ) : (null)}
+              {(this.props.extraRightLine) ? (
+                <div className="col-xs" style={style.extraLineCol}>
+                  <div className="box">
+                    <span style={style.extraRightLine}>{this.props.extraRightLine}</span>
+                  </div>
+                </div>
+              ) : (null)}
+            </div>
           ) : (null)}
-          {(this.props.extraRightLine) ? (
-            <span style={style.extraRightLine}>{this.props.extraRightLine}</span>
-          ) : (null)}
+
         </div>
 
         <CardActions className="row center-xs">
-          {this.props.actions.map((action, key) => {
+          {actions.map((action, key) => {
             return (
               <div className="col-xs" style={style.actionBox} key={key}>
                 <div className="box" onTouchTap={this._onTouchTapAction.bind(this, action)}>
@@ -170,6 +205,7 @@ DetailsCard.propTypes = {
   mainColor: React.PropTypes.string,
   subtitle: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
+  topTags: React.PropTypes.array,
 };
 
 export default DetailsCard;

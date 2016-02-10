@@ -4,14 +4,14 @@ export default class Stars extends React.Component {
   constructor(props){
     super(props);
   }
-  renderStar(){
-    return ( <FontIcon className="material-icons">star</FontIcon>);
+  renderStar(key){
+    return (<FontIcon key={key} className="material-icons">star</FontIcon>);
   }
-  renderHalfStar(){
-    return ( <FontIcon className="material-icons">star_half</FontIcon>);
+  renderHalfStar(key){
+    return (<FontIcon key={key} className="material-icons">star_half</FontIcon>);
   }
-  renderEmptyStar(){
-    return ( <FontIcon className="material-icons">star_border</FontIcon>);
+  renderEmptyStar(key){
+    return (<FontIcon key={key} className="material-icons">star_border</FontIcon>);
   }
   score(number){
     //max 5
@@ -26,6 +26,7 @@ export default class Stars extends React.Component {
     var halfStars = 0;
     var fullStars = 0;
     var emptyStars = 5;
+    var key = 0;
     for(let i = 0; i < currentScore; i++){
       if(halfStars == 0){
         halfStars++;
@@ -37,13 +38,13 @@ export default class Stars extends React.Component {
     }
     let starsArray = [];
     for(let i=0; i <fullStars;i++){
-      starsArray.push(this.renderStar());
+      starsArray.push(this.renderStar(key++));
     }
     for(let i=0; i <halfStars;i++){
-      starsArray.push(this.renderHalfStar());
+      starsArray.push(this.renderHalfStar(key++));
     }
     for(let i=0; i <emptyStars;i++){
-      starsArray.push(this.renderEmptyStar());
+      starsArray.push(this.renderEmptyStar(key++));
     }
     return (
       <span>{starsArray}</span>
