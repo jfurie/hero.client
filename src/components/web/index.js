@@ -34,7 +34,7 @@ export JobCreate from './jobCreate/jobCreate';
 export DetailsCard from './detailsCard/detailsCard';
 export ClientListItem from './clientListItem/clientListItem';
 export Stars from './stars/stars';
-export Tag from './tag/tag';
+export Tag from './Tag/tag';
 export PhoneButton from './actionButtons/phoneButton';
 export EmailButton from './actionButtons/emailButton';
 export FavoriteButton from './actionButtons/favoriteButton';
