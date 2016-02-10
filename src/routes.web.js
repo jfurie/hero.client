@@ -193,20 +193,13 @@ export default(store) => {
               <Route path=":contactId/create" component={ContactCreatePage}/>
           </Route>
 
-          {/* Contacts */}
+          {/* Jobs */}
           <Route path="jobs">
             {/* <IndexRoute component={ClientsPage}/> */}
               <Route path="search" component={JobSearchContainer}/>
               <Route path=":jobId" component={JobDetailsPage}/>
               <Route path=":jobId/create" component={JobCreatePage}/>
           </Route>
-
-          {/*<Route path="jobs">
-            <IndexRoute component={MyJobsPage}/>
-            <Route path="search" component={JobSearchContainer}/>
-            <Route path=":jobId" component={JobDetailsPage}/>
-            <Route path=":jobId/create" component={JobCreatePage}/>
-          </Route>*/}
 
           {/*<Route path="/myjobs" component={MyJobsPage}/>*/}
           <Route path="candidates">

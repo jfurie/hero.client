@@ -6,7 +6,7 @@ import marked from 'marked';
 
 //import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard, CustomTabsSwipe, CandidatesList } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, CandidatesList, CompanyAvatar } from '../../../components/web';
 import {
   Dialog, IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -153,30 +153,33 @@ export default class JobDetails extends React.Component {
               cover={cover}
               mainColor={Styles.Colors.amber700}
               actions={actions}
+              avatar={<CompanyAvatar style={{width: '50px'}} url={job.get('company').get('website')}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
           />
-          <CustomTabsSwipe isLight isInline ref='customTabsSwipe' tabs={['Details', 'Desc', 'Applicants']}>
+          <CustomTabsSwipe isLight isInline tabs={['Details', 'Desc', 'Applicants']}>
             <Card style={style.card}>
               <CardText>
-                {this.renderBigListItem('Quick Pitch', job.get('quickPitch'), <Avatar
-                icon={<FontIcon className="material-icons">info_outline</FontIcon>}
-                color={Styles.Colors.grey600}
-                backgroundColor={Styles.Colors.white}
+                {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
+                <Avatar
+                    icon={<FontIcon className="material-icons">info_outline</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
               <CardText>
-                {this.renderBigListItem('Fee Percentage', feePercent, <Avatar
-                icon={<FontIcon className="material-icons">equalizer</FontIcon>}
-                color={Styles.Colors.grey600}
-                backgroundColor={Styles.Colors.white}
+                {this.renderBigListItem('Fee Percentage', feePercent,
+                <Avatar
+                    icon={<FontIcon className="material-icons">equalizer</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
             </Card>
             <div>
               <Card>
                 <CardText >
-                  <div className='description'>
+                  <div className="description">
                     <h3>Job Description</h3>
                     <div dangerouslySetInnerHTML={{__html: description}} />
                   </div>

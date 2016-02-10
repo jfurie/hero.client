@@ -10,7 +10,7 @@ const constraints = {
     },
   },
   'website': {
-    presence: true
+    presence: true,
   },
   'twitterHandle': {
     length: {

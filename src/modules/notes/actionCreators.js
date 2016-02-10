@@ -1,8 +1,20 @@
 import * as constants from './constants';
-export function getNotesByCompany(companyId){
+export function getNotesByCompany(companyId, userId){
+  let filter = {
+    where: { or: [
+      {and: [{privacyValue: 0}, {userId}]},
+      {privacyValue: 1},
+    ]},
+    include:{
+      relation:'contact',
+    },
+  };
+
+  let filterStr = encodeURIComponent(JSON.stringify(filter));
+
   return {
     types: [constants.GET_NOTES_BY_COMPANY, constants.GET_NOTES_BY_COMPANY_SUCCESS, constants.GET_NOTES_BY_COMPANY_FAIL],
-    promise: (client, auth) => client.api.get(`/companies/${companyId}/notes?filter[include]=contact`, {
+    promise: (client, auth) => client.api.get(`/companies/${companyId}/notes?filter=${filterStr}`, {
       authToken: auth.authToken,
     }),
   };

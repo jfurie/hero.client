@@ -12,7 +12,7 @@ const style = {
   },
   container: {
     padding: '10px',
-    backgroundColor:'#ffffff'
+    backgroundColor: '#ffffff',
   },
   search: {
     bar: {
@@ -63,29 +63,26 @@ export default class JobSearch extends React.Component {
     return (
       <div style={style.container}>
       <AppBar
-        style={style.search.bar}
-        iconElementLeft={<IconButton iconStyle={{color: 'rgba(0, 0, 0, 0.54)'}} onTouchTap={this.props.onSearchModalClose.bind(this)} iconClassName='material-icons'>arrow_back</IconButton>}
-        iconElementRight={query ? <IconButton iconStyle={{color: 'rgba(0, 0, 0, 0.54)'}} onTouchTap={this.onQueryClear.bind(this)} iconClassName='material-icons'>close</IconButton> : <div></div>}
-        zDepth={1}
-        title=
-        {
-          <TextField
-            ref="queryTextField"
-            style={style.search.input}
-            underlineShow={false}
-            onEnterKeyDown={this.props.onQuerySubmit.bind(this)}
-            onChange={this.props.onQueryChange.bind(this)}
-            hintText="Search Jobs"
-            fullWidth={true}
-          >
-          </TextField>
-        }
+          style={style.search.bar}
+          iconElementLeft={<IconButton iconStyle={{color: 'rgba(0, 0, 0, 0.54)'}} onTouchTap={this.props.onSearchModalClose.bind(this)} iconClassName="material-icons">arrow_back</IconButton>}
+          iconElementRight={query ? <IconButton iconStyle={{color: 'rgba(0, 0, 0, 0.54)'}} onTouchTap={this.onQueryClear.bind(this)} iconClassName="material-icons">close</IconButton> : <div></div>}
+          zDepth={1}
+          title={
+            <TextField
+                ref="queryTextField"
+                style={style.search.input}
+                underlineShow={false}
+                onEnterKeyDown={this.props.onQuerySubmit.bind(this)}
+                onChange={this.props.onQueryChange.bind(this)}
+                hintText="Search Jobs"
+                fullWidth
+            />}
       />
       <RaisedButton
-        style={style.section}
-        fullWidth={true}
-        label={'add ' + (query ? query : 'job')}
-        onTouchTap={this.props.onDbJobSelect.bind(this, { title: query })}
+          style={style.section}
+          fullWidth
+          label={`add ${(query ? query : 'job')}`}
+          onTouchTap={this.props.onDbJobSelect.bind(this, { title: query })}
       />
       {
         searchResults.length > 0 || suggestions.length > 0 ?
@@ -100,13 +97,8 @@ export default class JobSearch extends React.Component {
               {searchResults.map((job, key) => {
                 return (
                   <div key={key} style={style.section}>
-                  <Card
-                    style={style.card}
-                    onTouchTap={this.props.onDbJobSelect.bind(this, job)}
-                  >
-                    <CardHeader
-                      title={job.get('title')}
-                    />
+                  <Card style={style.card} onTouchTap={this.props.onDbJobSelect.bind(this, job)}>
+                    <CardHeader title={job.get('title')} />
                   </Card>
                   </div>
                 );
@@ -125,13 +117,8 @@ export default class JobSearch extends React.Component {
               {suggestions.map((job, key) => {
                 return (
                   <div key={key} style={style.section}>
-                  <Card
-                    style={style.card}
-                    onTouchTap={this.props.onDbJobSelect.bind(this, job)}
-                  >
-                    <CardHeader
-                      title={job.get('title')}
-                    />
+                  <Card style={style.card} onTouchTap={this.props.onDbJobSelect.bind(this, job)}>
+                    <CardHeader title={job.get('title')} />
                   </Card>
                   </div>
                 );
