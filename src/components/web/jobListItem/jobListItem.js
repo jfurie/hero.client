@@ -106,9 +106,9 @@ export default class JobListItem extends React.Component {
   constructor(props){
     super(props);
   }
-  clickClient(){
+  clickJob(){
     let {job} = this.props;
-    this.props.onClientClick(job.get('id'));
+    this.props.onJobClick(job);
   }
 
 
@@ -203,7 +203,7 @@ export default class JobListItem extends React.Component {
                 title= {<div style={{fontWeight: 'bold'}}>{job.get('title')}</div>}
                 subtitle1={job.get('company').get('name')}
                 subtitle2={department}
-                onTouchTap={this.clickClient.bind(this)}
+                onTouchTap={this.clickJob.bind(this)}
               ></CardBasic>
             {type !== 'mini'?
             (<div>

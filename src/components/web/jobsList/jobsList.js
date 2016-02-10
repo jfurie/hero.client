@@ -2,6 +2,8 @@ import React from 'react';
 import { List } from 'material-ui';
 import Infinite from 'react-infinite';
 import { JobListItem } from '../../../components/web';
+import { pushState } from 'redux-router';
+import { connect } from 'react-redux';
 
 const style = {
   textField: {
@@ -13,6 +15,8 @@ const style = {
   },
 };
 
+@connect(() => (
+{}), {pushState})
 class JobsList extends React.Component {
 
   _handleJobClick(job, company){
