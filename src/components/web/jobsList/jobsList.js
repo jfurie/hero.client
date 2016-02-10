@@ -70,7 +70,7 @@ class JobsList extends React.Component {
       ressourceName += 's';
     }
     let heights = jobs.map(job =>{
-      let height = 272;
+      let height = 253;
       let tags = job.get('tags') || job.get('employmentType');
 
       if(tags){
@@ -81,7 +81,7 @@ class JobsList extends React.Component {
     });
     heights = heights.toArray();
     if(!heights || heights.length <= 0){
-      heights = 261;
+      heights = 253;
     }
     return (
       /*<List subheader={subheader}>
