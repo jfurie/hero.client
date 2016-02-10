@@ -25,7 +25,7 @@ export default class Tag extends React.Component {
     let currentStyle =_.merge(style,this.props.style);
 
     return (
-      <span onTouchTap={this._onTouchTap.bind(this)} style={currentStyle.badge} >{value}!</span>
+      <span onTouchTap={this._onTouchTap.bind(this)} style={currentStyle.badge} >{value}</span>
     );
   }
 }
