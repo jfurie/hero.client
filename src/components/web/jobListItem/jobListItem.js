@@ -179,6 +179,14 @@ export default class JobListItem extends React.Component {
 
     let jobImg = <img style={{width: '40px', height: '40px'}} src='http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png' />;
 
+    let isHot = false;
+    let isInterviewing = false;
+
+    if (job.get('tags')) {
+      isHot = job.get('tags').indexOf('HOT!') > -1;
+      isInterviewing = job.get('tags').indexOf('Interviewing') > -1;
+    }
+
     return (
       <Card
         style={{
@@ -192,12 +200,24 @@ export default class JobListItem extends React.Component {
             height: type !=='mini'?'auto':'auto'
           }}>
           {type !=='mini'?(<div>
-            <div style={{textAlign: 'right'}}>
-              <div style={style.badgeWrap}>
+            <div>
+              <div className="row between-xs" style={style.badgeWrap}>
+              <div style={{textAlign: 'left'}}>
+                {isHot?
+                <Tag value={'HOT!'} />
+                :<span></span>
+                }
+                {isInterviewing?
+                <Tag value={'Interviewing'} color={'green'}/>
+                :<span></span>
+                }
+              </div>
+              <div style={{textAlign: 'right'}}>
                 {job.get('employmentType')?
                 <Tag value={job.get('employmentType')} color={'green'} />
                 :<span></span>
                 }
+              </div>
               </div>
             </div>
           </div>):(<div></div>)}
@@ -205,7 +225,7 @@ export default class JobListItem extends React.Component {
                 image={<CompanyAvatar style={{width:'40px'}} url={job.get('company').get('website')} />}
                 title= {<div style={{fontWeight: 'bold'}}>{job.get('title')}</div>}
                 subtitle1={job.get('company').get('name')}
-                subtitle2={department}
+                subtitle2={<span>{job.get('department')?job.get('department'):'Tech'} Department</span>}
                 onTouchTap={this.clickJob.bind(this)}
               ></CardBasic>
             {type !== 'mini'?
