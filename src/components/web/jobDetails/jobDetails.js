@@ -150,27 +150,29 @@ export default class JobDetails extends React.Component {
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
           />
-          <CustomTabsSwipe isLight isInline ref='customTabsSwipe' tabs={['Details', 'Desc', 'Applicants']}>
+          <CustomTabsSwipe isLight isInline tabs={['Details', 'Desc', 'Applicants']}>
             <Card style={style.card}>
               <CardText>
-                {this.renderBigListItem('Quick Pitch', job.get('quickPitch'), <Avatar
-                icon={<FontIcon className="material-icons">info_outline</FontIcon>}
-                color={Styles.Colors.grey600}
-                backgroundColor={Styles.Colors.white}
+                {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
+                <Avatar
+                    icon={<FontIcon className="material-icons">info_outline</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
               <CardText>
-                {this.renderBigListItem('Fee Percentage', feePercent, <Avatar
-                icon={<FontIcon className="material-icons">equalizer</FontIcon>}
-                color={Styles.Colors.grey600}
-                backgroundColor={Styles.Colors.white}
+                {this.renderBigListItem('Fee Percentage', feePercent,
+                <Avatar
+                    icon={<FontIcon className="material-icons">equalizer</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
             </Card>
             <div>
               <Card>
                 <CardText >
-                  <div className='description'>
+                  <div className="description">
                     <h3>Job Description</h3>
                     <div dangerouslySetInnerHTML={{__html: description}} />
                   </div>
@@ -211,9 +213,7 @@ export default class JobDetails extends React.Component {
         >
           <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
             <Header transparent goBack={this.goBack.bind(this)} iconRight={
-              <IconMenu iconButtonElement={
-                <IconButton iconClassName="material-icons">more_vert</IconButton>
-              }>
+              <IconMenu iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}>
                 <MenuItem index={0} primaryText="Edit Job" />
               </IconMenu>
             }
