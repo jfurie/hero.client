@@ -176,7 +176,7 @@ export function createCandidate(candidateData, jobId) {
     dispatch({
       types: [CREATE_CANDIDATE, CREATE_CANDIDATE_SUCCESS, CREATE_CANDIDATE_FAIL],
       promise: (client, auth) => new Promise(function(resolve, reject){
-        let createCandidatePromise = client.api.post('/candidates', {
+        let createCandidatePromise = client.api.put('/candidates', {
           authToken: auth.authToken,
           data: {
             contact: candidateData,
