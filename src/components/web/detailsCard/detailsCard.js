@@ -60,13 +60,13 @@ let style = {
     zIndex: '50',
   },
   titlesub: {
-    paddingTop: '4px',
-    position: 'relative',
-    left: '-2px',
+    paddingLeft: '0px',
   },
   avatar: {
-    paddingLeft: '1px',
-    paddingRight: '1px',
+    position: 'absolute',
+    top: '-60px',
+    left: '9px',
+    maxHeight: '50px',
   },
   actionButton: {
     minWidth: '0px',
@@ -152,14 +152,16 @@ class DetailsCard extends React.Component {
             </div>
           </div>
 
-          {/* avatar (if any) + title and subtitle */}
+          {/* avatar (if any) */}
+          {(this.props.avatar) ? (
+            <div style={style.avatar}>
+              {this.props.avatar}
+            </div>
+          ) : (null)}
+
+          {/* title and subtitle */}
           <div className="row">
-            {(this.props.avatar) ? (
-              <div style={style.avatar} className="col-xs-2">
-                <div className="box">{this.props.avatar}</div>
-              </div>
-            ) : (null)}
-            <div className="col-xs-9" style={style.titlesub}>
+            <div className="col-xs-12" style={style.titlesub}>
               <div className="box">
                 <h2 style={style.title}>{this.props.title}</h2>
                 <p style={style.subtitle}>{this.props.subtitle}</p>

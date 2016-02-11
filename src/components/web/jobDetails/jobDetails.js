@@ -142,22 +142,28 @@ export default class JobDetails extends React.Component {
         color: 'green',
       }];
 
-      // department
-      let department = job.get('department') || 'Tech';
+      // company
+      let company = job.get('company');
+      let companyWebsite = null;
+      let companyName = null;
+      if (company) {
+        companyWebsite = company.get('website');
+        companyName = company.get('name');
+      }
 
       return (
 
         <div>
           <DetailsCard
               title={job.get('title')}
-              subtitle={`${job.get('company').get('name')} - ${job.get('department')}`}
+              subtitle={`${companyName} - ${job.get('department')}`}
               extraLeftLine={`${salaryMin} - ${salaryMax}`}
               extraCenterLine={fee}
               extraRightLine={job.get('employmentType') || 'Permanent'}
               cover={cover}
               mainColor={Styles.Colors.amber700}
               actions={actions}
-              avatar={<CompanyAvatar style={{width: '50px'}} url={job.get('company').get('website')}/>}
+              avatar={<CompanyAvatar style={{width: '50px'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
               topTags={topTags}

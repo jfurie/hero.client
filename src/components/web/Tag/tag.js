@@ -13,7 +13,7 @@ const style = {
     padding: '0px 16px',
     marginBottom: '8px',
     height: '18px',
-    marginRight: '3px',
+    marginRight: '4px',
   },
 };
 
