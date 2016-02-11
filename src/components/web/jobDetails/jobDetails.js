@@ -151,6 +151,27 @@ export default class JobDetails extends React.Component {
         companyName = company.get('name');
       }
 
+      // location stuff
+      let location = job.get('location');
+      let addressLine = null;
+
+      if (location) {
+        let address = location.get('addressLine') || '';
+        let city = location.get('city') || null;
+        let countrySubDivisionCode = location.get('countrySubDivisionCode') || null;
+
+        if (city && countrySubDivisionCode) {
+          city += `, ${countrySubDivisionCode}`;
+        }
+
+        addressLine = address;
+        if (addressLine.length) {
+          addressLine += `. ${city}`;
+        } else {
+          addressLine = city;
+        }
+      }
+
       return (
 
         <div>
@@ -178,12 +199,27 @@ export default class JobDetails extends React.Component {
                     backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
+              <CardText>
+                {this.renderBigListItem('Bonus & perks', job.get('bonusPerks'),
+                <Avatar
+                    icon={<FontIcon className="material-icons">redeem</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
+              <CardText>
+                {this.renderBigListItem('Location', addressLine,
+                <Avatar
+                    icon={<FontIcon className="material-icons">place</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
             </Card>
             <div>
               <Card>
                 <CardText >
                   <div className="description">
-                    <h3>Job Description</h3>
                     <div dangerouslySetInnerHTML={{__html: description}} />
                   </div>
                 </CardText>
