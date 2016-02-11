@@ -105,20 +105,12 @@ export default class JobDetails extends React.Component {
       // get cover
       let cover = ((job.get('image')) ? (job.get('image').get('item')) : ('/img/default-job.jpg'));
 
-      // fee percentages
-      let feePercent = job.get('feePercent');
-      if (!feePercent) {
-        feePercent = 'not set';
-      } else {
-        feePercent += '%';
-      }
-
       // markdown to html
       let description = job.get('description') ? marked(job.get('description')) : '';
 
       // salary
-      let salaryMin = '$?';
-      let salaryMax = '$?';
+      let salaryMin = '$[?]';
+      let salaryMax = '$[?]';
 
       if (job.get('minSalary')) {
         salaryMin = `$${~~(job.get('minSalary')) / 1000}k`;
@@ -128,6 +120,14 @@ export default class JobDetails extends React.Component {
         salaryMax = `$${~~(job.get('maxSalary')) / 1000}k`;
       }
 
+      // fee
+      let fee = 'Fee: [?]%';
+
+      if (job.get('fee')) {
+        fee = `Fee: ${job.get('fee')}%`;
+      }
+
+      // details card
       let actions = [{
         materialIcon: 'search',
         text: 'Find',
@@ -142,20 +142,59 @@ export default class JobDetails extends React.Component {
         onTouchTap: this._onTouchTapShare.bind(this),
       }];
 
+      let topTags = [{
+        text: 'HOT!',
+      }, {
+        text: 'Interviewing',
+        color: 'green',
+      }];
+
+      // company
+      let company = job.get('company');
+      let companyWebsite = null;
+      let companyName = null;
+      if (company) {
+        companyWebsite = company.get('website');
+        companyName = company.get('name');
+      }
+
+      // location stuff
+      let location = job.get('location');
+      let addressLine = null;
+
+      if (location) {
+        let address = location.get('addressLine') || '';
+        let city = location.get('city') || null;
+        let countrySubDivisionCode = location.get('countrySubDivisionCode') || null;
+
+        if (city && countrySubDivisionCode) {
+          city += `, ${countrySubDivisionCode}`;
+        }
+
+        addressLine = address;
+        if (addressLine.length) {
+          addressLine += `. ${city}`;
+        } else {
+          addressLine = city;
+        }
+      }
+
       return (
 
         <div>
           <DetailsCard
               title={job.get('title')}
-              subtitle={job.get('company').get('name')}
+              subtitle={`${companyName} - ${job.get('department')}`}
               extraLeftLine={`${salaryMin} - ${salaryMax}`}
-              extraRightLine={job.get('employmentType')}
+              extraCenterLine={fee}
+              extraRightLine={job.get('employmentType') || 'Permanent'}
               cover={cover}
               mainColor={Styles.Colors.amber700}
               actions={actions}
-              avatar={<CompanyAvatar style={{width: '50px'}} url={job.get('company').get('website')}/>}
+              avatar={<CompanyAvatar style={{width: '50px'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
+              topTags={topTags}
           />
           <CustomTabsSwipe isLight isInline tabs={['Details', 'Desc', 'Applicants']}>
             <Card style={style.card}>
@@ -168,9 +207,17 @@ export default class JobDetails extends React.Component {
                 />)}
               </CardText>
               <CardText>
-                {this.renderBigListItem('Fee Percentage', feePercent,
+                {this.renderBigListItem('Bonus & perks', job.get('bonusPerks'),
                 <Avatar
-                    icon={<FontIcon className="material-icons">equalizer</FontIcon>}
+                    icon={<FontIcon className="material-icons">redeem</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
+              <CardText>
+                {this.renderBigListItem('Location', addressLine,
+                <Avatar
+                    icon={<FontIcon className="material-icons">place</FontIcon>}
                     color={Styles.Colors.grey600}
                     backgroundColor={Styles.Colors.white}
                 />)}
@@ -180,7 +227,6 @@ export default class JobDetails extends React.Component {
               <Card>
                 <CardText >
                   <div className="description">
-                    <h3>Job Description</h3>
                     <div dangerouslySetInnerHTML={{__html: description}} />
                   </div>
                 </CardText>

@@ -20,6 +20,9 @@ let style = {
   title: {
     color: Styles.Colors.white,
     fontSize: '23px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   subtitle: {
     color: Styles.Colors.white,
@@ -36,8 +39,19 @@ let style = {
   extraRightLine: {
     color: Styles.Colors.white,
   },
+  extraCenterLine: {
+    color: Styles.Colors.white,
+  },
   extraLineCol: {
     padding: '0px',
+  },
+  extraLineRightCol: {
+    padding: '0px',
+    textAlign: 'right',
+    paddingRight: '5px',
+  },
+  extraLineCenterCol: {
+    textAlign: 'center',
   },
   floatActionButton: {
     position: 'absolute',
@@ -46,13 +60,13 @@ let style = {
     zIndex: '50',
   },
   titlesub: {
-    paddingTop: '4px',
-    position: 'relative',
-    left: '-2px',
+    paddingLeft: '0px',
   },
   avatar: {
-    paddingLeft: '1px',
-    paddingRight: '1px',
+    position: 'absolute',
+    top: '-60px',
+    left: '9px',
+    maxHeight: '50px',
   },
   actionButton: {
     minWidth: '0px',
@@ -138,14 +152,16 @@ class DetailsCard extends React.Component {
             </div>
           </div>
 
-          {/* avatar (if any) + title and subtitle */}
+          {/* avatar (if any) */}
+          {(this.props.avatar) ? (
+            <div style={style.avatar}>
+              {this.props.avatar}
+            </div>
+          ) : (null)}
+
+          {/* title and subtitle */}
           <div className="row">
-            {(this.props.avatar) ? (
-              <div style={style.avatar} className="col-xs-2">
-                <div className="box">{this.props.avatar}</div>
-              </div>
-            ) : (null)}
-            <div className="col-xs-10" style={style.titlesub}>
+            <div className="col-xs-12" style={style.titlesub}>
               <div className="box">
                 <h2 style={style.title}>{this.props.title}</h2>
                 <p style={style.subtitle}>{this.props.subtitle}</p>
@@ -163,8 +179,17 @@ class DetailsCard extends React.Component {
                   </div>
                 </div>
               ) : (null)}
+
+              {(this.props.extraCenterLine) ? (
+                <div className="col-xs" style={style.extraLineCenterCol}>
+                  <div className="box">
+                    <span style={style.extraCenterLine}>{this.props.extraCenterLine}</span>
+                  </div>
+                </div>
+              ) : (null)}
+
               {(this.props.extraRightLine) ? (
-                <div className="col-xs" style={style.extraLineCol}>
+                <div className="col-xs" style={style.extraLineRightCol}>
                   <div className="box">
                     <span style={style.extraRightLine}>{this.props.extraRightLine}</span>
                   </div>
@@ -198,6 +223,7 @@ DetailsCard.propTypes = {
   actions: React.PropTypes.array.isRequired,
   avatar: React.PropTypes.object,
   cover: React.PropTypes.string.isRequired,
+  extraCenterLine: React.PropTypes.string,
   extraLeftLine: React.PropTypes.string,
   extraRightLine: React.PropTypes.string,
   floatActionContent: React.PropTypes.object,
