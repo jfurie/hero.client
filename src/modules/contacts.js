@@ -194,9 +194,11 @@ export default function reducer(state = initialState, action = {}) {
   }
   case CREATE_COMPANY_CONTACT: {
     let contact = {};
-    action.contact = action.contact.set('saving',true);
-    action.contact = action.contact.set('savingError',null);
-    contact[action.id] = action.contact;
+    if(action.contact){
+      action.contact = action.contact.set('saving',true);
+      action.contact = action.contact.set('savingError',null);
+      contact[action.id] = action.contact;
+    }
     return {
       ...state,
       saving:true,
