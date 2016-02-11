@@ -68,7 +68,7 @@ class ContactSearchContainer extends React.Component {
       if(nextProps.candidates.savingError){
         //Show Snackbar
         setTimeout(function(){
-          self.props.resetError()
+          self.props.resetError();
         },4000);
       } else {
         //Redirect to Job

@@ -140,7 +140,7 @@ export function updateJobImage(id,file) {
   };
 }
 export function saveJob(job){
-  return (dispatch, getState) => {
+  return (dispatch) => {
     let current = job;
     let id = current.get('id');
     if(!id || (id.indexOf('tmp') > -1)){

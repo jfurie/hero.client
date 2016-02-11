@@ -10,7 +10,7 @@ const GET_CANDIDATES_FAIL = 'hero.client/candidates/GET_CANDIDATES_FAIL';
 const GET_ONE_CANDIDATE = 'hero.client/candidates/GET_ONE_CANDIDATE';
 const GET_ONE_CANDIDATE_SUCCESS = 'hero.client/candidates/GET_ONE_CANDIDATE_SUCCESS';
 const GET_ONE_CANDIDATE_FAIL = 'hero.client/candidates/GET_ONE_CANDIDATE_FAIL';
-const RESET_ERROR = 'hero.client/candidates/RESET_ERROR'
+const RESET_ERROR = 'hero.client/candidates/RESET_ERROR';
 const initialState = {
   list: new Immutable.Map(),
   byJobId: new Immutable.Map(),
@@ -224,7 +224,7 @@ export function getAllJobCandidates(jobId) {
 export function resetError(){
   return{
     type:RESET_ERROR
-  }
+  };
 }
 
 export function getAllUserCandidates(userId) {

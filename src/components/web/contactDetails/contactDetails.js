@@ -7,30 +7,10 @@ import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
 import { Header, DetailsCard } from '../../../components/web';
 import {
-  Dialog, IconButton, List, ListItem, FontIcon,
+   IconButton, List, ListItem, FontIcon,
   Divider, Styles, IconMenu, MenuItem,
 } from 'material-ui';
 
-const style = {
-  dialog: {
-    height: '100%',
-    maxHeight: '100%',
-    paddingTop: '0px',
-  },
-  bodyStyle: {
-    paddingTop: '0px',
-    height: '100%',
-    padding: '0',
-  },
-  contentStyle: {
-    width: '100%',
-    maxWidth: 'none',
-    height: '100%',
-    maxHeight: '100%',
-    paddingTop: '0px',
-    top: '-64px',
-  },
-};
 
 @connect(() => (
 {}), {pushState})

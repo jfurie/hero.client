@@ -8,7 +8,7 @@ import marked from 'marked';
 
 import { Header, DetailsCard, CustomTabsSwipe, CandidatesList, CompanyAvatar } from '../../../components/web';
 import {
-  Dialog, IconButton, FontIcon, Styles,
+  IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
 } from 'material-ui';
 
@@ -91,11 +91,11 @@ export default class JobDetails extends React.Component {
     this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/candidates/search`);
   }
   _onTouchAddCandidate(){
-    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/candidates/search`)
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/candidates/search`);
   }
 
   _onTouchTabEdit(){
-    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/create`)
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/create`);
   }
 
   renderContent(job) {

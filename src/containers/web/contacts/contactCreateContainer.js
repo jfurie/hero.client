@@ -67,7 +67,7 @@ export default class ContactCreateContainer extends React.Component {
       if(newProps.candidates.savingError){
         //Show Snackbar
         setTimeout(function(){
-          self.props.resetError()
+          self.props.resetError();
         },4000);
       } else {
         //Redirect to Job
