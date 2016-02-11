@@ -344,15 +344,6 @@ export default class ContactDetails extends React.Component {
                   />)}
                 </CardText>
                 <CardText>
-                  {this.renderBigListItem('Location', addressLine || 'Somewhere, USA',
-                  <Avatar
-                      icon={<FontIcon className="material-icons">place</FontIcon>}
-                      color={Styles.Colors.grey600}
-                      style={style.avatar}
-                      backgroundColor={Styles.Colors.white}
-                  />)}
-                </CardText>
-                <CardText>
                   {this.renderBigListItem('Availability', candidate.get('availability') || 'not set yet',
                   <Avatar
                       icon={<FontIcon className="material-icons">insert_invitation</FontIcon>}
@@ -374,13 +365,23 @@ export default class ContactDetails extends React.Component {
               <List style={{position: 'relative', top: '3px'}}>
                 <div>
 
+                  <ListItem
+                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                      primaryText={addressLine || 'Somewhere, USA'}
+                      secondaryText={<p>location</p>}
+                      secondaryTextLines={1}
+                  />
+
                   {(email) ? (
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
-                        primaryText={email}
-                        secondaryText={<p>email</p>}
-                        secondaryTextLines={1}
-                    />
+                    <div>
+                      <Divider inset />
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
+                          primaryText={email}
+                          secondaryText={<p>email</p>}
+                          secondaryTextLines={1}
+                      />
+                    </div>
                   ) : (null)}
 
                   {(phone) ? (
