@@ -239,7 +239,7 @@ export function getAllUserCandidates(userId) {
 export function getAllAccountCandidates(accountId) {
   return {
     types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
-    promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"accountId": "${accountId}"}, "include": "contact"}`, {
+    promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"accountId": "${accountId}"}, "include": ["contact","company"]}`, {
       authToken: auth.authToken,
     }),
   };

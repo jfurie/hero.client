@@ -34,6 +34,9 @@ export default class Tag extends React.Component {
     case 'green':
       color = Styles.Colors.green500;
       break;
+    case 'gray':
+      color = 'rgba(0, 0, 0, 0.54)';
+      break;
     default:
       color = '#E91B62'; // default pink
       break;
