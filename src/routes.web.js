@@ -38,7 +38,7 @@ import ClientCreatePage from './containers/web/clients/clientCreateContainer';
 //jobs
 import JobDetailsPage from './containers/web/jobs/jobDetailsContainer';
 import JobSearchContainer from './containers/web/jobs/jobSearchContainer';
-//import MyJobsPage from './containers/web/jobs/myJobsContainer';
+import MyJobsPage from './containers/web/jobs/myJobsContainer';
 import JobCreatePage from './containers/web/jobs/jobCreateContainer';
 
 //notes
@@ -197,7 +197,7 @@ export default(store) => {
 
           {/* Jobs */}
           <Route path="jobs">
-            {/* <IndexRoute component={ClientsPage}/> */}
+              <IndexRoute component={MyJobsPage}/>
               <Route path="search" component={JobSearchContainer}/>
               <Route path=":jobId" component={JobDetailsPage}/>
               <Route path=":jobId/create" component={JobCreatePage}/>

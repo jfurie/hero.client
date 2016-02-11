@@ -39,12 +39,8 @@ class Gravatar extends React.Component {
       style.picture.borderColor = Styles.Colors.red600;
       break;
     }
-    case 'notset': {
-      style.picture.borderColor = Styles.Colors.grey600;
-      break;
-    }
     default:
-      style.picture.border = '0px solid';
+      style.picture.borderColor = Styles.Colors.grey600;
     }
 
     // gravatar part
@@ -53,7 +49,7 @@ class Gravatar extends React.Component {
     } else {
       email = '00000000000000000000000000000000';
     }
-    
+
     let imgSrc = `http://www.gravatar.com/avatar/${email}?d=mm`;
 
     return (

@@ -93,11 +93,9 @@ class JobsList extends React.Component {
       </List>*/
       <List style={style.list} subheader={`${count} ${ressourceName}`}>
         <Infinite containerHeight={clientHeight - (56+64)} elementHeight={heights} useWindowAsScrollContainer>
-          {jobs.map((job) => {
+          {jobs.map((job, key) => {
             return (
-              <div>
-                <JobListItem onJobClick={this._showJobDetails.bind(this)} job={job} / >
-              </div>
+              <JobListItem key={key} onJobClick={this._showJobDetails.bind(this)} job={job} / >
             );
           })}
         </Infinite>
