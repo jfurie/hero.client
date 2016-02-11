@@ -2,7 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import {
   Dialog, IconButton, ToolbarGroup, Toolbar, Toggle, SelectField, MenuItem,
-  FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles
+  FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles, Snackbar,
 } from 'material-ui';
 import {
  Location,
@@ -414,7 +414,7 @@ export default class ContactCreate extends React.Component {
               open={ (this.props.candidates && this.props.candidates.errorMessage)?true:false}
               message={this.props.candidates && this.props.candidates.errorMessage}
               autoHideDuration={4000}
-          ></Snackbar>
+          />
       </div>
     );
   }

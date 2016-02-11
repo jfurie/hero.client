@@ -26,6 +26,7 @@ import ContactCreatePage from './containers/web/contacts/contactCreateContainer'
 
 // candidates
 import MyCandidatesPage from './containers/web/candidates/myCandidatesContainer';
+import CandidateDetailsPage from './containers/web/candidates/candidateDetailsContainer';
 import CandidateSearchContainer from './containers/web/candidates/candidateSearchContainer';
 
 // clients
@@ -205,7 +206,7 @@ export default(store) => {
           <Route path="candidates">
             <IndexRoute component={MyCandidatesPage}/>
             <Route path="search" component={CandidateSearchContainer} />
-            <Route path=":contactId" component={ContactDetailsPage}/>
+            <Route path=":candidateId" component={CandidateDetailsPage}/>
           </Route>
 
           {/* Settings  */}

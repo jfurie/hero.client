@@ -15,7 +15,7 @@ class CandidatesList extends React.Component {
   }
 
   openDetails(candidate) {
-    this.props.pushState(null, `/candidates/${candidate.get('contact').get('id')}`);
+    this.props.pushState(null, `/candidates/${candidate.get('id')}`);
   }
 
   render() {
