@@ -59,7 +59,7 @@ export default class JobDetails extends React.Component {
     };
   }
 
-  renderBigListItem(title,content,avatar){
+  renderBigListItem(title, content, avatar){
     return (
       <div style={{display:'flex'}}>
         <div style={{flex:'0 0 56px'}}>

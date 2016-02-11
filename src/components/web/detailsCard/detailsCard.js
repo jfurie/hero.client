@@ -14,7 +14,7 @@ let style = {
     position: 'relative',
   },
   cardTitleComponent: {
-    padding: '11px 16px 20px',
+    padding: '11px 16px 11px',
     position: 'relative',
   },
   title: {
@@ -42,8 +42,8 @@ let style = {
   extraCenterLine: {
     color: Styles.Colors.white,
   },
-  extraLineCol: {
-    padding: '0px',
+  extraLineLeftCol: {
+    paddingLeft: '3px',
   },
   extraLineRightCol: {
     padding: '0px',
@@ -60,7 +60,7 @@ let style = {
     zIndex: '50',
   },
   titlesub: {
-    paddingLeft: '0px',
+    paddingLeft: '3px',
   },
   avatar: {
     position: 'absolute',
@@ -87,7 +87,7 @@ let style = {
     overflow: 'hidden',
   },
   topTags: {
-    paddingLeft: '0px',
+    paddingLeft: '3px',
   },
 };
 
@@ -120,12 +120,6 @@ class DetailsCard extends React.Component {
     } else {
       style.cardTitleComponent.backgroundColor = Styles.Colors.indigo500; // default
       style.floatActionButton.color = Styles.Colors.indigo500; // default
-    }
-
-    if (this.props.avatar) {
-      style.titlesub.paddingLeft = '1px';
-    } else {
-      style.titlesub.paddingLeft = '11px';
     }
 
     return (
@@ -173,7 +167,7 @@ class DetailsCard extends React.Component {
           {(this.props.extraLeftLine || this.props.extraRightLine) ? (
             <div className="row" style={style.extraLine}>
               {(this.props.extraLeftLine) ? (
-                <div className="col-xs" style={style.extraLineCol}>
+                <div className="col-xs" style={style.extraLineLeftCol}>
                   <div className="box">
                     <span style={style.extraLeftLine}>{this.props.extraLeftLine}</span>
                   </div>

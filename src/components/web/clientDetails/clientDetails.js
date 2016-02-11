@@ -260,9 +260,7 @@ export default class ClientDetails extends React.Component {
         } else {
           addressLine = city;
         }
-
       }
-
 
       return (
         <div className="viewContent" style={style.viewContent}>
