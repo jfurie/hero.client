@@ -152,7 +152,7 @@ export default class JobListItem extends React.Component {
     if (peopleList.length > 0) {
       candidatesElm = (<div style={style.peopleList}>{peopleList}</div>);
     }
-    let department = 'Tech Department';
+    
     let location = job.get('location') && job.get('location').get('city') ? (
       <span>
         <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
@@ -245,7 +245,7 @@ export default class JobListItem extends React.Component {
                     </div>
                   </div>
                   <div>
-                  <div style={{lineHeight:'25px', marginTop:'0px', position:'absolute', bottom: '-7px', right: 0}}>
+                  <div style={{lineHeight:'25px', marginTop:'0px', position:'absolute', bottom: '-7px', right: 0, textAlign: 'right'}}>
                       {job.get('talentAdvocate')?(<div>
                         <Gravatar url={job.get('talentAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}></Gravatar> <div style={{display:'inline-block',lineHeight:'25px'}}>{job.get('talentAdvocate').get('displayName')}</div>
                       </div>):(<div></div>)}
