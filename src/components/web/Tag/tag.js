@@ -5,14 +5,14 @@ import { Styles } from 'material-ui';
 
 const style = {
   badge:{
-    fontSize: '14px',
+    fontSize: '13px',
     lineHeight: '18px',
     color: 'rgba(255, 255, 255, 1.00)',
-    borderRadius: '6px',
+    borderRadius: '4px',
     display: 'inline-block',
-    padding: '0px 16px',
+    padding: '1px 16px',
     marginBottom: '8px',
-    height: '18px',
+    height: '17px',
     marginRight: '4px',
   },
 };

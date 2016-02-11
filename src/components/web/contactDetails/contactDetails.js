@@ -11,6 +11,20 @@ import {
   Divider, Styles, IconMenu, MenuItem,
 } from 'material-ui';
 
+function defineContext(props) {
+  let context = {
+    isCandidate: false,
+    isContact: false,
+  };
+
+  if (props.candidate && !props.contact) {
+    context.isCandidate = !context.isCandidate;
+  } else if (!props.candidate && props.contact) {
+    context.isContact = !context.isContact;
+  }
+
+  return context;
+}
 
 @connect(() => (
 {}), {pushState})
@@ -18,11 +32,24 @@ export default class ContactDetails extends React.Component {
 
   constructor(props){
     super(props);
+    let context = defineContext(props);
 
     this.state = {
       justInvited: false,
       confirmOpen: false,
+      isCandidateContext: context.isCandidate,
+      isContactContext: context.isContact,
     };
+  }
+
+  componentWillReceiveProps(props) {
+    let context = defineContext(props);
+    let state = this.state;
+
+    state.isCandidateContext = context.isCandidate;
+    state.isContactContext = context.isContact;
+
+    this.setState(state);
   }
 
   editContactModalOpen(){
@@ -67,6 +94,10 @@ export default class ContactDetails extends React.Component {
     console.log('_onTouchTapWeb');
   }
 
+  _onTouchTapShare() {
+    console.log('_onTouchTapShare');
+  }
+
   _handleTapOnChat() {
     console.log('_handleTapOnChat');
   }
@@ -79,7 +110,7 @@ export default class ContactDetails extends React.Component {
   //   console.log('_handleTapOnApplications');
   // }
 
-  renderContent(contact) {
+  renderContent(contact, candidate) {
 
     //let picture = null;
     let email = null;
@@ -92,6 +123,10 @@ export default class ContactDetails extends React.Component {
     let source = null;
     let displayName = null;
     //let invited = false;
+
+    if (candidate) {
+      console.log(candidate.toJS());
+    }
 
     if (contact) {
       displayName = contact.get('displayName') || null;
@@ -131,41 +166,56 @@ export default class ContactDetails extends React.Component {
       let cover = `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`;
 
       // define action for the details card
-      // let actions = [{
-      //   materialIcon: 'search',
-      //   text: 'Find',
-      //   onTouchTap: this._onTouchTapSearch.bind(this),
-      // }, {
-      //   materialIcon: 'star_rate',
-      //   text: 'Save',
-      //   onTouchTap: this._onTouchTapSave.bind(this),
-      // }, {
-      //   materialIcon: 'favorite',
-      //   text: 'Hot!',
-      //   onTouchTap: this._onTouchTapHot.bind(this),
-      // }, {
-      //   materialIcon: 'share',
-      //   text: 'Share',
-      //   onTouchTap: this._onTouchTapShare.bind(this),
-      // }];
+      let actions = [];
 
-      let actions = [{
-        materialIcon: 'phone',
-        text: 'Call',
-        onTouchTap: this._onTouchTapCall.bind(this),
-      }, {
-        materialIcon: 'email',
-        text: 'Email',
-        onTouchTap: this._onTouchTapEmail.bind(this),
-      }, {
-        materialIcon: 'star_rate',
-        text: 'Save',
-        onTouchTap: this._onTouchTapSave.bind(this),
-      }, {
-        materialIcon: 'public',
-        text: 'Web',
-        onTouchTap: this._onTouchTapWeb.bind(this),
-      }];
+      if (this.state.isCandidateContext) {
+        actions = [{
+          materialIcon: 'phone',
+          text: 'Call',
+          onTouchTap: this._onTouchTapCall.bind(this),
+        }, {
+          materialIcon: 'star_rate',
+          text: 'Save',
+          onTouchTap: this._onTouchTapSave.bind(this),
+        }, {
+          materialIcon: 'email',
+          text: 'Email',
+          onTouchTap: this._onTouchTapEmail.bind(this),
+        }, {
+          materialIcon: 'share',
+          text: 'Share',
+          onTouchTap: this._onTouchTapShare.bind(this),
+        }];
+      } else {
+        actions = [{
+          materialIcon: 'phone',
+          text: 'Call',
+          onTouchTap: this._onTouchTapCall.bind(this),
+        }, {
+          materialIcon: 'email',
+          text: 'Email',
+          onTouchTap: this._onTouchTapEmail.bind(this),
+        }, {
+          materialIcon: 'star_rate',
+          text: 'Save',
+          onTouchTap: this._onTouchTapSave.bind(this),
+        }, {
+          materialIcon: 'public',
+          text: 'Web',
+          onTouchTap: this._onTouchTapWeb.bind(this),
+        }];
+      }
+
+      // define topTags
+      let topTags = [];
+
+      if (this.state.isCandidateContext) {
+        topTags = [
+          {text: 'HOT!'},
+          {text: 'Vetted', color: 'green'},
+          {text: 'Active', color: 'green'},
+        ];
+      }
 
       return (
 
@@ -178,16 +228,17 @@ export default class ContactDetails extends React.Component {
               actions={actions}
               floatActionOnTap={this._handleTapOnChat.bind(this)}
               floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
+              topTags={topTags}
           />
           <List style={{position: 'relative', top: '3px'}}>
             <div>
 
               {(email) ? (
                 <ListItem
-                  leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
-                  primaryText={email}
-                  secondaryText={<p>email</p>}
-                  secondaryTextLines={1}
+                    leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
+                    primaryText={email}
+                    secondaryText={<p>email</p>}
+                    secondaryTextLines={1}
                 />
               ) : (null)}
 
@@ -195,10 +246,10 @@ export default class ContactDetails extends React.Component {
                 <div>
                   <Divider inset />
                   <ListItem
-                    leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                    primaryText={phone}
-                    secondaryText={<p>phone</p>}
-                    secondaryTextLines={1}
+                      leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                      primaryText={phone}
+                      secondaryText={<p>phone</p>}
+                      secondaryTextLines={1}
                   />
                 </div>
               ) : (null)}
@@ -207,10 +258,10 @@ export default class ContactDetails extends React.Component {
                 <div>
                   <Divider inset />
                   <ListItem
-                    leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                    primaryText={addressLine}
-                    secondaryText={<p>address</p>}
-                    secondaryTextLines={1}
+                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                      primaryText={addressLine}
+                      secondaryText={<p>address</p>}
+                      secondaryTextLines={1}
                   />
                 </div>
               ) : (null)}
@@ -219,10 +270,10 @@ export default class ContactDetails extends React.Component {
                 <div>
                   <Divider inset />
                   <ListItem
-                    leftIcon={<FontIcon className="material-icons">business</FontIcon>}
-                    primaryText={city}
-                    secondaryText={<p>city</p>}
-                    secondaryTextLines={1}
+                      leftIcon={<FontIcon className="material-icons">business</FontIcon>}
+                      primaryText={city}
+                      secondaryText={<p>city</p>}
+                      secondaryTextLines={1}
                   />
                 </div>
               ) : (null)}
@@ -231,10 +282,10 @@ export default class ContactDetails extends React.Component {
                 <div>
                   <Divider inset />
                   <ListItem
-                    leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
-                    primaryText={source}
-                    secondaryText={<p>source</p>}
-                    secondaryTextLines={1}
+                      leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                      primaryText={source}
+                      secondaryText={<p>source</p>}
+                      secondaryTextLines={1}
                   />
                 </div>
               ) : (null)}
@@ -252,47 +303,46 @@ export default class ContactDetails extends React.Component {
 
   render() {
 
-    let { contact } = this.props;
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let contentHeight = clientHeight;
+    //let { contact } = this.props;
+    let contentHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    let { isContactContext, isCandidateContext } = this.state;
 
     let invited = false;
     let email = null;
-    //let displayName = null;
+    let contact = null;
+    let candidate = null;
+    let contextRessourceName = 'Contact';
+
+    console.log('render isCandidateContext', this.state.isCandidateContext, 'isContactContext', this.state.isContactContext);
+
+    if (isContactContext && !isCandidateContext) { /* contact context */
+      contact = this.props.contact;
+    } else if (isCandidateContext && !isContactContext) { /* candidate context */
+      contact = this.props.candidate.get('contact');
+      candidate = this.props.candidate;
+      contextRessourceName = 'Candidate';
+    }
+
+    console.log(contact, candidate, this.props);
 
     if (contact) {
       invited = contact.get('isInvited');
       email = contact.get('email') || null;
-      //displayName = contact.get('displayName') || null;
     }
-
-    // const confirmInviteActions = [
-    //   <FlatButton
-    //       label="Cancel"
-    //       primary
-    //       onTouchTap={this.handleConfirmInviteClose.bind(this)} />,
-    //   <FlatButton
-    //       label="Submit"
-    //       secondary
-    //       keyboardFocused
-    //       onTouchTap={this.handleConfirmInviteGo.bind(this)} />,
-    // ];
 
     return (
       <div>
         <Header transparent goBack={this.goBack.bind(this)} iconRight={
-          <IconMenu iconButtonElement={
-            <IconButton iconClassName="material-icons">more_vert</IconButton>
-          }>
-            {(!invited && !this.state.justInvited && email) ? (
+          <IconMenu iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}>
+            {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (
               <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />
             ) : (null)}
-            <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText="Edit Contact" />
+            <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
           </IconMenu>
         }
         />
         <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
-          {this.renderContent(contact)}
+          {this.renderContent(contact, candidate)}
         </div>
       </div>
     );
@@ -300,6 +350,7 @@ export default class ContactDetails extends React.Component {
 }
 
 ContactDetails.propTypes = {
+  candidate: React.PropTypes.object,
   contact: React.PropTypes.object,
   onContactDetailsClose: React.PropTypes.func,
   open: React.PropTypes.bool.isRequired,
