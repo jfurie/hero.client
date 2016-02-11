@@ -1,32 +1,27 @@
 import React from 'react';
-import { List, ListItem, Divider } from 'material-ui';
-import Infinite from 'react-infinite';
+import { List } from 'material-ui';
+import { ContactListItem } from '../../../components/web';
+import { connect } from 'react-redux';
+import { pushState } from 'redux-router';
 
-import { /*ContactDetailsModal,*/ Gravatar } from '../../../components/web';
-
+@connect(() => (
+{}), {pushState})
 class ContactsList extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      detailsContact: null,
-      detailsModalOpen: false,
+
     };
   }
 
-  openDetails(contact){
-    if (this.props.onOpenContactDetails) {
-      this.props.onOpenContactDetails(contact);
-    }
-  }
-
-  closeDetails(){
+  _showContactDetails(contact) {
+    this.props.pushState(null, `/contacts/${contact.get('id')}`);
   }
 
   render() {
 
-    let { contacts } = this.props;
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    let { contacts, company, type } = this.props;
 
     let count = contacts.count();
     let ressourceName = 'Contact';
@@ -36,58 +31,21 @@ class ContactsList extends React.Component {
     }
 
     return (
-      <div>
-        <List style={{backgroundColor:'transparant'}} subheader={`${count} ${ressourceName}`}>
-          <Infinite containerHeight={clientHeight - (56+64)} elementHeight={88} useWindowAsScrollContainer>
-            {contacts.map((contact, key) => {
-
-              let contactLocation = '';
-
-              if (contact.get('_address')) {
-
-                if (contact.get('_address').get('city')) {
-                  contactLocation += contact.get('_address').get('city');
-                }
-
-                if (contactLocation.length != 0 && contact.get('_address').get('countrySubDivisionCode')) {
-                  contactLocation += `, ${contact.get('_address').get('countrySubDivisionCode')}`;
-                } else {
-                  contactLocation = contact.get('_address').get('countrySubDivisionCode');
-                }
-              }
-
-              let secondaryText = contact.get('label') | '';
-              if (secondaryText.length && contactLocation) {
-                secondaryText += ' | ${contactLocation}';
-              } else if (!secondaryText.length && contactLocation) {
-                secondaryText = contactLocation;
-              }
-
-              return (
-                <div>
-                  <ListItem
-                      leftAvatar={<Gravatar email={contact.get('email')} />}
-                      primaryText={contact.get('displayName')}
-                      secondaryText={<p>{secondaryText}</p>}
-                      secondaryTextLines={2}
-                      onTouchTap={this.openDetails.bind(this, contact)}
-                      key={key}
-                  />
-                  <Divider inset={true} />
-                </div>
-              );
-            })}
-          </Infinite>
-        </List>
-        {/*<ContactDetailsModal open={this.state.detailsModalOpen} contact={this.state.detailsContact}/>*/}
-      </div>
+      <List subheader={`${count} ${ressourceName}`}>
+        {contacts.map((contact) => {
+          return (
+            <div>
+              <ContactListItem onContactClick={this._showContactDetails.bind(this)} contact={contact} company={company} type={type} / >
+            </div>
+          );
+        })}
+      </List>
     );
   }
 }
 
 ContactsList.propTypes = {
   contacts: React.PropTypes.object.isRequired,
-  onOpenContactDetails: React.PropTypes.func,
 };
 
 export default ContactsList;

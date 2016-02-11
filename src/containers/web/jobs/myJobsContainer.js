@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, JobsList } from '../../../components/web';
 import { toggleNav } from '../../../modules/leftNav';
-import { getAllJobs } from '../../../modules/jobs/index';
+import { getMyJobs } from '../../../modules/jobs/index';
 
 @connect(state => ({
   user: state.auth.user,
   jobs: state.jobs,
-}), {pushState, toggleNav, getAllJobs})
+}), {pushState, toggleNav, getMyJobs})
 class MyJobsPage extends React.Component {
 
   constructor(props) {
@@ -16,7 +16,7 @@ class MyJobsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getAllJobs();
+    this.props.getMyJobs();
   }
 
   _handleJobClick(job, company){
