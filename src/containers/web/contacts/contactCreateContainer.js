@@ -61,6 +61,20 @@ export default class ContactCreateContainer extends React.Component {
       }
     }
 
+    //Check for success or error saving candidate
+    if(newProps.candidates.saving == false && this.props.candidates.saving == true){
+      //a Save was attempted
+      if(newProps.candidates.savingError){
+        //Show Snackbar
+        setTimeout(function(){
+          self.props.resetError();
+        },4000);
+      } else {
+        //Redirect to Job
+        self.props.history.replaceState(null,`/clients/${self.props.params.companyId}/jobs/${self.props.params.jobId}`);
+      }
+    }
+
     if(newProps.params.contactId != this.props.params.contactId && newProps.params.contactId.indexOf('tmp')<=-1 ){
       this.props.getOneContact(newProps.params.contactId);
     }
@@ -94,8 +108,10 @@ export default class ContactCreateContainer extends React.Component {
 
     } else {
       let companyId = this.props.company ? this.props.company.get('id') : null;
-
-      if (companyId) {
+      if(this.props.params.jobId){
+        //This is a candidate creation
+        this.props.createCandidate(contact, self.props.params.jobId);
+      } else if (companyId) {
         this.props.createCompanyContact(companyId, contact);
       }
       else {

@@ -10,7 +10,7 @@ const GET_CANDIDATES_FAIL = 'hero.client/candidates/GET_CANDIDATES_FAIL';
 const GET_ONE_CANDIDATE = 'hero.client/candidates/GET_ONE_CANDIDATE';
 const GET_ONE_CANDIDATE_SUCCESS = 'hero.client/candidates/GET_ONE_CANDIDATE_SUCCESS';
 const GET_ONE_CANDIDATE_FAIL = 'hero.client/candidates/GET_ONE_CANDIDATE_FAIL';
-
+const RESET_ERROR = 'hero.client/candidates/RESET_ERROR';
 const initialState = {
   list: new Immutable.Map(),
   byJobId: new Immutable.Map(),
@@ -20,7 +20,20 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case CREATE_CANDIDATE: {
-    return state;
+    return {
+      ...state,
+      saving:true,
+      savingError:false,
+      errorMessage:null,
+    };
+  }
+  case RESET_ERROR:{
+    return {
+      ...state,
+      saving:false,
+      savingError:false,
+      errorMessage:null,
+    };
   }
   case CREATE_CANDIDATE_SUCCESS: {
 
@@ -45,11 +58,26 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       byJobId: state.byJobId.mergeDeep(byJobIdNew),
       byAccountId: state.byAccountId.mergeDeep(byAccountIdNew),
+      saving:false,
+      savingError:false,
+      errorMessage:null,
       // list: state.list.mergeDeep(listNew),
     };
   }
   case CREATE_CANDIDATE_FAIL: {
-    return state;
+    console.log('CREATE_CANDIDATE_FAIL:',action);
+    let errorMessage = 'There was an error adding a candidate to your job';
+    if(action && action.error && action.error.error && action.error.error.errMsg  && action.error.error.code){
+      if(action.error.error.code == 11000){
+        errorMessage = 'This candidate has already been added to this job';
+      }
+    }
+    return {
+      ...state,
+      saving:false,
+      savingError:true,
+      errorMessage,
+    };
   }
   case GET_ONE_CANDIDATE: {
     return state;
@@ -148,7 +176,7 @@ export function createCandidate(candidateData, jobId) {
     dispatch({
       types: [CREATE_CANDIDATE, CREATE_CANDIDATE_SUCCESS, CREATE_CANDIDATE_FAIL],
       promise: (client, auth) => new Promise(function(resolve, reject){
-        let createCandidatePromise = client.api.post('/candidates', {
+        let createCandidatePromise = client.api.put('/candidates', {
           authToken: auth.authToken,
           data: {
             contact: candidateData,
@@ -190,6 +218,12 @@ export function getAllJobCandidates(jobId) {
     promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"jobId": "${jobId}"}, "include": ${includeStr}}`, {
       authToken: auth.authToken,
     }),
+  };
+}
+
+export function resetError(){
+  return{
+    type:RESET_ERROR
   };
 }
 
