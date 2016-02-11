@@ -42,14 +42,14 @@ export default class ContactCreateContainer extends React.Component {
 
   componentWillReceiveProps(newProps){
     this.setState({contact: newProps.contact});
-
+    let self = this;
     if( newProps.contact && newProps.contact.get('saving') == false
     && this.props.contact && this.props.contact.get('saving') == true
     && !newProps.contact.get('savingError')){
       if(this.props.onSave){
         this.props.onSave(newProps.contact.get('id'));
       } else {
-        let self = this;
+
         let id = newProps.contact.get('contactId') ? newProps.contact.get('contactId') : newProps.contact.get('id');
         setTimeout(function () {
           if(self.props.location.query.returnUrl){
@@ -62,16 +62,18 @@ export default class ContactCreateContainer extends React.Component {
     }
 
     //Check for success or error saving candidate
-    if(newProps.candidates.saving == false && this.props.candidates.saving == true){
-      //a Save was attempted
-      if(newProps.candidates.savingError){
-        //Show Snackbar
-        setTimeout(function(){
-          self.props.resetError();
-        },4000);
-      } else {
-        //Redirect to Job
-        self.props.history.replaceState(null,`/clients/${self.props.params.companyId}/jobs/${self.props.params.jobId}`);
+    if(self.props.params.jobId){
+      if(newProps.candidates && newProps.candidates.saving == false && this.props.candidates.saving == true){
+        //a Save was attempted
+        if(newProps.candidates.savingError){
+          //Show Snackbar
+          setTimeout(function(){
+            self.props.resetError();
+          },4000);
+        } else {
+          //Redirect to Job
+          self.props.history.replaceState(null,`/clients/${self.props.params.companyId}/jobs/${self.props.params.jobId}`);
+        }
       }
     }
 
