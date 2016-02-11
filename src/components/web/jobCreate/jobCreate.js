@@ -307,6 +307,18 @@ export default class JobCreate extends React.Component {
 
                   <div className="col-xs-10 ">
                     <TextField
+                        pattern="[0-9]*"
+                        fullWidth
+                        errorText={''}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'positionCount')}
+                        floatingLabelText="Number of Positions"
+                        type="number"
+                        value={job.get('positionCount')}
+                    />
+                  </div>
+
+                  <div className="col-xs-10 ">
+                    <TextField
                         floatingLabelText="Quick Pitch"
                         multiLine
                         fullWidth

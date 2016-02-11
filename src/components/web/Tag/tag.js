@@ -32,7 +32,7 @@ export default class Tag extends React.Component {
 
     switch (this.props.color) {
     case 'green':
-      color = Styles.Colors.lightGreen500;
+      color = Styles.Colors.green500;
       break;
     default:
       color = '#E91B62'; // default pink
