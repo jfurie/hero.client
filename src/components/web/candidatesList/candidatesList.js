@@ -13,7 +13,10 @@ class CandidatesList extends React.Component {
   }
 
   openDetails(contact) {
-    this.props.pushState(null, `/candidates/${contact.get('id')}`);
+    let candidate = this.props.candidates.filter(function (candidate) {
+      return candidate.get('contactId') == contact.get('id');
+    })[0];
+    this.props.pushState(null, `/candidates/${candidate.get('id')}`);
   }
 
   render() {

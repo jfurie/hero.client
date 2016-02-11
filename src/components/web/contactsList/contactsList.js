@@ -16,7 +16,7 @@ class ContactsList extends React.Component {
   }
 
   _showContactDetails(contact) {
-    this.props.pushState(null, `/clients/${contact.get('companyId')}/jobs/${contact.get('id')}`);
+    this.props.pushState(null, `/contacts/${contact.get('id')}`);
   }
 
   render() {
