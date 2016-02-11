@@ -152,7 +152,7 @@ export default class JobListItem extends React.Component {
     if (peopleList.length > 0) {
       candidatesElm = (<div style={style.peopleList}>{peopleList}</div>);
     }
-    
+
     let location = job.get('location') && job.get('location').get('city') ? (
       <span>
         <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
@@ -186,7 +186,6 @@ export default class JobListItem extends React.Component {
       isHot = job.get('tags').indexOf('HOT!') > -1;
       isInterviewing = job.get('tags').indexOf('Interviewing') > -1;
     }
-
     return (
       <Card
         style={{
@@ -222,9 +221,9 @@ export default class JobListItem extends React.Component {
             </div>
           </div>):(<div></div>)}
             <CardBasic
-                image={<CompanyAvatar style={{width:'40px'}} url={job.get('company').get('website')} />}
+                image={<CompanyAvatar style={{width:'40px'}} url={job.get('company')&&job.get('company').get('website')} />}
                 title= {<div style={{fontWeight: 'bold'}}>{job.get('title')}</div>}
-                subtitle1={job.get('company').get('name')}
+                subtitle1={job.get('company')&&job.get('company').get('name')}
                 subtitle2={<span>{job.get('department')?job.get('department'):'Tech'} Department</span>}
                 onTouchTap={this.clickJob.bind(this)}
               ></CardBasic>
