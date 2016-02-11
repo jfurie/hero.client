@@ -186,7 +186,6 @@ export default class JobListItem extends React.Component {
       isHot = job.get('tags').indexOf('HOT!') > -1;
       isInterviewing = job.get('tags').indexOf('Interviewing') > -1;
     }
-
     return (
       <Card
         style={{
