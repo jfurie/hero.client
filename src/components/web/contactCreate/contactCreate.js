@@ -410,6 +410,11 @@ export default class ContactCreate extends React.Component {
                 </form>
               </div>
           </div>
+          <Snackbar
+              open={ (this.props.candidates && this.props.candidates.errorMessage)?true:false}
+              message={this.props.candidates && this.props.candidates.errorMessage}
+              autoHideDuration={4000}
+          ></Snackbar>
       </div>
     );
   }

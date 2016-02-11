@@ -80,9 +80,10 @@ export function shareJob(jobId, data){
   };
 }
 
-export function updateJobLocal(job,dontMergeDeep){
+export function updateJob(job,dontMergeDeep){
   return {
-    type: constants.UPDATE_JOB_LOCAL,
+    id:job.get('id'),
+    type: constants.UPDATE_JOB,
     result: job,
     dontMergeDeep
   };
@@ -94,10 +95,11 @@ export function replaceJobLocal(job){
   };
 }
 
-export function updateJobImageLocal(file) {
+export function updateJobImage(id,file) {
   return (dispatch) => {
     dispatch({
-      types: [constants.UPDATE_JOB_IMAGE_LOCAL, constants.UPDATE_JOB_IMAGE_LOCAL_SUCCESS, constants.UPDATE_JOB_IMAGE_LOCAL_FAIL],
+      id,
+      types: [constants.UPDATE_JOB_IMAGE, constants.UPDATE_JOB_IMAGE_SUCCESS, constants.UPDATE_JOB_IMAGE_FAIL],
       promise: (client, auth) => client.api.post('/resources/signUrl', {
         authToken: auth.authToken,
         data: {
@@ -110,7 +112,8 @@ export function updateJobImageLocal(file) {
             .send(file)
             .on('progress', function(e) {
               dispatch({
-                type: constants.UPDATE_JOB_IMAGE_LOCAL_PROGRESS,
+                id,
+                type: constants.UPDATE_JOB_IMAGE_PROGRESS,
                 result: e.percent,
               });
             })
@@ -136,9 +139,9 @@ export function updateJobImageLocal(file) {
     });
   };
 }
-export function saveLocalJob(){
-  return (dispatch, getState) => {
-    let current = getState().jobs.localJob;
+export function saveJob(job){
+  return (dispatch) => {
+    let current = job;
     let id = current.get('id');
     if(!id || (id.indexOf('tmp') > -1)){
       dispatch(createJob(current));

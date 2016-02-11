@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { AppBar, Card, CardHeader, IconButton, TextField, RaisedButton } from 'material-ui';
+import { AppBar, Card, CardHeader, IconButton, TextField, RaisedButton, Snackbar } from 'material-ui';
 import Infinite from 'react-infinite';
 
 import { Gravatar } from '../../../components/web';
@@ -60,7 +60,6 @@ export default class ContactSearch extends React.Component {
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     let { query, searchResults, suggestions } = this.props;
-
     return (
       <div style={style.container}>
       <AppBar
@@ -82,6 +81,11 @@ export default class ContactSearch extends React.Component {
           </TextField>
         }
       />
+      <Snackbar
+          open={ (this.props.candidates && this.props.candidates.errorMessage)?true:false}
+          message={this.props.candidates && this.props.candidates.errorMessage}
+          autoHideDuration={4000}
+        ></Snackbar>
       <RaisedButton
         style={style.section}
         fullWidth={true}

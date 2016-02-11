@@ -7,30 +7,10 @@ import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
 import { Header, DetailsCard } from '../../../components/web';
 import {
-  Dialog, IconButton, List, ListItem, FontIcon,
+   IconButton, List, ListItem, FontIcon,
   Divider, Styles, IconMenu, MenuItem,
 } from 'material-ui';
 
-const style = {
-  dialog: {
-    height: '100%',
-    maxHeight: '100%',
-    paddingTop: '0px',
-  },
-  bodyStyle: {
-    paddingTop: '0px',
-    height: '100%',
-    padding: '0',
-  },
-  contentStyle: {
-    width: '100%',
-    maxWidth: 'none',
-    height: '100%',
-    maxHeight: '100%',
-    paddingTop: '0px',
-    top: '-64px',
-  },
-};
 
 @connect(() => (
 {}), {pushState})
@@ -300,33 +280,20 @@ export default class ContactDetails extends React.Component {
 
     return (
       <div>
-        <Dialog
-            open={this.props.open}
-            autoDetectWindowHeight={false}
-            autoScrollBodyContent={false}
-            repositionOnUpdate={false}
-            defaultOpen={false}
-            style={style.dialog}
-            bodyStyle={style.bodyStyle}
-            contentStyle={style.contentStyle}
-        >
-          <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
-            <Header transparent goBack={this.goBack.bind(this)} iconRight={
-              <IconMenu iconButtonElement={
-                <IconButton iconClassName="material-icons">more_vert</IconButton>
-              }>
-                {(!invited && !this.state.justInvited && email) ? (
-                  <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />
-                ) : (null)}
-                <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText="Edit Contact" />
-              </IconMenu>
-            }
-            />
-            <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
-              {this.renderContent(contact)}
-            </div>
-          </div>
-        </Dialog>
+        <Header transparent goBack={this.goBack.bind(this)} iconRight={
+          <IconMenu iconButtonElement={
+            <IconButton iconClassName="material-icons">more_vert</IconButton>
+          }>
+            {(!invited && !this.state.justInvited && email) ? (
+              <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />
+            ) : (null)}
+            <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText="Edit Contact" />
+          </IconMenu>
+        }
+        />
+        <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
+          {this.renderContent(contact)}
+        </div>
       </div>
     );
   }
