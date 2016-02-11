@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { pushState } from 'redux-router';
 import { List } from 'material-ui';
 import { JobListItem } from '../../../components/web';
 
@@ -22,6 +24,8 @@ const style = {
   },
 };
 
+@connect(() => (
+{}), {pushState})
 class CompanyJobsList extends React.Component {
 
   _handleJobClick(job){

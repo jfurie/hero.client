@@ -186,14 +186,6 @@ export default class JobListItem extends React.Component {
       isHot = job.get('tags').indexOf('HOT!') > -1;
       isInterviewing = job.get('tags').indexOf('Interviewing') > -1;
     }
-    let companyAvatar = (<CompanyAvatar style={{width:'40px'}} url={job.get('company') && job.get('company').get('website')} />);
-    let cardBasic = (            <CardBasic
-                    image={companyAvatar}
-                    title= {<div style={{fontWeight: 'bold'}}>{job.get('title')}</div>}
-                    subtitle1={job.get('company') && job.get('company').get('name')}
-                    subtitle2={<span>{job.get('department')?job.get('department'):'Tech'} Department</span>}
-                    onTouchTap={this.clickJob.bind(this)}
-                  ></CardBasic>)
     return (
       <Card
         style={{
@@ -228,7 +220,13 @@ export default class JobListItem extends React.Component {
               </div>
             </div>
           </div>):(<div></div>)}
-            {cardBasic}
+            <CardBasic
+                image={<CompanyAvatar style={{width:'40px'}} url={job.get('company')&&job.get('company').get('website')} />}
+                title= {<div style={{fontWeight: 'bold'}}>{job.get('title')}</div>}
+                subtitle1={job.get('company')&&job.get('company').get('name')}
+                subtitle2={<span>{job.get('department')?job.get('department'):'Tech'} Department</span>}
+                onTouchTap={this.clickJob.bind(this)}
+              ></CardBasic>
             {type !== 'mini'?
             (<div>
               <Divider style={{marginTop:'8px'}}></Divider>
