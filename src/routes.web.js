@@ -166,6 +166,7 @@ export default(store) => {
             <Route path=":companyId/jobs/search" component={JobSearchContainer}></Route>
             <Route path=":companyId/jobs/:jobId/create" component={JobCreatePage}></Route>
             <Route path=":companyId/jobs/:jobId/candidates/search" component={ContactSearchContainer}></Route>
+            <Route path=":companyId/jobs/:jobId/candidates/:contactId/create" component={ContactCreatePage}></Route>
 			<Route path=":companyId/notes/:noteId/create" component={NoteCreatePage}></Route>
             <Route path=":companyId/create" component={ClientCreatePage}/>
             <Route path=":companyId" component={ClientDetailsPage}
