@@ -326,7 +326,7 @@ export default class ContactDetails extends React.Component {
             <div>
               <Card style={style.card}>
                 <CardText>
-                  {this.renderBigListItem('Quick Pitch', candidate.get('pitch') || 'no pitch yet',
+                  {this.renderBigListItem('Quick Pitch', contact.get('pitch') || 'no pitch yet',
                   <Avatar
                       icon={<FontIcon className="material-icons">info_outline</FontIcon>}
                       color={Styles.Colors.grey600}
@@ -335,7 +335,7 @@ export default class ContactDetails extends React.Component {
                   />)}
                 </CardText>
                 <CardText>
-                  {this.renderBigListItem('Bonus Note', candidate.get('bonusNotes') || 'no bonus note yet',
+                  {this.renderBigListItem('Bonus Note', contact.get('bonusNotes') || 'no bonus note yet',
                   <Avatar
                       icon={<FontIcon className="material-icons">redeem</FontIcon>}
                       color={Styles.Colors.grey600}
@@ -344,7 +344,7 @@ export default class ContactDetails extends React.Component {
                   />)}
                 </CardText>
                 <CardText>
-                  {this.renderBigListItem('Availability', candidate.get('availability') || 'not set yet',
+                  {this.renderBigListItem('Availability', contact.get('availability') || 'not set yet',
                   <Avatar
                       icon={<FontIcon className="material-icons">insert_invitation</FontIcon>}
                       color={Styles.Colors.grey600}
@@ -353,7 +353,7 @@ export default class ContactDetails extends React.Component {
                   />)}
                 </CardText>
                 <CardText>
-                  {this.renderBigListItem('X Factors', candidate.get('xfactors') || 'not set yet',
+                  {this.renderBigListItem('X Factors', contact.get('xfactors') || 'not set yet',
                   <Avatar
                       icon={<FontIcon className="material-icons">trending_up</FontIcon>}
                       color={Styles.Colors.grey600}
