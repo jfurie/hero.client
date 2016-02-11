@@ -1,23 +1,32 @@
 import React from 'react';
 
+const DEFAULT_IMG = 'https://static.licdn.com/scds/common/u/img/themes/katy/ghosts/companies/ghost_company_40x40_v1.png';
+
 class CompanyAvatar extends React.Component {
 
   constructor(props){
     super(props);
 
     let url = props.url;
-    url = url.toLowerCase();
-    url = url.replace(/http(s?):\/\//, '');
-    url = url.replace(/\/$/, '');
 
-    this.state = {
-      imgSrc: `https://logo.clearbit.com/${url}`,
-    };
+    if (url) {
+      url = url.toLowerCase();
+      url = url.replace(/http(s?):\/\//, '');
+      url = url.replace(/\/$/, '');
+
+      this.state = {
+        imgSrc: `https://logo.clearbit.com/${url}`,
+      };
+    } else {
+      this.state = {
+        imgSrc: DEFAULT_IMG,
+      };
+    }
   }
 
   _handleError() {
     this.setState({
-      imgSrc: 'https://static.licdn.com/scds/common/u/img/themes/katy/ghosts/companies/ghost_company_40x40_v1.png',
+      imgSrc: DEFAULT_IMG,
     });
   }
 
@@ -39,7 +48,7 @@ class CompanyAvatar extends React.Component {
 
 CompanyAvatar.propTypes = {
   style: React.PropTypes.object,
-  url: React.PropTypes.string.isRequired,
+  url: React.PropTypes.string,
 };
 
 export default CompanyAvatar;
