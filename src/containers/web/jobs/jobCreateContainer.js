@@ -73,7 +73,7 @@ export default class JobCreateContainer extends React.Component {
     && this.props.job && this.props.job.get('saving') == true
     && !newProps.job.get('savingError')){
       if(this.props.onSave){
-        this.props.onSave(newProps.job.get('id'));
+        this.props.onSave(newProps.job.get('newId'));
       } else {
         let self = this;
         //let id = newProps.job.get('id');
@@ -82,7 +82,7 @@ export default class JobCreateContainer extends React.Component {
             self.props.history.replaceState(null, self.props.location.query.returnUrl);
           } else{
             // self.props.history.replaceState(null, `/jobs/${id}`);
-            self.props.history.replaceState(null, `/clients/${newProps.job.get('companyId')}`); // for now
+            self.props.history.replaceState(null, `/clients/${newProps.job.get('companyId')}/jobs/${newProps.job.get('newId')}`);
           }
         }, 500);
 

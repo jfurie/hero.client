@@ -127,6 +127,7 @@ export default function reducer(state = initialState, action = {}) {
     contactsMap[action.id] = {
       saving: false,
       savingError: '',
+      newId: action.result.id,
     };
 
     return {
@@ -171,6 +172,7 @@ export default function reducer(state = initialState, action = {}) {
       contactsMap[action.id] = {
         saving: false,
         savingError: '',
+        newId: action.result.id,
       };
 
       return {
@@ -220,6 +222,7 @@ export default function reducer(state = initialState, action = {}) {
     contactMap[action.id] = {
       saving: false,
       savingError: '',
+      newId: action.result.contactId,
     };
 
     let companyId = action.result.companyId;

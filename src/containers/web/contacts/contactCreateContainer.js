@@ -48,15 +48,13 @@ export default class ContactCreateContainer extends React.Component {
     && this.props.contact && this.props.contact.get('saving') == true
     && !newProps.contact.get('savingError')){
       if(this.props.onSave){
-        this.props.onSave(newProps.contact.get('id'));
+        this.props.onSave(newProps.contact.get('newId'));
       } else {
-
-        let id = newProps.contact.get('contactId') ? newProps.contact.get('contactId') : newProps.contact.get('id');
         setTimeout(function () {
           if(self.props.location.query.returnUrl){
             self.props.history.replaceState(null, self.props.location.query.returnUrl);
           } else{
-            self.props.history.replaceState(null, `/contacts/${id}`);
+            self.props.history.replaceState(null, `/contacts/${newProps.contact.get('newId')}`);
           }
         }, 500);
       }

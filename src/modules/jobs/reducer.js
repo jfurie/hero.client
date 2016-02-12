@@ -110,6 +110,7 @@ export default function reducer(state = initialState, action = {}) {
     jobMap[action.id] = {
       saving: false,
       savingError: '',
+      newId: action.result.id,
     };
 
     let companyId = action.result.companyId;
@@ -162,6 +163,7 @@ export default function reducer(state = initialState, action = {}) {
     jobMap[action.id] = {
       saving: false,
       savingError: '',
+      newId: action.result.id,
     };
 
     return {
