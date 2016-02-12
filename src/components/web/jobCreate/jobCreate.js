@@ -97,12 +97,8 @@ export default class JobCreate extends React.Component {
     let newJob = this.props.job;
     let value = (e.target.value === '') ? (null) : (e.target.value);
 
-    if (value) {
-      newJob = newJob.set(field,value);
-    } else {
-      newJob = newJob.delete(field);
-    }
-
+    newJob = newJob.set(field,value);
+    
     this.props.onJobChange(newJob);
   }
 
