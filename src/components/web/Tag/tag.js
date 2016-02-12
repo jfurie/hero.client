@@ -30,16 +30,35 @@ export default class Tag extends React.Component {
     let { value } = this.props;
     let color = null;
 
-    switch (this.props.color) {
-    case 'green':
-      color = Styles.Colors.green500;
-      break;
-    case 'gray':
-      color = 'rgba(0, 0, 0, 0.54)';
-      break;
-    default:
+    // text
+    switch (this.props.value) {
+    case 'HOT!':
       color = '#E91B62'; // default pink
       break;
+    case 'Vetted':
+      color = Styles.Colors.green500;
+      break;
+    case 'Active':
+      color = Styles.Colors.green500;
+      break;
+    default:
+      color = Styles.Colors.grey500;
+      break;
+    }
+
+    // color
+    if (this.props.color) {
+      switch (this.props.color) {
+      case 'green':
+        color = Styles.Colors.green500;
+        break;
+      case 'pink':
+        color = '#E91B62'; // default pink
+        break;
+      default:
+        color = Styles.Colors.grey500; // default
+        break;
+      }
     }
 
     let currentStyle = _.merge(style, {badge: {backgroundColor: color}});
