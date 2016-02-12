@@ -105,10 +105,12 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.CREATE_JOB_SUCCESS:{
     let jobMap = {};
-    action.result.saving = false;
-    action.result.savingError = '';
     jobMap[action.result.id] = action.result;
-    jobMap[action.id] = jobMap[action.result.id];
+
+    jobMap[action.id] = {
+      saving: false,
+      savingError: '',
+    };
 
     let companyId = action.result.companyId;
     let byCompanyMapNew = {};

@@ -86,11 +86,7 @@ export default class NoteCreate extends React.Component {
     let note = this.props.note;
     let value = (e.target.value === '') ? (null) : (e.target.value);
 
-    if (value) {
-      note = note.set(field,value);
-    } else {
-      note = note.delete(field);
-    }
+    note = note.set(field,value);
 
     this.props.onChange(note);
   }
@@ -143,7 +139,7 @@ export default class NoteCreate extends React.Component {
                           hintText="Your note"
                           multiLine
                           fullWidth
-                          value={this.props.note.get('noteText')}
+                          value={note.get('noteText') ? note.get('noteText') : ''}
                           onChange={(e) => this._handleChange.bind(this)(e, 'noteText')}
                       />
                     </div>
@@ -158,6 +154,7 @@ export default class NoteCreate extends React.Component {
     );
   }
   render(){
+    let {note} = this.props;
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     let contentHeight = clientHeight - 64;
     if(this.props.inline){
@@ -182,7 +179,7 @@ export default class NoteCreate extends React.Component {
               <Toolbar style={style.toolbar}>
                 <ToolbarGroup key={0} float="left">
                   <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
-                  <ToolbarTitle style={style.toolbarTitle} text="Create Note" />
+                  <ToolbarTitle style={style.toolbarTitle} text={!note.get('id') || note.get('id').indexOf('tmp') > -1 ? 'Create Note' : 'Edit Note'} />
                 </ToolbarGroup>
                 <ToolbarGroup key={1} float="right">
                   <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
