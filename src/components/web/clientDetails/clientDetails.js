@@ -200,12 +200,6 @@ export default class ClientDetails extends React.Component {
       onTouchTap: this._onTouchTapShare.bind(this),
     }];
 
-    // let topTags = ['HOT!',
-    // }, {
-    //   text: 'Lead',
-    //   color: 'green',
-    // }];
-
     let inline = true;
     if (company) {
 
