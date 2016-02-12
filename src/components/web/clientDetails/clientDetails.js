@@ -200,12 +200,11 @@ export default class ClientDetails extends React.Component {
       onTouchTap: this._onTouchTapShare.bind(this),
     }];
 
-    let topTags = [{
-      text: 'HOT!',
-    }, {
-      text: 'Lead',
-      color: 'green',
-    }];
+    // let topTags = ['HOT!',
+    // }, {
+    //   text: 'Lead',
+    //   color: 'green',
+    // }];
 
     let inline = true;
     if (company) {
@@ -274,7 +273,7 @@ export default class ClientDetails extends React.Component {
               floatActionOnTap={this._handleDirections.bind(this)}
               floatActionContent={<MapsDirections color={Styles.Colors.deepPurple500}/>}
               extraLeftLine={recruiterData}
-              topTags={topTags}
+              topTags={company.get('tags') || []}
           />
 
           <CustomTabsSwipe isLight isInline={inline} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>

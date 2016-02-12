@@ -142,13 +142,6 @@ export default class JobDetails extends React.Component {
         onTouchTap: this._onTouchTapShare.bind(this),
       }];
 
-      let topTags = [{
-        text: 'HOT!',
-      }, {
-        text: 'Interviewing',
-        color: 'green',
-      }];
-
       // company
       let company = job.get('company');
       let companyWebsite = null;
@@ -194,7 +187,7 @@ export default class JobDetails extends React.Component {
               avatar={<CompanyAvatar style={{width: '50px'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
-              topTags={topTags}
+              topTags={job.get('tags') || []}
           />
           <CustomTabsSwipe isLight isInline tabs={['Details', 'Desc', 'Applicants']}>
             <Card style={style.card}>

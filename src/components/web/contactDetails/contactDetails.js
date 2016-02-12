@@ -97,20 +97,32 @@ export default class ContactDetails extends React.Component {
     this.setState({confirmOpen: true});
   }
 
-  _onTouchTapCall() {
-    console.log('_onTouchTapCall');
+  _onTouchTapCall(disabled) {
+    if (!disabled) {
+      console.log('_onTouchTapCall');
+    } else {
+      console.log('no phone');
+    }
   }
 
   _onTouchTapSave() {
     console.log('_onTouchTapSave');
   }
 
-  _onTouchTapEmail() {
-    console.log('_onTouchTapEmail');
+  _onTouchTapEmail(disabled) {
+    if (!disabled) {
+      console.log('_onTouchTapEmail');
+    } else {
+      console.log('no email');
+    }
   }
 
-  _onTouchTapWeb() {
-    console.log('_onTouchTapWeb');
+  _onTouchTapWeb(disabled) {
+    if (!disabled) {
+      console.log('_onTouchTapWeb');
+    } else {
+      console.log('no web');
+    }
   }
 
   _onTouchTapShare() {
@@ -172,15 +184,10 @@ export default class ContactDetails extends React.Component {
 
     let common = this.getCommonDetailsCard(contact);
 
-    let topTags = [
-      {text: 'HOT!'},
-      {text: 'Vetted', color: 'green'},
-      {text: 'Active', color: 'green'},
-    ];
-
     let actions = [{
       materialIcon: 'phone',
       text: 'Call',
+      disabled: (contact.get('phone') ? (false) : (true)),
       onTouchTap: this._onTouchTapCall.bind(this),
     }, {
       materialIcon: 'star_rate',
@@ -189,6 +196,7 @@ export default class ContactDetails extends React.Component {
     }, {
       materialIcon: 'email',
       text: 'Email',
+      disabled: (contact.get('email') ? (false) : (true)),
       onTouchTap: this._onTouchTapEmail.bind(this),
     }, {
       materialIcon: 'share',
@@ -197,8 +205,9 @@ export default class ContactDetails extends React.Component {
     }];
 
     // salary
-    let salaryMin = '$[?]';
-    let salaryMax = '$[?]';
+    let salaryMin = null;
+    let salaryMax = null;
+    let extraLeftLine = null;
 
     if (contact.get('currentSalary')) {
       salaryMin = `$${~~(contact.get('currentSalary')) / 1000}k`;
@@ -206,6 +215,14 @@ export default class ContactDetails extends React.Component {
 
     if (contact.get('desiredSalary')) {
       salaryMax = `$${~~(contact.get('desiredSalary')) / 1000}k`;
+    }
+
+    if (salaryMin && salaryMax) {
+      extraLeftLine = `${salaryMin} - ${salaryMax}`;
+    } else if (salaryMin && !salaryMax) {
+      extraLeftLine = `- ${salaryMax}`;
+    } else if (!salaryMin && salaryMax) {
+      extraLeftLine = `${salaryMin} -`;
     }
 
     // workAuthorization
@@ -219,71 +236,40 @@ export default class ContactDetails extends React.Component {
           mainColor={Styles.Colors.indigo500}
           actions={actions}
           floatActionOnTap={this._handleTapOnChat.bind(this)}
-          floatActionContent={<div><p style={{color: `${Styles.Colors.indigo500}`, fontSize: '20px', fontWeight: '500'}}>12</p></div>}
-          topTags={topTags}
-          extraLeftLine={`${salaryMin} - ${salaryMax}`}
+          floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
+          topTags={contact.get('tags') || []}
+          extraLeftLine={extraLeftLine}
           extraRightLine={workAuthorization}
       />
     );
   }
 
-  renderContactDetailsCard(contact) {
-
-    let common = this.getCommonDetailsCard(contact);
-
-    let actions = [{
-      materialIcon: 'phone',
-      text: 'Call',
-      onTouchTap: this._onTouchTapCall.bind(this),
-    }, {
-      materialIcon: 'email',
-      text: 'Email',
-      onTouchTap: this._onTouchTapEmail.bind(this),
-    }, {
-      materialIcon: 'star_rate',
-      text: 'Save',
-      onTouchTap: this._onTouchTapSave.bind(this),
-    }, {
-      materialIcon: 'public',
-      text: 'Web',
-      onTouchTap: this._onTouchTapWeb.bind(this),
-    }];
-
+  renderBigListItem(title, content, iconName){
     return (
-      <DetailsCard
-          title={common.displayName}
-          subtitle={common.city}
-          cover={common.cover}
-          mainColor={Styles.Colors.indigo500}
-          actions={actions}
-          floatActionOnTap={this._handleTapOnChat.bind(this)}
-          floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
-      />
+      <CardText>
+        <div style={{display:'flex'}}>
+          <div style={{flex:'0 0 56px'}}>
+            <Avatar
+                icon={<FontIcon className="material-icons">{iconName}</FontIcon>}
+                color={Styles.Colors.grey600}
+                style={style.avatar}
+                backgroundColor={Styles.Colors.white}
+            />
+          </div>
+          <div style={{display:'inline-block'}}>
+            <div style={style.title}>{title}</div>
+            <div style={style.content}>{content}</div>
+          </div>
+        </div>
+      </CardText>
     );
   }
 
-  renderBigListItem(title, content, avatar){
-    return (
-      <div style={{display:'flex'}}>
-        <div style={{flex:'0 0 56px'}}>
-          {avatar}
-        </div>
-        <div style={{display:'inline-block'}}>
-          <div style={style.title}>{title}</div>
-          <div style={style.content}>{content}</div>
-        </div>
-      </div>
-    );
-  }
-
-  renderContent(contact, candidate) {
+  renderContent(contact) {
 
     let email = null;
     let phone = null;
     let addressLine = null;
-    // let city = null;
-    // let postalCode = null;
-    // let countrySubDivisionCode = null;
     let source = null;
 
     if (contact) {
@@ -314,53 +300,67 @@ export default class ContactDetails extends React.Component {
         }
       }
 
+      // startingDate
+      let startingDate = contact.get('startDate') || null;
+      if (startingDate) {
+        let d = new Date(startingDate);
+        startingDate = d.toDateString();
+      }
+
+      // quickPitch
+      let quickPitch = contact.get('pitch') || null;
+      let summary = contact.get('summary') || null;
+      let description = '';
+
+      if (quickPitch) {
+        description += `${quickPitch} `;
+      }
+
+      if (summary) {
+        description += summary;
+      }
+
       return (
 
         <div>
-          {(this.state.isCandidateContext) ? (
-            this.renderCandidateDetailsCard(contact, candidate)
-          ) : (
-            this.renderContactDetailsCard(contact)
-          )}
+          {this.renderCandidateDetailsCard(contact)}
           <CustomTabsSwipe isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
             <div>
               <Card style={style.card}>
-                <CardText>
-                  {this.renderBigListItem('Quick Pitch', contact.get('pitch') || 'no pitch yet',
-                  <Avatar
-                      icon={<FontIcon className="material-icons">info_outline</FontIcon>}
-                      color={Styles.Colors.grey600}
-                      style={style.avatar}
-                      backgroundColor={Styles.Colors.white}
-                  />)}
-                </CardText>
-                <CardText>
-                  {this.renderBigListItem('Bonus Note', contact.get('bonusNotes') || 'no bonus note yet',
-                  <Avatar
-                      icon={<FontIcon className="material-icons">redeem</FontIcon>}
-                      color={Styles.Colors.grey600}
-                      style={style.avatar}
-                      backgroundColor={Styles.Colors.white}
-                  />)}
-                </CardText>
-                <CardText>
-                  {this.renderBigListItem('Availability', contact.get('availability') || 'not set yet',
-                  <Avatar
-                      icon={<FontIcon className="material-icons">insert_invitation</FontIcon>}
-                      color={Styles.Colors.grey600}
-                      style={style.avatar}
-                      backgroundColor={Styles.Colors.white}
-                  />)}
-                </CardText>
-                <CardText>
-                  {this.renderBigListItem('X Factors', contact.get('xfactors') || 'not set yet',
-                  <Avatar
-                      icon={<FontIcon className="material-icons">trending_up</FontIcon>}
-                      color={Styles.Colors.grey600}
-                      style={style.avatar}
-                      backgroundColor={Styles.Colors.white}
-                  />)}
-                </CardText>
+
+                {(description.length > 0) ? (
+                  this.renderBigListItem('Quick pitch', description, 'info_outline')
+                ) : (null)}
+
+                {(contact.get('bonusNotes')) ? (
+                  this.renderBigListItem('Bonus note', contact.get('bonusNotes'), 'redeem')
+                ) : (null)}
+
+                {(contact.get('rfl')) ? (
+                  this.renderBigListItem('Reason for leaving', contact.get('rfl'), 'swap_horiz')
+                ) : (null)}
+
+                {(contact.get('jobsAppliedFor')) ? (
+                  this.renderBigListItem('Job(s) applied for', contact.get('jobsAppliedFor'), 'system_update_alt')
+                ) : (null)}
+
+                {(contact.get('availability')) ? (
+                  this.renderBigListItem('Availability', contact.get('availability'), 'insert_invitation')
+                ) : (null)}
+
+                {(startingDate) ? (
+                  this.renderBigListItem('Starting date', startingDate, 'insert_invitation')
+                ) : (null)}
+
+                {(contact.get('targetLocations')) ? (
+                  this.renderBigListItem('Target location(s)', contact.get('targetLocations'), 'place')
+                ) : (null)}
+
+                {(contact.get('xfactors')) ? (
+                  this.renderBigListItem('X Factors', contact.get('xfactors'), 'trending_up')
+                ) : (null)}
+
+
               </Card>
               <List style={{position: 'relative', top: '3px'}}>
                 <div>
@@ -436,7 +436,7 @@ export default class ContactDetails extends React.Component {
     let invited = false;
     let email = null;
     let contact = null;
-    let candidate = null;
+    //let candidate = null;
     let contextRessourceName = 'Contact';
 
     //console.log('render isCandidateContext', this.state.isCandidateContext, 'isContactContext', this.state.isContactContext);
@@ -445,7 +445,7 @@ export default class ContactDetails extends React.Component {
       contact = this.props.contact;
     } else if (isCandidateContext && !isContactContext) { /* candidate context */
       contact = this.props.candidate.get('contact');
-      candidate = this.props.candidate;
+      //candidate = this.props.candidate;
       contextRessourceName = 'Candidate';
     }
 
@@ -468,7 +468,7 @@ export default class ContactDetails extends React.Component {
         }
         />
         <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
-          {this.renderContent(contact, candidate)}
+          {this.renderContent(contact)}
         </div>
       </div>
     );
