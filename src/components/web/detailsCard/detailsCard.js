@@ -105,7 +105,7 @@ class DetailsCard extends React.Component {
 
   _onTouchTapAction(action) {
     if (action.onTouchTap) {
-      action.onTouchTap();
+      action.onTouchTap(action.disabled);
     }
   }
 
@@ -139,7 +139,7 @@ class DetailsCard extends React.Component {
               <div className="box">
                 {topTags.map((tag, key) => {
                   return (
-                    <Tag value={tag.text} color={tag.color} key={key}/>
+                    <Tag value={tag} key={key}/>
                   );
                 })}
               </div>
@@ -196,11 +196,19 @@ class DetailsCard extends React.Component {
 
         <CardActions className="row center-xs">
           {actions.map((action, key) => {
+
+            let disabled = false;
+            if (action.disabled) {
+              disabled = true;
+            }
+
             return (
               <div className="col-xs" style={style.actionBox} key={key}>
                 <div className="box" onTouchTap={this._onTouchTapAction.bind(this, action)}>
-                  <FlatButton style={style.actionButton}>
-                    <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
+                  <FlatButton style={style.actionButton} disabled={disabled}>
+                    <div style={(disabled) ? ({opacity: '0.25'}) : ({})}>
+                      <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
+                    </div>
                     <span>{action.text}</span>
                   </FlatButton>
                 </div>
