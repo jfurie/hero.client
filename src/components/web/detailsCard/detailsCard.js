@@ -14,7 +14,7 @@ let style = {
     position: 'relative',
   },
   cardTitleComponent: {
-    padding: '11px 16px 20px',
+    padding: '11px 16px 11px',
     position: 'relative',
   },
   title: {
@@ -42,8 +42,8 @@ let style = {
   extraCenterLine: {
     color: Styles.Colors.white,
   },
-  extraLineCol: {
-    padding: '0px',
+  extraLineLeftCol: {
+    paddingLeft: '3px',
   },
   extraLineRightCol: {
     padding: '0px',
@@ -60,7 +60,7 @@ let style = {
     zIndex: '50',
   },
   titlesub: {
-    paddingLeft: '0px',
+    paddingLeft: '3px',
   },
   avatar: {
     position: 'absolute',
@@ -87,7 +87,7 @@ let style = {
     overflow: 'hidden',
   },
   topTags: {
-    paddingLeft: '0px',
+    paddingLeft: '3px',
   },
 };
 
@@ -105,7 +105,7 @@ class DetailsCard extends React.Component {
 
   _onTouchTapAction(action) {
     if (action.onTouchTap) {
-      action.onTouchTap();
+      action.onTouchTap(action.disabled);
     }
   }
 
@@ -120,12 +120,6 @@ class DetailsCard extends React.Component {
     } else {
       style.cardTitleComponent.backgroundColor = Styles.Colors.indigo500; // default
       style.floatActionButton.color = Styles.Colors.indigo500; // default
-    }
-
-    if (this.props.avatar) {
-      style.titlesub.paddingLeft = '1px';
-    } else {
-      style.titlesub.paddingLeft = '11px';
     }
 
     return (
@@ -145,7 +139,7 @@ class DetailsCard extends React.Component {
               <div className="box">
                 {topTags.map((tag, key) => {
                   return (
-                    <Tag value={tag.text} color={tag.color} key={key}/>
+                    <Tag value={tag} key={key}/>
                   );
                 })}
               </div>
@@ -173,7 +167,7 @@ class DetailsCard extends React.Component {
           {(this.props.extraLeftLine || this.props.extraRightLine) ? (
             <div className="row" style={style.extraLine}>
               {(this.props.extraLeftLine) ? (
-                <div className="col-xs" style={style.extraLineCol}>
+                <div className="col-xs" style={style.extraLineLeftCol}>
                   <div className="box">
                     <span style={style.extraLeftLine}>{this.props.extraLeftLine}</span>
                   </div>
@@ -202,11 +196,19 @@ class DetailsCard extends React.Component {
 
         <CardActions className="row center-xs">
           {actions.map((action, key) => {
+
+            let disabled = false;
+            if (action.disabled) {
+              disabled = true;
+            }
+
             return (
               <div className="col-xs" style={style.actionBox} key={key}>
                 <div className="box" onTouchTap={this._onTouchTapAction.bind(this, action)}>
-                  <FlatButton style={style.actionButton}>
-                    <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
+                  <FlatButton style={style.actionButton} disabled={disabled}>
+                    <div style={(disabled) ? ({opacity: '0.25'}) : ({})}>
+                      <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
+                    </div>
                     <span>{action.text}</span>
                   </FlatButton>
                 </div>

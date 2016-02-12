@@ -5,10 +5,10 @@ import md5 from 'md5';
 
 import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe } from '../../../components/web';
 import {
-   IconButton, List, ListItem, FontIcon,
-  Divider, Styles, IconMenu, MenuItem,
+   IconButton, List, ListItem, FontIcon, Avatar,
+  Divider, Styles, IconMenu, MenuItem, CardText, Card,
 } from 'material-ui';
 
 function defineContext(props) {
@@ -25,6 +25,25 @@ function defineContext(props) {
 
   return context;
 }
+
+const style = {
+  title:{
+    color:'rgba(0, 0, 0, 0.87)',
+    fontSize:'15px',
+    fontWeight:'500',
+  },
+  content:{
+    color:'rgba(0, 0, 0, 0.54)',
+    fontSize:'14px',
+    fontWeight:'500',
+  },
+  card: {
+    paddingTop: '4px',
+  },
+  avatar: {
+    margin: '8px 17px 8px 0px',
+  },
+};
 
 @connect(() => (
 {}), {pushState})
@@ -78,20 +97,32 @@ export default class ContactDetails extends React.Component {
     this.setState({confirmOpen: true});
   }
 
-  _onTouchTapCall() {
-    console.log('_onTouchTapCall');
+  _onTouchTapCall(disabled) {
+    if (!disabled) {
+      console.log('_onTouchTapCall');
+    } else {
+      console.log('no phone');
+    }
   }
 
   _onTouchTapSave() {
     console.log('_onTouchTapSave');
   }
 
-  _onTouchTapEmail() {
-    console.log('_onTouchTapEmail');
+  _onTouchTapEmail(disabled) {
+    if (!disabled) {
+      console.log('_onTouchTapEmail');
+    } else {
+      console.log('no email');
+    }
   }
 
-  _onTouchTapWeb() {
-    console.log('_onTouchTapWeb');
+  _onTouchTapWeb(disabled) {
+    if (!disabled) {
+      console.log('_onTouchTapWeb');
+    } else {
+      console.log('no web');
+    }
   }
 
   _onTouchTapShare() {
@@ -110,188 +141,283 @@ export default class ContactDetails extends React.Component {
   //   console.log('_handleTapOnApplications');
   // }
 
-  renderContent(contact, candidate) {
+  getCommonDetailsCard(contact) {
 
-    //let picture = null;
-    let email = null;
-    let phone = null;
-    let addressLine = null;
+    // build cover from gravatar
+    let email = contact.get('email') || null;
+    let cover = null;
+
+    if (email) {
+      cover = md5(email);
+    } else {
+      cover = '00000000000000000000000000000000';
+    }
+
+    // location stuff
+    let address = contact.get('_address');
     let city = null;
-    let postalCode = null;
-    //let countryCode = null;
-    let countrySubDivisionCode = null;
-    let source = null;
-    let displayName = null;
-    //let invited = false;
+
+    if (address) {
+      city = address.get('city') || null;
+      let countrySubDivisionCode = address.get('countrySubDivisionCode') || null;
+
+      if (city && countrySubDivisionCode) {
+        city += `, ${countrySubDivisionCode}`;
+      }
+    }
+
+    // displayName
+    let displayName = contact.get('displayName') || null;
+
+    return {
+      cover: `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      city,
+      displayName,
+    };
+  }
+
+  renderCandidateDetailsCard(contact, candidate) {
 
     if (candidate) {
       console.log(candidate.toJS());
     }
 
+    let common = this.getCommonDetailsCard(contact);
+
+    let actions = [{
+      materialIcon: 'phone',
+      text: 'Call',
+      disabled: (contact.get('phone') ? (false) : (true)),
+      onTouchTap: this._onTouchTapCall.bind(this),
+    }, {
+      materialIcon: 'star_rate',
+      text: 'Save',
+      onTouchTap: this._onTouchTapSave.bind(this),
+    }, {
+      materialIcon: 'email',
+      text: 'Email',
+      disabled: (contact.get('email') ? (false) : (true)),
+      onTouchTap: this._onTouchTapEmail.bind(this),
+    }, {
+      materialIcon: 'share',
+      text: 'Share',
+      onTouchTap: this._onTouchTapShare.bind(this),
+    }];
+
+    // salary
+    let salaryMin = null;
+    let salaryMax = null;
+    let extraLeftLine = null;
+
+    if (contact.get('currentSalary')) {
+      salaryMin = `$${~~(contact.get('currentSalary')) / 1000}k`;
+    }
+
+    if (contact.get('desiredSalary')) {
+      salaryMax = `$${~~(contact.get('desiredSalary')) / 1000}k`;
+    }
+
+    if (salaryMin && salaryMax) {
+      extraLeftLine = `${salaryMin} - ${salaryMax}`;
+    } else if (salaryMin && !salaryMax) {
+      extraLeftLine = `- ${salaryMax}`;
+    } else if (!salaryMin && salaryMax) {
+      extraLeftLine = `${salaryMin} -`;
+    }
+
+    // workAuthorization
+    let workAuthorization = contact.get('workAuthorization') || null;
+
+    return (
+      <DetailsCard
+          title={common.displayName}
+          subtitle={common.city}
+          cover={common.cover}
+          mainColor={Styles.Colors.indigo500}
+          actions={actions}
+          floatActionOnTap={this._handleTapOnChat.bind(this)}
+          floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
+          topTags={contact.get('tags') || []}
+          extraLeftLine={extraLeftLine}
+          extraRightLine={workAuthorization}
+      />
+    );
+  }
+
+  renderBigListItem(title, content, iconName){
+    return (
+      <CardText>
+        <div style={{display:'flex'}}>
+          <div style={{flex:'0 0 56px'}}>
+            <Avatar
+                icon={<FontIcon className="material-icons">{iconName}</FontIcon>}
+                color={Styles.Colors.grey600}
+                style={style.avatar}
+                backgroundColor={Styles.Colors.white}
+            />
+          </div>
+          <div style={{display:'inline-block'}}>
+            <div style={style.title}>{title}</div>
+            <div style={style.content}>{content}</div>
+          </div>
+        </div>
+      </CardText>
+    );
+  }
+
+  renderContent(contact) {
+
+    let email = null;
+    let phone = null;
+    let addressLine = null;
+    let source = null;
+
     if (contact) {
-      displayName = contact.get('displayName') || null;
       email = contact.get('email') || null;
       phone = contact.get('phone') || null;
-      //invited = contact.get('isInvited');
 
       if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
         source = contact.get('sourceInfo').get('referrer');
       }
 
       // location stuff
-      let address = contact.get('_address');
+      let location = contact.get('_address');
 
-      if (address) {
-        addressLine = address.get('addressLine') || null;
-        city = address.get('city') || null;
-        postalCode = address.get('postalCode') || null;
-        countrySubDivisionCode = address.get('countrySubDivisionCode') || null;
+      if (location) {
+        let address = location.get('addressLine') || '';
+        let city = location.get('city') || null;
+        let countrySubDivisionCode = location.get('countrySubDivisionCode') || null;
 
         if (city && countrySubDivisionCode) {
           city += `, ${countrySubDivisionCode}`;
         }
 
-        if (city && postalCode) {
-          city += ` ${postalCode}`;
+        addressLine = address;
+        if (addressLine.length) {
+          addressLine += `. ${city}`;
+        } else {
+          addressLine = city;
         }
       }
 
-      // build cover from gravatar
-      if (email) {
-        cover = md5(email);
-      } else {
-        cover = '00000000000000000000000000000000';
+      // startingDate
+      let startingDate = contact.get('startDate') || null;
+      if (startingDate) {
+        let d = new Date(startingDate);
+        startingDate = d.toDateString();
       }
 
-      let cover = `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`;
+      // quickPitch
+      let quickPitch = contact.get('pitch') || null;
+      let summary = contact.get('summary') || null;
+      let description = '';
 
-      // define action for the details card
-      let actions = [];
-
-      if (this.state.isCandidateContext) {
-        actions = [{
-          materialIcon: 'phone',
-          text: 'Call',
-          onTouchTap: this._onTouchTapCall.bind(this),
-        }, {
-          materialIcon: 'star_rate',
-          text: 'Save',
-          onTouchTap: this._onTouchTapSave.bind(this),
-        }, {
-          materialIcon: 'email',
-          text: 'Email',
-          onTouchTap: this._onTouchTapEmail.bind(this),
-        }, {
-          materialIcon: 'share',
-          text: 'Share',
-          onTouchTap: this._onTouchTapShare.bind(this),
-        }];
-      } else {
-        actions = [{
-          materialIcon: 'phone',
-          text: 'Call',
-          onTouchTap: this._onTouchTapCall.bind(this),
-        }, {
-          materialIcon: 'email',
-          text: 'Email',
-          onTouchTap: this._onTouchTapEmail.bind(this),
-        }, {
-          materialIcon: 'star_rate',
-          text: 'Save',
-          onTouchTap: this._onTouchTapSave.bind(this),
-        }, {
-          materialIcon: 'public',
-          text: 'Web',
-          onTouchTap: this._onTouchTapWeb.bind(this),
-        }];
+      if (quickPitch) {
+        description += `${quickPitch} `;
       }
 
-      // define topTags
-      let topTags = [];
-
-      if (this.state.isCandidateContext) {
-        topTags = [
-          {text: 'HOT!'},
-          {text: 'Vetted', color: 'green'},
-          {text: 'Active', color: 'green'},
-        ];
+      if (summary) {
+        description += summary;
       }
 
       return (
 
         <div>
-          <DetailsCard
-              title={displayName}
-              subtitle={city}
-              cover={cover}
-              mainColor={Styles.Colors.indigo500}
-              actions={actions}
-              floatActionOnTap={this._handleTapOnChat.bind(this)}
-              floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
-              topTags={topTags}
-          />
-          <List style={{position: 'relative', top: '3px'}}>
+          {this.renderCandidateDetailsCard(contact)}
+          <CustomTabsSwipe isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
             <div>
+              <Card style={style.card}>
 
-              {(email) ? (
-                <ListItem
-                    leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
-                    primaryText={email}
-                    secondaryText={<p>email</p>}
-                    secondaryTextLines={1}
-                />
-              ) : (null)}
+                {(description.length > 0) ? (
+                  this.renderBigListItem('Quick pitch', description, 'info_outline')
+                ) : (null)}
 
-              {(phone) ? (
+                {(contact.get('bonusNotes')) ? (
+                  this.renderBigListItem('Bonus note', contact.get('bonusNotes'), 'redeem')
+                ) : (null)}
+
+                {(contact.get('rfl')) ? (
+                  this.renderBigListItem('Reason for leaving', contact.get('rfl'), 'swap_horiz')
+                ) : (null)}
+
+                {(contact.get('jobsAppliedFor')) ? (
+                  this.renderBigListItem('Job(s) applied for', contact.get('jobsAppliedFor'), 'system_update_alt')
+                ) : (null)}
+
+                {(contact.get('availability')) ? (
+                  this.renderBigListItem('Availability', contact.get('availability'), 'insert_invitation')
+                ) : (null)}
+
+                {(startingDate) ? (
+                  this.renderBigListItem('Starting date', startingDate, 'insert_invitation')
+                ) : (null)}
+
+                {(contact.get('targetLocations')) ? (
+                  this.renderBigListItem('Target location(s)', contact.get('targetLocations'), 'place')
+                ) : (null)}
+
+                {(contact.get('xfactors')) ? (
+                  this.renderBigListItem('X Factors', contact.get('xfactors'), 'trending_up')
+                ) : (null)}
+
+
+              </Card>
+              <List style={{position: 'relative', top: '3px'}}>
                 <div>
-                  <Divider inset />
-                  <ListItem
-                      leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                      primaryText={phone}
-                      secondaryText={<p>phone</p>}
-                      secondaryTextLines={1}
-                  />
-                </div>
-              ) : (null)}
 
-              {(addressLine) ? (
-                <div>
-                  <Divider inset />
                   <ListItem
                       leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                      primaryText={addressLine}
-                      secondaryText={<p>address</p>}
+                      primaryText={addressLine || 'Somewhere, USA'}
+                      secondaryText={<p>location</p>}
                       secondaryTextLines={1}
                   />
-                </div>
-              ) : (null)}
 
-              {(city) ? (
-                <div>
-                  <Divider inset />
-                  <ListItem
-                      leftIcon={<FontIcon className="material-icons">business</FontIcon>}
-                      primaryText={city}
-                      secondaryText={<p>city</p>}
-                      secondaryTextLines={1}
-                  />
-                </div>
-              ) : (null)}
+                  {(email) ? (
+                    <div>
+                      <Divider inset />
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
+                          primaryText={email}
+                          secondaryText={<p>email</p>}
+                          secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
 
-              {(source) ? (
-                <div>
-                  <Divider inset />
-                  <ListItem
-                      leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
-                      primaryText={source}
-                      secondaryText={<p>source</p>}
-                      secondaryTextLines={1}
-                  />
-                </div>
-              ) : (null)}
+                  {(phone) ? (
+                    <div>
+                      <Divider inset />
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                          primaryText={phone}
+                          secondaryText={<p>phone</p>}
+                          secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
 
+                  {(source) ? (
+                    <div>
+                      <Divider inset />
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                          primaryText={source}
+                          secondaryText={<p>source</p>}
+                          secondaryTextLines={1}
+                      />
+                    </div>
+                  ) : (null)}
+
+                </div>
+              </List>
             </div>
-          </List>
+            <div>
+              <p>jobs</p>
+            </div>
+            <div>
+              <p>notes</p>
+            </div>
+          </CustomTabsSwipe>
         </div>
       );
 
@@ -310,20 +436,20 @@ export default class ContactDetails extends React.Component {
     let invited = false;
     let email = null;
     let contact = null;
-    let candidate = null;
+    //let candidate = null;
     let contextRessourceName = 'Contact';
 
-    console.log('render isCandidateContext', this.state.isCandidateContext, 'isContactContext', this.state.isContactContext);
+    //console.log('render isCandidateContext', this.state.isCandidateContext, 'isContactContext', this.state.isContactContext);
 
     if (isContactContext && !isCandidateContext) { /* contact context */
       contact = this.props.contact;
     } else if (isCandidateContext && !isContactContext) { /* candidate context */
       contact = this.props.candidate.get('contact');
-      candidate = this.props.candidate;
+      //candidate = this.props.candidate;
       contextRessourceName = 'Candidate';
     }
 
-    console.log(contact, candidate, this.props);
+    //console.log(contact, candidate, this.props);
 
     if (contact) {
       invited = contact.get('isInvited');
@@ -342,7 +468,7 @@ export default class ContactDetails extends React.Component {
         }
         />
         <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
-          {this.renderContent(contact, candidate)}
+          {this.renderContent(contact)}
         </div>
       </div>
     );
