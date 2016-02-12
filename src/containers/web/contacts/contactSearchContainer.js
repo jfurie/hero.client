@@ -130,6 +130,8 @@ class ContactSearchContainer extends React.Component {
     } else {
       let id = contact.id ? contact.id : 'tmp_' + this._guid();
       contact.id = id;
+      contact.companyId = this.props.params.companyId || contact.companyId;
+
       this.props.createTempContact(contact);
       let self = this;
 
@@ -137,14 +139,13 @@ class ContactSearchContainer extends React.Component {
         if(self.props.params.jobId){
           if(contact.id.indexOf('tmp') > -1){
             //this is a temp. need to create
-            self.props.history.replaceState(null,`/clients/${self.props.params.companyId}/jobs/${self.props.params.jobId}/candidates/${id}/create`);
+            self.props.history.replaceState(null,`/clients/${contact.companyId}/jobs/${self.props.params.jobId}/candidates/${id}/create`);
           } else {
             self.props.createCandidate(contact, self.props.params.jobId);
           }
         }
         else if(self.props.params.companyId){
-          let companyId = self.props.params.companyId;
-          self.props.history.replaceState(null,`/clients/${companyId}/contacts/${id}/create`);
+          self.props.history.replaceState(null,`/clients/${contact.companyId}/contacts/${id}/create`);
         } else {
           self.props.history.replaceState(null,`/contacts/${id}/create`);
         }

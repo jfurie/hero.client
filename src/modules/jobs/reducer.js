@@ -105,10 +105,13 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.CREATE_JOB_SUCCESS:{
     let jobMap = {};
-    action.result.saving = false;
-    action.result.savingError = '';
     jobMap[action.result.id] = action.result;
-    jobMap[action.id] = jobMap[action.result.id];
+
+    jobMap[action.id] = {
+      saving: false,
+      savingError: '',
+      newId: action.result.id,
+    };
 
     let companyId = action.result.companyId;
     let byCompanyMapNew = {};
@@ -155,10 +158,13 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.EDIT_JOB_SUCCESS:{
     let jobMap = {};
-    action.result.saving = false;
-    action.result.savingError = '';
     jobMap[action.result.id] = action.result;
-    jobMap[action.id] = jobMap[action.result.id];
+
+    jobMap[action.id] = {
+      saving: false,
+      savingError: '',
+      newId: action.result.id,
+    };
 
     return {
       ...state,

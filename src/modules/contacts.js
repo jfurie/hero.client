@@ -90,9 +90,10 @@ export default function reducer(state = initialState, action = {}) {
   case GET_CONTACT_CREATED_SUCCESS: {
     let contactsMap = {};
     contactsMap[action.result.id] = action.result;
-    contactsMap[action.result.id].saving = false;
-    contactsMap[action.result.id].savingError = '';
-    contactsMap[action.id] = contactsMap[action.result.id];
+    contactsMap[action.id] = {
+      saving: false,
+      savingError: '',
+    };
     return {
       ...state,
       saving:false,
@@ -122,9 +123,13 @@ export default function reducer(state = initialState, action = {}) {
   case CREATE_CONTACT_SUCCESS: {
     let contactsMap = {};
     contactsMap[action.result.id] = action.result;
-    contactsMap[action.result.id].saving = false;
-    contactsMap[action.result.id].savingError = '';
-    contactsMap[action.id] = contactsMap[action.result.id];
+
+    contactsMap[action.id] = {
+      saving: false,
+      savingError: '',
+      newId: action.result.id,
+    };
+
     return {
       ...state,
       saving:false,
@@ -163,9 +168,13 @@ export default function reducer(state = initialState, action = {}) {
     {
       let contactsMap = {};
       contactsMap[action.result.id] = action.result;
-      contactsMap[action.result.id].saving = false;
-      contactsMap[action.result.id].savingError = '';
-      contactsMap[action.id] = contactsMap[action.result.id];
+
+      contactsMap[action.id] = {
+        saving: false,
+        savingError: '',
+        newId: action.result.id,
+      };
+
       return {
         ...state,
         saving:false,
@@ -207,23 +216,27 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case CREATE_COMPANY_CONTACT_SUCCESS: {
-    let byCompanyMap = {};
-    let allCompanyContacts = state.byCompanyId.get(action.result.companyId) ? state.byCompanyId.get(action.result.companyId).toJS() : [];
-    allCompanyContacts.push(action.result.contactId);
-    byCompanyMap[action.result.companyId] = allCompanyContacts;
+    let contactMap = {};
+    contactMap[action.result.id] = action.result;
 
-    let contactsMap = {};
-    contactsMap[action.result.contactId] = action.result;
-    contactsMap[action.result.contactId].saving = false;
-    contactsMap[action.result.contactId].savingError = '';
-    contactsMap[action.id] = contactsMap[action.result.contactId];
+    contactMap[action.id] = {
+      saving: false,
+      savingError: '',
+      newId: action.result.contactId,
+    };
+
+    let companyId = action.result.companyId;
+    let byCompanyMapNew = {};
+
+    byCompanyMapNew[companyId] = state.byCompanyId.get(companyId) || new Immutable.List();
+    byCompanyMapNew[companyId] = byCompanyMapNew[companyId].push(action.result.id);
 
     return {
       ...state,
       saving:false,
       savingError:'',
-      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
-      list:state.list.mergeDeep(contactsMap),
+      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMapNew),
+      list:state.list.mergeDeep(contactMap),
     };
   }
   case CREATE_COMPANY_CONTACT_FAIL: {

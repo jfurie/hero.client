@@ -176,7 +176,7 @@ export function createCandidate(candidateData, jobId) {
     dispatch({
       types: [CREATE_CANDIDATE, CREATE_CANDIDATE_SUCCESS, CREATE_CANDIDATE_FAIL],
       promise: (client, auth) => new Promise(function(resolve, reject){
-        let createCandidatePromise = client.api.put('/candidates', {
+        let createCandidatePromise = client.api.post('/candidates', {
           authToken: auth.authToken,
           data: {
             contact: candidateData,
@@ -239,7 +239,7 @@ export function getAllUserCandidates(userId) {
 export function getAllAccountCandidates(accountId) {
   return {
     types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
-    promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"accountId": "${accountId}"}, "include": ["contact","company"]}`, {
+    promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"accountId": "${accountId}"}, "include": "contact"}`, {
       authToken: auth.authToken,
     }),
   };

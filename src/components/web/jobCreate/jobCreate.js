@@ -97,11 +97,7 @@ export default class JobCreate extends React.Component {
     let newJob = this.props.job;
     let value = (e.target.value === '') ? (null) : (e.target.value);
 
-    if (value) {
-      newJob = newJob.set(field,value);
-    } else {
-      newJob = newJob.delete(field);
-    }
+    newJob = newJob.set(field,value);
 
     this.props.onJobChange(newJob);
   }
@@ -460,6 +456,8 @@ export default class JobCreate extends React.Component {
     );
   }
   render(){
+    let {job} = this.props;
+
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     let contentHeight = clientHeight - 64;
     if(this.props.inline){
@@ -468,7 +466,7 @@ export default class JobCreate extends React.Component {
         <Toolbar style={style.toolbarInline}>
           <ToolbarGroup key={0} float="left">
             <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
-            <ToolbarTitle style={style.toolbarTitle} text="Create Job" />
+            <ToolbarTitle style={style.toolbarTitle} text={!job.get('id') || job.get('id').indexOf('tmp') > -1 ? 'Create Job' : 'Edit Job'} />
           </ToolbarGroup>
           <ToolbarGroup key={1} float="right">
             <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
@@ -496,7 +494,7 @@ export default class JobCreate extends React.Component {
               <Toolbar style={style.toolbar}>
                 <ToolbarGroup key={0} float="left">
                   <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
-                  <ToolbarTitle style={style.toolbarTitle} text="Create Job" />
+                  <ToolbarTitle style={style.toolbarTitle} text={!job.get('id') || job.get('id').indexOf('tmp') > -1 ? 'Create Job' : 'Edit Job'} />
                 </ToolbarGroup>
                 <ToolbarGroup key={1} float="right">
                   <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
