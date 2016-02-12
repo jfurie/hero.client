@@ -6,6 +6,7 @@ import { pushState } from 'redux-router';
 import { createContact, getOneContact, getContactsByCompany, editContact } from '../../../modules/contacts';
 import {createCompanyContact} from '../../../modules/companyContacts';
 import { ContactCreate } from '../../../components/web';
+import { getMyCompanies } from '../../../modules/companies/index';
 
 let getData = (state, props) => {
   let contact = null;
@@ -16,7 +17,7 @@ let getData = (state, props) => {
   }
 
   if (props.params.companyId) {
-    company = state.companies.myCompanyIds.get(props.params.companyId);
+    company = state.companies.list.get(props.params.companyId);
   }
 
   return {
@@ -26,7 +27,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData, { pushState, createContact, createCompanyContact, getOneContact, getContactsByCompany, editContact })
+@connect(getData, { pushState, getMyCompanies, createContact, createCompanyContact, getOneContact, getContactsByCompany, editContact })
 export default class ContactCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -37,7 +38,7 @@ export default class ContactCreateContainer extends React.Component {
   }
 
   componentDidMount() {
-
+    this.props.getMyCompanies();
   }
 
   componentWillReceiveProps(newProps){

@@ -27,6 +27,8 @@ export function createCompanyContact(companyId, contact, contactId) {
 
   return (dispatch) => {
     dispatch({
+      id,
+      contact,
       types: [CREATE_COMPANY_CONTACT, CREATE_COMPANY_CONTACT_SUCCESS, CREATE_COMPANY_CONTACT_FAIL],
       promise: (client, auth) => new Promise(function(resolve, reject){
         let contactPromise = client.api.post('/companyContacts', {
