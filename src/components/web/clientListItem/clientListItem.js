@@ -166,7 +166,7 @@ export default class ClientListItem extends React.Component {
       return (
         <CardBasic
             image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
-            title= {company && company.get('name')}
+            title={company && company.get('name')}
             subtitle1={company.get('businessType')|| 'Company'}
             subtitle2={subTitle2}
             stars={<Stars score={company.get('rating')}></Stars>}

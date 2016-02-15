@@ -1,14 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { ClientListItem, JobTemplateListItem, ContactListItem } from '../../components/web';
+import { ClientListItem, JobTemplateListItem, ContactListItem, LocationListItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
 import { createTempContact } from '../../modules/contacts';
 import Immutable from 'immutable';
-import { ListItem, Divider } from 'material-ui';
+import { ListItem, Divider, FontIcon } from 'material-ui';
+let ReactSwipe = require('react-swipe');
 
 function filterMyCandidates(candidates, auth) {
   if(auth && auth.authToken){
@@ -46,7 +47,7 @@ function filterMyJobs(state){
   auth: state.auth,
   companies: state.companies,
 }), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany, createTempContact})
-class HomePage extends React.Component {
+class TestPage extends React.Component {
 
   constructor(props) {
     super(props);
@@ -200,6 +201,28 @@ class HomePage extends React.Component {
     let style = {
       item: {
         backgroundColor: '#fff',
+        paddingLeft: '10px',
+        paddingRight: '10px',
+      },
+      leftNav: {
+        display: 'flex',
+        justifyContent: 'center',
+        position: 'absolute',
+        left: '-10px',
+        top: 0,
+        bottom: 0,
+      },
+      rightNav: {
+        display: 'flex',
+        justifyContent: 'center',
+        position: 'absolute',
+        right: '-10px',
+        top: 0,
+        bottom: 0,
+      },
+      navIcon: {
+        alignSelf: 'center',
+        fontSize: '2em',
       },
     };
 
@@ -207,7 +230,7 @@ class HomePage extends React.Component {
       name: 'Google',
       businessType: 'Technology company',
       website: 'http://google.com',
-      location: new Immutable.Map({ city: 'Mountain View', countrySubDivisionCode: 'CA'}),
+      location: new Immutable.Map({ name: 'Main Office', addressLine: '1600 Amphitheatre Pkwy', city: 'Mountain View', countrySubDivisionCode: 'CA', postalCode: '94043'}),
       tags: ['HOT!'],
     });
 
@@ -221,10 +244,26 @@ class HomePage extends React.Component {
       title: 'CoFounder & CTO',
     });
 
+    let location = company.get('location');
+
     return (
       <div>
         <ListItem style={style.item}>
-          <ClientListItem company={company} type="tiny" />
+        <div>
+          <div style={style.leftNav}><FontIcon style={style.navIcon} className="material-icons">keyboard_arrow_left</FontIcon></div>
+          <div style={style.rightNav}><FontIcon style={style.navIcon} className="material-icons">keyboard_arrow_right</FontIcon></div>
+          <ReactSwipe continuous={true}>
+            <div>
+              <ClientListItem company={company} type="tiny" />
+            </div>
+            <div>
+              <ClientListItem company={company} type="tiny" />
+            </div>
+            <div>
+              <ClientListItem company={company} type="tiny" />
+            </div>
+          </ReactSwipe>
+        </div>
         </ListItem>
         <Divider />
         <ListItem style={style.item}>
@@ -234,9 +273,13 @@ class HomePage extends React.Component {
         <ListItem style={style.item}>
           <ContactListItem contact={contact} company={company} type="tiny" />
         </ListItem>
+        <Divider />
+        <ListItem style={style.item}>
+          <LocationListItem location={location} type="tiny" />
+        </ListItem>
       </div>
     );
   }
 }
 
-export default HomePage;
+export default TestPage;
