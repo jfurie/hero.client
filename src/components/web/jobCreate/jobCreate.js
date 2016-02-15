@@ -111,11 +111,15 @@ const style = {
   rowSwipeTitle: {
     fontSize: '17px',
     fontWeight: '800',
+    marginTop: '0px',
+    marginBottom: '0px',
   },
   rowSwipeSubTitle: {
     fontWeight: '800',
     fontSize: '12px',
     opacity: '0.25',
+    marginTop: '0px',
+    marginBottom: '0px',
   },
   rowSwipeNext: {
     position: 'absolute',
@@ -128,6 +132,9 @@ const style = {
     top: '50%',
     left: '10px',
     marginTop: '-22px',
+  },
+  addImageLabel: {
+    margin: '0px',
   },
 };
 
@@ -275,7 +282,7 @@ export default class JobCreate extends React.Component {
             <div className="box" style={style.pictureBox}>
               <img style={style.orderDefault} src="/img/job-order-default.jpg" />
               <div style={style.addImage}>
-                <p>Add Image</p>
+                <p style={style.addImageLabel}>Add Image</p>
                 <IconButton style={style.addImageIcon} iconClassName="material-icons">camera_alt</IconButton>
               </div>
             </div>
