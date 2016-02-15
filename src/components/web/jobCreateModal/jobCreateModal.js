@@ -162,7 +162,7 @@ class JobCreateModal extends React.Component {
       <Toolbar style={style.toolBar}>
         <ToolbarGroup key={0} float="left">
           <IconButton onTouchTap={this.closeModal.bind(this)} style={style.close} iconClassName='material-icons'>close</IconButton>
-          <ToolbarTitle style={style.title} text={'Create Job'} />
+          <ToolbarTitle style={style.title} text={'Create Job f'} />
         </ToolbarGroup>
         <ToolbarGroup key={1} float="right">
           <FlatButton onTouchTap={this.saveJob.bind(this)} style={style.save}>Save</FlatButton>

@@ -21,23 +21,6 @@ class JobSearchContainer extends React.Component {
     this.onQueryChange = _.debounce(this.onQueryChange.bind(this), 500);
   }
 
-  _getResetState() {
-    return {
-      open:true,
-      query: '',
-      searchResults: [],
-      suggestions: [],
-      position: {
-        lat: 34.016483,
-        lng: -118.496859,
-      }
-    };
-  }
-
-  _resetState() {
-    this.setState(this._getResetState());
-  }
-
   componentDidMount() {
     let self = this;
 
@@ -59,6 +42,23 @@ class JobSearchContainer extends React.Component {
     this.setState({
       searchResults: results ? results.toArray() : [],
     });
+  }
+
+  _getResetState() {
+    return {
+      open:true,
+      query: '',
+      searchResults: [],
+      suggestions: [],
+      position: {
+        lat: 34.016483,
+        lng: -118.496859,
+      },
+    };
+  }
+
+  _resetState() {
+    this.setState(this._getResetState());
   }
 
   onQuerySubmit() {
@@ -109,7 +109,7 @@ class JobSearchContainer extends React.Component {
   }
 
   onSelect(job){
-    if(this.props.onJobSelect){
+    if(this.props.onJobSelect) {
       this.props.onJobSelect(job);
     } else {
       let id = job.id ? job.id : 'tmp_' + this._guid();
@@ -123,7 +123,7 @@ class JobSearchContainer extends React.Component {
 
       setTimeout(function () {
         self.props.history.replaceState(null,`/clients/${job.companyId}/jobs/${id}/create`);
-      },500);
+      }, 500);
     }
   }
 
