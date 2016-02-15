@@ -44,6 +44,7 @@ import JobCreatePage from './containers/web/jobs/jobCreateContainer';
 //notes
 import NoteCreatePage from './containers/web/notes/noteCreateContainer';
 
+import TestPage from './containers/web/testContainer';
 
 const localStorage = new LocalStorageClient('Auth');
 
@@ -142,10 +143,9 @@ export default(store) => {
   };
 
   return (
-
     <Route path="/" onUpdate={() => window.scrollTo(0, 0)} onEnter={loadUser}>
+    <Route path="test" component={TestPage}/>
       <Route component={Layout}>
-
         <Route path="login" onEnter={checkLogin} component={LoginPage}/>
         <Route path="error" component={ErrorPage}/>
 

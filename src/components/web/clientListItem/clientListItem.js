@@ -159,7 +159,40 @@ export default class ClientListItem extends React.Component {
         , {company.get('location')&& company.get('location').get('countrySubDivisionCode')}
       </span>
     );
+
+    let self = this;
+
+    function renderBasic() {
+      return (
+        <CardBasic
+            image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
+            title= {company && company.get('name')}
+            subtitle1={company.get('businessType')|| 'Company'}
+            subtitle2={subTitle2}
+            stars={<Stars score={company.get('rating')}></Stars>}
+            onTouchTap={self.clickClient.bind(this)}
+          ></CardBasic>
+      );
+    }
+
+    function renderTags() {
+      return (
+        <div style={style.badgeWrap}>
+        {company.get('tags') && company.get('tags').map(function(tag, i){
+          if(i <=3){
+            return (
+              <Tag value={tag} />
+            );
+          }
+          return (
+            <span></span>
+          );
+        })}
+      </div>);
+    }
+
     return (
+      type == 'tiny' ? (<div>{renderTags()}{renderBasic()}</div>) :
       <Card
         style={{
           height: type !=='mini'?'auto':'80px',
@@ -171,30 +204,8 @@ export default class ClientListItem extends React.Component {
           style={{
             height: type !=='mini'?'auto':'auto'
           }}>
-          {type !=='mini'?(<div>
-            <div>
-              <div style={style.badgeWrap}>
-                {company.get('tags') && company.get('tags').map(function(tag, i){
-                  if(i <=3){
-                    return (
-                      <Tag value={tag} />
-                    );
-                  }
-                  return (
-                    <span></span>
-                  );
-                })}
-              </div>
-            </div>
-          </div>):(<div></div>)}
-            <CardBasic
-                image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
-                title= {company && company.get('name')}
-                subtitle1={company.get('businessType')|| 'Company'}
-                subtitle2={subTitle2}
-                stars={<Stars score={company.get('rating')}></Stars>}
-                onTouchTap={this.clickClient.bind(this)}
-              ></CardBasic>
+          {type !=='mini'?(renderTags()):(<div></div>)}
+            {renderBasic()}
             {type !== 'mini'?
             (<div>
               <Divider style={{marginTop:'8px'}}></Divider>
