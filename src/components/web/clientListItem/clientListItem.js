@@ -181,11 +181,11 @@ export default class ClientListItem extends React.Component {
         {company.get('tags') && company.get('tags').map(function(tag, i){
           if(i <=3){
             return (
-              <Tag value={tag} />
+              <Tag key={i} value={tag} />
             );
           }
           return (
-            <span></span>
+            <span key={i}></span>
           );
         })}
       </div>);

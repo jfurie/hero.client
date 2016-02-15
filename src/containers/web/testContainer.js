@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { ClientListItem } from '../../components/web';
+import { ClientListItem, JobTemplateListItem, ContactListItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
@@ -197,18 +197,29 @@ class HomePage extends React.Component {
   }
 
   render () {
-    let company = new Immutable.Map({
-      name: 'Google',
-      website: 'http://google.com',
-      location: new Immutable.Map({ city: 'Mountain View', countrySubDivisionCode: 'CA'}),
-      tags: ['HOT!'],
-    });
-
     let style = {
       item: {
         backgroundColor: '#fff',
       },
     };
+
+    let company = new Immutable.Map({
+      name: 'Google',
+      businessType: 'Technology company',
+      website: 'http://google.com',
+      location: new Immutable.Map({ city: 'Mountain View', countrySubDivisionCode: 'CA'}),
+      tags: ['HOT!'],
+    });
+
+    let jobTemplate = new Immutable.Map({
+      title: 'Javascript Engineer',
+      description: 'Front end/Back end javascript engineer',
+    });
+
+    let contact = new Immutable.Map({
+      displayName: 'Joshis Furry',
+      title: 'CoFounder & CTO',
+    });
 
     return (
       <div>
@@ -217,7 +228,11 @@ class HomePage extends React.Component {
         </ListItem>
         <Divider />
         <ListItem style={style.item}>
-          <ClientListItem company={company} type="tiny" />
+          <JobTemplateListItem jobTemplate={jobTemplate} type="tiny" />
+        </ListItem>
+        <Divider />
+        <ListItem style={style.item}>
+          <ContactListItem contact={contact} company={company} type="tiny" />
         </ListItem>
       </div>
     );
