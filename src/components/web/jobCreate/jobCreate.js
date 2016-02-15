@@ -1,33 +1,30 @@
 import React from 'react';
-import Immutable from 'immutable';
+//import Immutable from 'immutable';
 import {
-  IconButton, ToolbarGroup, Toolbar, SelectField, MenuItem,
-  FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles,
-  Card, CardMedia, CardText, LinearProgress, DatePicker,
+  IconButton, ToolbarGroup, Toolbar,
+  FlatButton, ToolbarTitle, Styles,
 } from 'material-ui';
-import { FileInput, TagsInput, Dialog } from '../';
-import {
- Location,
-} from '../';
+import { Dialog } from '../';
+
 
 const style = {
   error: {
     float: 'left',
   },
-  divider:{
-    marginTop:'16px',
-  },
-  subheader:{
-    color: Styles.Colors.grey600,
-    fontSize:'14px',
-    marginTop:'16px',
-    marginBottom:'16px',
-    marginLeft:'16px',
-    textAlign:'left',
-  },
-  textField: {
-    'width': '100%',
-  },
+  // divider:{
+  //   marginTop:'16px',
+  // },
+  // subheader: {
+  //   color: Styles.Colors.grey600,
+  //   fontSize:'14px',
+  //   marginTop:'16px',
+  //   marginBottom:'16px',
+  //   marginLeft:'16px',
+  //   textAlign:'left',
+  // },
+  // textField: {
+  //   'width': '100%',
+  // },
   dialog: {
     height: '100%',
     maxHeight: '100%',
@@ -39,7 +36,8 @@ const style = {
     padding: '0',
   },
   toolbarInline:{
-    backgroundColor: '#ffffff',
+    background: Styles.Colors.grey900,
+    color: '#FFFF',
     height: '64px',
     position:'fixed',
     zIndex:'1000',
@@ -63,14 +61,20 @@ const style = {
     marginRight:'8px',
     marginLeft:'-16px',
   },
+  addImageIcon: {
+    marginTop: '-7px',
+    marginLeft: '0px',
+  },
   toolbarFlat: {
     marginTop:'14px',
     marginRight:'-16px',
     marginLeft:'auto',
+    color: '#FFFFFF',
   },
   toolbarTitle: {
     lineHeight:'64px',
     float:'left',
+    color: '#ffffff',
   },
   select: {
     textAlign: 'left',
@@ -81,6 +85,51 @@ const style = {
     color: 'rgba(0, 0, 0, 0.298039)',
     fontSize: '12px',
     transform: 'none',
+  },
+  pictureRow: {
+    backgroundColor: Styles.Colors.grey900,
+    position: 'relative',
+  },
+  pictureBox: {
+    marginBottom: '-4px',
+  },
+  orderDefault: {
+    width: '100%',
+  },
+  addImage: {
+    textAlign: 'center',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginLeft: '-40px',
+    marginTop: '-20px',
+  },
+  rowSwipe: {
+    padding: '30px 0px',
+    borderBottom: '2px solid #D9D9D9',
+    backgroundColor: Styles.Colors.white,
+    position: 'relative',
+  },
+  rowSwipeTitle: {
+    fontSize: '17px',
+    fontWeight: '800',
+  },
+  rowSwipeSubTitle: {
+    fontWeight: '800',
+    fontSize: '12px',
+    opacity: '0.25',
+  },
+  rowSwipeNext: {
+    position: 'absolute',
+    top: '50%',
+    right: '10px',
+    marginTop: '-22px',
+  },
+  rowSwipeBefore: {
+    position: 'absolute',
+    top: '50%',
+    left: '10px',
+    marginTop: '-22px',
   },
 };
 
@@ -93,30 +142,30 @@ export default class JobCreate extends React.Component {
     this.props.closeModal();
   }
 
-  _handleChange(e, field) {
-    let newJob = this.props.job;
-    let value = (e.target.value === '') ? (null) : (e.target.value);
+  // _handleChange(e, field) {
+  //   let newJob = this.props.job;
+  //   let value = (e.target.value === '') ? (null) : (e.target.value);
+  //
+  //   newJob = newJob.set(field,value);
+  //
+  //   this.props.onJobChange(newJob);
+  // }
+  //
+  // _handleLocationChange(field, value) {
+  //   let newJob = this.props.job;
+  //
+  //   if (value) {
+  //     newJob = newJob.set(field,value);
+  //   } else {
+  //     newJob = newJob.delete(field);
+  //   }
+  //
+  //   this.props.onJobChange(newJob);
+  // }
 
-    newJob = newJob.set(field,value);
-
-    this.props.onJobChange(newJob);
-  }
-
-  _handleLocationChange(field, value) {
-    let newJob = this.props.job;
-
-    if (value) {
-      newJob = newJob.set(field,value);
-    } else {
-      newJob = newJob.delete(field);
-    }
-
-    this.props.onJobChange(newJob);
-  }
-
-  _handleCompanySelectValueChange(event, index, value) {
-    this.props.onCompanyChange(value);
-  }
+  // _handleCompanySelectValueChange(event, index, value) {
+  //   this.props.onCompanyChange(value);
+  // }
 
   _handleSubmit(){
     if(this.props.job.get('saving') == true) return;
@@ -128,345 +177,178 @@ export default class JobCreate extends React.Component {
     this.props.onImageChange(value);
   }
 
-  _handleHeroValueChange(event, index, value) {
-    let newJob = this.props.job;
+  // _handleHeroValueChange(event, index, value) {
+  //   let newJob = this.props.job;
+  //
+  //   if (value) {
+  //     newJob = newJob.set('talentAdvocateId',value);
+  //   } else {
+  //     newJob = newJob.delete('talentAdvocateId');
+  //   }
+  //
+  //   this.props.onJobChange(newJob);
+  // }
+  //
+  // _handleSelectValueChange(event, index, value) {
+  //   let newJob = this.props.job;
+  //
+  //   if (value) {
+  //     newJob = newJob.set('contactId',value);
+  //   } else {
+  //     newJob = newJob.delete('contactId');
+  //   }
+  //
+  //   this.props.onJobChange(newJob);
+  // }
+  //
+  // _handleSkillsChange(skills){
+  //   let newJob = this.props.job;
+  //
+  //   if (skills) {
+  //     newJob = newJob.set('skills',skills);
+  //   } else {
+  //     newJob = newJob.delete('skills');
+  //   }
+  //
+  //   this.props.onJobChange(newJob, true);
+  // }
 
-    if (value) {
-      newJob = newJob.set('talentAdvocateId',value);
-    } else {
-      newJob = newJob.delete('talentAdvocateId');
-    }
+  // _handleStartDateChange(e,value){
+  //   let newJob = this.props.job;
+  //
+  //   if (value) {
+  //     newJob = newJob.set('startDate',value);
+  //   } else {
+  //     newJob = newJob.delete('startDate');
+  //   }
+  //
+  //   this.props.onJobChange(newJob);
+  // }
+  //
+  // _handleEmploymentTypeValueChange(e, key, payload){
+  //   let newJob = this.props.job;
+  //
+  //   if (payload) {
+  //     newJob = newJob.set('employmentType',payload);
+  //   } else {
+  //     newJob = newJob.delete('employmentType');
+  //   }
+  //
+  //   this.props.onJobChange(newJob);
+  // }
 
-    this.props.onJobChange(newJob);
-  }
-
-  _handleSelectValueChange(event, index, value) {
-    let newJob = this.props.job;
-
-    if (value) {
-      newJob = newJob.set('contactId',value);
-    } else {
-      newJob = newJob.delete('contactId');
-    }
-
-    this.props.onJobChange(newJob);
-  }
-
-  _handleSkillsChange(skills){
-    let newJob = this.props.job;
-
-    if (skills) {
-      newJob = newJob.set('skills',skills);
-    } else {
-      newJob = newJob.delete('skills');
-    }
-
-    this.props.onJobChange(newJob, true);
-  }
-
-  _handleStartDateChange(e,value){
-    let newJob = this.props.job;
-
-    if (value) {
-      newJob = newJob.set('startDate',value);
-    } else {
-      newJob = newJob.delete('startDate');
-    }
-
-    this.props.onJobChange(newJob);
-  }
-
-  _handleEmploymentTypeValueChange(e, key, payload){
-    let newJob = this.props.job;
-
-    if (payload) {
-      newJob = newJob.set('employmentType',payload);
-    } else {
-      newJob = newJob.delete('employmentType');
-    }
-
-    this.props.onJobChange(newJob);
-  }
-
-  _handleDepartmentValueChange(e, key, payload){
-    let newJob = this.props.job;
-
-    if (payload) {
-      newJob = newJob.set('department', payload);
-    } else {
-      newJob = newJob.delete('department');
-    }
-
-    this.props.onJobChange(newJob);
-  }
-
-  _datePickerClose() {
-    console.log('close!');
-  }
-
-  _datePickerOpen() {
-    console.log('show!');
-  }
+  // _handleDepartmentValueChange(e, key, payload){
+  //   let newJob = this.props.job;
+  //
+  //   if (payload) {
+  //     newJob = newJob.set('department', payload);
+  //   } else {
+  //     newJob = newJob.delete('department');
+  //   }
+  //
+  //   this.props.onJobChange(newJob);
+  // }
+  //
+  // _datePickerClose() {
+  //   console.log('close!');
+  // }
+  //
+  // _datePickerOpen() {
+  //   console.log('show!');
+  // }
 
   _renderContents() {
-    let { job, companies, contacts, heroContacts } = this.props;
-
-    job = job || new Immutable.Map({errors:new Immutable.Map()});
-
-    let isCandidate = job.get('isCandidate');
-
-    if (isCandidate === undefined) isCandidate = false;
-
-    let companyId = this.props.company ? this.props.company.get('id') : null;
+    // let { job, companies, contacts, heroContacts } = this.props;
+    //
+    // job = job || new Immutable.Map({errors:new Immutable.Map()});
+    //
+    // let isCandidate = job.get('isCandidate');
+    //
+    // if (isCandidate === undefined) {
+    //   isCandidate = false;
+    // }
+    //
+    // let companyId = this.props.company ? this.props.company.get('id') : null;
 
     return (
-      <div style={{backgroundColor:'#ffffff'}} className="row center-xs">
-          <div className="col-xs-12 col-md-8">
-              <div className="box">
-                <form onSubmit={this._handleSubmit.bind(this)}>
-                  <div className="row center-xs" >
-
-                  <div className="col-xs-12">
-                    <Divider style={style.divider} />
-                    <div style={style.subheader}>Primary</div>
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <SelectField
-                        floatingLabelText="Company"
-                        floatingLabelStyle={style.floatLabel}
-                        fullWidth
-                        style={style.select}
-                        onChange={this._handleCompanySelectValueChange.bind(this)}
-                        hintText={''}
-                        value={companyId}
-                    >
-                      {companies.map((company, index) => {
-                        return (
-                          <MenuItem
-                              value={index}
-                              primaryText={company.get('name')}
-                          />
-                        );
-                      })}
-                    </SelectField>
-                  </div>
-
-                  <div className="col-xs-10 ">
-                      <Card>
-                        <CardMedia>
-                          {(() => {
-                            if(this.props.jobImage){
-                              return (<div><img style={{maxWidth:'100%', maxHeight:'300px'}} src={this.props.jobImage.get('item')}></img></div>);
-                            } else {
-                              return (<div></div>);
-                            }
-                          })()}
-                        </CardMedia>
-                        <CardText>
-                          <LinearProgress mode="determinate" value={job.get('percentUploaded')} />
-                          <FileInput label={this.props.jobImage?'Change Photo':'Add Photo'} onFileChanged={this.onImageChange.bind(this)}></FileInput>
-                        </CardText>
-                      </Card>
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <TextField
-                        fullWidth
-                        errorText={''}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'title')}
-                        floatingLabelText="Job Title"
-                        value={job.get('title')}
-                    />
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <SelectField value={job.get('department')} floatingLabelText="Department" fullWidth onChange={this._handleDepartmentValueChange.bind(this)}>
-                      <MenuItem value={'Tech'} primaryText="Tech"/>
-                      <MenuItem value={'Sales'}  primaryText="Sales"/>
-                      <MenuItem value={'Product'} primaryText="Product"/>
-                      <MenuItem value={'Executive'} primaryText="Executive"/>
-                      <MenuItem value={'Marketing'} primaryText="Marketing"/>
-                      <MenuItem value={'Operations'} primaryText="Operations"/>
-                      <MenuItem value={'Customer Service'} primaryText="Customer Service"/>
-                      <MenuItem value={'Office Mgmt'} primaryText="Office Mgmt"/>
-                    </SelectField>
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <SelectField value={job.get('employmentType')} floatingLabelText="Employment Type" fullWidth onChange={this._handleEmploymentTypeValueChange.bind(this)}>
-                      <MenuItem value={'Permanent'} primaryText="Permanent"/>
-                      <MenuItem value={'Contract To Hire'}  primaryText="Contract to Hire"/>
-                      <MenuItem value={'Contract'} primaryText="Contract"/>
-                    </SelectField>
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <TextField
-                        pattern="[0-9]*"
-                        fullWidth
-                        errorText={''}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'positionCount')}
-                        floatingLabelText="Number of Positions"
-                        type="number"
-                        value={job.get('positionCount')}
-                    />
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <TextField
-                        floatingLabelText="Quick Pitch"
-                        multiLine
-                        fullWidth
-                        floatingLabelStyle={style.floatLabel}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'quickPitch')}
-                        value={job.get('quickPitch')}
-                    />
-                  </div>
-
-                  <div className="col-xs-12">
-                    <Divider style={style.divider} />
-                    <div style={style.subheader}>Location</div>
-                  </div>
-
-                  <div className="col-xs-10" >
-                    <Location location={job.get('location')} onChange={this._handleLocationChange.bind(this,'location')} />
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <TextField
-                        pattern="[0-9]*"
-                        fullWidth
-                        errorText={''}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'minSalary')}
-                        floatingLabelText="Min Salary"
-                        type="number"
-                        value={job.get('minSalary')}
-                    />
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <TextField
-                        pattern="[0-9]*"
-                        fullWidth
-                        errorText={''}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'maxSalary')}
-                        floatingLabelText="Max Salary"
-                        type="number"
-                        value={job.get('maxSalary')}
-                    />
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <TextField
-                        floatingLabelText="Bonus + Perks"
-                        multiLine
-                        fullWidth
-                        floatingLabelStyle={style.floatLabel}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'bonusPerks')}
-                        value={job.get('bonusPerks')}
-                    />
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <TextField
-                        floatingLabelText="Job Description"
-                        multiLine
-                        fullWidth
-                        floatingLabelStyle={style.floatLabel}
-                        onChange={(e) => this._handleChange.bind(this)(e, 'description')}
-                        value={job.get('description')}
-                    />
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <DatePicker
-                        hintText="Estimated Start Date"
-                        textFieldStyle={style.datePicker}
-                        onShow={this._datePickerOpen}
-                        onRequestClose={this._datePickerClose}
-                        onChange={this._handleStartDateChange.bind(this)}
-                        value={job.get('startDate')}
-                        ref="startDate"
-                    />
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <TextField
-                        pattern="[0-9]*"
-                        fullWidth
-                        errorText={''}
-                        floatingLabelText="Fee %"
-                        onChange={(e) => this._handleChange.bind(this)(e, 'fee')}
-                        type="number"
-                        value={job.get('fee')}
-                    />
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <TagsInput value={job.get('skills')} onChange={this._handleSkillsChange.bind(this)} title="Skills"></TagsInput>
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <SelectField
-                        ref="selectValue"
-                        fullWidth
-                        floatingLabelText="Select Primary Contact"
-                        value={job.get('contactId')}
-                        onChange={this._handleSelectValueChange.bind(this)}
-                    >
-                      {contacts.map((contact, index) => {
-                        return (
-                          <MenuItem
-                              value={index}
-                              primaryText={contact.get('displayName')}
-                          />
-                        );
-                      })}
-                    </SelectField>
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <SelectField
-                        ref="selectValue"
-                        fullWidth
-                        floatingLabelText="Select Talent Advocate"
-                        value={job.get('talentAdvocateId')}
-                        onChange={this._handleHeroValueChange.bind(this)}
-                    >
-                      {heroContacts.map((contact, index) => {
-                        return (
-                          <MenuItem
-                              value={index}
-                              primaryText={contact.get('displayName')}
-                          />
-                        );
-                      })}
-                    </SelectField>
-                  </div>
-
-                  <div className="col-xs-10 " style={{marginTop:'20px', marginBottom:'20px'}}>
-                    <RaisedButton primary={true} label='Save' onTouchTap={this._handleSubmit.bind(this)}></RaisedButton>
-                  </div>
-                  </div>
-                </form>
+      <div>
+        <div className="row center-xs" style={style.pictureRow}>
+          <div className="col-xs-10">
+            <div className="box" style={style.pictureBox}>
+              <img style={style.orderDefault} src="/img/job-order-default.jpg" />
+              <div style={style.addImage}>
+                <p>Add Image</p>
+                <IconButton style={style.addImageIcon} iconClassName="material-icons">camera_alt</IconButton>
               </div>
+            </div>
           </div>
+        </div>
+        <div className="row center-xs" style={style.rowSwipe}>
+          <div className="col-xs-12">
+            <div className="box">
+              <h2 style={style.rowSwipeTitle}>Client</h2>
+              <p style={style.rowSwipeSubTitle}>swipe to select</p>
+              <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
+              <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
+            </div>
+          </div>
+        </div>
+        <div className="row center-xs" style={style.rowSwipe}>
+          <div className="col-xs-12">
+            <div className="box">
+              <h2 style={style.rowSwipeTitle}>Job Description</h2>
+              <p style={style.rowSwipeSubTitle}>swipe to select</p>
+              <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
+              <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
+            </div>
+          </div>
+        </div>
+        <div className="row center-xs" style={style.rowSwipe}>
+          <div className="col-xs-12">
+            <div className="box">
+              <h2 style={style.rowSwipeTitle}>Hourly - Salary</h2>
+              <p style={style.rowSwipeSubTitle}>swipe to select</p>
+              <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
+              <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
+            </div>
+          </div>
+        </div>
+        <div className="row center-xs" style={style.rowSwipe}>
+          <div className="col-xs-12">
+            <div className="box">
+              <h2 style={style.rowSwipeTitle}>Hiring Manager</h2>
+              <p style={style.rowSwipeSubTitle}>swipe to select</p>
+              <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
+              <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
+            </div>
+          </div>
+        </div>
+        <div className="row center-xs" style={style.rowSwipe}>
+          <div className="col-xs-12">
+            <div className="box">
+              <h2 style={style.rowSwipeTitle}>Location</h2>
+              <p style={style.rowSwipeSubTitle}>swipe to select</p>
+              <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
+              <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
-  render(){
-    let {job} = this.props;
 
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let contentHeight = clientHeight - 64;
-    if(this.props.inline){
-      return (
+  render() {
+
+    //let {job} = this.props;
+
+
+    //if (this.props.inline){
+    return (
       <div>
         <Toolbar style={style.toolbarInline}>
           <ToolbarGroup key={0} float="left">
-            <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
-            <ToolbarTitle style={style.toolbarTitle} text={!job.get('id') || job.get('id').indexOf('tmp') > -1 ? 'Create Job' : 'Edit Job'} />
+            <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconStyle={{'color': '#ffffff'}} iconClassName="material-icons">close</IconButton>
+            <ToolbarTitle style={style.toolbarTitle} text={'Job Order'} />
           </ToolbarGroup>
           <ToolbarGroup key={1} float="right">
             <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
@@ -476,25 +358,26 @@ export default class JobCreate extends React.Component {
         <div>
           {this._renderContents()}
         </div>
-      </div>);
-    } else {
+      </div>
+    );
+    /*} /*else {
       return (
       <div>
           <Dialog
-                open={this.props.open}
-                autoDetectWindowHeight={false}
-                autoScrollBodyContent={false}
-                repositionOnUpdate={false}
-                defaultOpen={false}
-                style={style.dialog}
-                bodyStyle={style.bodyStyle}
-                contentStyle={style.contentStyle}
+              open={this.props.open}
+              autoDetectWindowHeight={false}
+              autoScrollBodyContent={false}
+              repositionOnUpdate={false}
+              defaultOpen={false}
+              style={style.dialog}
+              bodyStyle={style.bodyStyle}
+              contentStyle={style.contentStyle}
             >
             <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
               <Toolbar style={style.toolbar}>
                 <ToolbarGroup key={0} float="left">
-                  <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
-                  <ToolbarTitle style={style.toolbarTitle} text={!job.get('id') || job.get('id').indexOf('tmp') > -1 ? 'Create Job' : 'Edit Job'} />
+                  <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconStyle={{'color': '#ffffff'}} iconClassName='material-icons'>close</IconButton>
+                  <ToolbarTitle style={style.toolbarTitle} text={'Create Job'} />
                 </ToolbarGroup>
                 <ToolbarGroup key={1} float="right">
                   <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
@@ -506,6 +389,6 @@ export default class JobCreate extends React.Component {
             </div>
           </Dialog>
       </div>);
-    }
+    } */
   }
 }
