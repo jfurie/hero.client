@@ -4,8 +4,6 @@ import {
   IconButton, ToolbarGroup, Toolbar,
   FlatButton, ToolbarTitle, Styles,
 } from 'material-ui';
-import { Dialog } from '../';
-
 
 const style = {
   error: {
