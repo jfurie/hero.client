@@ -21,6 +21,7 @@ let style = {
     color: 'rgba(0, 0, 0, 0.870588)',
     fontSize: '16px',
     lineHeight: '16px',
+    fontWeight: 'bold',
   },
   subtitle:{
     color: 'rgba(0, 0, 0, 0.54)',
