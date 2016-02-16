@@ -11,7 +11,7 @@ import notes from './notes';
 import resources from './resources';
 import currentAccount from './currentAccount';
 import candidates from './candidates';
-
+import categories from './categories';
 export default combineReducers({
   router: routerStateReducer,
   auth,
@@ -25,4 +25,5 @@ export default combineReducers({
   resources,
   currentAccount,
   candidates,
+  categories,
 });
