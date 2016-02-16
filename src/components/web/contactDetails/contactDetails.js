@@ -99,7 +99,7 @@ export default class ContactDetails extends React.Component {
 
   _onTouchTapCall(disabled) {
     if (!disabled) {
-      console.log('_onTouchTapCall');
+      window.location.href = `tel:${this.props.contact.get('phone')}`;
     } else {
       console.log('no phone');
     }
@@ -109,11 +109,10 @@ export default class ContactDetails extends React.Component {
     console.log('_onTouchTapSave');
   }
 
-  _onTouchTapEmail(disabled) {
-    if (!disabled) {
-      console.log('_onTouchTapEmail');
-    } else {
-      console.log('no email');
+  _onTouchTapEmail() {
+    let email = this.props.contact.get('email');
+    if (email) {
+      window.location.href = `mailto:${email}`;
     }
   }
 
@@ -126,7 +125,9 @@ export default class ContactDetails extends React.Component {
   }
 
   _onTouchTapShare() {
-    console.log('_onTouchTapShare');
+    let subject = `Check out ${this.props.contact.get('displayName')} on HERO`;
+    let body = `${encodeURIComponent(this.props.contact.get('displayName'))}%0A${encodeURIComponent(window.location.href)}`;
+    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
   _handleTapOnChat() {
