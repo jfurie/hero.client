@@ -76,6 +76,10 @@ class TestPage extends React.Component {
         paddingLeft: '10px',
         paddingRight: '10px',
       },
+      sliderItem: {
+        padding: '20px',
+        backgroundColor: '#fff',
+      },
       leftNav: {
         display: 'flex',
         justifyContent: 'center',
@@ -150,7 +154,7 @@ class TestPage extends React.Component {
           <LocationListItem location={location} type="tiny" />
         </ListItem>
         <Divider />
-        <ListItem style={style.item}>
+        <div style={style.sliderItem}>
           <RangeSlider
             min={0}
             max={180000}
@@ -159,7 +163,7 @@ class TestPage extends React.Component {
             onChange={this.onSalaryChange.bind(this)}
             format="money"
           />
-        </ListItem>
+        </div>
       </div>
     );
   }
