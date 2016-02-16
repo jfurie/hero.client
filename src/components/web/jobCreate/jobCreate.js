@@ -5,26 +5,12 @@ import {
   FlatButton, ToolbarTitle, Styles,
 } from 'material-ui';
 
-import { ClientListItem, JobTemplateListItem, ContactListItem, LocationListItem, RangeSlider, JobOrderSwipeArea } from '../';
+import { ClientListItem, /*JobTemplateListItem, ContactListItem, LocationListItem, */ RangeSlider, JobOrderSwipeArea } from '../';
 
 const style = {
   error: {
     float: 'left',
   },
-  // divider:{
-  //   marginTop:'16px',
-  // },
-  // subheader: {
-  //   color: Styles.Colors.grey600,
-  //   fontSize:'14px',
-  //   marginTop:'16px',
-  //   marginBottom:'16px',
-  //   marginLeft:'16px',
-  //   textAlign:'left',
-  // },
-  // textField: {
-  //   'width': '100%',
-  // },
   dialog: {
     height: '100%',
     maxHeight: '100%',
@@ -255,8 +241,7 @@ export default class JobCreate extends React.Component {
     // let companyId = this.props.company ? this.props.company.get('id') : null;
 
     let clients = [
-      <p>client 1</p>,
-      <p>client 2</p>,
+      <div>,
     ];
 
     let salary = [
@@ -287,7 +272,7 @@ export default class JobCreate extends React.Component {
           </div>
         </div>
         <div>
-          <JobOrderSwipeArea title={'Client'} items={clients} />
+          <JobOrderSwipeArea title={'Client'} items={[<ClientListItem company={this.props.company} type="tiny" />, <ClientListItem company={this.props.company} type="tiny" />]} />
           <JobOrderSwipeArea title={'Job Description'} items={[]} />
           <JobOrderSwipeArea title={'Hourly - Salary'} items={salary} />
           <JobOrderSwipeArea title={'Hiring Manager'} items={[]} />
