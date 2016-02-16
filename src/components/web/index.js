@@ -34,6 +34,8 @@ export JobEdit from './jobEdit/jobEdit';
 export DetailsCard from './detailsCard/detailsCard';
 export ClientListItem from './clientListItem/clientListItem';
 export JobListItem from './jobListItem/jobListItem';
+export JobTemplateListItem from './jobTemplateListItem/jobTemplateListItem';
+export LocationListItem from './locationListItem/locationListItem';
 export ContactListItem from './contactListItem/contactListItem';
 export Stars from './stars/stars';
 export Tag from './Tag/tag';
