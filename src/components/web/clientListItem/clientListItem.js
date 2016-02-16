@@ -262,7 +262,7 @@ export default class ClientListItem extends React.Component {
         </Card>
       );
     } else {
-      return (null);
+      return (<div></div>);
     }
   }
 }

@@ -145,11 +145,13 @@ export default class JobCreateContainer extends React.Component {
     this.props.updateJobLocal(job, dontMergeDeep);
   }
 
-  render(){
+  render() {
+    
     return (
       <JobCreate
           company={this.props.company}
           job={this.props.job}
+          categories={this.props.categories}
           closeModal={this._handleClose.bind(this)}
           onSubmit={this._handleSave.bind(this)}
           onJobChange={this._handleChange.bind(this)}

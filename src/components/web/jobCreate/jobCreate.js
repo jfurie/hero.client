@@ -5,7 +5,7 @@ import {
   FlatButton, ToolbarTitle, Styles,
 } from 'material-ui';
 
-import { ClientListItem, /*JobTemplateListItem, ContactListItem, LocationListItem,  RangeSlider, */ JobOrderSwipeArea } from '../';
+import { ClientListItem, JobTemplateListItem,/* ContactListItem, LocationListItem,  RangeSlider, */ JobOrderSwipeArea } from '../';
 
 const style = {
   error: {
@@ -258,7 +258,15 @@ export default class JobCreate extends React.Component {
     //   </div>,
     // ];
 
-    //console.log(clients.length);
+    let clients = [];
+    if (this.props.company) {
+      clients.push(<ClientListItem company={this.props.company} type="tiny" />);
+    }
+
+    let categories = [];
+    this.props.categories.forEach(function(c) {
+      categories.push(<JobTemplateListItem jobTemplate={c} type="tiny" />);
+    });
 
     return (
       <div>
@@ -274,26 +282,26 @@ export default class JobCreate extends React.Component {
           </div>
         </div>
         <div>
-          <JobOrderSwipeArea title={'Client'}>
+          <JobOrderSwipeArea title={'Client'} items={clients} />
+          <JobOrderSwipeArea title={'Job Description'} items={categories} />
+          {/*
+            <JobTemplateListItem jobTemplate={this.props.categories.toArray()[0]} type="tiny" />
+
+            <JobOrderSwipeArea title={'Hourly - Salary'}>
             <ClientListItem company={this.props.company} type="tiny" />
             <ClientListItem company={this.props.company} type="tiny" />
           </JobOrderSwipeArea>
-          <JobOrderSwipeArea title={'Job Description'}>
-            <ClientListItem company={this.props.company} type="tiny" />
-            <ClientListItem company={this.props.company} type="tiny" />
-          </JobOrderSwipeArea>
-          <JobOrderSwipeArea title={'Hourly - Salary'}>
-            <ClientListItem company={this.props.company} type="tiny" />
-            <ClientListItem company={this.props.company} type="tiny" />
-          </JobOrderSwipeArea>
+
           <JobOrderSwipeArea title={'Hiring Manager'}>
             <ClientListItem company={this.props.company} type="tiny" />
             <ClientListItem company={this.props.company} type="tiny" />
           </JobOrderSwipeArea>
+
           <JobOrderSwipeArea title={'Location'}>
             <ClientListItem company={this.props.company} type="tiny" />
             <ClientListItem company={this.props.company} type="tiny" />
-          </JobOrderSwipeArea>
+          </JobOrderSwipeArea>*/}
+
         </div>
       </div>
     );
@@ -354,3 +362,8 @@ export default class JobCreate extends React.Component {
     } */
   }
 }
+
+JobCreate.propTypes = {
+  categories: React.PropTypes.object.isRequired,
+  company: React.PropTypes.object,
+};
