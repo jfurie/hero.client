@@ -53,11 +53,33 @@ class JobOrderSwipeArea extends React.Component {
 
 
   _onBefore() {
+
+    let index = this.refs.reactSwipe.swipe.getPos();
+
+    this.setState({
+      slideIndex: index,
+    });
+
     this.refs.reactSwipe.swipe.prev();
+
+    if (this.props.onChange) {
+      this.props.onChange(index);
+    }
   }
 
   _onAfter() {
+
+    let index = this.refs.reactSwipe.swipe.getPos();
+
+    this.setState({
+      slideIndex: index,
+    });
+
     this.refs.reactSwipe.swipe.next();
+
+    if (this.props.onChange) {
+      this.props.onChange(index);
+    }
   }
 
   _onChange(index) {
@@ -67,13 +89,15 @@ class JobOrderSwipeArea extends React.Component {
     });
 
     if (this.props.onChange) {
-      this.props.onChange();
+      this.props.onChange(index);
     }
   }
 
   render() {
 
     let { title } = this.props;
+
+    console.log(this.state.slideIndex);
 
     return (
       <div className="row center-xs" style={style.rowSwipe}>
