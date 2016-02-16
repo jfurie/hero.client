@@ -5,7 +5,7 @@ import {
   FlatButton, ToolbarTitle, Styles,
 } from 'material-ui';
 
-import { JobOrderSwipeArea } from '../';
+import { ClientListItem, JobTemplateListItem, ContactListItem, LocationListItem, RangeSlider, JobOrderSwipeArea } from '../';
 
 const style = {
   error: {
@@ -116,6 +116,10 @@ const style = {
 export default class JobCreate extends React.Component {
   constructor(props){
     super(props);
+
+    this.state = {
+      salary: [90000, 120000],
+    };
   }
 
   _handleClose(){
@@ -250,6 +254,25 @@ export default class JobCreate extends React.Component {
     //
     // let companyId = this.props.company ? this.props.company.get('id') : null;
 
+    let clients = [
+      <p>client 1</p>,
+      <p>client 2</p>,
+    ];
+
+    let salary = [
+      <div style={{padding: '20px'}}>
+        <RangeSlider
+            min={0}
+            max={180000}
+            step={1000}
+            value={this.state.salary}
+            format="money"
+        />
+      </div>,
+    ];
+
+    //console.log(clients.length);
+
     return (
       <div>
         <div className="row center-xs" style={style.pictureRow}>
@@ -264,9 +287,9 @@ export default class JobCreate extends React.Component {
           </div>
         </div>
         <div>
-          <JobOrderSwipeArea title={'Client'} items={[]} />
+          <JobOrderSwipeArea title={'Client'} items={clients} />
           <JobOrderSwipeArea title={'Job Description'} items={[]} />
-          <JobOrderSwipeArea title={'Hourly - Salary'} items={[]} />
+          <JobOrderSwipeArea title={'Hourly - Salary'} items={salary} />
           <JobOrderSwipeArea title={'Hiring Manager'} items={[]} />
           <JobOrderSwipeArea title={'Location'} items={[]} />
         </div>
