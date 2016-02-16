@@ -291,9 +291,7 @@ export default class JobCreate extends React.Component {
                   </div>}
                   onFileChanged={this.onImageChange.bind(this)}
                 />
-                {(this.props.job && this.props.job.get('percentUploaded')) ? (
-                  <LinearProgress mode="determinate" value={this.props.job.get('percentUploaded')} />
-                ) : (<div></div>)}
+                  <LinearProgress mode="determinate" value={this.props.job && this.props.job.get('percentUploaded')} />
               </div>
             </div>
           </div>
@@ -301,6 +299,7 @@ export default class JobCreate extends React.Component {
         <div>
           <JobOrderSwipeArea title={'Client'} items={clients} />
           <JobOrderSwipeArea title={'Job Description'} items={categories} />
+          <JobOrderSwipeArea title={'Hourly - Salary'} />
           {/*
             <JobTemplateListItem jobTemplate={this.props.categories.toArray()[0]} type="tiny" />
 
