@@ -146,10 +146,9 @@ export default class JobCreateContainer extends React.Component {
   }
 
   render(){
-    //this._handleCategoryChange.bind(this)();
     return (
       <JobCreate
-          {...this.props}
+          company={this.props.company}
           job={this.props.job}
           closeModal={this._handleClose.bind(this)}
           onSubmit={this._handleSave.bind(this)}
