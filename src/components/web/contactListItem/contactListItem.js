@@ -44,12 +44,12 @@ let style = {
     display:'inline-block',
     padding:'0px 16px',
     marginBottom:'8px',
-    height:'18px'
+    height:'18px',
   },
   starOn:{
     color:'#F5A623',
     fontSize:'22px',
-    width:'22px'
+    width:'22px',
   },
   status:{
     color:'#4A4A4A',
@@ -124,8 +124,55 @@ export default class ContactListItem extends React.Component {
     let body = encodeURIComponent(this.props.contact.get('name')) +'%0A' + encodeURIComponent(window.location.href);
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
+
+  renderBasic() {
+    let {contact, company} = this.props;
+
+    return (
+      <CardBasic
+          image={<Gravatar style={{width:'40px'}} email={contact.get('email')} status={contact.get('status')} />}
+          title= {<div style={{fontWeight: 'bold'}}>{contact.get('displayName')}</div>}
+          subtitle1={company?company.get('name'):''}
+          subtitle2={contact.get('title')}
+          onTouchTap={this.clickContact.bind(this)}
+          stars={<Stars score={contact.get('rating')}></Stars>}
+        ></CardBasic>
+    );
+  }
+
+  renderTags() {
+    let {contact} = this.props;
+
+    let isHot = false;
+
+    if (contact.get('tags')) {
+      isHot = contact.get('tags').indexOf('HOT!') > -1;
+    }
+
+    return (
+      <div>
+        <div className="row" style={style.badgeWrap}>
+        <div style={{textAlign: 'left'}}>
+        {isHot?
+        <Tag value={'HOT!'} />
+        :<span></span>
+        }
+        {contact.get('isActive')?
+        <Tag value={'Active'} color={'gray'}/>
+        :<span></span>
+        }
+        {contact.get('isVetted')?
+        <Tag value={'Vetted'} color={'green'} />
+        :<span></span>
+        }
+        </div>
+        </div>
+      </div>
+    );
+  }
+
   render(){
-    let {contact,company,type} = this.props;
+    let {contact,type} = this.props;
 
     let candidates = contact.get('candidates');
     candidates = candidates || new Immutable.List();
@@ -166,12 +213,6 @@ export default class ContactListItem extends React.Component {
       salary = (<span>No Salary Info</span>);
     }
 
-    let isHot = false;
-
-    if (contact.get('tags')) {
-      isHot = contact.get('tags').indexOf('HOT!') > -1;
-    }
-
     let skillImg = <img style={{width: '40px', height: '40px'}} src='http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png' />;
 
     let companies = '';
@@ -185,46 +226,8 @@ export default class ContactListItem extends React.Component {
       }
     }
 
-    let self = this;
-
-    function renderBasic() {
-      return (
-        <CardBasic
-            image={<Gravatar style={{width:'40px'}} email={contact.get('email')} status={contact.get('status')} />}
-            title= {<div style={{fontWeight: 'bold'}}>{contact.get('displayName')}</div>}
-            subtitle1={company?company.get('name'):''}
-            subtitle2={contact.get('title')}
-            onTouchTap={self.clickContact.bind(this)}
-            stars={<Stars score={contact.get('rating')}></Stars>}
-          ></CardBasic>
-      );
-    }
-
-    function renderTags() {
-      return (
-        <div>
-          <div className="row" style={style.badgeWrap}>
-          <div style={{textAlign: 'left'}}>
-          {isHot?
-          <Tag value={'HOT!'} />
-          :<span></span>
-          }
-          {contact.get('isActive')?
-          <Tag value={'Active'} color={'gray'}/>
-          :<span></span>
-          }
-          {contact.get('isVetted')?
-          <Tag value={'Vetted'} color={'green'} />
-          :<span></span>
-          }
-          </div>
-          </div>
-        </div>
-      );
-    }
-
     return (
-      type == 'tiny' ? (<div>{renderTags()}{renderBasic()}</div>) :
+      type == 'tiny' ? (<div>{this.renderTags()}{this.renderBasic()}</div>) :
       <Card
         style={{
           height: type !=='mini'?'auto':'169px',
@@ -234,10 +237,10 @@ export default class ContactListItem extends React.Component {
         }}>
         <CardText
           style={{
-            height: type !=='mini'?'auto':'auto'
+            height: type !=='mini'?'auto':'auto',
           }}>
-            {renderTags()}
-            {renderBasic()}
+            {this.renderTags()}
+            {this.renderBasic()}
             {type !== 'mini'?
             (<div>
               <Divider style={{marginTop:'8px'}}></Divider>
@@ -272,7 +275,7 @@ export default class ContactListItem extends React.Component {
         </CardText>
         <CardActions style={{
           backgroundColor:'rgba(100,100,100,0.2)',
-          boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)'
+          boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)',
 
         }}>
           <PhoneButton phone={contact.get('phone')} />
