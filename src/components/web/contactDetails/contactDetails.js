@@ -5,9 +5,9 @@ import md5 from 'md5';
 
 import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard, CustomTabsSwipe } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, JobListItem } from '../../../components/web';
 import {
-   IconButton, List, ListItem, FontIcon, Avatar,
+  IconButton, List, ListItem, FontIcon, Avatar,
   Divider, Styles, IconMenu, MenuItem, CardText, Card,
 } from 'material-ui';
 
@@ -148,7 +148,7 @@ export default class ContactDetails extends React.Component {
     } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
       contact = this.props.candidate.get('contact');
     }
-    
+
     let subject = `Check out ${contact.get('displayName')} on HERO`;
     let body = `${encodeURIComponent(contact.get('displayName'))}%0A${encodeURIComponent(window.location.href)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
@@ -199,6 +199,10 @@ export default class ContactDetails extends React.Component {
       city,
       displayName,
     };
+  }
+
+  _showJobDetails(job) {
+    this.props.pushState(null, `/clients/${job.get('companyId')}/jobs/${job.get('id')}`);
   }
 
   renderCandidateDetailsCard(contact, candidate) {
@@ -436,9 +440,15 @@ export default class ContactDetails extends React.Component {
                 </div>
               </List>
             </div>
-            <div>
-              <p>jobs</p>
-            </div>
+            <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
+              {contact.get('jobs') && contact.get('jobs').map((job, key) => {
+                return (
+                  <div key={key}>
+                    <JobListItem onJobClick={this._showJobDetails.bind(this)} job={job} / >
+                  </div>
+                );
+              })}
+            </List>
             <div>
               <p>notes</p>
             </div>

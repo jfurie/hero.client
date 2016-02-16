@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 //import { pushState } from 'redux-router';
 
 import { ContactDetails } from '../../../components/web';
-import { getOneContact } from '../../../modules/contacts';
+import { getContactDetail } from '../../../modules/contacts';
 
 //const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
@@ -15,7 +15,7 @@ function getData(state, props) {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneContact})
+{getContactDetail})
 class ContactDetailsPage extends React.Component {
 
   constructor(props) {
@@ -27,7 +27,7 @@ class ContactDetailsPage extends React.Component {
     let self = this;
 
     setTimeout(() => {
-      self.props.getOneContact(self.props.params.contactId);
+      self.props.getContactDetail(self.props.params.contactId);
     }, 500);
   }
 

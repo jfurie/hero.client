@@ -26,6 +26,9 @@ const CREATE_COMPANY_CONTACT_FAIL = 'hero.client/contacts/CREATE_COMPANY_CONTACT
 const EDIT_CONTACT = 'hero.client/contacts/EDIT_CONTACT';
 const EDIT_CONTACT_SUCCESS = 'hero.client/contacts/EDIT_CONTACT_SUCCESS';
 const EDIT_CONTACT_FAIL = 'hero.client/contacts/EDIT_CONTACT_FAIL';
+const GET_CONTACT_DETAIL = 'hero.client/contacts/GET_CONTACT_DETAIL';
+const GET_CONTACT_DETAIL_SUCCESS = 'hero.client/contacts/GET_CONTACT_DETAIL_SUCCESS';
+const GET_CONTACT_DETAIL_FAIL = 'hero.client/contacts/GET_CONTACT_DETAIL_FAIL';
 
 const initialState = {
   list: new Immutable.Map(),
@@ -315,6 +318,26 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       err: action.err,
     };
+  case GET_CONTACT_DETAIL: {
+    return {
+      ...state,
+    };
+  }
+  case GET_CONTACT_DETAIL_SUCCESS: {
+    let contactsMap = {};
+    let id = action.result.id;
+    contactsMap[id] = action.result;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(contactsMap),
+    };
+  }
+  case GET_CONTACT_DETAIL_FAIL: {
+    return {
+      ...state,
+    };
+  }
   default:
     return state;
   }
@@ -448,5 +471,18 @@ export function saveContactsByCompanyResult(contacts){
   return {
     type: GET_CONTACTS_BY_COMPANY_SUCCESS,
     result: contacts,
+  };
+}
+
+export function getContactDetail(id) {
+  return (dispatch) => {
+    dispatch({
+      types: [GET_CONTACT_DETAIL, GET_CONTACT_DETAIL_SUCCESS, GET_CONTACT_DETAIL_FAIL],
+      promise: (client, auth) => client.api.get(`/contacts/detail?id=${id}`, {
+        authToken: auth.authToken,
+      }).then((contact)=> {
+        return contact;
+      }),
+    });
   };
 }

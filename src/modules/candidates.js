@@ -10,6 +10,10 @@ const GET_CANDIDATES_FAIL = 'hero.client/candidates/GET_CANDIDATES_FAIL';
 const GET_ONE_CANDIDATE = 'hero.client/candidates/GET_ONE_CANDIDATE';
 const GET_ONE_CANDIDATE_SUCCESS = 'hero.client/candidates/GET_ONE_CANDIDATE_SUCCESS';
 const GET_ONE_CANDIDATE_FAIL = 'hero.client/candidates/GET_ONE_CANDIDATE_FAIL';
+const GET_CANDIDATE_DETAIL = 'hero.client/contacts/GET_CANDIDATE_DETAIL';
+const GET_CANDIDATE_DETAIL_SUCCESS = 'hero.client/contacts/GET_CANDIDATE_DETAIL_SUCCESS';
+const GET_CANDIDATE_DETAIL_FAIL = 'hero.client/contacts/GET_CANDIDATE_DETAIL_FAIL';
+
 const RESET_ERROR = 'hero.client/candidates/RESET_ERROR';
 const initialState = {
   list: new Immutable.Map(),
@@ -157,6 +161,22 @@ export default function reducer(state = initialState, action = {}) {
         list:state.list.mergeDeep(candidateList)
       };
     }
+  case GET_CANDIDATE_DETAIL: {
+    return state;
+  }
+  case GET_CANDIDATE_DETAIL_SUCCESS: {
+
+    let listNew = {};
+    listNew[action.result.id] = action.result;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(listNew),
+    };
+  }
+  case GET_CANDIDATE_DETAIL_FAIL: {
+    return state;
+  }
   default:
     return state;
   }
@@ -242,5 +262,18 @@ export function getAllAccountCandidates(accountId) {
     promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"accountId": "${accountId}"}, "include": "contact"}`, {
       authToken: auth.authToken,
     }),
+  };
+}
+
+export function getCandidateDetail(id) {
+  return (dispatch) => {
+    dispatch({
+      types: [GET_CANDIDATE_DETAIL, GET_CANDIDATE_DETAIL_SUCCESS, GET_CANDIDATE_DETAIL_FAIL],
+      promise: (client, auth) => client.api.get(`/candidates/detail?id=${id}`, {
+        authToken: auth.authToken,
+      }).then((candidate)=> {
+        return candidate;
+      }),
+    });
   };
 }
