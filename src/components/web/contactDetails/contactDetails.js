@@ -98,8 +98,16 @@ export default class ContactDetails extends React.Component {
   }
 
   _onTouchTapCall(disabled) {
+    let contact = null;
+
+    if (this.state.isContactContext && !this.state.isCandidateContext) { /* contact context */
+      contact = this.props.contact;
+    } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
+      contact = this.props.candidate.get('contact');
+    }
+
     if (!disabled) {
-      window.location.href = `tel:${this.props.contact.get('phone')}`;
+      window.location.href = `tel:${contact.get('phone')}`;
     } else {
       console.log('no phone');
     }
@@ -110,7 +118,15 @@ export default class ContactDetails extends React.Component {
   }
 
   _onTouchTapEmail() {
-    let email = this.props.contact.get('email');
+    let contact = null;
+
+    if (this.state.isContactContext && !this.state.isCandidateContext) { /* contact context */
+      contact = this.props.contact;
+    } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
+      contact = this.props.candidate.get('contact');
+    }
+
+    let email = contact.get('email');
     if (email) {
       window.location.href = `mailto:${email}`;
     }
@@ -125,8 +141,16 @@ export default class ContactDetails extends React.Component {
   }
 
   _onTouchTapShare() {
-    let subject = `Check out ${this.props.contact.get('displayName')} on HERO`;
-    let body = `${encodeURIComponent(this.props.contact.get('displayName'))}%0A${encodeURIComponent(window.location.href)}`;
+    let contact = null;
+
+    if (this.state.isContactContext && !this.state.isCandidateContext) { /* contact context */
+      contact = this.props.contact;
+    } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
+      contact = this.props.candidate.get('contact');
+    }
+    
+    let subject = `Check out ${contact.get('displayName')} on HERO`;
+    let body = `${encodeURIComponent(contact.get('displayName'))}%0A${encodeURIComponent(window.location.href)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
