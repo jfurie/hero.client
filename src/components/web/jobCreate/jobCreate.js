@@ -3,7 +3,9 @@ import React from 'react';
 import {
   IconButton, ToolbarGroup, Toolbar,
   FlatButton, ToolbarTitle, Styles,
+  LinearProgress,
 } from 'material-ui';
+import { FileInput } from '../';
 
 import { ClientListItem, /*JobTemplateListItem, ContactListItem, LocationListItem,  RangeSlider, */ JobOrderSwipeArea } from '../';
 
@@ -50,8 +52,8 @@ const style = {
     marginLeft:'-16px',
   },
   addImageIcon: {
-    marginTop: '-7px',
-    marginLeft: '0px',
+    position: 'absolute',
+    left: '20px',
   },
   toolbarFlat: {
     marginTop:'14px',
@@ -84,6 +86,7 @@ const style = {
   },
   orderDefault: {
     width: '100%',
+
     borderRadius: '4px 4px 0px 0px',
   },
   addImage: {
@@ -265,10 +268,22 @@ export default class JobCreate extends React.Component {
         <div className="row center-xs" style={style.pictureRow}>
           <div className="col-xs-10">
             <div className="box" style={style.pictureBox}>
-              <img style={style.orderDefault} src="/img/job-order-default.jpg" />
+              {(() => {
+                if(this.props.jobImage){
+                  return (<img style={style.orderDefault} src={this.props.jobImage.get('item')}></img>);
+                } else {
+                  return (<img style={style.orderDefault} src="/img/job-order-default.jpg" />);
+                }
+              })()}
               <div style={style.addImage}>
-                <p style={style.addImageLabel}>Add Image</p>
-                <IconButton style={style.addImageIcon} iconClassName="material-icons">camera_alt</IconButton>
+                <FileInput
+                  label={<div>
+                    <div>{this.props.jobImage?'Change Image':'Add Image'}</div>
+                    <IconButton style={style.addImageIcon} iconClassName="material-icons">camera_alt</IconButton>
+                  </div>}
+                  onFileChanged={this.onImageChange.bind(this)}
+                />
+                <LinearProgress mode="determinate" value={this.props.job.get('percentUploaded')} />
               </div>
             </div>
           </div>
