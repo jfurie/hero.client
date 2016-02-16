@@ -41,10 +41,16 @@ export function getAllJobs() {
   };
 }
 
-export function createJob(job){
+export function createJob(job, category){
   let id = job.get('id');
   if(id && id.indexOf('tmp') > -1){
     job = job.remove('id');
+  }
+  if(category){
+    //Going to fill out the fields based on category
+    job = job
+    .set('description',category.get('description'))
+    .set('title',category.get('title'));
   }
   return {
     id,
