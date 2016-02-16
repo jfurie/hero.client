@@ -5,6 +5,8 @@ import {
   FlatButton, ToolbarTitle, Styles,
 } from 'material-ui';
 
+import { JobOrderSwipeArea } from '../';
+
 const style = {
   error: {
     float: 'left',
@@ -288,55 +290,12 @@ export default class JobCreate extends React.Component {
             </div>
           </div>
         </div>
-        <div className="row center-xs" style={style.rowSwipe}>
-          <div className="col-xs-12">
-            <div className="box">
-              <h2 style={style.rowSwipeTitle}>Client</h2>
-              <p style={style.rowSwipeSubTitle}>swipe to select</p>
-              <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
-              <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
-            </div>
-          </div>
-        </div>
-        <div className="row center-xs" style={style.rowSwipe}>
-          <div className="col-xs-12">
-            <div className="box">
-              <h2 style={style.rowSwipeTitle}>Job Description</h2>
-              <p style={style.rowSwipeSubTitle}>swipe to select</p>
-              <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
-              <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
-            </div>
-          </div>
-        </div>
-        <div className="row center-xs" style={style.rowSwipe}>
-          <div className="col-xs-12">
-            <div className="box">
-              <h2 style={style.rowSwipeTitle}>Hourly - Salary</h2>
-              <p style={style.rowSwipeSubTitle}>swipe to select</p>
-              <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
-              <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
-            </div>
-          </div>
-        </div>
-        <div className="row center-xs" style={style.rowSwipe}>
-          <div className="col-xs-12">
-            <div className="box">
-              <h2 style={style.rowSwipeTitle}>Hiring Manager</h2>
-              <p style={style.rowSwipeSubTitle}>swipe to select</p>
-              <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
-              <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
-            </div>
-          </div>
-        </div>
-        <div className="row center-xs" style={style.rowSwipe}>
-          <div className="col-xs-12">
-            <div className="box">
-              <h2 style={style.rowSwipeTitle}>Location</h2>
-              <p style={style.rowSwipeSubTitle}>swipe to select</p>
-              <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
-              <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
-            </div>
-          </div>
+        <div>
+          <JobOrderSwipeArea title={'Client'} items={[]} />
+          <JobOrderSwipeArea title={'Job Description'} items={[]} />
+          <JobOrderSwipeArea title={'Hourly - Salary'} items={[]} />
+          <JobOrderSwipeArea title={'Hiring Manager'} items={[]} />
+          <JobOrderSwipeArea title={'Location'} items={[]} />
         </div>
       </div>
     );
