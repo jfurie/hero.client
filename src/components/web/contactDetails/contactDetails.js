@@ -440,8 +440,8 @@ export default class ContactDetails extends React.Component {
                 </div>
               </List>
             </div>
-            <List style={style.list} subheader={`${contact.get('jobs').size} Job`}>
-              {contact.get('jobs').map((job, key) => {
+            <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
+              {contact.get('jobs') && contact.get('jobs').map((job, key) => {
                 return (
                   <div key={key}>
                     <JobListItem onJobClick={this._showJobDetails.bind(this)} job={job} / >
