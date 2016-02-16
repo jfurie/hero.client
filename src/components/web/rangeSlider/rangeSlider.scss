@@ -1,0 +1,37 @@
+.horizontal-slider {
+  width: 100%;
+  max-width: 500px;
+  height: 22px;
+
+  .handle {
+    font-size: 0.9em;
+    text-align: center;
+    background-color: #26A69A;
+    color: #444;
+    cursor: pointer;
+    top: 1px;
+    left: 11px;
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    border-radius: 50%;
+
+    .label {
+      position: relative;
+      top: -30px;
+      font-weight: bold;
+      background-color: #fff;
+    }
+  }
+
+  .bar {
+    position: relative;
+    top: 10px;
+    height: 5px;
+    background: #80CBC4;
+  }
+
+  .bar.bar-1 {
+    background: #777;
+  }
+}

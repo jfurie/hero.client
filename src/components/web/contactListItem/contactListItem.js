@@ -184,8 +184,47 @@ export default class ContactListItem extends React.Component {
         }
       }
     }
-    
+
+    let self = this;
+
+    function renderBasic() {
+      return (
+        <CardBasic
+            image={<Gravatar style={{width:'40px'}} email={contact.get('email')} status={contact.get('status')} />}
+            title= {<div style={{fontWeight: 'bold'}}>{contact.get('displayName')}</div>}
+            subtitle1={company?company.get('name'):''}
+            subtitle2={contact.get('title')}
+            onTouchTap={self.clickContact.bind(this)}
+            stars={<Stars score={contact.get('rating')}></Stars>}
+          ></CardBasic>
+      );
+    }
+
+    function renderTags() {
+      return (
+        <div>
+          <div className="row" style={style.badgeWrap}>
+          <div style={{textAlign: 'left'}}>
+          {isHot?
+          <Tag value={'HOT!'} />
+          :<span></span>
+          }
+          {contact.get('isActive')?
+          <Tag value={'Active'} color={'gray'}/>
+          :<span></span>
+          }
+          {contact.get('isVetted')?
+          <Tag value={'Vetted'} color={'green'} />
+          :<span></span>
+          }
+          </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
+      type == 'tiny' ? (<div>{renderTags()}{renderBasic()}</div>) :
       <Card
         style={{
           height: type !=='mini'?'auto':'169px',
@@ -197,32 +236,8 @@ export default class ContactListItem extends React.Component {
           style={{
             height: type !=='mini'?'auto':'auto'
           }}>
-            <div>
-              <div className="row" style={style.badgeWrap}>
-              <div style={{textAlign: 'left'}}>
-              {isHot?
-              <Tag value={'HOT!'} />
-              :<span></span>
-              }
-              {contact.get('isActive')?
-              <Tag value={'Active'} color={'gray'}/>
-              :<span></span>
-              }
-              {contact.get('isVetted')?
-              <Tag value={'Vetted'} color={'green'} />
-              :<span></span>
-              }
-              </div>
-              </div>
-            </div>
-            <CardBasic
-                image={<Gravatar style={{width:'40px'}} email={contact.get('email')} status={contact.get('status')} />}
-                title= {<div style={{fontWeight: 'bold'}}>{contact.get('displayName')}</div>}
-                subtitle1={company?company.get('name'):''}
-                subtitle2={contact.get('title')}
-                onTouchTap={this.clickContact.bind(this)}
-                stars={<Stars score={contact.get('rating')}></Stars>}
-              ></CardBasic>
+            {renderTags()}
+            {renderBasic()}
             {type !== 'mini'?
             (<div>
               <Divider style={{marginTop:'8px'}}></Divider>
