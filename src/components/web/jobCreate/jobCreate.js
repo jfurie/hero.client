@@ -7,7 +7,10 @@ import {
 } from 'material-ui';
 import { FileInput } from '../';
 
-import { ClientListItem, JobTemplateListItem,/* ContactListItem, LocationListItem,  RangeSlider, */ JobOrderSwipeArea } from '../';
+import {
+  ClientListItem, JobTemplateListItem, RangeSlider,
+  LocationListItem, ContactListItem, JobOrderSwipeArea,
+} from '../';
 
 const style = {
   error: {
@@ -108,6 +111,7 @@ export default class JobCreate extends React.Component {
 
     this.state = {
       salary: [90000, 120000],
+      hourlySalary: [20, 50],
     };
   }
 
@@ -230,6 +234,18 @@ export default class JobCreate extends React.Component {
   //   console.log('show!');
   // }
 
+  _onSalaryChange(value) {
+    this.setState({
+      salary: value,
+    });
+  }
+
+  _onHourlySalaryChange(value) {
+    this.setState({
+      hourlySalary: value,
+    });
+  }
+
   _renderContents() {
     // let { job, companies, contacts, heroContacts } = this.props;
     //
@@ -261,15 +277,53 @@ export default class JobCreate extends React.Component {
     //   </div>,
     // ];
 
+    let locations = [];
+    let contacts = [];
+
+    let { company } = this.props;
+
     let clients = [];
-    if (this.props.company) {
-      clients.push(<ClientListItem company={this.props.company} type="tiny" />);
+    if (company) {
+      clients.push(<ClientListItem company={company} type="tiny" />);
+
+      if (company.get('location')) {
+        locations.push(<LocationListItem location={company.get('location')} type="tiny" />);
+      }
+
+      if (company.get('contacts')) {
+        company.get('contacts').forEach(function(c) {
+          contacts.push(<ContactListItem contact={c} company={company} type="tiny" />);
+        });
+      }
     }
 
     let categories = [];
     this.props.categories.forEach(function(c) {
       categories.push(<JobTemplateListItem jobTemplate={c} type="tiny" />);
     });
+
+
+    let money = [
+      <div style={{padding: '0px 20px'}}>
+        <RangeSlider
+            min={0}
+            max={180000}
+            step={1000}
+            value={this.state.salary}
+            format="money"
+        />
+      </div>,
+      <div style={{padding: '0px 20px'}}>
+        <RangeSlider
+            min={0}
+            max={150}
+            step={0.5}
+            value={this.state.hourlySalary}
+            onChange={this._onHourlySalaryChange.bind(this)}
+            format="money"
+        />
+      </div>,
+    ];
 
     return (
       <div>
@@ -285,11 +339,13 @@ export default class JobCreate extends React.Component {
               })()}
               <div style={style.addImage}>
                 <FileInput
-                  label={<div>
-                    <div>{this.props.jobImage?'Change Image':'Add Image'}</div>
-                    <IconButton style={style.addImageIcon} iconClassName="material-icons">camera_alt</IconButton>
-                  </div>}
-                  onFileChanged={this.onImageChange.bind(this)}
+                    label={
+                      <div>
+                        <div>{this.props.jobImage ? 'Change Image' : 'Add Image'}</div>
+                        <IconButton style={style.addImageIcon} iconClassName="material-icons">camera_alt</IconButton>
+                      </div>
+                    }
+                    onFileChanged={this.onImageChange.bind(this)}
                 />
                   <LinearProgress mode="determinate" value={this.props.job && this.props.job.get('percentUploaded')} />
               </div>
@@ -299,7 +355,10 @@ export default class JobCreate extends React.Component {
         <div>
           <JobOrderSwipeArea title={'Client'} items={clients} />
           <JobOrderSwipeArea title={'Job Description'} items={categories} />
-          <JobOrderSwipeArea title={'Hourly - Salary'} />
+          <JobOrderSwipeArea title={'Hourly - Salary'} items={money} />
+          <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} />
+          <JobOrderSwipeArea title={'Location'} items={locations} />
+
           {/*
             <JobTemplateListItem jobTemplate={this.props.categories.toArray()[0]} type="tiny" />
 
