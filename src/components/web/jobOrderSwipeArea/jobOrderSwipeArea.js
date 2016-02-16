@@ -97,8 +97,6 @@ class JobOrderSwipeArea extends React.Component {
 
     let { title } = this.props;
 
-    console.log(this.state.slideIndex);
-
     return (
       <div className="row center-xs" style={style.rowSwipe}>
         <div className="col-xs-12" style={style.colSwipe}>
@@ -113,8 +111,8 @@ class JobOrderSwipeArea extends React.Component {
                 <h2 style={style.rowSwipeTitle}>{title}</h2>
                 <p style={style.rowSwipeSubTitle}>swipe to select</p>
               </div>
-              {this.props.items.map((item, key) => {
-                return (<div key={key}>{item}</div>);
+              {this.props.items.map((item) => {
+                return (item);
               })}
             </ReactSwipe>
             <IconButton style={style.rowSwipeBefore} onTouchTap={this._onBefore.bind(this)} iconClassName="material-icons">navigate_before</IconButton>
