@@ -44,12 +44,12 @@ let style = {
     display:'inline-block',
     padding:'0px 16px',
     marginBottom:'8px',
-    height:'18px'
+    height:'18px',
   },
   starOn:{
     color:'#F5A623',
     fontSize:'22px',
-    width:'22px'
+    width:'22px',
   },
   status:{
     color:'#4A4A4A',
@@ -124,6 +124,48 @@ export default class ClientListItem extends React.Component {
     let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
+
+  renderBasic() {
+    let {company} = this.props;
+
+    let subTitle2 = (
+      <span>
+        <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
+        {company.get('location')&& company.get('location').get('city') }
+        , {company.get('location')&& company.get('location').get('countrySubDivisionCode')}
+      </span>
+    );
+
+    return (
+      <CardBasic
+        image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
+        title={company && company.get('name')}
+        subtitle1={company.get('businessType')|| 'Company'}
+        subtitle2={subTitle2}
+        stars={<Stars score={company.get('rating')}></Stars>}
+        onTouchTap={this.clickClient.bind(this)}
+      ></CardBasic>
+    );
+  }
+
+  renderTags() {
+    let {company} = this.props;
+
+    return (
+      <div style={style.badgeWrap}>
+      {company.get('tags') && company.get('tags').map(function(tag, i){
+        if(i <=3){
+          return (
+            <Tag key={i} value={tag} />
+          );
+        }
+        return (
+          <span key={i}></span>
+        );
+      })}
+    </div>);
+  }
+
   render(){
     let {company, type} = this.props;
 
@@ -152,47 +194,10 @@ export default class ClientListItem extends React.Component {
     if (peopleList.length > 0) {
       secondaryText = (<div style={style.peopleList}>{peopleList}</div>);
     }
-    let subTitle2 = (
-      <span>
-        <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
-        {company.get('location')&& company.get('location').get('city') }
-        , {company.get('location')&& company.get('location').get('countrySubDivisionCode')}
-      </span>
-    );
 
-    let self = this;
-
-    function renderBasic() {
-      return (
-        <CardBasic
-            image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
-            title={company && company.get('name')}
-            subtitle1={company.get('businessType')|| 'Company'}
-            subtitle2={subTitle2}
-            stars={<Stars score={company.get('rating')}></Stars>}
-            onTouchTap={self.clickClient.bind(this)}
-          ></CardBasic>
-      );
-    }
-
-    function renderTags() {
-      return (
-        <div style={style.badgeWrap}>
-        {company.get('tags') && company.get('tags').map(function(tag, i){
-          if(i <=3){
-            return (
-              <Tag key={i} value={tag} />
-            );
-          }
-          return (
-            <span key={i}></span>
-          );
-        })}
-      </div>);
-    }
 
     return (
-      type == 'tiny' ? (<div>{renderTags()}{renderBasic()}</div>) :
+      type == 'tiny' ? (<div>{this.renderTags()}{this.renderBasic()}</div>) :
       <Card
         style={{
           height: type !=='mini'?'auto':'80px',
@@ -202,10 +207,10 @@ export default class ClientListItem extends React.Component {
         }}>
         <CardText
           style={{
-            height: type !=='mini'?'auto':'auto'
+            height: type !=='mini'?'auto':'auto',
           }}>
-          {type !=='mini'?(renderTags()):(<div></div>)}
-            {renderBasic()}
+          {type !=='mini'?(this.renderTags()):(<div></div>)}
+            {this.renderBasic()}
             {type !== 'mini'?
             (<div>
               <Divider style={{marginTop:'8px'}}></Divider>
@@ -244,8 +249,7 @@ export default class ClientListItem extends React.Component {
         {type !== 'mini'?(<div>
           <CardActions style={{
             backgroundColor:'rgba(100,100,100,0.2)',
-            boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)'
-
+            boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)',
           }}>
             <PhoneButton phone={this.props.company && this.props.company.get('phone')} />
             <EmailButton email={this.props.company && this.props.company.get('email')} />

@@ -7,21 +7,23 @@ export default class JobTemplateListItem extends React.Component {
     super(props);
   }
 
-  render(){
-    let {jobTemplate, type} = this.props;
-
-    function renderBasic() {
-      return (
-        <CardBasic
-            image={<img style={{width: '40px', height: '40px'}} src='http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png' />}
-            title={jobTemplate.get('title')}
-            subtitle2={jobTemplate.get('description')}
-          ></CardBasic>
-      );
-    }
+  renderBasic() {
+    let {jobTemplate} = this.props;
 
     return (
-      type == 'tiny' ? (<div>{renderBasic()}</div>) :
+      <CardBasic
+        image={<img style={{width: '40px', height: '40px'}} src='http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png' />}
+        title={jobTemplate.get('title')}
+        subtitle2={jobTemplate.get('description')}
+      ></CardBasic>
+    );
+  }
+
+  render(){
+    let {type} = this.props;
+
+    return (
+      type == 'tiny' ? (<div>{this.renderBasic()}</div>) :
       <Card
         style={{
           height: type !=='mini'?'auto':'80px',
@@ -31,9 +33,9 @@ export default class JobTemplateListItem extends React.Component {
         }}>
         <CardText
           style={{
-            height: type !=='mini'?'auto':'auto'
+            height: type !=='mini'?'auto':'auto',
           }}>
-          {renderBasic()}
+          {this.renderBasic()}
         </CardText>
       </Card>
     );
