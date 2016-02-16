@@ -1,5 +1,6 @@
 import React from 'react';
 import { Styles, IconButton } from 'material-ui';
+import ReactSwipe from 'react-swipe';
 
 const style = {
   rowSwipe: {
@@ -7,6 +8,8 @@ const style = {
     borderBottom: '2px solid #D9D9D9',
     backgroundColor: Styles.Colors.white,
     position: 'relative',
+    margin: '0px',
+    // maxWidth: '100%',
   },
   rowSwipeTitle: {
     fontSize: '17px',
@@ -33,9 +36,40 @@ const style = {
     left: '10px',
     marginTop: '-22px',
   },
+  colSwipe: {
+    padding: '0px',
+  },
 };
 
 class JobOrderSwipeArea extends React.Component {
+
+  constructor(props){
+    super(props);
+
+    this.state = {
+      slideIndex: this.props.selected || 0,
+    };
+  }
+
+
+  _onBefore() {
+    this.refs.reactSwipe.swipe.prev();
+  }
+
+  _onAfter() {
+    this.refs.reactSwipe.swipe.next();
+  }
+
+  _onChange(index) {
+
+    this.setState({
+      slideIndex: index,
+    });
+
+    if (this.props.onChange) {
+      this.props.onChange();
+    }
+  }
 
   render() {
 
@@ -43,13 +77,25 @@ class JobOrderSwipeArea extends React.Component {
 
     return (
       <div className="row center-xs" style={style.rowSwipe}>
-        <div className="col-xs-12">
+        <div className="col-xs-12" style={style.colSwipe}>
           <div className="box">
-            <h2 style={style.rowSwipeTitle}>{title}</h2>
-            <p style={style.rowSwipeSubTitle}>swipe to select</p>
-            <IconButton style={style.rowSwipeBefore} iconClassName="material-icons">navigate_before</IconButton>
-            <IconButton style={style.rowSwipeNext} iconClassName="material-icons">navigate_next</IconButton>
-          </div>
+            <ReactSwipe
+                continuous
+                ref="reactSwipe"
+                transitionEnd={this._onChange.bind(this)}
+                slideToIndex={this.state.slideIndex}
+            >
+              <div>
+                <h2 style={style.rowSwipeTitle}>{title}</h2>
+                <p style={style.rowSwipeSubTitle}>swipe to select</p>
+              </div>
+              {this.props.items.map((item, key) => {
+                return (<div key={key}>{item}</div>);
+              })}
+            </ReactSwipe>
+            <IconButton style={style.rowSwipeBefore} onTouchTap={this._onBefore.bind(this)} iconClassName="material-icons">navigate_before</IconButton>
+            <IconButton style={style.rowSwipeNext} onTouchTap={this._onAfter.bind(this)} iconClassName="material-icons">navigate_next</IconButton>
+         </div>
         </div>
       </div>
     );
@@ -58,6 +104,8 @@ class JobOrderSwipeArea extends React.Component {
 
 JobOrderSwipeArea.propTypes = {
   items: React.PropTypes.array.isRequired,
+  onChange: React.PropTypes.func,
+  selected: React.PropTypes.number,
   title: React.PropTypes.string.isRequired,
 };
 

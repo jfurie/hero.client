@@ -39,8 +39,10 @@ const style = {
     background: Styles.Colors.grey900,
     color: '#FFFF',
     height: '64px',
-    position:'fixed',
-    zIndex:'1000',
+    position: 'fixed',
+    zIndex: '1000',
+    width: '100%',
+    maxWidth: '100%',
   },
   contentStyle: {
     width: '100%',
@@ -67,7 +69,7 @@ const style = {
   },
   toolbarFlat: {
     marginTop:'14px',
-    marginRight:'-16px',
+    marginRight:'-24px',
     marginLeft:'auto',
     color: '#FFFFFF',
   },
@@ -89,12 +91,14 @@ const style = {
   pictureRow: {
     backgroundColor: Styles.Colors.grey900,
     position: 'relative',
+    margin: '0px',
   },
   pictureBox: {
     marginBottom: '-4px',
   },
   orderDefault: {
     width: '100%',
+    borderRadius: '4px 4px 0px 0px',
   },
   addImage: {
     textAlign: 'center',
@@ -103,37 +107,6 @@ const style = {
     left: '50%',
     marginLeft: '-40px',
     marginTop: '-20px',
-  },
-  rowSwipe: {
-    padding: '30px 0px',
-    borderBottom: '2px solid #D9D9D9',
-    backgroundColor: Styles.Colors.white,
-    position: 'relative',
-  },
-  rowSwipeTitle: {
-    fontSize: '17px',
-    fontWeight: '800',
-    marginTop: '0px',
-    marginBottom: '0px',
-  },
-  rowSwipeSubTitle: {
-    fontWeight: '800',
-    fontSize: '12px',
-    opacity: '0.25',
-    marginTop: '0px',
-    marginBottom: '0px',
-  },
-  rowSwipeNext: {
-    position: 'absolute',
-    top: '50%',
-    right: '10px',
-    marginTop: '-22px',
-  },
-  rowSwipeBefore: {
-    position: 'absolute',
-    top: '50%',
-    left: '10px',
-    marginTop: '-22px',
   },
   addImageLabel: {
     margin: '0px',
