@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { ClientListItem, JobTemplateListItem, ContactListItem, LocationListItem } from '../../components/web';
+import { ClientListItem, JobTemplateListItem, ContactListItem, LocationListItem, RangeSlider } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
@@ -9,6 +9,7 @@ import { getAllCompanies, getMyCompanies, createTempCompany } from '../../module
 import { createTempContact } from '../../modules/contacts';
 import Immutable from 'immutable';
 import { ListItem, Divider, FontIcon } from 'material-ui';
+
 let ReactSwipe = require('react-swipe');
 
 function filterMyCandidates(candidates, auth) {
@@ -52,149 +53,20 @@ class TestPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openClientCreate: false,
-      clientSearchModalOpen: false,
-
-      openContactCreate: false,
-      contactSearchModalOpen: false,
+      salary: [90000, 120000],
     };
   }
 
   componentDidMount() {
-    this.props.getMyJobs();
-    this.props.getAllJobs();
-    this.props.getAllCompanies();
-    this.props.getMyCompanies();
-    if(this.props.auth && this.props.auth.authToken){
-      this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
-    }
-
 
   }
 
-  _handleJobClick(job){
-    this.props.pushState(null,'/clients/'+ job.get('companyId') + '/jobs/'+job.get('id'));
-  }
-  _handleClose(){
-    this.setState({openClientCreate:false});
-  }
+  onSalaryChange(value) {
+    console.log(value);
 
-  _handleOverlayTouchTap() {
-    console.log('lol');
-  }
-
-  _createContact() {
-    console.log('_createContact');
-  }
-
-  _createJob() {
-    console.log('_createJob');
-  }
-
-  _handleClientSave(id){
-    //onSave
-    console.log('saved',id);
     this.setState({
-      companyId:id,
-      openClientCreate:false,
+      salary: value,
     });
-    var self = this;
-    setTimeout(function () {
-      self.props.pushState(null, `/clients/${id}`);
-    }, 500);
-
-  }
-
-  onClientSearchOpen() {
-    this.refs.actionButtons.close();
-    this.props.history.pushState(null,`/clients/search`);
-  }
-
-  onClientSearchClose() {
-    this.setState({
-      clientSearchModalOpen: false,
-    });
-  }
-
-  onClientSelect(client) {
-    let id = client.id ? client.id : 'tmp_' + this._guid();
-    client.id = id;
-
-    this.props.createTempCompany(client);
-    this.setState({
-      companyId: id,
-      clientSearchModalOpen: false,
-      openClientCreate: true,
-    });
-  }
-
-  onClientCreateClose() {
-    this.setState({
-      openClientCreate: false,
-    });
-  }
-  onClientDetailsClose(){
-    var self = this;
-    setTimeout(function () {
-      self.props.history.goBack();
-    }, 10);
-  }
-
-  onContactSearchOpen() {
-    this.refs.actionButtons.close();
-    this.props.history.pushState(null,`/contacts/search`);
-  }
-
-  onContactSearchClose() {
-    this.setState({
-      contactSearchModalOpen: false,
-    });
-  }
-
-  onContactSelect(contact) {
-    let id = contact.id ? contact.id : 'tmp_' + this._guid();
-    contact.id = id;
-
-    this.props.createTempContact(contact);
-    this.setState({
-      contactId: id,
-      contactSearchModalOpen: false,
-    });
-    var self = this;
-    setTimeout(function () {
-      self.setState({
-        contactId: id,
-        openContactCreate: true
-      });
-
-    }, 10);
-  }
-
-  onContactCreateClose() {
-    this.setState({
-      openContactCreate: false,
-    });
-  }
-
-  onContactCompanyChange(companyId) {
-    this.setState({
-      companyId,
-    });
-  }
-
-  onJobSearchOpen() {
-    this.refs.actionButtons.close();
-    this.props.history.pushState(null,'/jobs/search');
-  }
-
-  _guid() {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4();
   }
 
   render () {
@@ -276,6 +148,17 @@ class TestPage extends React.Component {
         <Divider />
         <ListItem style={style.item}>
           <LocationListItem location={location} type="tiny" />
+        </ListItem>
+        <Divider />
+        <ListItem style={style.item}>
+          <RangeSlider
+            min={0}
+            max={180000}
+            step={1000}
+            value={this.state.salary}
+            onChange={this.onSalaryChange.bind(this)}
+            format="money"
+          />
         </ListItem>
       </div>
     );
