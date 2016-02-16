@@ -291,7 +291,9 @@ export default class JobCreate extends React.Component {
                   </div>}
                   onFileChanged={this.onImageChange.bind(this)}
                 />
-                <LinearProgress mode="determinate" value={this.props.job.get('percentUploaded')} />
+                {(this.props.job && this.props.job.get('percentUploaded')) ? (
+                  <LinearProgress mode="determinate" value={this.props.job.get('percentUploaded')} />
+                ) : (<div></div>)}
               </div>
             </div>
           </div>
