@@ -84,7 +84,9 @@ export default class JobDetails extends React.Component {
   }
 
   _onTouchTapShare() {
-    console.log('_onTouchTapShare');
+    let subject = `Check out ${this.props.job.get('title')} on HERO`;
+    let body = `${encodeURIComponent(this.props.job.get('title'))}%0A${encodeURIComponent(window.location.href)}`;
+    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
   _onTouchTapSearch() {
