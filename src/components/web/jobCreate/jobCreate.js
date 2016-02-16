@@ -5,7 +5,7 @@ import {
   FlatButton, ToolbarTitle, Styles,
 } from 'material-ui';
 
-import { ClientListItem, /*JobTemplateListItem, ContactListItem, LocationListItem, */ RangeSlider, JobOrderSwipeArea } from '../';
+import { ClientListItem, /*JobTemplateListItem, ContactListItem, LocationListItem,  RangeSlider, */ JobOrderSwipeArea } from '../';
 
 const style = {
   error: {
@@ -240,21 +240,23 @@ export default class JobCreate extends React.Component {
     //
     // let companyId = this.props.company ? this.props.company.get('id') : null;
 
-    let clients = [
-      <div>,
-    ];
+    // let clients = [
+    //   <ClientListItem company={this.props.company} type="tiny" />,
+    //   <ClientListItem company={this.props.company} type="tiny" />,
+    //   <ClientListItem company={this.props.company} type="tiny" />,
+    // ];
 
-    let salary = [
-      <div style={{padding: '20px'}}>
-        <RangeSlider
-            min={0}
-            max={180000}
-            step={1000}
-            value={this.state.salary}
-            format="money"
-        />
-      </div>,
-    ];
+    // let salary = [
+    //   <div style={{padding: '20px'}}>
+    //     <RangeSlider
+    //         min={0}
+    //         max={180000}
+    //         step={1000}
+    //         value={this.state.salary}
+    //         format="money"
+    //     />
+    //   </div>,
+    // ];
 
     //console.log(clients.length);
 
@@ -272,11 +274,26 @@ export default class JobCreate extends React.Component {
           </div>
         </div>
         <div>
-          <JobOrderSwipeArea title={'Client'} items={[<ClientListItem company={this.props.company} type="tiny" />, <ClientListItem company={this.props.company} type="tiny" />]} />
-          <JobOrderSwipeArea title={'Job Description'} items={[]} />
-          <JobOrderSwipeArea title={'Hourly - Salary'} items={salary} />
-          <JobOrderSwipeArea title={'Hiring Manager'} items={[]} />
-          <JobOrderSwipeArea title={'Location'} items={[]} />
+          <JobOrderSwipeArea title={'Client'}>
+            <ClientListItem company={this.props.company} type="tiny" />
+            <ClientListItem company={this.props.company} type="tiny" />
+          </JobOrderSwipeArea>
+          <JobOrderSwipeArea title={'Job Description'}>
+            <ClientListItem company={this.props.company} type="tiny" />
+            <ClientListItem company={this.props.company} type="tiny" />
+          </JobOrderSwipeArea>
+          <JobOrderSwipeArea title={'Hourly - Salary'}>
+            <ClientListItem company={this.props.company} type="tiny" />
+            <ClientListItem company={this.props.company} type="tiny" />
+          </JobOrderSwipeArea>
+          <JobOrderSwipeArea title={'Hiring Manager'}>
+            <ClientListItem company={this.props.company} type="tiny" />
+            <ClientListItem company={this.props.company} type="tiny" />
+          </JobOrderSwipeArea>
+          <JobOrderSwipeArea title={'Location'}>
+            <ClientListItem company={this.props.company} type="tiny" />
+            <ClientListItem company={this.props.company} type="tiny" />
+          </JobOrderSwipeArea>
         </div>
       </div>
     );

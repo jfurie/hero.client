@@ -96,6 +96,7 @@ class JobOrderSwipeArea extends React.Component {
   render() {
 
     let { title } = this.props;
+    let self = this;
 
     return (
       <div className="row center-xs" style={style.rowSwipe}>
@@ -111,9 +112,15 @@ class JobOrderSwipeArea extends React.Component {
                 <h2 style={style.rowSwipeTitle}>{title}</h2>
                 <p style={style.rowSwipeSubTitle}>swipe to select</p>
               </div>
-              {this.props.items.map((item) => {
-                return (item);
-              })}
+              {(self.props.children && self.props.children.length) ? (
+                self.props.children.map((child, key) => {
+                  return (
+                    <div key={key} /*style={{width: '100%', padding: '0px 60px'}}*/>
+                      <div style={{width: '150px', maxWidth: '150px'}}>{child}</div>
+                    </div>
+                  );
+                })
+              ) : (null)}
             </ReactSwipe>
             <IconButton style={style.rowSwipeBefore} onTouchTap={this._onBefore.bind(this)} iconClassName="material-icons">navigate_before</IconButton>
             <IconButton style={style.rowSwipeNext} onTouchTap={this._onAfter.bind(this)} iconClassName="material-icons">navigate_next</IconButton>
@@ -125,7 +132,7 @@ class JobOrderSwipeArea extends React.Component {
 }
 
 JobOrderSwipeArea.propTypes = {
-  items: React.PropTypes.array.isRequired,
+  // items: React.PropTypes.array.isRequired,
   onChange: React.PropTypes.func,
   selected: React.PropTypes.number,
   title: React.PropTypes.string.isRequired,
