@@ -25,6 +25,7 @@ export CandidateSearch from './candidateSearch/candidateSearch';
 export ClientsCreate from './clientsCreate/clientsCreate';
 export ContactCreate from './contactCreate/contactCreate';
 export NoteCreate from './noteCreate/noteCreate';
+export RangeSlider from './rangeSlider/rangeSlider';
 export ActionButton from './actionButton/actionButton';
 export ActionButtonItem from './actionButtonItem/actionButtonItem';
 export Location from './location/location';

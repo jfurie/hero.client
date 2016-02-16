@@ -62,6 +62,7 @@
     "react-pdf": "0.0.9",
     "react-redux": "^4.0.0",
     "react-router": "^1.0.0",
+    "react-slider": "^0.6.1",
     "react-sticky": "^3.0.0",
     "react-swipe": "^3.0.0",
     "react-tagsinput": "^3.0.3",
