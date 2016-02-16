@@ -125,141 +125,140 @@ export default class ClientListItem extends React.Component {
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
-  renderBasic(company, subTitle2) {
+  renderBasic() {
+    let {company} = this.props;
+
+    let subTitle2 = (
+      <span>
+        <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
+        {company.get('location')&& company.get('location').get('city') }
+        , {company.get('location')&& company.get('location').get('countrySubDivisionCode')}
+      </span>
+    );
+
     return (
       <CardBasic
-          image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
-          title={company && company.get('name')}
-          subtitle1={company.get('businessType')|| 'Company'}
-          subtitle2={subTitle2}
-          stars={<Stars score={company.get('rating')} />}
-          onTouchTap={this.clickClient.bind(this)}
-      />
+        image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
+        title={company && company.get('name')}
+        subtitle1={company.get('businessType')|| 'Company'}
+        subtitle2={subTitle2}
+        stars={<Stars score={company.get('rating')}></Stars>}
+        onTouchTap={this.clickClient.bind(this)}
+      ></CardBasic>
     );
   }
 
-  renderTags(company) {
+  renderTags() {
+    let {company} = this.props;
+
     return (
       <div style={style.badgeWrap}>
-        {company.get('tags') && company.get('tags').map(function(tag, i){
-          if(i <=3){
-            return (
-              <Tag key={i} value={tag} />
-            );
-          }
+      {company.get('tags') && company.get('tags').map(function(tag, i){
+        if(i <=3){
           return (
-            <span key={i}></span>
+            <Tag key={i} value={tag} />
           );
-        })}
-      </div>
-    );
+        }
+        return (
+          <span key={i}></span>
+        );
+      })}
+    </div>);
   }
 
   render(){
     let {company, type} = this.props;
 
-    if (company) {
-      let contacts = company.get('contacts');
-      contacts = contacts || new Immutable.List();
-      let peopleList = [];
+    let contacts = company.get('contacts');
+    contacts = contacts || new Immutable.List();
+    let peopleList = [];
 
-      let limit = contacts.count();
+    let limit = contacts.count();
 
-      if (contacts.count() > 4) {
-        limit = 2;
+    if (contacts.count() > 4) {
+      limit = 2;
+    }
+
+    contacts.forEach(function(c, key) {
+      if (key < limit) {
+        peopleList.push(<Gravatar style={style.gravatar} key={key} email={c.get('email')} status={'notset'}/>);
       }
+    });
 
-      contacts.forEach(function(c, key) {
-        if (key < limit) {
-          peopleList.push(<Gravatar style={style.gravatar} key={key} email={c.get('email')} status={'notset'}/>);
-        }
-      });
+    // add a + circle if needed
+    if (limit < contacts.count()) {
+      peopleList.push(<Avatar style={style.plusAvatar} key={limit} color="#FF1564" backgroundColor={Styles.Colors.grey300}>+{contacts.count() - limit}</Avatar>);
+    }
 
-      // add a + circle if needed
-      if (limit < contacts.count()) {
-        peopleList.push(<Avatar style={style.plusAvatar} key={limit} color="#FF1564" backgroundColor={Styles.Colors.grey300}>+{contacts.count() - limit}</Avatar>);
-      }
+    let secondaryText = (<div>No Contacts Yet</div>);
+    if (peopleList.length > 0) {
+      secondaryText = (<div style={style.peopleList}>{peopleList}</div>);
+    }
 
-      let secondaryText = (<div>No Contacts Yet</div>);
-      if (peopleList.length > 0) {
-        secondaryText = (<div style={style.peopleList}>{peopleList}</div>);
-      }
-      let subTitle2 = (
-        <span>
-          <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
-          {company.get('location')&& company.get('location').get('city') }
-          , {company.get('location')&& company.get('location').get('countrySubDivisionCode')}
-        </span>
-      );
 
-      //let self = this;
-
-      return (
-        type == 'tiny' ? (<div>{this.renderTags(company)}{this.renderBasic(company, subTitle2)}</div>) :
-        <Card
+    return (
+      type == 'tiny' ? (<div>{this.renderTags()}{this.renderBasic()}</div>) :
+      <Card
+        style={{
+          height: type !=='mini'?'auto':'80px',
+          marginBottom:'8px',
+          marginLeft:'8px',
+          marginRight:'8px',
+        }}>
+        <CardText
           style={{
-            height: type !=='mini'?'auto':'80px',
-            marginBottom:'8px',
-            marginLeft:'8px',
-            marginRight:'8px',
+            height: type !=='mini'?'auto':'auto',
           }}>
-          <CardText
-            style={{
-              height: type !=='mini'?'auto':'auto'
-            }}>
-            {type !=='mini'?(this.renderTags(company)):(<div></div>)}
-              {this.renderBasic(company, subTitle2)}
-              {type !== 'mini'?
-              (<div>
-                <Divider style={{marginTop:'8px'}}></Divider>
-                <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
-                  <div className="row between-xs" style={style.layoutCompanyDetails}>
-                    <div style={style.contactsLayout} >
-                      {secondaryText}
-                    </div>
-                    <div>
-                    <div style={{lineHeight:'25px', marginTop:'0px', textAlign:'right'}}>
-                        {company.get('clientAdvocate')?(<div>
-                          <Gravatar url={company.get('clientAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}></Gravatar> <div style={{display:'inline-block',lineHeight:'25px'}}>{company.get('clientAdvocate').get('displayName')}</div>
-                        </div>):(<div></div>)}
-                        <div style={{marginTop:'8px'}}>
-
-                          <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
-                          {company.get('stats') && company.get('stats').get('jobCount')|| 0}
-                          <FontIcon style={style.status} className="material-icons">assignment_ind</FontIcon>
-                          { company.get('stats') && company.get('stats').get('candidateCount')|| 0}
-                          <FontIcon style={style.statusRed} className="material-icons">assignment_late</FontIcon>
-                          {company.get('stats') && company.get('stats').get('actionsCount')|| 0}
-                          <FontIcon style={style.statusGreen} className="material-icons">assignment_turned_in</FontIcon>
-                          {company.get('stats') && company.get('stats').get('hiredCount')|| 0}
-                        </div>
-                    </div>
-
+          {type !=='mini'?(this.renderTags()):(<div></div>)}
+            {this.renderBasic()}
+            {type !== 'mini'?
+            (<div>
+              <Divider style={{marginTop:'8px'}}></Divider>
+              <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
+                <div className="row between-xs" style={style.layoutCompanyDetails}>
+                  <div style={style.contactsLayout} >
+                    {secondaryText}
                   </div>
+                  <div>
+                  <div style={{lineHeight:'25px', marginTop:'0px', textAlign:'right'}}>
+                      {company.get('clientAdvocate')?(<div>
+                        <Gravatar url={company.get('clientAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}></Gravatar> <div style={{display:'inline-block',lineHeight:'25px'}}>{company.get('clientAdvocate').get('displayName')}</div>
+                      </div>):(<div></div>)}
+                      <div style={{marginTop:'8px'}}>
+
+                        <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
+                        {company.get('stats') && company.get('stats').get('jobCount')|| 0}
+                        <FontIcon style={style.status} className="material-icons">assignment_ind</FontIcon>
+                        { company.get('stats') && company.get('stats').get('candidateCount')|| 0}
+                        <FontIcon style={style.statusRed} className="material-icons">assignment_late</FontIcon>
+                        {company.get('stats') && company.get('stats').get('actionsCount')|| 0}
+                        <FontIcon style={style.statusGreen} className="material-icons">assignment_turned_in</FontIcon>
+                        {company.get('stats') && company.get('stats').get('hiredCount')|| 0}
+                      </div>
+                  </div>
+
                 </div>
               </div>
-              </div>)
-              :(<div>
-              </div>)
-              }
+            </div>
+            </div>)
+            :(<div>
+            </div>)
+            }
 
-          </CardText>
-          {type !== 'mini'?(<div>
-            <CardActions style={{
-              backgroundColor:'rgba(100,100,100,0.2)',
-              boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)',
-            }}>
-              <PhoneButton phone={this.props.company && this.props.company.get('phone')} />
-              <EmailButton email={this.props.company && this.props.company.get('email')} />
-              <FavoriteButton />
-              <ShareButton />
-            </CardActions>
-          </div>):(<div></div>)}
+        </CardText>
+        {type !== 'mini'?(<div>
+          <CardActions style={{
+            backgroundColor:'rgba(100,100,100,0.2)',
+            boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)',
+          }}>
+            <PhoneButton phone={this.props.company && this.props.company.get('phone')} />
+            <EmailButton email={this.props.company && this.props.company.get('email')} />
+            <FavoriteButton />
+            <ShareButton />
+          </CardActions>
+        </div>):(<div></div>)}
 
-        </Card>
-      );
-    } else {
-      return (null);
-    }
+      </Card>
+    );
   }
 }
