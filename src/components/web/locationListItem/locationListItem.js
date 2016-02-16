@@ -7,9 +7,9 @@ export default class LocationListItem extends React.Component {
     super(props);
   }
 
-  render(){
-    let {location, type} = this.props;
-
+  renderBasic() {
+    let {location} = this.props;
+    
     let line1 = location.get('addressLine');
 
     let line2 = '';
@@ -24,19 +24,21 @@ export default class LocationListItem extends React.Component {
       line2 += location.get('postalCode');
     }
 
-    function renderBasic() {
-      return (
-        <CardBasic
-          image={<FontIcon className="material-icons" style={{color: '#F5A623', fontSize: '3em'}}>place</FontIcon>}
-          title={location.get('name')}
-          subtitle1={line1}
-          subtitle2={line2}
-        ></CardBasic>
-      );
-    }
+    return (
+      <CardBasic
+        image={<FontIcon className="material-icons" style={{color: '#F5A623', fontSize: '3em'}}>place</FontIcon>}
+        title={location.get('name')}
+        subtitle1={line1}
+        subtitle2={line2}
+      ></CardBasic>
+    );
+  }
+
+  render(){
+    let {type} = this.props;
 
     return (
-      type == 'tiny' ? (<div>{renderBasic()}</div>) :
+      type == 'tiny' ? (<div>{this.renderBasic()}</div>) :
       <Card
         style={{
           height: type !=='mini'?'auto':'80px',
@@ -48,7 +50,7 @@ export default class LocationListItem extends React.Component {
           style={{
             height: type !=='mini'?'auto':'auto'
           }}>
-          {renderBasic()}
+          {this.renderBasic()}
         </CardText>
       </Card>
     );
