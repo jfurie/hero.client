@@ -120,6 +120,9 @@ export default class ContactDetails extends React.Component {
       this.props.pushState({}, `/candidates/${this.props.candidate.get('id')}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
     }
   }
+  deleteNote(note){
+    this.props.deleteNote(note);
+  }
   addNoteModalOpen(e,note){
     this.addNote(note);
   }
@@ -489,7 +492,7 @@ export default class ContactDetails extends React.Component {
               })}
             </List>
             <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
-              <CompanyNotesList editNote={this.addNote.bind(this)} notes={contact.get('notes')}/>
+              <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
             </List>
           </CustomTabsSwipe>
         </div>

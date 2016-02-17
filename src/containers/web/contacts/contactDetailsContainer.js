@@ -4,7 +4,7 @@ import { pushState } from 'redux-router';
 import Immutable from 'immutable';
 import { ContactDetails } from '../../../components/web';
 import { getContactDetail } from '../../../modules/contacts';
-import { replaceNoteLocal } from '../../../modules/notes/index';
+import { replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 //const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 function getData(state, props) {
@@ -15,7 +15,7 @@ function getData(state, props) {
 
 @connect((state, props) => (
 getData(state, props)),
-{getContactDetail, replaceNoteLocal,pushState})
+{getContactDetail, replaceNoteLocal,pushState, deleteNote})
 class ContactDetailsPage extends React.Component {
 
   constructor(props) {
@@ -56,12 +56,18 @@ class ContactDetailsPage extends React.Component {
     this.props.pushState({}, `/contact/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
   }
 
+  _handleDeleteNote(note) {
+    this.props.replaceNoteLocal(note);
+    this.props.deleteNote(note.get('id'));
+    this.props.getContactDetail(this.props.params.contactId);
+  }
+
   render() {
 
     let {contact} = this.props;
     return (
       <div>
-        <ContactDetails location={this.props.location} onContactDetailsClose={this.onContactDetailsClose.bind(this)} open={true} contact={contact} />
+        <ContactDetails deleteNote={this._handleDeleteNote.bind(this)} location={this.props.location} onContactDetailsClose={this.onContactDetailsClose.bind(this)} open={true} contact={contact} />
       </div>
     );
   }
