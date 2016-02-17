@@ -23,7 +23,7 @@ export default class JobTemplateListItem extends React.Component {
         <CardBasic
           image={<img style={style.templatePicture} src={jobTemplate.get('imageUrl')} />}
           title={jobTemplate.get('title')}
-          subtitle2={jobTemplate.get('description')}
+          subtitle2={jobTemplate.get('shortDescription')}
         ></CardBasic>
       );
     } else {
