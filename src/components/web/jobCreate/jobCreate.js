@@ -8,7 +8,7 @@ import { FileInput } from '../';
 
 import {
   ClientListItem, JobTemplateListItem, RangeSlider,
-  LocationListItem, ContactListItem, JobOrderSwipeArea,
+  LocationListItem, ContactListItem, JobOrderSwipeArea, JobOrderMoneySwipeArea,
 } from '../';
 
 const style = {
@@ -308,19 +308,20 @@ export default class JobCreate extends React.Component {
       <div style={{padding: '0px 20px'}}>
         <RangeSlider
             min={0}
-            max={180000}
-            step={1000}
-            value={this.state.salary}
+            max={150}
+            step={0.5}
+            value={this.state.hourlySalary}
+            onChange={this._onHourlySalaryChange.bind(this)}
             format="money"
         />
       </div>,
       <div style={{padding: '0px 20px'}}>
         <RangeSlider
             min={0}
-            max={150}
-            step={0.5}
-            value={this.state.hourlySalary}
-            onChange={this._onHourlySalaryChange.bind(this)}
+            max={180000}
+            step={1000}
+            value={this.state.salary}
+            onChange={this._onSalaryChange.bind(this)}
             format="money"
         />
       </div>,
@@ -356,7 +357,7 @@ export default class JobCreate extends React.Component {
         <div>
           <JobOrderSwipeArea title={'Client'} items={clients} />
           <JobOrderSwipeArea title={'Job Description'} items={categories} />
-          <JobOrderSwipeArea title={'Hourly - Salary'} items={money} />
+          <JobOrderMoneySwipeArea title={'Hourly - Salary'} leftItems={[money[0]]} rightItems={[money[1]]}/>
           <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} />
           <JobOrderSwipeArea title={'Location'} items={locations} />
         </div>
@@ -367,8 +368,6 @@ export default class JobCreate extends React.Component {
   render() {
 
     //let {job} = this.props;
-
-
     //if (this.props.inline){
     return (
       <div>

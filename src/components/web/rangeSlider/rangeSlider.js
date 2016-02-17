@@ -5,8 +5,8 @@ let ReactSlider = require('react-slider');
 import './rangeSlider.scss';
 
 export default class RangeSlider extends React.Component {
-  onChange(value) {
 
+  onChange(value) {
     if (this.props.onChange) {
       this.props.onChange(value);
     }
@@ -18,14 +18,14 @@ export default class RangeSlider extends React.Component {
     }
 
     return (
-      <div style={{paddingTop: '30px'}}>
+      <div style={{paddingTop: '25px'}}>
         <ReactSlider className="horizontal-slider"
             min={this.props.min}
             max={this.props.max}
             step={this.props.step}
             value={this.props.value}
-            withBars={true}
-            pearling={true}
+            withBars
+            pearling
             onChange={this.onChange.bind(this)}
         >
           <div>

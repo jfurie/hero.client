@@ -48,6 +48,7 @@ export FavoriteButton from './actionButtons/favoriteButton';
 export ShareButton from './actionButtons/shareButton';
 export CardBasic from './cardBasic/cardBasic';
 export JobOrderSwipeArea from './jobOrderSwipeArea/jobOrderSwipeArea';
+export JobOrderMoneySwipeArea from './jobOrderMoneySwipeArea/jobOrderMoneySwipeArea';
 
 /* all the web modals components */
 
