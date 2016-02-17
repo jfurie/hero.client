@@ -3,6 +3,7 @@ import * as constants from './constants';
 const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
+  byJobId: new Immutable.Map(),
   localNote: new Immutable.Map(),
 };
 
@@ -88,6 +89,48 @@ export default function reducer(state = initialState, action = {}) {
       loading:false,
     };
   }
+  case constants.GET_NOTES_BY_JOB:{
+    return {
+      ...state,
+      loading:true,
+    };
+  }
+  case constants.GET_NOTES_BY_JOB_SUCCESS:{
+
+    let jobId = null;
+
+    if (action.result.length) {
+      jobId = action.result[0].notableId;
+    }
+
+    if (jobId) {
+      let byJobMap = {};
+      byJobMap[jobId] = action.result.map((note) => note.id);
+      let jobMap = {};
+      action.result.map((c) => {
+        jobMap[c.id] = c;
+      });
+
+      return {
+        ...state,
+        byJobId: state.byCompanyId.mergeDeep(byJobMap),
+        list: state.list.mergeDeep(jobMap),
+        loading:false,
+      };
+
+    }
+
+    return {
+      ...state,
+      loading:false,
+    };
+  }
+  case constants.GET_NOTES_BY_JOB_FAIL:{
+    return {
+      ...state,
+      loading:false,
+    };
+  }
   case constants.CREATE_NOTE:{
     action.note = action.note.set('saving',true);
     action.note = action.note.set('savingError',null);
@@ -161,10 +204,13 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.DELETE_NOTE_SUCCESS: {
+    let notableType = state.localNote.get('notableType');
+
     return {
       ...state,
       list: state.list.delete(state.localNote.get('id')),
-      byCompanyId: state.byCompanyId.delete(state.localNote.get('id')),
+      byCompanyId: notableType == 'company' ? state.byCompanyId.delete(state.localNote.get('id')) : state.byCompanyId,
+      byJobId: notableType == 'job' ? state.byJobId.delete(state.localNote.get('id')) : state.byJobId,
       loading: false,
       localNote: state.localNote.mergeDeep({deleted:true}),
     };

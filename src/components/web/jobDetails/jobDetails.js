@@ -6,7 +6,9 @@ import marked from 'marked';
 
 //import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard, CustomTabsSwipe, CandidatesList, CompanyAvatar } from '../../../components/web';
+import { List } from 'material-ui';
+
+import { Header, DetailsCard, CustomTabsSwipe, CandidatesList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -100,6 +102,20 @@ export default class JobDetails extends React.Component {
     this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/create`);
   }
 
+  createNoteModalOpen(){
+    if(this.props.addNoteModalOpen){
+      this.props.addNoteModalOpen();
+    }
+  }
+
+  editNote(note){
+    this.props.addNoteModalOpen(note);
+  }
+
+  deleteNote(note){
+    this.props.deleteNote(note);
+  }
+
   renderContent(job) {
 
     if (job) {
@@ -191,7 +207,7 @@ export default class JobDetails extends React.Component {
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
               topTags={job.get('tags') || []}
           />
-          <CustomTabsSwipe isLight isInline tabs={['Details', 'Desc', 'Applicants']}>
+          <CustomTabsSwipe isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
             <Card style={style.card}>
               <CardText>
                 {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
@@ -230,6 +246,9 @@ export default class JobDetails extends React.Component {
             <div>
               <CandidatesList candidates={job.get('candidates')} />
             </div>
+            <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
+              <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
+            </List>
           </CustomTabsSwipe>
 
         </div>
@@ -255,6 +274,7 @@ export default class JobDetails extends React.Component {
           }>
             <MenuItem onTouchTap={this._onTouchTabEdit.bind(this)} index={0} primaryText="Edit Job" />
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
+            <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
           </IconMenu>
         }
         />

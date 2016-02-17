@@ -29,3 +29,6 @@ export const SEARCH_JOBS = 'hero.client/jobs/SEARCH_JOBS';
 export const SEARCH_JOBS_SUCCESS = 'hero.client/jobs/SEARCH_JOBS_SUCCESS';
 export const SEARCH_JOBS_FAIL = 'hero.client/jobs/SEARCH_JOBS_FAIL';
 export const CREATE_TEMP_JOB = 'hero.client/jobs/CREATE_TEMP_JOB';
+export const GET_JOB_DETAIL = 'hero.client/jobs/GET_JOB_DETAIL';
+export const GET_JOB_DETAIL_SUCCESS = 'hero.client/jobs/GET_JOB_DETAIL_SUCCESS';
+export const GET_JOB_DETAIL_FAIL = 'hero.client/jobs/GET_JOB_DETAIL_FAIL';
