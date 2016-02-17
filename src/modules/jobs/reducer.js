@@ -290,6 +290,26 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.mergeDeep(contactsMap),
     };
   }
+  case constants.GET_JOB_DETAIL: {
+    return {
+      ...state,
+    };
+  }
+  case constants.GET_JOB_DETAIL_SUCCESS: {
+    let jobMap = {};
+    jobMap[action.result.id] = action.result;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(jobMap),
+    };
+  }
+  case constants.GET_JOB_DETAIL_FAIL: {
+    return {
+      ...state,
+      err: action.err,
+    };
+  }
   default:
     return state;
   }

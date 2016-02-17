@@ -2,23 +2,31 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 
-import { getOneNote, getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
+import { getOneNote, getNotesByCompany, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { NoteCreate } from '../../../components/web';
 
 let getData = (state, props) => {
   let note = null;
-
+  let notableType = null;
   if (props.params.noteId) {
     note = state.notes.localNote;
   }
 
+  if (props.params.jobId) {
+    notableType = 'job';
+  }
+  else if (props.params.companyId) {
+    notableType = 'company';
+  }
+
   return {
     note,
+    notableType,
     user: state.auth.user
   };
 };
 
-@connect(getData, { pushState, getOneNote, getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote })
+@connect(getData, { pushState, getOneNote, getNotesByCompany, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote })
 export default class NoteCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -40,10 +48,24 @@ export default class NoteCreateContainer extends React.Component {
       } else {
         let self = this;
         setTimeout(function () {
-          self.props.history.replaceState(null, `/clients/${newProps.note.get('notableId')}`);
+          if (self.props.notableType == 'job') {
+            self.props.history.replaceState(null, `/jobs/${newProps.note.get('notableId')}`);
+          }
+          else if (self.props.notableType == 'company') {
+            self.props.history.replaceState(null, `/clients/${newProps.note.get('notableId')}`);
+          }
+          else {
+            self.props.history.replaceState(null, `/`);
+          }
         }, 500);
 
-        this.props.getNotesByCompany(newProps.note.get('notableId'), newProps.user.id);
+        if (this.props.notableType == 'job') {
+          this.props.getNotesByJob(newProps.note.get('notableId'), newProps.user.id);
+        }
+        else {
+          this.props.getNotesByCompany(newProps.note.get('notableId'), newProps.user.id);
+        }
+
       }
     }
 
@@ -57,7 +79,14 @@ export default class NoteCreateContainer extends React.Component {
   }
 
   _handleSave(){
-    this.props.saveLocalNote(this.props.params.companyId, 'company');
+    switch(this.props.notableType) {
+    case 'company':
+      this.props.saveLocalNote(this.props.params.companyId, this.props.notableType);
+      break;
+    case 'job':
+      this.props.saveLocalNote(this.props.params.jobId, this.props.notableType);
+      break;
+    }
   }
 
   _handleClose(){

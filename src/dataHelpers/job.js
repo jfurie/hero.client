@@ -37,6 +37,21 @@ export default function getJobDataFromState(state, jobId) {
       job.set('talentAdvocate',contact);
     }
 
+    // filter down company notes
+    let notesByJobListIds = state.notes.byJobId.get(jobId);
+    let jobNotes = new Immutable.Map();
+
+    if (notesByJobListIds) {
+      jobNotes = state.notes.list.filter(x => {
+        return notesByJobListIds.indexOf(x.get('id')) > -1;
+      });
+    }
+
+    jobNotes = jobNotes.sort((a, b) => {
+      return new Date(b.get('created')) - new Date(a.get('created'));
+    });
+
+    job = job.set('notes', jobNotes);
   }
 
   return job;
