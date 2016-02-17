@@ -40,10 +40,16 @@ export default class NoteCreateContainer extends React.Component {
       } else {
         let self = this;
         setTimeout(function () {
-          self.props.history.replaceState(null, `/clients/${newProps.note.get('notableId')}`);
+          if(self.props.params.companyId){
+            self.props.history.replaceState(null, `/clients/${newProps.note.get('notableId')}`);
+          } else if(self.props.params.contactId){
+            self.props.history.replaceState({tab:2}, `/contacts/${newProps.note.get('notableId')}`);
+          } else if(self.props.params.candidateId){
+            self.props.history.replaceState({tab:2}, `/candidates/${newProps.note.get('notableId')}`);
+          }
         }, 500);
 
-        this.props.getNotesByCompany(newProps.note.get('notableId'), newProps.user.id);
+        //this.props.getNotesByCompany(newProps.note.get('notableId'), newProps.user.id);
       }
     }
 
@@ -57,7 +63,13 @@ export default class NoteCreateContainer extends React.Component {
   }
 
   _handleSave(){
-    this.props.saveLocalNote(this.props.params.companyId, 'company');
+    if(this.props.params.companyId){
+      this.props.saveLocalNote(this.props.params.companyId, 'company');
+    } else if( this.props.params.contactId){
+      this.props.saveLocalNote(this.props.params.contactId, 'contact');
+    } else if( this.props.params.candidateId){
+      this.props.saveLocalNote(this.props.params.candidateId, 'contact');
+    }
   }
 
   _handleClose(){

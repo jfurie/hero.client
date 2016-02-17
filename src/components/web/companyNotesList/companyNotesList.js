@@ -24,6 +24,7 @@ class CompanyNotesList extends React.Component {
     let self = this;
 
     let { notes } = this.props;
+    notes = notes || new Immutable.Map();
   //  let heroContact = '/img/rameet.jpg';
 
     return (
@@ -34,7 +35,7 @@ class CompanyNotesList extends React.Component {
 
         return (
           <div>
-          <Card initiallyExpanded>
+          <Card style={{marginLeft:'8px',marginRight:'8px',marginBottom:'8px'}} initiallyExpanded>
             <CardHeader
               title={contact.get('displayName')}
               subtitle={<div>{(note.get('privacyValue') ? 'Public' : 'Private')} | <TimeAgo live={true} date={note.get('updated')} /></div>}

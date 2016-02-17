@@ -72,7 +72,16 @@ export function replaceNoteLocal(note){
     result: note,
   };
 }
-
+export function createContactNote(contact, note){
+  return {
+    note,
+    types: [constants.CREATE_NOTE, constants.CREATE_NOTE_SUCCESS, constants.CREATE_NOTE_FAIL],
+    promise: (client, auth) => client.api.post(`/contacts/${contact}/notes`, {
+      authToken: auth.authToken,
+      data:note,
+    }),
+  };
+}
 export function saveLocalNote(notableId, notableType){
   return (dispatch, getState) => {
     let note = getState().notes.localNote;
@@ -89,6 +98,9 @@ export function saveLocalNote(notableId, notableType){
       switch (notableType) {
       case 'company':
         dispatch(createCompanyNote(notableId, note));
+        break;
+      case 'contact':
+        dispatch(createContactNote(notableId, note));
         break;
       default:
       }

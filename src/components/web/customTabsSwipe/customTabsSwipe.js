@@ -91,6 +91,9 @@ class CustomTabsSwipe extends React.Component {
     this.setState({
       slideIndex: index,
     });
+    if(this.props.onChange){
+      this.props.onChange(value);
+    }
   }
 
   // _reactSwipeShouldUpdate() {
@@ -123,7 +126,7 @@ class CustomTabsSwipe extends React.Component {
       tabsStyle.position = 'fixed';
       tabStyle.top = '0px';
     }
-
+    console.log('slideIndex ',this.state.slideIndex);
     return (
       <div>
         <Tabs
@@ -138,9 +141,10 @@ class CustomTabsSwipe extends React.Component {
             if (this.state.slideIndex == key && isLight) {
               tabStyleItem = style.tabLightSelected;
             }
-
+            console.log('slideIndex ',this.state.slideIndex);
+            console.log('key ',key);
             return (
-              <Tab label={tab} key={key} style={tabStyleItem} value={`${key}`}>
+              <Tab selected={this.state.slideIndex == key} label={tab} key={key} style={tabStyleItem} value={`${key}`}>
                 <div style={{paddingTop: (isInline) ? ('0px') : ('48px')}}>
                   {this.props.children[key]}
                 </div>

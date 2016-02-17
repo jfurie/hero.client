@@ -16,7 +16,7 @@ class CandidatesList extends React.Component {
     let candidate = this.props.candidates.filter(function (candidate) {
       return candidate.get('contactId') == contact.get('id');
     })[0];
-    this.props.pushState(null, `/candidates/${candidate.get('id')}`);
+    this.props.pushState(null, `/contacts/${candidate.get('contactId')}`);
   }
 
   render() {
