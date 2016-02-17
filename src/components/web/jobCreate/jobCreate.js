@@ -121,120 +121,14 @@ export default class JobCreate extends React.Component {
     this.props.closeModal();
   }
 
-  // _handleChange(e, field) {
-  //   let newJob = this.props.job;
-  //   let value = (e.target.value === '') ? (null) : (e.target.value);
-  //
-  //   newJob = newJob.set(field,value);
-  //
-  //   this.props.onJobChange(newJob);
-  // }
-  //
-  // _handleLocationChange(field, value) {
-  //   let newJob = this.props.job;
-  //
-  //   if (value) {
-  //     newJob = newJob.set(field,value);
-  //   } else {
-  //     newJob = newJob.delete(field);
-  //   }
-  //
-  //   this.props.onJobChange(newJob);
-  // }
-
-  // _handleCompanySelectValueChange(event, index, value) {
-  //   this.props.onCompanyChange(value);
-  // }
-
-  _handleSubmit(){
+  _handleSubmit() {
     if(this.props.job.get('saving') == true) return;
-
     this.props.onSubmit(this.props.job);
   }
 
   onImageChange(value){
     this.props.onImageChange(value);
   }
-
-  // _handleHeroValueChange(event, index, value) {
-  //   let newJob = this.props.job;
-  //
-  //   if (value) {
-  //     newJob = newJob.set('talentAdvocateId',value);
-  //   } else {
-  //     newJob = newJob.delete('talentAdvocateId');
-  //   }
-  //
-  //   this.props.onJobChange(newJob);
-  // }
-  //
-  // _handleSelectValueChange(event, index, value) {
-  //   let newJob = this.props.job;
-  //
-  //   if (value) {
-  //     newJob = newJob.set('contactId',value);
-  //   } else {
-  //     newJob = newJob.delete('contactId');
-  //   }
-  //
-  //   this.props.onJobChange(newJob);
-  // }
-  //
-  // _handleSkillsChange(skills){
-  //   let newJob = this.props.job;
-  //
-  //   if (skills) {
-  //     newJob = newJob.set('skills',skills);
-  //   } else {
-  //     newJob = newJob.delete('skills');
-  //   }
-  //
-  //   this.props.onJobChange(newJob, true);
-  // }
-
-  // _handleStartDateChange(e,value){
-  //   let newJob = this.props.job;
-  //
-  //   if (value) {
-  //     newJob = newJob.set('startDate',value);
-  //   } else {
-  //     newJob = newJob.delete('startDate');
-  //   }
-  //
-  //   this.props.onJobChange(newJob);
-  // }
-  //
-  // _handleEmploymentTypeValueChange(e, key, payload){
-  //   let newJob = this.props.job;
-  //
-  //   if (payload) {
-  //     newJob = newJob.set('employmentType',payload);
-  //   } else {
-  //     newJob = newJob.delete('employmentType');
-  //   }
-  //
-  //   this.props.onJobChange(newJob);
-  // }
-
-  // _handleDepartmentValueChange(e, key, payload){
-  //   let newJob = this.props.job;
-  //
-  //   if (payload) {
-  //     newJob = newJob.set('department', payload);
-  //   } else {
-  //     newJob = newJob.delete('department');
-  //   }
-  //
-  //   this.props.onJobChange(newJob);
-  // }
-  //
-  // _datePickerClose() {
-  //   console.log('close!');
-  // }
-  //
-  // _datePickerOpen() {
-  //   console.log('show!');
-  // }
 
   _onSalaryChange(value) {
     this.setState({
@@ -252,8 +146,6 @@ export default class JobCreate extends React.Component {
     let categoryId = null;
     let pos = 1;
 
-    console.log(index);
-
     this.props.categories.forEach(function(c, id) {
       //console.log(i, index);
       if (pos === index) {
@@ -263,69 +155,88 @@ export default class JobCreate extends React.Component {
     });
 
     this.props.onCategoryChange(categoryId);
+  }
 
-    // if (categoryId) {
-    //   this.props.onCategoryChange(categoryId);
-    // } else {
-    //   console.log('category is required');
-    // }
+  _onCompanyChange(index) {
+    let companyId = null;
+    let pos = 1;
+
+    this.props.clients.forEach(function(c, id) {
+      //console.log(i, index);
+      if (pos === index) {
+        companyId = id;
+      }
+      pos++;
+    });
+    this.props.onCompanyChange(companyId);
+  }
+
+  _onMoneyChange(index) {
+    //let isSalary = (index === 2)
+    console.log(index);
+  }
+
+  _onHiringManagerChange(index) {
+    let contactId = null;
+    let pos = 1;
+
+    this.props.contacts.forEach(function(c, id) {
+      if (pos === index) {
+        contactId = id;
+      }
+      pos++;
+    });
+    this.props.onContactChange(contactId);
+  }
+
+  _onLocationChange(index) {
+    let locationId = null;
+    let pos = 1;
+
+    this.props.locations.forEach(function(l) {
+      if (pos === index) {
+        locationId = l.get('id');
+      }
+      pos++;
+    });
+    this.props.onLocationChange(locationId);
   }
 
   _renderContents() {
-    // let { job, companies, contacts, heroContacts } = this.props;
-    //
-    // job = job || new Immutable.Map({errors:new Immutable.Map()});
-    //
-    // let isCandidate = job.get('isCandidate');
-    //
-    // if (isCandidate === undefined) {
-    //   isCandidate = false;
-    // }
-    //
-    // let companyId = this.props.company ? this.props.company.get('id') : null;
-
-    // let clients = [
-    //   <ClientListItem company={this.props.company} type="tiny" />,
-    //   <ClientListItem company={this.props.company} type="tiny" />,
-    //   <ClientListItem company={this.props.company} type="tiny" />,
-    // ];
-
-    // let salary = [
-    //   <div style={{padding: '20px'}}>
-    //     <RangeSlider
-    //         min={0}
-    //         max={180000}
-    //         step={1000}
-    //         value={this.state.salary}
-    //         format="money"
-    //     />
-    //   </div>,
-    // ];
-
-    let locations = [];
-    let contacts = [];
 
     let { company } = this.props;
+    let contacts = [];
+
+    /* clients */
 
     let clients = [];
-    if (company) {
-      clients.push(<ClientListItem company={company} type="tiny" />);
+    this.props.clients.forEach(function(c) {
+      clients.push(<ClientListItem company={c} type="tiny" />);
+    });
 
-      if (company.get('location')) {
-        locations.push(<LocationListItem location={company.get('location')} type="tiny" />);
-      }
-
-      if (company.get('contacts')) {
-        company.get('contacts').forEach(function(c) {
-          contacts.push(<ContactListItem contact={c} company={company} type="tiny" />);
-        });
-      }
-    }
+    /* job template */
 
     let categories = [];
     this.props.categories.forEach(function(c) {
       categories.push(<JobTemplateListItem jobTemplate={c} type="tiny" />);
     });
+
+    /* hr manager */
+
+    if (company) {
+      this.props.contacts.forEach(function(c) {
+        contacts.push(<ContactListItem contact={c} company={company} type="tiny" />);
+      });
+    }
+
+    /* location */
+
+    let locations = [];
+    this.props.locations.forEach(function(l) {
+      locations.push(<LocationListItem location={l} type="tiny" />);
+    });
+
+    /* salary */
 
     let money = [
       <div style={{padding: '0px 20px'}}>
@@ -378,20 +289,17 @@ export default class JobCreate extends React.Component {
           </div>
         </div>
         <div>
-          <JobOrderSwipeArea title={'Client'} items={clients} />
-          <JobOrderSwipeArea title={'Job Description'} items={categories} onChange={this._onCategoryChange.bind(this)}/>
-          <JobOrderMoneySwipeArea title={'Hourly - Salary'} leftItems={[money[0]]} rightItems={[money[1]]}/>
-          <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} />
-          <JobOrderSwipeArea title={'Location'} items={locations} />
+          <JobOrderSwipeArea title={'Client'} items={clients} onChange={this._onCompanyChange.bind(this)} />
+          <JobOrderSwipeArea title={'Job Description'} items={categories} onChange={this._onCategoryChange.bind(this)} />
+          <JobOrderMoneySwipeArea title={'Hourly - Salary'} leftItems={[money[0]]} rightItems={[money[1]]} onChange={this._onMoneyChange.bind(this)} />
+          <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} onChange={this._onHiringManagerChange.bind(this)} />
+          <JobOrderSwipeArea title={'Location'} items={locations} onChange={this._onLocationChange.bind(this)} />
         </div>
       </div>
     );
   }
 
   render() {
-
-    //let {job} = this.props;
-    //if (this.props.inline){
     return (
       <div>
         <Toolbar style={style.toolbarInline}>
@@ -409,41 +317,20 @@ export default class JobCreate extends React.Component {
         </div>
       </div>
     );
-    /*} /*else {
-      return (
-      <div>
-          <Dialog
-              open={this.props.open}
-              autoDetectWindowHeight={false}
-              autoScrollBodyContent={false}
-              repositionOnUpdate={false}
-              defaultOpen={false}
-              style={style.dialog}
-              bodyStyle={style.bodyStyle}
-              contentStyle={style.contentStyle}
-            >
-            <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
-              <Toolbar style={style.toolbar}>
-                <ToolbarGroup key={0} float="left">
-                  <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconStyle={{'color': '#ffffff'}} iconClassName='material-icons'>close</IconButton>
-                  <ToolbarTitle style={style.toolbarTitle} text={'Create Job'} />
-                </ToolbarGroup>
-                <ToolbarGroup key={1} float="right">
-                  <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
-                </ToolbarGroup>
-              </Toolbar>
-              <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
-                {this._renderContents()}
-              </div>
-            </div>
-          </Dialog>
-      </div>);
-    } */
   }
 }
 
 JobCreate.propTypes = {
-  categories: React.PropTypes.object.isRequired,
+  categories: React.PropTypes.object,
   company: React.PropTypes.object,
+  contacts: React.PropTypes.object,
+  clients: React.PropTypes.array,
+  locations: React.PropTypes.array,
   onCategoryChange: React.PropTypes.func.isRequired,
+  onCompanyChange: React.PropTypes.func.isRequired,
+  onContactChange: React.PropTypes.func.isRequired,
+  onImageChange: React.PropTypes.func.isRequired,
+  onLocationChange: React.PropTypes.func.isRequired,
+  onSalaryChange: React.PropTypes.func.isRequired,
+  onSubmit: React.PropTypes.func.isRequired,
 };

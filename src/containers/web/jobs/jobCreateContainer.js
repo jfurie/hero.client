@@ -98,6 +98,7 @@ export default class JobCreateContainer extends React.Component {
   }
 
   _handleChange(job, dontMergeDeep){
+    console.log('_handleChange', job.toJS());
     this.props.updateJob(job, dontMergeDeep);
   }
 
@@ -111,8 +112,9 @@ export default class JobCreateContainer extends React.Component {
   }
 
   _handleSave(job){
-    this.props.saveJob(job);
+    this.props.saveJob(job, this.props.categories.get(job.get('categoryId')));
   }
+
   _handleCategoryChange(categoryId){
 
     console.log('_handleCategoryChange!', categoryId);
@@ -120,14 +122,21 @@ export default class JobCreateContainer extends React.Component {
     let job = this.props.job.set('categoryId', categoryId);
     this._handleChange(job);
   }
+
   _handleSalaryChange(currentCompensationView){
     replaceState({
       ...this.props.location.state,
       currentCompensationView,
     },(location.pathname+location.search));
   }
-  _handleLocationChange(locationId){
+
+  _handleLocationChange(locationId) {
     let job = this.props.job.set('locationId', locationId);
+    this._handleChange(job);
+  }
+
+  _handleContactChange(contactId) {
+    let job = this.props.job.set('contactId', contactId);
     this._handleChange(job);
   }
 
@@ -150,17 +159,37 @@ export default class JobCreateContainer extends React.Component {
 
   render() {
 
+    let { company } = this.props;
+    let locations = [];
+    let contacts = [];
+    let clients = [];
+
+    if (company) {
+      if (company.get('location')) {
+        locations.push(company.get('location'));
+      }
+
+      contacts = company.get('contacts');
+      clients = [company];
+    }
+
     return (
       <JobCreate
           company={this.props.company}
+          contacts={contacts}
+          clients={this.props.companies}
           job={this.props.job}
           categories={this.props.categories}
+          locations={locations}
           jobImage={this.props.jobImage}
           closeModal={this._handleClose.bind(this)}
           onSubmit={this._handleSave.bind(this)}
           onJobChange={this._handleChange.bind(this)}
           onCompanyChange={this._handleCompanyChange.bind(this)}
           onCategoryChange={this._handleCategoryChange.bind(this)}
+          onSalaryChange={this._handleSalaryChange.bind(this)}
+          onLocationChange={this._handleLocationChange.bind(this)}
+          onContactChange={this._handleContactChange.bind(this)}
           open={this.state.open}
           onImageChange={this.onJobCreateImageChange.bind(this)}
           inline

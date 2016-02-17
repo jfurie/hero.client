@@ -63,23 +63,13 @@ class JobOrderSwipeArea extends React.Component {
   }
 
   _onBefore() {
-
     this.refs.reactSwipe.swipe.prev();
-
-    if (this.props.onChange) {
-      let index = this.refs.reactSwipe.swipe.getPos();
-      this.props.onChange(index);
-    }
+    this._onChange(this.refs.reactSwipe.swipe.getPos());
   }
 
   _onAfter() {
-
     this.refs.reactSwipe.swipe.next();
-
-    if (this.props.onChange) {
-      let index = this.refs.reactSwipe.swipe.getPos();
-      this.props.onChange(index);
-    }
+    this._onChange(this.refs.reactSwipe.swipe.getPos());
   }
 
   _onChange(index) {
@@ -96,15 +86,6 @@ class JobOrderSwipeArea extends React.Component {
   _reactSwipeShouldUpdate() {
     return true;
   }
-
-  // _onTouchMove(e) {
-  //   console.log('_onTouchMove jobOrderSwipe');
-  //   //this.refs.reactSwipe.swipe.kill();
-  //   // e.preventDefault();
-  //   // e.nativeEvent.preventDefault();
-  //   // e.stopPropagation();
-  //   // e.nativeEvent.stopImmediatePropagation();
-  // }
 
   render() {
 
