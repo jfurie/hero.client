@@ -145,12 +145,12 @@ export function updateJobImage(id,file) {
     });
   };
 }
-export function saveJob(job){
+export function saveJob(job, category){
   return (dispatch) => {
     let current = job;
     let id = current.get('id');
     if(!id || (id.indexOf('tmp') > -1)){
-      dispatch(createJob(current));
+      dispatch(createJob(current, category));
     }
     else {
       dispatch(editJob(current));
