@@ -114,6 +114,9 @@ export default class JobCreateContainer extends React.Component {
     this.props.saveJob(job);
   }
   _handleCategoryChange(categoryId){
+
+    console.log('_handleCategoryChange!', categoryId);
+
     let job = this.props.job.set('categoryId', categoryId);
     this._handleChange(job);
   }

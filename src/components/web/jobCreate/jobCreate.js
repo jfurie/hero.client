@@ -248,6 +248,29 @@ export default class JobCreate extends React.Component {
     });
   }
 
+  _onCategoryChange(index) {
+    let categoryId = null;
+    let pos = 1;
+
+    console.log(index);
+
+    this.props.categories.forEach(function(c, id) {
+      //console.log(i, index);
+      if (pos === index) {
+        categoryId = id;
+      }
+      pos++;
+    });
+
+    this.props.onCategoryChange(categoryId);
+
+    // if (categoryId) {
+    //   this.props.onCategoryChange(categoryId);
+    // } else {
+    //   console.log('category is required');
+    // }
+  }
+
   _renderContents() {
     // let { job, companies, contacts, heroContacts } = this.props;
     //
@@ -356,7 +379,7 @@ export default class JobCreate extends React.Component {
         </div>
         <div>
           <JobOrderSwipeArea title={'Client'} items={clients} />
-          <JobOrderSwipeArea title={'Job Description'} items={categories} />
+          <JobOrderSwipeArea title={'Job Description'} items={categories} onChange={this._onCategoryChange.bind(this)}/>
           <JobOrderMoneySwipeArea title={'Hourly - Salary'} leftItems={[money[0]]} rightItems={[money[1]]}/>
           <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} />
           <JobOrderSwipeArea title={'Location'} items={locations} />
@@ -422,4 +445,5 @@ export default class JobCreate extends React.Component {
 JobCreate.propTypes = {
   categories: React.PropTypes.object.isRequired,
   company: React.PropTypes.object,
+  onCategoryChange: React.PropTypes.func.isRequired,
 };
