@@ -194,6 +194,7 @@ export default(store) => {
               <Route path="search" component={ContactSearchContainer}/>
               <Route path=":contactId" component={ContactDetailsPage}/>
               <Route path=":contactId/create" component={ContactCreatePage}/>
+              <Route path=":contactId/notes/:noteId/create" component={NoteCreatePage}></Route>
           </Route>
 
           {/* Jobs */}
@@ -209,6 +210,7 @@ export default(store) => {
             <IndexRoute component={MyCandidatesPage}/>
             <Route path="search" component={CandidateSearchContainer} />
             <Route path=":candidateId" component={CandidateDetailsPage}/>
+            <Route path=":candidateId/notes/:noteId/create" component={NoteCreatePage}></Route>
           </Route>
 
           {/* Settings  */}

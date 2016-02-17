@@ -49,7 +49,7 @@ class CandidateDetailsPage extends React.Component {
 
     return (
       <div>
-        <ContactDetails onContactDetailsClose={this.onContactDetailsClose.bind(this)} open candidate={candidate} />
+        <ContactDetails location={this.props.location} onContactDetailsClose={this.onContactDetailsClose.bind(this)} open candidate={candidate} />
       </div>
     );
   }

@@ -131,11 +131,13 @@ export function saveLocalNote(notableId, notableType){
       case 'company':
         dispatch(createCompanyNote(notableId, note));
         break;
+<<<<<<< HEAD
       case 'contact':
         dispatch(createContactNote(notableId, note));
-        break;
+=======
       case 'job':
         dispatch(createJobNote(notableId, note));
+>>>>>>> origin/thien
         break;
       default:
       }
