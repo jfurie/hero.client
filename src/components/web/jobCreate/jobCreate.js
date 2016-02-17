@@ -112,6 +112,8 @@ export default class JobCreate extends React.Component {
     super(props);
 
     this.state = {
+      isSalary: false,
+      isHourly: false,
       salary: [90000, 120000],
       hourlySalary: [20, 50],
     };
@@ -134,11 +136,23 @@ export default class JobCreate extends React.Component {
     this.setState({
       salary: value,
     });
+
+    this.props.onSalaryChange({
+      isSalary: this.state.isSalary,
+      isHourly: this.state.isHourly,
+      value,
+    });
   }
 
   _onHourlySalaryChange(value) {
     this.setState({
       hourlySalary: value,
+    });
+
+    this.props.onSalaryChange({
+      isSalary: this.state.isSalary,
+      isHourly: this.state.isHourly,
+      value,
     });
   }
 
@@ -172,8 +186,28 @@ export default class JobCreate extends React.Component {
   }
 
   _onMoneyChange(index) {
-    //let isSalary = (index === 2)
-    console.log(index);
+
+    let isSalary = (index === 2) ? (true) : (false);
+    let isHourly = (index === 0) ? (true) : (false);
+
+    let value = null;
+    if (isSalary) {
+      value = this.state.salary;
+    } else if (isHourly) {
+      value = this.state.hourlySalary;
+    }
+
+    this.props.onSalaryChange({
+      isSalary,
+      isHourly,
+      value,
+    });
+
+    this.setState({
+      isSalary,
+      isHourly,
+    });
+
   }
 
   _onHiringManagerChange(index) {
@@ -207,11 +241,20 @@ export default class JobCreate extends React.Component {
     let { company } = this.props;
     let contacts = [];
 
+    // default indexes
+    let clientDefaultSlide = 0;
+    let locationDefaultSlide = 0;
+
     /* clients */
 
     let clients = [];
+    let pos = 1;
     this.props.clients.forEach(function(c) {
       clients.push(<ClientListItem company={c} type="tiny" />);
+      if (company && company.get('id') === c.get('id')) {
+        clientDefaultSlide = pos;
+      }
+      pos++;
     });
 
     /* job template */
@@ -234,6 +277,7 @@ export default class JobCreate extends React.Component {
     let locations = [];
     this.props.locations.forEach(function(l) {
       locations.push(<LocationListItem location={l} type="tiny" />);
+      locationDefaultSlide = 1;
     });
 
     /* salary */
@@ -289,11 +333,11 @@ export default class JobCreate extends React.Component {
           </div>
         </div>
         <div>
-          <JobOrderSwipeArea title={'Client'} items={clients} onChange={this._onCompanyChange.bind(this)} />
+          <JobOrderSwipeArea title={'Client'} items={clients} onChange={this._onCompanyChange.bind(this)} selected={clientDefaultSlide}/>
           <JobOrderSwipeArea title={'Job Description'} items={categories} onChange={this._onCategoryChange.bind(this)} />
           <JobOrderMoneySwipeArea title={'Hourly - Salary'} leftItems={[money[0]]} rightItems={[money[1]]} onChange={this._onMoneyChange.bind(this)} />
           <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} onChange={this._onHiringManagerChange.bind(this)} />
-          <JobOrderSwipeArea title={'Location'} items={locations} onChange={this._onLocationChange.bind(this)} />
+          <JobOrderSwipeArea title={'Location'} items={locations} onChange={this._onLocationChange.bind(this)} selected={locationDefaultSlide}/>
         </div>
       </div>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
-import { pushState, replaceState } from 'redux-router';
+import { pushState /*, replaceState */ } from 'redux-router';
 
 import { getMyCompanies, getCompanyDetail } from '../../../modules/companies/index';
 import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs } from '../../../modules/jobs/index';
@@ -123,11 +123,21 @@ export default class JobCreateContainer extends React.Component {
     this._handleChange(job);
   }
 
-  _handleSalaryChange(currentCompensationView){
-    replaceState({
-      ...this.props.location.state,
-      currentCompensationView,
-    },(location.pathname+location.search));
+  _handleSalaryChange(money){
+
+    //console.log(money, ((money.isSalary || money.isHourly) && money.value));
+
+    if ((money.isSalary || money.isHourly) && money.value) {
+
+      let data = Immutable.Map({
+        minSalary: money.value[0],
+        maxSalary: money.value[1],
+        isHourly: money.isHourly,
+      });
+
+      let job = this.props.job.merge(data);
+      this._handleChange(job);
+    }
   }
 
   _handleLocationChange(locationId) {
@@ -162,7 +172,7 @@ export default class JobCreateContainer extends React.Component {
     let { company } = this.props;
     let locations = [];
     let contacts = [];
-    let clients = [];
+    //let clients = [];
 
     if (company) {
       if (company.get('location')) {
@@ -170,7 +180,7 @@ export default class JobCreateContainer extends React.Component {
       }
 
       contacts = company.get('contacts');
-      clients = [company];
+      //clients = [company];
     }
 
     return (
