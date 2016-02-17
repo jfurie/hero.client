@@ -17,6 +17,10 @@ let getData = (state, props) => {
   }
   else if (props.params.companyId) {
     notableType = 'company';
+  } else if (props.params.contactId){
+    notableType = 'contact';
+  } else if (props.params.candidateId){
+    notableType = 'contact';
   }
 
   return {
@@ -85,11 +89,14 @@ export default class NoteCreateContainer extends React.Component {
       this.props.saveLocalNote(this.props.params.jobId, this.props.notableType);
       break;
     }
-    if( this.props.params.contactId){
-      this.props.saveLocalNote(this.props.params.contactId, 'contact');
-    } else if( this.props.params.candidateId){
-      this.props.saveLocalNote(this.props.params.candidateId, 'contact');
-    }
+    case 'contact':
+	  if(this.props.params.candidateId){
+		this.props.saveLocalNote(this.props.params.candidateId, this.props.notableType);
+	  } else {
+		this.props.saveLocalNote(this.props.params.contactId, this.props.notableType);
+      }
+
+      break;
   }
 
   _handleClose(){

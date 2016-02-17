@@ -169,6 +169,7 @@ export default(store) => {
             <Route path=":companyId/jobs/:jobId/candidates/search" component={ContactSearchContainer}></Route>
             <Route path=":companyId/jobs/:jobId/candidates/:contactId/create" component={ContactCreatePage}></Route>
 			<Route path=":companyId/notes/:noteId/create" component={NoteCreatePage}></Route>
+      <Route path=":companyId/jobs/:jobId/notes/:noteId/create" component={NoteCreatePage}></Route>
             <Route path=":companyId/create" component={ClientCreatePage}/>
             <Route path=":companyId" component={ClientDetailsPage}
               onEnter={(nextState) => {
@@ -193,6 +194,7 @@ export default(store) => {
               <Route path="search" component={ContactSearchContainer}/>
               <Route path=":contactId" component={ContactDetailsPage}/>
               <Route path=":contactId/create" component={ContactCreatePage}/>
+              <Route path=":contactId/notes/:noteId/create" component={NoteCreatePage}></Route>
           </Route>
 
           {/* Jobs */}
@@ -208,6 +210,7 @@ export default(store) => {
             <IndexRoute component={MyCandidatesPage}/>
             <Route path="search" component={CandidateSearchContainer} />
             <Route path=":candidateId" component={CandidateDetailsPage}/>
+            <Route path=":candidateId/notes/:noteId/create" component={NoteCreatePage}></Route>
           </Route>
 
           {/* Settings  */}

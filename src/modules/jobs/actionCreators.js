@@ -1,5 +1,7 @@
 import superagent from 'superagent';
 import * as constants from './constants';
+import { saveNotesByJobResult } from '../notes';
+
 export function getJobsByCompany(companyId){
 
   let include = [
@@ -193,5 +195,22 @@ export function saveJobsByCompanyResult(jobs){
   return {
     type: constants.GET_JOBS_BY_COMPANY_SUCCESS,
     result: jobs,
+  };
+}
+
+export function getJobDetail(id) {
+  return (dispatch) => {
+    dispatch({
+      types: [constants.GET_JOB_DETAIL, constants.GET_JOB_DETAIL_SUCCESS, constants.GET_JOB_DETAIL_FAIL],
+      promise: (client, auth) => client.api.get(`/jobs/detail?id=${id}`, {
+        authToken: auth.authToken,
+      }).then((job)=> {
+        if (job.notes && job.notes.length > 0) {
+          dispatch(saveNotesByJobResult(job.notes));
+        }
+
+        return job;
+      }),
+    });
   };
 }
