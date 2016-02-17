@@ -91,7 +91,7 @@ export function updateJob(job,dontMergeDeep){
     id:job.get('id'),
     type: constants.UPDATE_JOB,
     result: job,
-    dontMergeDeep
+    dontMergeDeep,
   };
 }
 export function replaceJobLocal(job){
@@ -162,7 +162,7 @@ export function getMyJobs(){
   return {
     types: [constants.GET_MY_JOBS, constants.GET_MY_JOBS_SUCCESS, constants.GET_MY_JOBS_FAIL],
     promise: (client, auth) => client.api.get('/jobs/myJobs', {
-      authToken: auth.authToken
+      authToken: auth.authToken,
     }),
   };
 }

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState, replaceState } from 'redux-router';
 
-import { getOneCompany, getMyCompanies } from '../../../modules/companies/index';
+import { getMyCompanies, getCompanyDetail } from '../../../modules/companies/index';
 import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { getAllCategories } from '../../../modules/categories';
@@ -36,7 +36,6 @@ let getData = (state, props) => {
     }
   }
 
-
   return {
     job,
     company,
@@ -48,7 +47,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getOneCompany, getContactsByCompany, getMyJobs, getMyCompanies, getAllCategories })
+@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, getCompanyDetail, replaceJob, getOneJob, getContactsByCompany, getMyJobs, getAllCategories, getMyCompanies })
 export default class JobCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -62,6 +61,7 @@ export default class JobCreateContainer extends React.Component {
     this.props.getContactsByCompany(this.props.params.companyId);
     this.props.getMyCompanies();
     this.props.getAllCategories();
+    this.props.getCompanyDetail(this.props.params.companyId);
     if(this.props.params.jobId && this.props.params.jobId.indexOf('tmp')<=-1 ){
       this.props.getOneJob(this.props.params.jobId);
     }

@@ -1,5 +1,4 @@
 import React from 'react';
-//import Immutable from 'immutable';
 import {
   IconButton, ToolbarGroup, Toolbar,
   FlatButton, ToolbarTitle, Styles,
@@ -102,6 +101,9 @@ const style = {
   },
   addImageLabel: {
     margin: '0px',
+  },
+  progress: {
+    borderRadius: '0px',
   },
 };
 
@@ -302,7 +304,6 @@ export default class JobCreate extends React.Component {
       categories.push(<JobTemplateListItem jobTemplate={c} type="tiny" />);
     });
 
-
     let money = [
       <div style={{padding: '0px 20px'}}>
         <RangeSlider
@@ -347,7 +348,7 @@ export default class JobCreate extends React.Component {
                     }
                     onFileChanged={this.onImageChange.bind(this)}
                 />
-                  <LinearProgress mode="determinate" value={this.props.job && this.props.job.get('percentUploaded')} />
+                  <LinearProgress mode="determinate" style={style.progress} value={this.props.job && this.props.job.get('percentUploaded')} />
               </div>
             </div>
           </div>
@@ -358,25 +359,6 @@ export default class JobCreate extends React.Component {
           <JobOrderSwipeArea title={'Hourly - Salary'} items={money} />
           <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} />
           <JobOrderSwipeArea title={'Location'} items={locations} />
-
-          {/*
-            <JobTemplateListItem jobTemplate={this.props.categories.toArray()[0]} type="tiny" />
-
-            <JobOrderSwipeArea title={'Hourly - Salary'}>
-            <ClientListItem company={this.props.company} type="tiny" />
-            <ClientListItem company={this.props.company} type="tiny" />
-          </JobOrderSwipeArea>
-
-          <JobOrderSwipeArea title={'Hiring Manager'}>
-            <ClientListItem company={this.props.company} type="tiny" />
-            <ClientListItem company={this.props.company} type="tiny" />
-          </JobOrderSwipeArea>
-
-          <JobOrderSwipeArea title={'Location'}>
-            <ClientListItem company={this.props.company} type="tiny" />
-            <ClientListItem company={this.props.company} type="tiny" />
-          </JobOrderSwipeArea>*/}
-
         </div>
       </div>
     );
