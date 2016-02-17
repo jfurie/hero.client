@@ -40,6 +40,7 @@ import JobDetailsPage from './containers/web/jobs/jobDetailsContainer';
 import JobSearchContainer from './containers/web/jobs/jobSearchContainer';
 import MyJobsPage from './containers/web/jobs/myJobsContainer';
 import JobCreatePage from './containers/web/jobs/jobCreateContainer';
+import JobEditPage from './containers/web/jobs/jobEditContainer';
 
 //notes
 import NoteCreatePage from './containers/web/notes/noteCreateContainer';
@@ -160,30 +161,29 @@ export default(store) => {
 
           {/* Clients */}
           <Route path="clients">
-            <IndexRoute component={ClientsPage}/>
-            <Route path="search" component={ClientSearchContainer}/>
-            <Route path=":companyId/contacts/search" component={ContactSearchContainer}></Route>
-            <Route path=":companyId/contacts/:contactId/create" component={ContactCreatePage}></Route>
-            <Route path=":companyId/jobs/search" component={JobSearchContainer}></Route>
-            <Route path=":companyId/jobs/:jobId/create" component={JobCreatePage}></Route>
-            <Route path=":companyId/jobs/:jobId/candidates/search" component={ContactSearchContainer}></Route>
-            <Route path=":companyId/jobs/:jobId/candidates/:contactId/create" component={ContactCreatePage}></Route>
-			<Route path=":companyId/notes/:noteId/create" component={NoteCreatePage}></Route>
-            <Route path=":companyId/create" component={ClientCreatePage}/>
-            <Route path=":companyId" component={ClientDetailsPage}
-              onEnter={(nextState) => {
-                nextState.params.clientDetailsOpen = true;
-              }} />
+            <IndexRoute component={ClientsPage} />
+            <Route path="search" component={ClientSearchContainer} />
+            <Route path=":companyId/contacts/search" component={ContactSearchContainer} />
+            <Route path=":companyId/contacts/:contactId/create" component={ContactCreatePage} />
+            <Route path=":companyId/jobs/search" component={JobSearchContainer} />
+            <Route path=":companyId/jobs/:jobId/create" component={JobCreatePage} />
+            <Route path=":companyId/jobs/:jobId/edit" component={JobEditPage} />
+            <Route path=":companyId/jobs/:jobId/candidates/search" component={ContactSearchContainer} />
+            <Route path=":companyId/jobs/:jobId/candidates/:contactId/create" component={ContactCreatePage} />
+            <Route path=":companyId/notes/:noteId/create" component={NoteCreatePage} />
+            <Route path=":companyId/create" component={ClientCreatePage} />
+            <Route path=":companyId" component={ClientDetailsPage} onEnter={(nextState) => {
+              nextState.params.clientDetailsOpen = true;}}
+            />
             <Route path=":id/jobs" component={ClientDetailsPage} onEnter={(nextState) => {
-              nextState.params.tab = 'jobs';
-            }} />
+              nextState.params.tab = 'jobs';}}
+            />
             <Route path=":id/jobs/:jobId" component={JobDetailsPage} />
             <Route path=":id/jobs(/:create)" component={ClientDetailsPage} />
             <Route path=":id" component={ClientDetailsPage} />
-              <Route path=":id/notes" component={ClientDetailsPage}
-                onEnter={(nextState) => {
-                  nextState.params.tab = 'notes';
-                }} />
+            <Route path=":id/notes" component={ClientDetailsPage} onEnter={(nextState) => {
+              nextState.params.tab = 'notes';}}
+            />
           </Route>
 
           {/* Contacts */}
@@ -201,6 +201,7 @@ export default(store) => {
               <Route path="search" component={JobSearchContainer}/>
               <Route path=":jobId" component={JobDetailsPage}/>
               <Route path=":jobId/create" component={JobCreatePage}/>
+              <Route path=":jobId/edit" component={JobEditPage}/>
           </Route>
 
           {/*<Route path="/myjobs" component={MyJobsPage}/>*/}
@@ -215,7 +216,6 @@ export default(store) => {
             <IndexRoute component={SettingsHomePage}/>
             <Route path="account" onEnter={requireAccount} component={SettingsAccountPage}/>
           </Route>
-
 
           {/* Account  */}
           <Route path="/account" onEnter={requireAccount}>
