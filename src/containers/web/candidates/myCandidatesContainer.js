@@ -14,7 +14,7 @@ class MyCandidatesPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getMyContacts();
+    this.props.getMyCandidates();
   }
 
   render() {
