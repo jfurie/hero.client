@@ -106,6 +106,9 @@ export default class JobDetails extends React.Component {
     this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/edit`);
   }
 
+  _onTouchCompanyIcon(){
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}`);
+  }
   createNoteModalOpen(){
     if(this.props.addNoteModalOpen){
       this.props.addNoteModalOpen();
@@ -207,7 +210,7 @@ export default class JobDetails extends React.Component {
               cover={cover}
               mainColor={Styles.Colors.amber700}
               actions={actions}
-              avatar={<CompanyAvatar style={{width: '50px'}} url={companyWebsite}/>}
+              avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '50px'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
               topTags={job.get('tags') || []}
