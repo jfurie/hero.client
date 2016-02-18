@@ -2,9 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import marked from 'marked';
-//import md5 from 'md5';
-
-//import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
 import { Header, DetailsCard, CustomTabsSwipe, CandidatesList, CompanyAvatar } from '../../../components/web';
 import {

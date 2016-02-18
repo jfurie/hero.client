@@ -161,7 +161,6 @@ export default class JobCreate extends React.Component {
     let pos = 1;
 
     this.props.categories.forEach(function(c, id) {
-      //console.log(i, index);
       if (pos === index) {
         categoryId = id;
       }
@@ -176,7 +175,6 @@ export default class JobCreate extends React.Component {
     let pos = 1;
 
     this.props.clients.forEach(function(c, id) {
-      //console.log(i, index);
       if (pos === index) {
         companyId = id;
       }
@@ -243,6 +241,7 @@ export default class JobCreate extends React.Component {
     // default indexes
     let clientDefaultSlide = 0;
     let locationDefaultSlide = 0;
+    let hrDefaultSlide = 0;
 
     /* clients */
 
@@ -268,6 +267,7 @@ export default class JobCreate extends React.Component {
     if (company) {
       this.props.contacts.forEach(function(c) {
         contacts.push(<ContactListItem contact={c} company={company} type="tiny" />);
+        hrDefaultSlide = 1;
       });
     }
 
@@ -335,7 +335,7 @@ export default class JobCreate extends React.Component {
           <JobOrderSwipeArea title={'Client'} items={clients} onChange={this._onCompanyChange.bind(this)} selected={clientDefaultSlide}/>
           <JobOrderSwipeArea title={'Job Description'} items={categories} onChange={this._onCategoryChange.bind(this)} />
           <JobOrderMoneySwipeArea title={'Hourly - Salary'} leftItems={[money[0]]} rightItems={[money[1]]} onChange={this._onMoneyChange.bind(this)} />
-          <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} onChange={this._onHiringManagerChange.bind(this)} />
+          <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} onChange={this._onHiringManagerChange.bind(this)} selected={hrDefaultSlide} />
           <JobOrderSwipeArea title={'Location'} items={locations} onChange={this._onLocationChange.bind(this)} selected={locationDefaultSlide}/>
         </div>
       </div>
@@ -368,11 +368,13 @@ JobCreate.propTypes = {
   clients: React.PropTypes.object,
   company: React.PropTypes.object,
   contacts: React.PropTypes.object,
+  job: React.PropTypes.object,
   locations: React.PropTypes.array,
   onCategoryChange: React.PropTypes.func.isRequired,
   onCompanyChange: React.PropTypes.func.isRequired,
   onContactChange: React.PropTypes.func.isRequired,
   onImageChange: React.PropTypes.func.isRequired,
+  onJobChange: React.PropTypes.func.isRequired,
   onLocationChange: React.PropTypes.func.isRequired,
   onSalaryChange: React.PropTypes.func.isRequired,
   onSubmit: React.PropTypes.func.isRequired,
