@@ -251,7 +251,7 @@ export default class JobCreate extends React.Component {
     this.props.clients.forEach(function(c) {
       clients.push(<ClientListItem company={c} type="tiny" />);
       if (company && company.get('id') === c.get('id')) {
-        clientDefaultSlide = pos;
+        clientDefaultSlide = 0; //pos;
       }
       pos++;
     });
@@ -365,9 +365,9 @@ export default class JobCreate extends React.Component {
 
 JobCreate.propTypes = {
   categories: React.PropTypes.object,
+  clients: React.PropTypes.array,
   company: React.PropTypes.object,
   contacts: React.PropTypes.object,
-  clients: React.PropTypes.array,
   locations: React.PropTypes.array,
   onCategoryChange: React.PropTypes.func.isRequired,
   onCompanyChange: React.PropTypes.func.isRequired,

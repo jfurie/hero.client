@@ -112,7 +112,7 @@ class JobSearchContainer extends React.Component {
     if(this.props.onJobSelect) {
       this.props.onJobSelect(job);
     } else {
-      let id = job.id ? job.id : 'tmp_' + this._guid();
+      let id = (job.id) ? (job.id) : (`tmp_${this._guid()}`);
       job.id = id;
       job.companyId = this.props.params.companyId || job.companyId || (this.props.companies.first() && this.props.companies.first().get('id'));
 
