@@ -3,23 +3,17 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
-import { getAllJobs, getMyFavoriteJobs } from '../../modules/jobs/index';
-import { getAllCompanies, getMyFavoriteCompanies, createTempCompany } from '../../modules/companies';
+import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs } from '../../modules/jobs/index';
+import { getAllAccountCandidates } from '../../modules/candidates';
+import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies } from '../../modules/companies';
 import { createTempContact, getMyFavoriteContacts } from '../../modules/contacts';
 
 import { Styles } from 'material-ui';
-
-//import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
-
-
-//import Overlay from 'material-ui/lib/overlay';
-//import StylePropable from 'material-ui/lib/mixins/style-propable';
 
 const style = {
   slide: {
     minHeight: `${window.innerHeight - 160}px`,
-    // marginTop: '48px',
   },
   actionButton: {
     position: 'fixed',
@@ -37,7 +31,7 @@ const style = {
   contacts: state.contacts,
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getMyFavoriteContacts, getAllCompanies, getMyFavoriteJobs, getMyFavoriteCompanies, createTempCompany, createTempContact})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, getMyFavoriteJobs})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -52,42 +46,40 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
+    this.props.getMyJobs();
+    this.props.getAllJobs();
+    this.props.getAllCompanies();
+    this.props.getMyCompanies();
+
     this.props.getMyFavoriteJobs();
     this.props.getMyFavoriteCompanies();
     this.props.getMyFavoriteContacts();
+
+    if(this.props.auth && this.props.auth.authToken){
+      this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
+    }
   }
 
   _handleJobClick(job){
-    this.props.pushState(null,'/clients/'+ job.get('companyId') + '/jobs/'+job.get('id'));
+    this.props.pushState(null, `/clients/${job.get('companyId')}/jobs/${job.get('id')}`);
   }
+
   _handleClose(){
     this.setState({openClientCreate:false});
   }
 
-  _handleOverlayTouchTap() {
-    console.log('lol');
-  }
-
-  _createContact() {
-    console.log('_createContact');
-  }
-
-  _createJob() {
-    console.log('_createJob');
-  }
-
   _handleClientSave(id){
-    //onSave
-    console.log('saved',id);
+
     this.setState({
       companyId:id,
       openClientCreate:false,
     });
-    var self = this;
+
+    let self = this;
+
     setTimeout(function () {
       self.props.pushState(null, `/clients/${id}`);
     }, 500);
-
   }
 
   onClientSearchOpen() {
@@ -102,7 +94,7 @@ class HomePage extends React.Component {
   }
 
   onClientSelect(client) {
-    let id = client.id ? client.id : 'tmp_' + this._guid();
+    let id = (client.id) ? (client.id) : (`tmp_${this._guid()}`);
     client.id = id;
 
     this.props.createTempCompany(client);
@@ -118,8 +110,9 @@ class HomePage extends React.Component {
       openClientCreate: false,
     });
   }
+
   onClientDetailsClose(){
-    var self = this;
+    let self = this;
     setTimeout(function () {
       self.props.history.goBack();
     }, 10);
@@ -137,7 +130,7 @@ class HomePage extends React.Component {
   }
 
   onContactSelect(contact) {
-    let id = contact.id ? contact.id : 'tmp_' + this._guid();
+    let id = (contact.id) ? (contact.id) : (`tmp_${this._guid()}`);
     contact.id = id;
 
     this.props.createTempContact(contact);
@@ -145,13 +138,12 @@ class HomePage extends React.Component {
       contactId: id,
       contactSearchModalOpen: false,
     });
-    var self = this;
+    let self = this;
     setTimeout(function () {
       self.setState({
         contactId: id,
-        openContactCreate: true
+        openContactCreate: true,
       });
-
     }, 10);
   }
 
@@ -167,9 +159,37 @@ class HomePage extends React.Component {
     });
   }
 
-  onJobSearchOpen() {
+  // onJobSearchOpen() {
+  //   this.refs.actionButtons.close();
+  //   this.props.history.pushState(null,'/jobs/search');
+  // }
+
+  onJobCreateOpen() {
     this.refs.actionButtons.close();
-    this.props.history.pushState(null,'/jobs/search');
+
+    //console.log(this.props.companies && this.props.companies.list);
+
+    // let companyId = null;
+    // if (this.props.companies && this.props.companies.list && this.props.companies.list.size) {
+    //   companyId = this.props.companies.list.first().get('id');
+    // }
+
+    // create tpm job
+    let job = {
+      id: `tmp_${this._guid()}`,
+      //companyId,
+    };
+
+    this.props.createTempJob(job);
+    let self = this;
+
+    setTimeout(function () {
+      //self.props.history.replaceState(null,`/clients/${job.companyId}/jobs/${job.id}/create`);
+      self.props.history.replaceState(null,`/jobs/${job.id}/create`);
+
+    }, 500);
+
+    //this.props.history.pushState(null,'/jobs/search');
   }
 
   _guid() {
@@ -178,19 +198,18 @@ class HomePage extends React.Component {
         .toString(16)
         .substring(1);
     }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4();
+    return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   }
 
   render () {
-    //console.log(window);
+
     let { contacts, companies, jobs } = this.props;
-    //let { query } = this.props.location;
+
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
         <ContentAdd />
       </ActionButtonItem>,
-      <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this.onJobSearchOpen.bind(this)}>
+      <ActionButtonItem title={'Job'} color={Styles.Colors.purple500} itemTapped={this.onJobCreateOpen.bind(this)}>
         <ContentAdd />
       </ActionButtonItem>,
       <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this.onClientSearchOpen.bind(this)}>
@@ -200,8 +219,7 @@ class HomePage extends React.Component {
 
     return (
       <div>
-        <Header title='Dashboard'></Header>
-
+        <Header title="Dashboard" />
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
           <div style={style.slide}>
             <ClientsList clients={companies.myFavoriteCompanyIds} />
@@ -213,7 +231,7 @@ class HomePage extends React.Component {
             <ContactsList contacts={contacts.myFavoriteContactIds}/>
           </div>
         </CustomTabsSwipe>
-        <ActionButton ref='actionButtons' actions={actions}/>
+        <ActionButton ref="actionButtons" actions={actions}/>
       {
         /*
         <ClientDetailsContainer

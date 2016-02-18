@@ -385,12 +385,14 @@ export function saveCompanyResult(company){
 }
 
 export function getCompanyDetail(id) {
+
   return (dispatch) => {
     dispatch({
       types: [constants.GET_COMPANY_DETAIL, constants.GET_COMPANY_DETAIL_SUCCESS, constants.GET_COMPANY_DETAIL_FAIL],
       promise: (client, auth) => client.api.get(`/companies/detail?id=${id}`, {
         authToken: auth.authToken,
       }).then((company)=> {
+
         dispatch(saveCompanyResult(company));
 
         if (company.location) {

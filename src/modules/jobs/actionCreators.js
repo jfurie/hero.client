@@ -43,11 +43,20 @@ export function getAllJobs() {
   };
 }
 
-export function createJob(job){
+export function createJob(job, category){
   let id = job.get('id');
-  if(id && id.indexOf('tmp') > -1){
+
+  if (id && id.indexOf('tmp') > -1) {
     job = job.remove('id');
   }
+
+  if (category) {
+    //Going to fill out the fields based on category
+    job = job
+    .set('description',category.get('description'))
+    .set('title',category.get('title'));
+  }
+
   return {
     id,
     job,
@@ -87,7 +96,7 @@ export function updateJob(job,dontMergeDeep){
     id:job.get('id'),
     type: constants.UPDATE_JOB,
     result: job,
-    dontMergeDeep
+    dontMergeDeep,
   };
 }
 export function replaceJobLocal(job){
@@ -141,12 +150,12 @@ export function updateJobImage(id,file) {
     });
   };
 }
-export function saveJob(job){
+export function saveJob(job, category){
   return (dispatch) => {
     let current = job;
     let id = current.get('id');
     if(!id || (id.indexOf('tmp') > -1)){
-      dispatch(createJob(current));
+      dispatch(createJob(current, category));
     }
     else {
       dispatch(editJob(current));
@@ -158,7 +167,7 @@ export function getMyJobs(){
   return {
     types: [constants.GET_MY_JOBS, constants.GET_MY_JOBS_SUCCESS, constants.GET_MY_JOBS_FAIL],
     promise: (client, auth) => client.api.get('/jobs/myJobs', {
-      authToken: auth.authToken
+      authToken: auth.authToken,
     }),
   };
 }

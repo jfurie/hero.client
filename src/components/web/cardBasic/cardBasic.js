@@ -22,11 +22,13 @@ let style = {
     fontSize: '16px',
     lineHeight: '16px',
     fontWeight: 'bold',
+    textAlign: 'left',
   },
   subtitle:{
     color: 'rgba(0, 0, 0, 0.54)',
     fontSize: '14px',
     lineHeight: '18px',
+    textAlign: 'left',
   },
 };
 

@@ -9,11 +9,18 @@ export default class LocationListItem extends React.Component {
 
   renderBasic() {
     let {location} = this.props;
-    
     let line1 = location.get('addressLine');
-
     let line2 = '';
-    if (location.get('city')) line2 += location.get('city');
+    let title = location.get('name');
+
+    if (location.get('city')) {
+      line2 += location.get('city');
+
+      if (!title) {
+        title = `${location.get('city')} office`;
+      }
+    }
+
     if (location.get('countrySubDivisionCode')) {
       if (location.get('city')) line2 += ', ';
       line2 += location.get('countrySubDivisionCode');
@@ -26,11 +33,11 @@ export default class LocationListItem extends React.Component {
 
     return (
       <CardBasic
-        image={<FontIcon className="material-icons" style={{color: '#F5A623', fontSize: '3em'}}>place</FontIcon>}
-        title={location.get('name')}
-        subtitle1={line1}
-        subtitle2={line2}
-      ></CardBasic>
+          image={<FontIcon className="material-icons" style={{color: '#F5A623', fontSize: '3em'}}>place</FontIcon>}
+          title={title}
+          subtitle1={line1}
+          subtitle2={line2}
+      />
     );
   }
 
