@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState /*, replaceState */ } from 'redux-router';
-
+import { Snackbar } from 'material-ui';
 import { getMyCompanies, getCompanyDetail } from '../../../modules/companies/index';
 import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
@@ -53,6 +53,7 @@ export default class JobCreateContainer extends React.Component {
     super(props);
     this.state = {
       open: true,
+      error: false,
     };
   }
 
@@ -97,6 +98,12 @@ export default class JobCreateContainer extends React.Component {
     }
   }
 
+  _handleErrorClose() {
+    this.setState({
+      error: false,
+    });
+  }
+
   _handleChange(job, dontMergeDeep){
     console.log('_handleChange', job.toJS());
     this.props.updateJob(job, dontMergeDeep);
@@ -111,21 +118,28 @@ export default class JobCreateContainer extends React.Component {
     }, 500);
   }
 
-  _handleSave(job){
-    this.props.saveJob(job, this.props.categories.get(job.get('categoryId')));
+  _handleSave(job) {
+
+    let categoryId = job.get('categoryId');
+    let contactId =  job.get('contactId');
+    let minSalary = job.get('minSalary');
+    let maxSalary = job.get('maxSalary');
+    let companyId = job.get('companyId');
+
+    if (categoryId && contactId && minSalary && maxSalary && companyId) {
+      this.props.saveJob(job, this.props.categories.get(job.get('categoryId')));
+    }
   }
 
   _handleCategoryChange(categoryId){
 
-    console.log('_handleCategoryChange!', categoryId);
+    //console.log('_handleCategoryChange!', categoryId);
 
     let job = this.props.job.set('categoryId', categoryId);
     this._handleChange(job);
   }
 
   _handleSalaryChange(money){
-
-    //console.log(money, ((money.isSalary || money.isHourly) && money.value));
 
     if ((money.isSalary || money.isHourly) && money.value) {
 

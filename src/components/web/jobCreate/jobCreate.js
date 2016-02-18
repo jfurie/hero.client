@@ -207,7 +207,6 @@ export default class JobCreate extends React.Component {
       isSalary,
       isHourly,
     });
-
   }
 
   _onHiringManagerChange(index) {
