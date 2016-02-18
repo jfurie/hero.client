@@ -64,7 +64,7 @@ export default class JobCreateContainer extends React.Component {
       this.props.getContactsByCompany(this.props.params.companyId);
       this.props.getCompanyDetail(this.props.params.companyId);
     }
-    
+
     this.props.getMyCompanies();
     this.props.getAllCategories();
 
@@ -118,7 +118,9 @@ export default class JobCreateContainer extends React.Component {
     this._handleChange(job);
     let self = this;
     setTimeout(function () {
-      self.props.history.replaceState(null, `/clients/${companyId}/jobs/${self.props.params.jobId}/create`);
+      if (companyId) {
+        self.props.history.replaceState(null, `/clients/${companyId}/jobs/${self.props.params.jobId}/create`);
+      }
     }, 500);
   }
 

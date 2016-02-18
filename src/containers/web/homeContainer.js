@@ -193,15 +193,15 @@ class HomePage extends React.Component {
 
     //console.log(this.props.companies && this.props.companies.list);
 
-    let companyId = null;
-    if (this.props.companies && this.props.companies.list && this.props.companies.list.size) {
-      companyId = this.props.companies.list.first().get('id');
-    }
+    // let companyId = null;
+    // if (this.props.companies && this.props.companies.list && this.props.companies.list.size) {
+    //   companyId = this.props.companies.list.first().get('id');
+    // }
 
     // create tpm job
     let job = {
       id: `tmp_${this._guid()}`,
-      companyId,
+      //companyId,
     };
 
     this.props.createTempJob(job);
