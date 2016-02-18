@@ -134,6 +134,8 @@ export default class JobCreateContainer extends React.Component {
 
     if (categoryId && contactId && minSalary && maxSalary && companyId) {
       this.props.saveJob(job, this.props.categories.get(job.get('categoryId')));
+    } else {
+      console.log('can\'t save', categoryId,contactId,minSalary,maxSalary,companyId);
     }
   }
 
