@@ -128,11 +128,22 @@ export default class ClientListItem extends React.Component {
   renderBasic() {
     let {company} = this.props;
 
+    let line = '';
+
+    if (company.get('location')) {
+      line = company.get('location').get('city');
+      let countrySubDivisionCode = company.get('location').get('countrySubDivisionCode');
+      if (line && line.length && countrySubDivisionCode && countrySubDivisionCode.length) {
+        line += `, ${countrySubDivisionCode}`;
+      } else {
+        line = countrySubDivisionCode;
+      }
+    }
+
     let subTitle2 = (
       <span>
         <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
-        {company.get('location') && company.get('location').get('city')}
-        , {company.get('location')&& company.get('location').get('countrySubDivisionCode')}
+        {line || ''}
       </span>
     );
 
@@ -140,7 +151,7 @@ export default class ClientListItem extends React.Component {
       <CardBasic
           image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
           title={company && company.get('name')}
-          subtitle1={company.get('businessType')|| 'Company'}
+          subtitle1={company.get('businessType') || 'Software Company'}
           subtitle2={subTitle2}
           stars={<Stars score={company.get('rating')} />}
           onTouchTap={this.clickClient.bind(this)}
