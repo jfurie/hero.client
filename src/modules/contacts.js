@@ -29,11 +29,25 @@ const EDIT_CONTACT_FAIL = 'hero.client/contacts/EDIT_CONTACT_FAIL';
 const GET_CONTACT_DETAIL = 'hero.client/contacts/GET_CONTACT_DETAIL';
 const GET_CONTACT_DETAIL_SUCCESS = 'hero.client/contacts/GET_CONTACT_DETAIL_SUCCESS';
 const GET_CONTACT_DETAIL_FAIL = 'hero.client/contacts/GET_CONTACT_DETAIL_FAIL';
+const CREATE_CONTACT_FAVORITE = 'hero.client/contacts/CREATE_CONTACT_FAVORITE';
+const CREATE_CONTACT_FAVORITE_SUCCESS = 'hero.client/contacts/CREATE_CONTACT_FAVORITE_SUCCESS';
+const CREATE_CONTACT_FAVORITE_FAIL = 'hero.client/contacts/CREATE_CONTACT_FAVORITE_FAIL';
+const DELETE_CONTACT_FAVORITE = 'hero.client/contacts/DELETE_CONTACT_FAVORITE';
+const DELETE_CONTACT_FAVORITE_SUCCESS = 'hero.client/contacts/DELETE_CONTACT_FAVORITE_SUCCESS';
+const DELETE_CONTACT_FAVORITE_FAIL = 'hero.client/contacts/DELETE_CONTACT_FAVORITE_FAIL';
+const GET_MY_CONTACTS = 'hero.client/candidates/GET_MY_CONTACTS';
+const GET_MY_CONTACTS_SUCCESS = 'hero.client/candidates/GET_MY_CONTACTS_SUCCESS';
+const GET_MY_CONTACTS_FAIL = 'hero.client/candidates/GET_MY_CONTACTS_FAIL';
+const GET_MY_FAVORITE_CONTACTS = 'hero.client/candidates/GET_MY_FAVORITE_CONTACTS';
+const GET_MY_FAVORITE_CONTACTS_SUCCESS = 'hero.client/candidates/GET_MY_FAVORITE_CONTACTS_SUCCESS';
+const GET_MY_FAVORITE_CONTACTS_FAIL = 'hero.client/candidates/GET_MY_FAVORITE_CONTACTS_FAIL';
 
 const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
   queries: new Immutable.Map(),
+  myContactIds: new Immutable.Map(),
+  myFavoriteContactIds: new Immutable.Map(),
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -338,6 +352,56 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
     };
   }
+  case GET_MY_CONTACTS_SUCCESS: {
+    let contactsMap = {};
+    action.result.map((c) => {
+      contactsMap[c.id] = c;
+    });
+
+    return{
+      ...state,
+      myContactIds: state.myContactIds.mergeDeep(contactsMap),
+      list: state.list.mergeDeep(contactsMap),
+    };
+  }
+  case GET_MY_FAVORITE_CONTACTS_SUCCESS: {
+    let contactsMap = {};
+    action.result.map((c) => {
+      contactsMap[c.id] = c;
+    });
+
+    return{
+      ...state,
+      myFavoriteContactIds: state.myFavoriteContactIds.mergeDeep(contactsMap),
+      list: state.list.mergeDeep(contactsMap),
+    };
+  }
+  case CREATE_CONTACT_FAVORITE_SUCCESS: {
+    let contact = state.list.get(action.result.favorableId);
+    contact = contact.set('isFavorited', true);
+
+    let contactMap = {};
+    contactMap[contact.get('id')] = contact;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(contactMap),
+      myFavoriteContactIds: state.myFavoriteContactIds.mergeDeep(contactMap),
+    };
+  }
+  case DELETE_CONTACT_FAVORITE_SUCCESS: {
+    let contact = state.list.get(action.result.favorableId);
+    contact = contact.set('isFavorited', false);
+
+    let contactMap = {};
+    contactMap[contact.get('id')] = contact;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(contactMap),
+      myFavoriteContactIds: state.myFavoriteContactIds.delete(action.result.favorableId),
+    };
+  }
   default:
     return state;
   }
@@ -484,5 +548,41 @@ export function getContactDetail(id) {
         return contact;
       }),
     });
+  };
+}
+
+export function getMyContacts() {
+  return {
+    types: [GET_MY_CONTACTS, GET_MY_CONTACTS_SUCCESS, GET_MY_CONTACTS_FAIL],
+    promise: (client, auth) => client.api.get(`/contacts/myContacts`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function getMyFavoriteContacts() {
+  return {
+    types: [GET_MY_FAVORITE_CONTACTS, GET_MY_FAVORITE_CONTACTS_SUCCESS, GET_MY_FAVORITE_CONTACTS_FAIL],
+    promise: (client, auth) => client.api.get(`/contacts/myFavoriteContacts`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function createContactFavorite(contactId){
+  return {
+    types: [CREATE_CONTACT_FAVORITE, CREATE_CONTACT_FAVORITE_SUCCESS, CREATE_CONTACT_FAVORITE_FAIL],
+    promise: (client, auth) => client.api.post(`/contacts/${contactId}/favorites`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function deleteContactFavorite(contactId){
+  return {
+    types: [DELETE_CONTACT_FAVORITE, DELETE_CONTACT_FAVORITE_SUCCESS, DELETE_CONTACT_FAVORITE_FAIL],
+    promise: (client, auth) => client.api.del(`/contacts/unfavorite?id=${contactId}`, {
+      authToken: auth.authToken,
+    }),
   };
 }

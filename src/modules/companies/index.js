@@ -13,6 +13,7 @@ import { saveLocationByCompanyResult } from '../locations';
 const initialState = {
   list: new Immutable.Map(),
   myCompanyIds: new Immutable.Map(),
+  myFavoriteCompanyIds: new Immutable.Map(),
   searches: new Immutable.Map(),
   currentSearch: '',
   queries: new Immutable.Map(),
@@ -183,6 +184,45 @@ export default function reducer(state = initialState, action = {}) {
       err: action.err,
     };
   }
+  case constants.GET_MY_FAVORITE_COMPANIES_SUCCESS: {
+
+    let companiesMap = {};
+    action.result.map((c) => {
+      companiesMap[c.id] = c;
+    });
+
+    return{
+      ...state,
+      myFavoriteCompanyIds: state.myFavoriteCompanyIds.mergeDeep(companiesMap),
+      list: state.list.mergeDeep(companiesMap),
+    };
+  }
+  case constants.CREATE_COMPANY_FAVORITE_SUCCESS: {
+    let company = state.list.get(action.result.favorableId);
+    company = company.set('isFavorited', true);
+
+    let companyMap = {};
+    companyMap[company.get('id')] = company;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(companyMap),
+      myFavoriteCompanyIds: state.myFavoriteCompanyIds.mergeDeep(companyMap),
+    };
+  }
+  case constants.DELETE_COMPANY_FAVORITE_SUCCESS: {
+    let company = state.list.get(action.result.favorableId);
+    company = company.set('isFavorited', false);
+
+    let companyMap = {};
+    companyMap[company.get('id')] = company;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(companyMap),
+      myFavoriteCompanyIds: state.myFavoriteCompanyIds.delete(action.result.favorableId),
+    };
+  }
   case constants.CREATE_TEMP_COMPANY:{
     let companiesMap = {};
     companiesMap[action.result.id] = action.result;
@@ -296,6 +336,33 @@ export function getMyCompanies() {
   return {
     types: [constants.GET_MY_COMPANIES, constants.GET_MY_COMPANIES_SUCCESS, constants.GET_MY_COMPANIES_FAIL],
     promise: (client, auth) => client.api.get('/companies/myCompanies', {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function getMyFavoriteCompanies() {
+  return {
+    types: [constants.GET_MY_FAVORITE_COMPANIES, constants.GET_MY_FAVORITE_COMPANIES_SUCCESS, constants.GET_MY_FAVORITE_COMPANIES_FAIL],
+    promise: (client, auth) => client.api.get('/companies/myFavoriteCompanies', {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function createCompanyFavorite(companyId){
+  return {
+    types: [constants.CREATE_COMPANY_FAVORITE, constants.CREATE_COMPANY_FAVORITE_SUCCESS, constants.CREATE_COMPANY_FAVORITE_FAIL],
+    promise: (client, auth) => client.api.post(`/companies/${companyId}/favorites`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function deleteCompanyFavorite(companyId){
+  return {
+    types: [constants.DELETE_COMPANY_FAVORITE, constants.DELETE_COMPANY_FAVORITE_SUCCESS, constants.DELETE_COMPANY_FAVORITE_FAIL],
+    promise: (client, auth) => client.api.del(`/companies/unfavorite?id=${companyId}`, {
       authToken: auth.authToken,
     }),
   };

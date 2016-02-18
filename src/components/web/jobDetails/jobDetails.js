@@ -82,7 +82,14 @@ export default class JobDetails extends React.Component {
   }
 
   _onTouchTapSave() {
-    console.log('_onTouchTapSave');
+    let {job} = this.props;
+
+    if (job.get('isFavorited')) {
+      this.props.unfavoriteJob();
+    }
+    else {
+      this.props.favoriteJob();
+    }
   }
 
   _onTouchTapShare() {
@@ -152,7 +159,8 @@ export default class JobDetails extends React.Component {
         onTouchTap: this._onTouchTapSearch.bind(this),
       }, {
         materialIcon: 'star_rate',
-        text: 'Save',
+        text: job.get('isFavorited') ? 'Saved' : 'Save',
+        active: job.get('isFavorited'),
         onTouchTap: this._onTouchTapSave.bind(this),
       }, {
         materialIcon: 'share',
