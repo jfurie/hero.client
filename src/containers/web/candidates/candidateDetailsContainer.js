@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 //import { pushState } from 'redux-router';
 
 import { ContactDetails } from '../../../components/web';
-import { getOneCandidate } from '../../../modules/candidates';
+import { getCandidateDetail } from '../../../modules/candidates';
 
 //const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
@@ -15,7 +15,7 @@ function getData(state, props) {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCandidate})
+{getCandidateDetail})
 class CandidateDetailsPage extends React.Component {
 
   constructor(props) {
@@ -27,7 +27,7 @@ class CandidateDetailsPage extends React.Component {
     let self = this;
 
     setTimeout(() => {
-      self.props.getOneCandidate(self.props.params.candidateId);
+      self.props.getCandidateDetail(self.props.params.candidateId);
     }, 500);
   }
 
@@ -49,7 +49,7 @@ class CandidateDetailsPage extends React.Component {
 
     return (
       <div>
-        <ContactDetails onContactDetailsClose={this.onContactDetailsClose.bind(this)} open candidate={candidate} />
+        <ContactDetails location={this.props.location} onContactDetailsClose={this.onContactDetailsClose.bind(this)} open candidate={candidate} />
       </div>
     );
   }

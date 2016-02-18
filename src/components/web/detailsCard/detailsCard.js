@@ -202,12 +202,18 @@ class DetailsCard extends React.Component {
               disabled = true;
             }
 
+            let actionFontIcon = style.actionFontIcon;
+
+            if (action.active) {
+              actionFontIcon = {...style.actionFontIcon, ...{color:'#FDD835'}};
+            }
+
             return (
               <div className="col-xs" style={style.actionBox} key={key}>
                 <div className="box" onTouchTap={this._onTouchTapAction.bind(this, action)}>
                   <FlatButton style={style.actionButton} disabled={disabled}>
                     <div style={(disabled) ? ({opacity: '0.25'}) : ({})}>
-                      <FontIcon style={style.actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
+                      <FontIcon style={actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
                     </div>
                     <span>{action.text}</span>
                   </FlatButton>

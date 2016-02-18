@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-router';
+import { pushState, replaceState } from 'redux-router';
+import { replaceNoteLocal } from '../../../modules/notes/index';
 import md5 from 'md5';
-
+import Immutable from 'immutable';
 import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard, CustomTabsSwipe } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList } from '../../../components/web';
 import {
-   IconButton, List, ListItem, FontIcon, Avatar,
+  IconButton, List, ListItem, FontIcon, Avatar,
   Divider, Styles, IconMenu, MenuItem, CardText, Card,
 } from 'material-ui';
 
@@ -46,7 +47,7 @@ const style = {
 };
 
 @connect(() => (
-{}), {pushState})
+{}), {pushState, replaceNoteLocal,replaceState})
 export default class ContactDetails extends React.Component {
 
   constructor(props){
@@ -96,24 +97,81 @@ export default class ContactDetails extends React.Component {
   inviteToHero() {
     this.setState({confirmOpen: true});
   }
+  _guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  }
+  addNote(note){
+    if (!note) {
+      note = new Immutable.Map({
+        id: 'tmp_' + this._guid(),
+        privacyValue: 0,
+      });
+    }
+    this.props.replaceNoteLocal(note);
+    if(this.state.isContactContext){
+      this.props.pushState({}, `/contacts/${this.props.contact.get('id')}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+    } else {
+      this.props.pushState({}, `/candidates/${this.props.candidate.get('id')}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+    }
+  }
+  deleteNote(note){
+    this.props.deleteNote(note);
+  }
+  addNoteModalOpen(e,note){
+    this.addNote(note);
+  }
 
   _onTouchTapCall(disabled) {
+    let contact = null;
+
+    if (this.state.isContactContext && !this.state.isCandidateContext) { /* contact context */
+      contact = this.props.contact;
+    } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
+      contact = this.props.candidate.get('contact');
+    }
+
     if (!disabled) {
-      console.log('_onTouchTapCall');
+      window.location.href = `tel:${contact.get('phone')}`;
     } else {
       console.log('no phone');
     }
   }
 
   _onTouchTapSave() {
-    console.log('_onTouchTapSave');
+    let contact = null;
+
+    if (this.state.isContactContext && !this.state.isCandidateContext) { /* contact context */
+      contact = this.props.contact;
+    } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
+      contact = this.props.candidate.get('contact');
+    }
+
+    if (contact.get('isFavorited')) {
+      this.props.unfavoriteContact();
+    }
+    else {
+      this.props.favoriteContact();
+    }
   }
 
-  _onTouchTapEmail(disabled) {
-    if (!disabled) {
-      console.log('_onTouchTapEmail');
-    } else {
-      console.log('no email');
+  _onTouchTapEmail() {
+    let contact = null;
+
+    if (this.state.isContactContext && !this.state.isCandidateContext) { /* contact context */
+      contact = this.props.contact;
+    } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
+      contact = this.props.candidate.get('contact');
+    }
+
+    let email = contact.get('email');
+    if (email) {
+      window.location.href = `mailto:${email}`;
     }
   }
 
@@ -126,7 +184,17 @@ export default class ContactDetails extends React.Component {
   }
 
   _onTouchTapShare() {
-    console.log('_onTouchTapShare');
+    let contact = null;
+
+    if (this.state.isContactContext && !this.state.isCandidateContext) { /* contact context */
+      contact = this.props.contact;
+    } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
+      contact = this.props.candidate.get('contact');
+    }
+
+    let subject = `Check out ${contact.get('displayName')} on HERO`;
+    let body = `${encodeURIComponent(contact.get('displayName'))}%0A${encodeURIComponent(window.location.href)}`;
+    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
   _handleTapOnChat() {
@@ -176,6 +244,10 @@ export default class ContactDetails extends React.Component {
     };
   }
 
+  _showJobDetails(job) {
+    this.props.pushState(null, `/clients/${job.get('companyId')}/jobs/${job.get('id')}`);
+  }
+
   renderCandidateDetailsCard(contact, candidate) {
 
     if (candidate) {
@@ -191,7 +263,8 @@ export default class ContactDetails extends React.Component {
       onTouchTap: this._onTouchTapCall.bind(this),
     }, {
       materialIcon: 'star_rate',
-      text: 'Save',
+      text: contact && contact.get('isFavorited') ? 'Saved' : 'Save',
+      active: contact && contact.get('isFavorited'),
       onTouchTap: this._onTouchTapSave.bind(this),
     }, {
       materialIcon: 'email',
@@ -265,6 +338,13 @@ export default class ContactDetails extends React.Component {
     );
   }
 
+  onTabChange(index){
+    console.log(index);
+    this.props.replaceState({
+      tab:index,
+    }, location.pathname+location.search);
+  }
+
   renderContent(contact) {
 
     let email = null;
@@ -319,12 +399,17 @@ export default class ContactDetails extends React.Component {
       if (summary) {
         description += summary;
       }
+      let startingTab = 0;
+      console.log(this.props.location.state);
+      if(this.props.location.state && this.props.location.state.tab){
+        startingTab = parseInt(this.props.location.state.tab);
+      }
 
       return (
 
         <div>
           {this.renderCandidateDetailsCard(contact)}
-          <CustomTabsSwipe isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
+          <CustomTabsSwipe startingTab={startingTab} onChange={this.onTabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
             <div>
               <Card style={style.card}>
 
@@ -411,12 +496,18 @@ export default class ContactDetails extends React.Component {
                 </div>
               </List>
             </div>
-            <div>
-              <p>jobs</p>
-            </div>
-            <div>
-              <p>notes</p>
-            </div>
+            <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
+              {contact.get('jobs') && contact.get('jobs').map((job, key) => {
+                return (
+                  <div key={key}>
+                    <JobListItem onJobClick={this._showJobDetails.bind(this)} job={job} / >
+                  </div>
+                );
+              })}
+            </List>
+            <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
+              <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
+            </List>
           </CustomTabsSwipe>
         </div>
       );
@@ -463,6 +554,7 @@ export default class ContactDetails extends React.Component {
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (
               <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />
             ) : (null)}
+            <MenuItem index={0} onTouchTap={this.addNoteModalOpen.bind(this)} primaryText={`Create Note`} />
             <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
           </IconMenu>
         }

@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
+import { Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
-import { getAllJobs, getMyJobs, createTempJob } from '../../modules/jobs/index';
+import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
-import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
-import { createTempContact } from '../../modules/contacts';
+import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies } from '../../modules/companies';
+import { createTempContact, getMyFavoriteContacts } from '../../modules/contacts';
 
 import { Styles } from 'material-ui';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
@@ -25,42 +25,13 @@ const style = {
   },
 };
 
-function filterMyCandidates(candidates, auth) {
-  if(auth && auth.authToken){
-    let accountId = auth.authToken.accountInfo.account.id;
-
-    let myCandidates = [];
-    if (accountId && candidates && candidates.byAccountId && candidates.list) {
-      if (candidates.byAccountId.size > 0) {
-        candidates.byAccountId.get(accountId).forEach(function(candidateId) {
-          let c = candidates.list.get(candidateId);
-          if (c) {
-            myCandidates.push(c);
-          }
-        });
-      }
-    }
-
-    return myCandidates;
-  }
-  return [];
-}
-
-function filterMyJobs(state){
-  let ids = state.jobs.myJobIds;
-  return ids.map(id =>{
-    return state.jobs.list.get(id);
-  });
-}
-
-@connect((state, props) => ({
+@connect((state) => ({
   user: state.auth.user,
   jobs: state.jobs,
-  myJobs:filterMyJobs(state,props),
-  candidates: filterMyCandidates(state.candidates, state.auth),
+  contacts: state.contacts,
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany, createTempContact, createTempJob})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, getMyFavoriteJobs})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -79,6 +50,11 @@ class HomePage extends React.Component {
     this.props.getAllJobs();
     this.props.getAllCompanies();
     this.props.getMyCompanies();
+
+    this.props.getMyFavoriteJobs();
+    this.props.getMyFavoriteCompanies();
+    this.props.getMyFavoriteContacts();
+
     if(this.props.auth && this.props.auth.authToken){
       this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
     }
@@ -226,7 +202,8 @@ class HomePage extends React.Component {
   }
 
   render () {
-    let { candidates, companies, myJobs } = this.props;
+
+    let { contacts, companies, jobs } = this.props;
 
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
@@ -245,13 +222,13 @@ class HomePage extends React.Component {
         <Header title="Dashboard" />
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
           <div style={style.slide}>
-            <ClientsList clients={companies.myCompanyIds} />
+            <ClientsList clients={companies.myFavoriteCompanyIds} />
           </div>
           <div>
-            <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={myJobs}/>
+            <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.myFavoriteJobIds}/>
           </div>
           <div style={style.slide}>
-            <CandidatesList candidates={candidates}/>
+            <ContactsList contacts={contacts.myFavoriteContactIds}/>
           </div>
         </CustomTabsSwipe>
         <ActionButton ref="actionButtons" actions={actions}/>

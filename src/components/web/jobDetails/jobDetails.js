@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import marked from 'marked';
 
-import { Header, DetailsCard, CustomTabsSwipe, CandidatesList, CompanyAvatar } from '../../../components/web';
+import { List } from 'material-ui';
+
+import { Header, DetailsCard, CustomTabsSwipe, CandidatesList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -77,11 +79,20 @@ export default class JobDetails extends React.Component {
   }
 
   _onTouchTapSave() {
-    console.log('_onTouchTapSave');
+    let {job} = this.props;
+
+    if (job.get('isFavorited')) {
+      this.props.unfavoriteJob();
+    }
+    else {
+      this.props.favoriteJob();
+    }
   }
 
   _onTouchTapShare() {
-    console.log('_onTouchTapShare');
+    let subject = `Check out ${this.props.job.get('title')} on HERO`;
+    let body = `${encodeURIComponent(this.props.job.get('title'))}%0A${encodeURIComponent(window.location.href)}`;
+    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
   _onTouchTapSearch() {
@@ -93,6 +104,20 @@ export default class JobDetails extends React.Component {
 
   _onTouchTapEdit(){
     this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/edit`);
+  }
+
+  createNoteModalOpen(){
+    if(this.props.addNoteModalOpen){
+      this.props.addNoteModalOpen();
+    }
+  }
+
+  editNote(note){
+    this.props.addNoteModalOpen(note);
+  }
+
+  deleteNote(note){
+    this.props.deleteNote(note);
   }
 
   renderContent(job) {
@@ -131,7 +156,8 @@ export default class JobDetails extends React.Component {
         onTouchTap: this._onTouchTapSearch.bind(this),
       }, {
         materialIcon: 'star_rate',
-        text: 'Save',
+        text: job.get('isFavorited') ? 'Saved' : 'Save',
+        active: job.get('isFavorited'),
         onTouchTap: this._onTouchTapSave.bind(this),
       }, {
         materialIcon: 'share',
@@ -186,7 +212,7 @@ export default class JobDetails extends React.Component {
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
               topTags={job.get('tags') || []}
           />
-          <CustomTabsSwipe isLight isInline tabs={['Details', 'Desc', 'Applicants']}>
+          <CustomTabsSwipe isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
             <Card style={style.card}>
               <CardText>
                 {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
@@ -225,6 +251,9 @@ export default class JobDetails extends React.Component {
             <div>
               <CandidatesList candidates={job.get('candidates')} />
             </div>
+            <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
+              <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
+            </List>
           </CustomTabsSwipe>
 
         </div>
@@ -250,6 +279,7 @@ export default class JobDetails extends React.Component {
           }>
             <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
+            <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
           </IconMenu>
         }
         />

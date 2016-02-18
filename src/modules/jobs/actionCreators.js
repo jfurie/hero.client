@@ -1,5 +1,7 @@
 import superagent from 'superagent';
 import * as constants from './constants';
+import { saveNotesByJobResult } from '../notes';
+
 export function getJobsByCompany(companyId){
 
   let include = [
@@ -170,6 +172,33 @@ export function getMyJobs(){
   };
 }
 
+export function getMyFavoriteJobs() {
+  return {
+    types: [constants.GET_MY_FAVORITE_JOBS, constants.GET_MY_FAVORITE_JOBS_SUCCESS, constants.GET_MY_FAVORITE_JOBS_FAIL],
+    promise: (client, auth) => client.api.get('/jobs/myFavoriteJobs', {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function createJobFavorite(jobId){
+  return {
+    types: [constants.CREATE_JOB_FAVORITE, constants.CREATE_JOB_FAVORITE_SUCCESS, constants.CREATE_JOB_FAVORITE_FAIL],
+    promise: (client, auth) => client.api.post(`/jobs/${jobId}/favorites`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function deleteJobFavorite(jobId){
+  return {
+    types: [constants.DELETE_JOB_FAVORITE, constants.DELETE_JOB_FAVORITE_SUCCESS, constants.DELETE_JOB_FAVORITE_FAIL],
+    promise: (client, auth) => client.api.del(`/jobs/unfavorite?id=${jobId}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
 export function getOneJob(id) {
   return {
     types: [constants.GET_JOB, constants.GET_JOB_SUCCESS, constants.GET_JOB_FAIL],
@@ -202,5 +231,22 @@ export function saveJobsByCompanyResult(jobs){
   return {
     type: constants.GET_JOBS_BY_COMPANY_SUCCESS,
     result: jobs,
+  };
+}
+
+export function getJobDetail(id) {
+  return (dispatch) => {
+    dispatch({
+      types: [constants.GET_JOB_DETAIL, constants.GET_JOB_DETAIL_SUCCESS, constants.GET_JOB_DETAIL_FAIL],
+      promise: (client, auth) => client.api.get(`/jobs/detail?id=${id}`, {
+        authToken: auth.authToken,
+      }).then((job)=> {
+        if (job.notes && job.notes.length > 0) {
+          dispatch(saveNotesByJobResult(job.notes));
+        }
+
+        return job;
+      }),
+    });
   };
 }

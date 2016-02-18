@@ -5,7 +5,7 @@ import Immutable from 'immutable';
 
 import { ClientDetails } from '../../../components/web';
 
-import { getOneCompany, getCompanyDetail } from '../../../modules/companies/index';
+import { getOneCompany, getCompanyDetail, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob } from '../../../modules/jobs/index';
@@ -73,6 +73,7 @@ getData(state, props)), {
   replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates,
   getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote,
   replaceNoteLocal, invite, createCandidate, createTempJob,
+  createCompanyFavorite, deleteCompanyFavorite,
 })
 class ClientDetailsPage extends React.Component {
 
@@ -233,6 +234,16 @@ class ClientDetailsPage extends React.Component {
     this.props.pushState({}, `/clients/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
   }
 
+  favoriteCompany() {
+    let {company} = this.props;
+    this.props.createCompanyFavorite(company.get('id'));
+  }
+
+  unfavoriteCompany() {
+    let {company} = this.props;
+    this.props.deleteCompanyFavorite(company.get('id'));
+  }
+
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -260,6 +271,8 @@ class ClientDetailsPage extends React.Component {
             tabId={0}
             company={company}
             inline
+            favoriteCompany={this.favoriteCompany.bind(this)}
+            unfavoriteCompany={this.unfavoriteCompany.bind(this)}
         />
 
       </div>

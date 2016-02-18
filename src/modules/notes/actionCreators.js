@@ -20,6 +20,27 @@ export function getNotesByCompany(companyId, userId){
   };
 }
 
+export function getNotesByJob(jobId, userId){
+  let filter = {
+    where: { or: [
+      {and: [{privacyValue: 0}, {userId}]},
+      {privacyValue: 1},
+    ]},
+    include:{
+      relation:'contact',
+    },
+  };
+
+  let filterStr = encodeURIComponent(JSON.stringify(filter));
+
+  return {
+    types: [constants.GET_NOTES_BY_JOB, constants.GET_NOTES_BY_JOB_SUCCESS, constants.GET_NOTES_BY_JOB_FAIL],
+    promise: (client, auth) => client.api.get(`/jobs/${jobId}/notes?filter=${filterStr}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
 export function getAllNotes() {
   return {
     types: [constants.GET_NOTES, constants.GET_NOTES_SUCCESS, constants.GET_NOTES_FAIL],
@@ -34,6 +55,17 @@ export function createCompanyNote(companyId, note){
     note,
     types: [constants.CREATE_NOTE, constants.CREATE_NOTE_SUCCESS, constants.CREATE_NOTE_FAIL],
     promise: (client, auth) => client.api.post(`/companies/${companyId}/notes`, {
+      authToken: auth.authToken,
+      data:note,
+    }),
+  };
+}
+
+export function createJobNote(jobId, note){
+  return {
+    note,
+    types: [constants.CREATE_NOTE, constants.CREATE_NOTE_SUCCESS, constants.CREATE_NOTE_FAIL],
+    promise: (client, auth) => client.api.post(`/jobs/${jobId}/notes`, {
       authToken: auth.authToken,
       data:note,
     }),
@@ -72,7 +104,16 @@ export function replaceNoteLocal(note){
     result: note,
   };
 }
-
+export function createContactNote(contact, note){
+  return {
+    note,
+    types: [constants.CREATE_NOTE, constants.CREATE_NOTE_SUCCESS, constants.CREATE_NOTE_FAIL],
+    promise: (client, auth) => client.api.post(`/contacts/${contact}/notes`, {
+      authToken: auth.authToken,
+      data:note,
+    }),
+  };
+}
 export function saveLocalNote(notableId, notableType){
   return (dispatch, getState) => {
     let note = getState().notes.localNote;
@@ -89,6 +130,12 @@ export function saveLocalNote(notableId, notableType){
       switch (notableType) {
       case 'company':
         dispatch(createCompanyNote(notableId, note));
+        break;
+      case 'contact':
+        dispatch(createContactNote(notableId, note));
+        break;
+      case 'job':
+        dispatch(createJobNote(notableId, note));
         break;
       default:
       }
@@ -111,6 +158,13 @@ export function getOneNote(id) {
 export function saveNotesByCompanyResult(notes){
   return {
     type: constants.GET_NOTES_BY_COMPANY_SUCCESS,
+    result: notes,
+  };
+}
+
+export function saveNotesByJobResult(notes){
+  return {
+    type: constants.GET_NOTES_BY_JOB_SUCCESS,
     result: notes,
   };
 }

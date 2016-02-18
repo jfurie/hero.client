@@ -12,35 +12,32 @@ class CandidatesList extends React.Component {
     super(props);
   }
 
-  openDetails(contact) {
-    let candidate = this.props.candidates.filter(function (candidate) {
-      return candidate.get('contactId') == contact.get('id');
-    })[0];
-    this.props.pushState(null, `/candidates/${candidate.get('id')}`);
+  openDetails(candidate) {
+    this.props.pushState(null, `/contacts/${candidate.get('id')}`);
   }
 
   render() {
-
     let { candidates } = this.props;
 
+    let candidateCount;
+
+    if (Array.isArray(candidates)) {
+      candidateCount = candidates.length;
+    }
+    else {
+      candidateCount = candidates.size;
+    }
+
     return (
-      <div>
-        {/*<CandidateDetailsModal open={this.state.candidateDetailsModalOpen} candidate={this.state.selectedCandidate} close={this.closeDetails.bind(this)}/>*/}
-        <List style={{backgroundColor:'transparant'}} subheader={`${candidates.length} Candidate${(candidates.length !== 1) ? ('s') : ('')}`}>
-            {candidates.map((candidate, key) => {
-              return (
-                <ContactListItem key={key} contact={candidate.get('contact')} company={candidate.get('company')} onContactClick={this.openDetails.bind(this)}/>
-              );
-            })}
-        </List>
-      </div>
+      <List style={{backgroundColor: 'transparent'}} subheader={`${candidateCount} Candidate${(candidateCount !== 1) ? ('s') : ('')}`}>
+          {candidates.map((candidate, key) => {
+            return (
+              <ContactListItem key={key} contact={candidate.get('contact')} company={candidate.get('company')} onContactClick={this.openDetails.bind(this)}/>
+            );
+          })}
+      </List>
     );
   }
 }
-
-CandidatesList.propTypes = {
-  candidates: React.PropTypes.array.isRequired,
-  onOpenCandidateDetails: React.PropTypes.func,
-};
 
 export default CandidatesList;
