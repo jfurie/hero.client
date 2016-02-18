@@ -14,7 +14,6 @@ export CompanyNotesList from './companyNotesList/companyNotesList';
 export LeftNavTop from './leftNav/leftNavTop';
 export CustomTabsSwipe from './customTabsSwipe/customTabsSwipe';
 export JobDetails from './jobDetails/jobDetails';
-//export JobDetailsPage from './jobDetails/jobDetailsPage';
 export Dialog from './dialog/dialog';
 export ClientsList from './clientsList/clientsList';
 export Gravatar from './gravatar/gravatar';
@@ -32,6 +31,7 @@ export Location from './location/location';
 export ClientDetails from './clientDetails/clientDetails';
 export ContactDetails from './contactDetails/contactDetails';
 export JobCreate from './jobCreate/jobCreate';
+export JobEdit from './jobEdit/jobEdit';
 export DetailsCard from './detailsCard/detailsCard';
 export ClientListItem from './clientListItem/clientListItem';
 export JobListItem from './jobListItem/jobListItem';
@@ -47,6 +47,9 @@ export EmailButton from './actionButtons/emailButton';
 export FavoriteButton from './actionButtons/favoriteButton';
 export ShareButton from './actionButtons/shareButton';
 export CardBasic from './cardBasic/cardBasic';
+export JobOrderSwipeArea from './jobOrderSwipeArea/jobOrderSwipeArea';
+export JobOrderMoneySwipeArea from './jobOrderMoneySwipeArea/jobOrderMoneySwipeArea';
+
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
@@ -56,7 +59,6 @@ export CandidateDetailsModal from './candidateDetailsModal/candidateDetailsModal
 export InviteSuccessModal from './inviteSuccessModal/inviteSuccessModal';
 export NotesCreateModal from './notesCreateModal/notesCreateModal';
 export JobCreateModal from './jobCreateModal/jobCreateModal';
-//export JobDetailsModal from './jobDetails/jobDetailsModal';
 export CandidateSearchModal from './candidateSearch/candidateSearchModal';
 export CandidateCreateModal from './candidateCreateModal/candidateCreateModal';
 export ShareJobModal from './shareJobModal/shareJobModal';

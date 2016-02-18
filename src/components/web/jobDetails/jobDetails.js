@@ -2,9 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import marked from 'marked';
-//import md5 from 'md5';
-
-//import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
 import { List } from 'material-ui';
 
@@ -105,8 +102,8 @@ export default class JobDetails extends React.Component {
     this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/candidates/search`);
   }
 
-  _onTouchTabEdit(){
-    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/create`);
+  _onTouchTapEdit(){
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/edit`);
   }
 
   _onTouchCompanyIcon(){
@@ -283,7 +280,7 @@ export default class JobDetails extends React.Component {
           <IconMenu iconButtonElement={
             <IconButton iconClassName="material-icons">more_vert</IconButton>
           }>
-            <MenuItem onTouchTap={this._onTouchTabEdit.bind(this)} index={0} primaryText="Edit Job" />
+            <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
             <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
           </IconMenu>

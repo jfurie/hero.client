@@ -87,6 +87,8 @@ let style = {
     top: '-11px',
   },
   badgeWrap:{
+    position: 'relative',
+    left: '10px',
   },
   accountOwnerGravatar:{
     display: 'inline',
@@ -135,7 +137,7 @@ export default class ContactListItem extends React.Component {
           subtitle1={company?company.get('name'):''}
           subtitle2={contact.get('title')}
           onTouchTap={this.clickContact.bind(this)}
-          stars={<Stars score={contact.get('rating')}></Stars>}
+          stars={<Stars score={contact.get('rating')} />}
         ></CardBasic>
     );
   }

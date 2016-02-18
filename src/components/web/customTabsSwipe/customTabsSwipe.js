@@ -126,7 +126,7 @@ class CustomTabsSwipe extends React.Component {
       tabsStyle.position = 'fixed';
       tabStyle.top = '0px';
     }
-    console.log('slideIndex ',this.state.slideIndex);
+    //console.log('slideIndex ',this.state.slideIndex);
     return (
       <div>
         <Tabs
@@ -141,8 +141,8 @@ class CustomTabsSwipe extends React.Component {
             if (this.state.slideIndex == key && isLight) {
               tabStyleItem = style.tabLightSelected;
             }
-            console.log('slideIndex ',this.state.slideIndex);
-            console.log('key ',key);
+            // console.log('slideIndex ',this.state.slideIndex);
+            // console.log('key ',key);
             return (
               <Tab selected={this.state.slideIndex == key} label={tab} key={key} style={tabStyleItem} value={`${key}`}>
                 <div style={{paddingTop: (isInline) ? ('0px') : ('48px')}}>

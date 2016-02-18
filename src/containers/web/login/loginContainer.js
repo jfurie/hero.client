@@ -40,13 +40,6 @@ class LogoutPage extends React.Component {
     };
   }
 
-  getParameterByName(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    let results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-  }
-
   componentWillReceiveProps(nextProps) {
 
     if (nextProps.auth && nextProps.auth.loginError) { // fail to log
@@ -67,6 +60,13 @@ class LogoutPage extends React.Component {
     } else if (this.props.user && !nextProps.user) { // logout
       this.props.pushState(null, '/');
     }
+  }
+
+  getParameterByName(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    let results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
   onSubmit (e) {
@@ -107,7 +107,7 @@ class LogoutPage extends React.Component {
   }
 
   linkedinConnect() {
-    let url = Config.get('apiBaseUrl') + '/auth/linkedin?redirect=' + window.location.origin;
+    let url = `${Config.get('apiBaseUrl')}/auth/linkedin?redirect=${window.location.origin}`;
     window.location.replace(url);
   }
 

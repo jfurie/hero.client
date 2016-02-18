@@ -8,7 +8,7 @@ import { ClientDetails } from '../../../components/web';
 import { getOneCompany, getCompanyDetail, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
-import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
+import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob } from '../../../modules/jobs/index';
 import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
 import { getAllJobCandidates, createCandidate } from '../../../modules/candidates';
@@ -66,8 +66,15 @@ function getData(state, props) {
 
 
 @connect((state, props) => (
-getData(state, props)),
-{getOneCompany, getCompanyDetail, createCompanyFavorite, deleteCompanyFavorite, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite, createCandidate })
+getData(state, props)), {
+  getOneCompany, getCompanyDetail, getOneLocation,
+  getAllContacts, getContactsByCompany, getJobsByCompany,
+  pushState, updateJobLocal, updateJobImageLocal, saveLocalJob,
+  replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates,
+  getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote,
+  replaceNoteLocal, invite, createCandidate, createTempJob,
+  createCompanyFavorite, deleteCompanyFavorite,
+})
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -176,7 +183,7 @@ class ClientDetailsPage extends React.Component {
     this.props.deleteNote(note.get('id'));
   }
   createJobModalOpen() {
-    this.props.replaceJobLocal({companyId:this.props.params.companyId});
+    this.props.replaceJobLocal({companyId: this.props.params.companyId});
     this.refs.jobCreateModal.show();
   }
 
@@ -204,9 +211,17 @@ class ClientDetailsPage extends React.Component {
   addContactModalOpen(){
     this.props.pushState({}, `/clients/${this.props.params.companyId}/contacts/search?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
   }
+
   addJobModalOpen(){
-    this.props.pushState({}, `/clients/${this.props.params.companyId}/jobs/search?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+
+    let job = {
+      id: `tmp_${this._guid()}`,
+    };
+
+    this.props.createTempJob(job);
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/jobs/${job.id}/create`);
   }
+
   addNoteModalOpen(note){
     if (!note) {
       note = new Immutable.Map({
@@ -216,47 +231,49 @@ class ClientDetailsPage extends React.Component {
     }
 
     this.props.replaceNoteLocal(note);
-
     this.props.pushState({}, `/clients/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
   }
+
   favoriteCompany() {
     let {company} = this.props;
     this.props.createCompanyFavorite(company.get('id'));
   }
+
   unfavoriteCompany() {
     let {company} = this.props;
     this.props.deleteCompanyFavorite(company.get('id'));
   }
+
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
         .toString(16)
         .substring(1);
     }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4();
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
+
   render() {
 
     let {company} = this.props;
 
-
-      //let website = company.get('website');
-    //  let heroContact = '/img/rameet.jpg';
     return (
       <div>
-      {/*
-        <JobDetailsModal closeModal={this.closeJobModal.bind(this)} job={this.props.job} company={company} open={(this.props.params.jobId)?(true):(false)} createCandidate={this.createCandidate.bind(this)} />
 
-       <ClientContactsCreateModal ref="clientContactsCreateModal" companyId={this.props.params.id}/>
-       <ClientsEditModal ref="clientEditModal" company={company}/>
-
-       <ContactDetailsModal open={this.state.contactDetailsModalOpen} onInvite={this._inviteHandler.bind(this)} closeModal={this.contactDetailsModalClose.bind(this)} contact={this.state.detailsContact}/>
-       <NotesCreateModal saveNote={this._handleSaveNote.bind(this)} onNoteChange={this.onNoteCreateChange.bind(this)} note={this.props.localNote} ref='notesCreateModal' />
-       <JobCreateModal heroContacts={heroContacts} contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
-        */}
-
-        <ClientDetails favoriteCompany={this.favoriteCompany.bind(this)} unfavoriteCompany={this.unfavoriteCompany.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} addNoteModalOpen={this.addNoteModalOpen.bind(this)} addJobModalOpen={this.addJobModalOpen.bind(this)} addContactModalOpen={this.addContactModalOpen.bind(this)} editClientModalOpen={this.editClientModalOpen.bind(this)} onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={true} tabId={0} company={company} inline={true} ></ClientDetails>
+        <ClientDetails
+            deleteNote={this._handleDeleteNote.bind(this)}
+            addNoteModalOpen={this.addNoteModalOpen.bind(this)}
+            addJobModalOpen={this.addJobModalOpen.bind(this)}
+            addContactModalOpen={this.addContactModalOpen.bind(this)}
+            editClientModalOpen={this.editClientModalOpen.bind(this)}
+            onClientDetailsClose={this.onClientDetailsClose.bind(this)}
+            open
+            tabId={0}
+            company={company}
+            inline
+            favoriteCompany={this.favoriteCompany.bind(this)}
+            unfavoriteCompany={this.unfavoriteCompany.bind(this)}
+        />
 
       </div>
     );
