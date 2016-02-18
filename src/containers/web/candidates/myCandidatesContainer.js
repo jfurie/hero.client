@@ -24,7 +24,7 @@ class MyCandidatesPage extends React.Component {
     return (
       <div>
         <Header title={'Candidates'}/>
-        <CandidatesList contacts={candidates.myCandidateIds} />
+        <CandidatesList candidates={candidates.myCandidateIds} />
       </div>);
   }
 }
