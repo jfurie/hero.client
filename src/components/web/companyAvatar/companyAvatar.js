@@ -23,6 +23,11 @@ class CompanyAvatar extends React.Component {
       };
     }
   }
+  handleTouchTap(e){
+    if(this.props.onTouchTap){
+      this.props.onTouchTap(e);
+    }
+  }
 
   _handleError() {
     this.setState({
@@ -41,7 +46,7 @@ class CompanyAvatar extends React.Component {
     }
 
     return (
-      <img src={this.state.imgSrc} style={style} onError={this._handleError.bind(this)} />
+      <img onTouchTap={this.handleTouchTap.bind(this)} src={this.state.imgSrc} style={style} onError={this._handleError.bind(this)} />
     );
   }
 }
