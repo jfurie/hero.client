@@ -289,7 +289,7 @@ export default class JobListItem extends React.Component {
 
           }}>
             <FindButton />
-            <FavoriteButton />
+            <FavoriteButton isFavorited={job.get('isFavorited')} />
             <ShareButton />
           </CardActions>
         </div>):(<div></div>)}

@@ -281,7 +281,7 @@ export default class ContactListItem extends React.Component {
           <PhoneButton phone={contact.get('phone')} />
           <SmsButton phone={contact.get('phone')} />
           <EmailButton email={contact.get('email')} />
-          <FavoriteButton />
+          <FavoriteButton isFavorited={contact.get('isFavorited')} />
         </CardActions>
 
       </Card>

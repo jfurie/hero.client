@@ -253,7 +253,7 @@ export default class ClientListItem extends React.Component {
           }}>
             <PhoneButton phone={this.props.company && this.props.company.get('phone')} />
             <EmailButton email={this.props.company && this.props.company.get('email')} />
-            <FavoriteButton />
+            <FavoriteButton isFavorited={company.get('isFavorited')} />
             <ShareButton />
           </CardActions>
         </div>):(<div></div>)}
