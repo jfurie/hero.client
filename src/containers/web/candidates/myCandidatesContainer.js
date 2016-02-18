@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Header, ContactsList } from '../../../components/web';
-import { getMyContacts } from '../../../modules/contacts';
+import { Header, CandidatesList } from '../../../components/web';
+import { getMyCandidates } from '../../../modules/contacts';
 
 @connect(state => ({
-  contacts: state.contacts,
+  candidates: state.candidates,
   auth: state.auth,
-}), { getMyContacts })
+}), { getMyCandidates })
 class MyCandidatesPage extends React.Component {
 
   constructor() {
@@ -19,12 +19,12 @@ class MyCandidatesPage extends React.Component {
 
   render() {
 
-    let {contacts} = this.props;
+    let {candidates} = this.props;
 
     return (
       <div>
         <Header title={'Candidates'}/>
-        <ContactsList contacts={contacts.myContactIds} />
+        <CandidatesList contacts={candidates.myCandidateIds} />
       </div>);
   }
 }
