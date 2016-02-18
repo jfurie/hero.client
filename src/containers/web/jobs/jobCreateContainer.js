@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState /*, replaceState */ } from 'redux-router';
-import { Snackbar } from 'material-ui';
+//import { Snackbar } from 'material-ui';
 import { getMyCompanies, getCompanyDetail } from '../../../modules/companies/index';
 import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
@@ -105,7 +105,6 @@ export default class JobCreateContainer extends React.Component {
   }
 
   _handleChange(job, dontMergeDeep){
-    console.log('_handleChange', job.toJS());
     this.props.updateJob(job, dontMergeDeep);
   }
 
