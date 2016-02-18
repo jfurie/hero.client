@@ -5,6 +5,7 @@ const initialState = {
   byCompanyId: new Immutable.Map(),
   localJob: new Immutable.Map(),
   myJobIds: new Immutable.List(),
+  myFavoriteJobIds: new Immutable.Map(),
   queries: new Immutable.Map(),
 };
 
@@ -264,6 +265,45 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       myJobIds: new Immutable.List(myJobIds),
       list: state.list.mergeDeep(jobList)
+    };
+  }
+  case constants.GET_MY_FAVORITE_JOBS_SUCCESS: {
+
+    let jobsMap = {};
+    action.result.map((c) => {
+      jobsMap[c.id] = c;
+    });
+
+    return{
+      ...state,
+      myFavoriteJobIds: state.myFavoriteJobIds.mergeDeep(jobsMap),
+      list: state.list.mergeDeep(jobsMap),
+    };
+  }
+  case constants.CREATE_JOB_FAVORITE_SUCCESS: {
+    let job = state.list.get(action.result.favorableId);
+    job = job.set('isFavorited', true);
+
+    let jobMap = {};
+    jobMap[job.get('id')] = job;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(jobMap),
+      myFavoriteJobIds: state.myFavoriteJobIds.mergeDeep(jobMap),
+    };
+  }
+  case constants.DELETE_JOB_FAVORITE_SUCCESS: {
+    let job = state.list.get(action.result.favorableId);
+    job = job.set('isFavorited', false);
+
+    let jobMap = {};
+    jobMap[job.get('id')] = job;
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(jobMap),
+      myFavoriteJobIds: state.myFavoriteJobIds.delete(action.result.favorableId),
     };
   }
   case constants.UPDATE_JOB_IMAGE_FAIL:{

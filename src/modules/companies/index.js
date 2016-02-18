@@ -361,7 +361,6 @@ export function createCompanyFavorite(companyId){
 
 export function deleteCompanyFavorite(companyId){
   return {
-    companyId,
     types: [constants.DELETE_COMPANY_FAVORITE, constants.DELETE_COMPANY_FAVORITE_SUCCESS, constants.DELETE_COMPANY_FAVORITE_FAIL],
     promise: (client, auth) => client.api.del(`/companies/unfavorite?id=${companyId}`, {
       authToken: auth.authToken,

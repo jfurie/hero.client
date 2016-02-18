@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
-import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
+import { getAllJobs, getMyFavoriteJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyFavoriteCompanies, createTempCompany } from '../../modules/companies';
 import { createTempContact } from '../../modules/contacts';
@@ -53,21 +53,13 @@ function filterMyCandidates(candidates, auth) {
   return [];
 }
 
-function filterMyJobs(state){
-  let ids = state.jobs.myJobIds;
-  return ids.map(id =>{
-    return state.jobs.list.get(id);
-  });
-}
-
-@connect((state, props) => ({
+@connect((state) => ({
   user: state.auth.user,
   jobs: state.jobs,
-  myJobs:filterMyJobs(state,props),
   candidates: filterMyCandidates(state.candidates, state.auth),
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyFavoriteCompanies, createTempCompany, createTempContact})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyFavoriteJobs, getMyFavoriteCompanies, createTempCompany, createTempContact})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -82,7 +74,7 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getMyJobs();
+    this.props.getMyFavoriteJobs();
     this.props.getMyFavoriteCompanies();
     if(this.props.auth && this.props.auth.authToken){
       this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
@@ -216,7 +208,7 @@ class HomePage extends React.Component {
 
   render () {
     //console.log(window);
-    let { candidates, companies, myJobs } = this.props;
+    let { candidates, companies, jobs } = this.props;
     //let { query } = this.props.location;
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
@@ -239,7 +231,7 @@ class HomePage extends React.Component {
             <ClientsList clients={companies.myFavoriteCompanyIds} />
           </div>
           <div>
-            <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={myJobs}/>
+            <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.myFavoriteJobIds}/>
           </div>
           <div style={style.slide}>
             <CandidatesList candidates={candidates}/>
