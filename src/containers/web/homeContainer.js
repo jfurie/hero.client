@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
+import { Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyFavoriteJobs } from '../../modules/jobs/index';
-import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyFavoriteCompanies, createTempCompany } from '../../modules/companies';
-import { createTempContact } from '../../modules/contacts';
+import { createTempContact, getMyFavoriteContacts } from '../../modules/contacts';
 
 import { Styles } from 'material-ui';
 
@@ -32,34 +31,13 @@ const style = {
   },
 };
 
-function filterMyCandidates(candidates, auth) {
-  if(auth && auth.authToken){
-    let accountId = auth.authToken.accountInfo.account.id;
-
-    let myCandidates = [];
-    if (accountId && candidates && candidates.byAccountId && candidates.list) {
-      if (candidates.byAccountId.size > 0) {
-        candidates.byAccountId.get(accountId).forEach(function(candidateId) {
-          let c = candidates.list.get(candidateId);
-          if (c) {
-            myCandidates.push(c);
-          }
-        });
-      }
-    }
-
-    return myCandidates;
-  }
-  return [];
-}
-
 @connect((state) => ({
   user: state.auth.user,
   jobs: state.jobs,
-  candidates: filterMyCandidates(state.candidates, state.auth),
+  contacts: state.contacts,
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyFavoriteJobs, getMyFavoriteCompanies, createTempCompany, createTempContact})
+}), {pushState, toggleNav, getAllJobs, getMyFavoriteContacts, getAllCompanies, getMyFavoriteJobs, getMyFavoriteCompanies, createTempCompany, createTempContact})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -76,9 +54,7 @@ class HomePage extends React.Component {
   componentDidMount() {
     this.props.getMyFavoriteJobs();
     this.props.getMyFavoriteCompanies();
-    if(this.props.auth && this.props.auth.authToken){
-      this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
-    }
+    this.props.getMyFavoriteContacts();
   }
 
   _handleJobClick(job){
@@ -208,7 +184,7 @@ class HomePage extends React.Component {
 
   render () {
     //console.log(window);
-    let { candidates, companies, jobs } = this.props;
+    let { contacts, companies, jobs } = this.props;
     //let { query } = this.props.location;
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
@@ -234,7 +210,7 @@ class HomePage extends React.Component {
             <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.myFavoriteJobIds}/>
           </div>
           <div style={style.slide}>
-            <CandidatesList candidates={candidates}/>
+            <ContactsList contacts={contacts.myFavoriteContactIds}/>
           </div>
         </CustomTabsSwipe>
         <ActionButton ref='actionButtons' actions={actions}/>

@@ -20,18 +20,19 @@ class ContactsList extends React.Component {
   }
 
   render() {
-
     let { contacts, company, type } = this.props;
 
-    let count = contacts.count();
-    let ressourceName = 'Contact';
+    let contactCount;
 
-    if (count !== 1) {
-      ressourceName += 's';
+    if (Array.isArray(contacts)) {
+      contactCount = contacts.length;
+    }
+    else {
+      contactCount = contacts.size;
     }
 
     return (
-      <List subheader={`${count} ${ressourceName}`}>
+      <List style={{backgroundColor: 'transparent'}} subheader={`${contactCount} Contact${(contactCount !== 1) ? ('s') : ('')}`}>
         {contacts.map((contact) => {
           return (
             <div>

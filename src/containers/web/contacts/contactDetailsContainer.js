@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import Immutable from 'immutable';
 import { ContactDetails } from '../../../components/web';
-import { getContactDetail } from '../../../modules/contacts';
+import { getContactDetail, createContactFavorite, deleteContactFavorite } from '../../../modules/contacts';
 import { replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 //const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
@@ -15,7 +15,7 @@ function getData(state, props) {
 
 @connect((state, props) => (
 getData(state, props)),
-{getContactDetail, replaceNoteLocal,pushState, deleteNote})
+{getContactDetail, createContactFavorite, deleteContactFavorite, replaceNoteLocal,pushState, deleteNote})
 class ContactDetailsPage extends React.Component {
 
   constructor(props) {
@@ -62,12 +62,22 @@ class ContactDetailsPage extends React.Component {
     this.props.getContactDetail(this.props.params.contactId);
   }
 
+  favoriteContact() {
+    let {contact} = this.props;
+    this.props.createContactFavorite(contact.get('id'));
+  }
+
+  unfavoriteContact() {
+    let {contact} = this.props;
+    this.props.deleteContactFavorite(contact.get('id'));
+  }
+
   render() {
 
     let {contact} = this.props;
     return (
       <div>
-        <ContactDetails deleteNote={this._handleDeleteNote.bind(this)} location={this.props.location} onContactDetailsClose={this.onContactDetailsClose.bind(this)} open={true} contact={contact} />
+        <ContactDetails favoriteContact={this.favoriteContact.bind(this)} unfavoriteContact={this.unfavoriteContact.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} location={this.props.location} onContactDetailsClose={this.onContactDetailsClose.bind(this)} open={true} contact={contact} />
       </div>
     );
   }

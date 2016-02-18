@@ -144,7 +144,20 @@ export default class ContactDetails extends React.Component {
   }
 
   _onTouchTapSave() {
-    console.log('_onTouchTapSave');
+    let contact = null;
+
+    if (this.state.isContactContext && !this.state.isCandidateContext) { /* contact context */
+      contact = this.props.contact;
+    } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
+      contact = this.props.candidate.get('contact');
+    }
+
+    if (contact.get('isFavorited')) {
+      this.props.unfavoriteContact();
+    }
+    else {
+      this.props.favoriteContact();
+    }
   }
 
   _onTouchTapEmail() {
@@ -250,7 +263,8 @@ export default class ContactDetails extends React.Component {
       onTouchTap: this._onTouchTapCall.bind(this),
     }, {
       materialIcon: 'star_rate',
-      text: 'Save',
+      text: contact && contact.get('isFavorited') ? 'Saved' : 'Save',
+      active: contact && contact.get('isFavorited'),
       onTouchTap: this._onTouchTapSave.bind(this),
     }, {
       materialIcon: 'email',

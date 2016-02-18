@@ -13,12 +13,20 @@ const GET_ONE_CANDIDATE_FAIL = 'hero.client/candidates/GET_ONE_CANDIDATE_FAIL';
 const GET_CANDIDATE_DETAIL = 'hero.client/contacts/GET_CANDIDATE_DETAIL';
 const GET_CANDIDATE_DETAIL_SUCCESS = 'hero.client/contacts/GET_CANDIDATE_DETAIL_SUCCESS';
 const GET_CANDIDATE_DETAIL_FAIL = 'hero.client/contacts/GET_CANDIDATE_DETAIL_FAIL';
+const GET_MY_CANDIDATES = 'hero.client/candidates/GET_MY_CANDIDATES';
+const GET_MY_CANDIDATES_SUCCESS = 'hero.client/candidates/GET_MY_CANDIDATES_SUCCESS';
+const GET_MY_CANDIDATES_FAIL = 'hero.client/candidates/GET_MY_CANDIDATES_FAIL';
+const GET_MY_FAVORITE_CANDIDATES = 'hero.client/candidates/GET_MY_FAVORITE_CANDIDATES';
+const GET_MY_FAVORITE_CANDIDATES_SUCCESS = 'hero.client/candidates/GET_MY_FAVORITE_CANDIDATES_SUCCESS';
+const GET_MY_FAVORITE_CANDIDATES_FAIL = 'hero.client/candidates/GET_MY_FAVORITE_CANDIDATES_FAIL';
 
 const RESET_ERROR = 'hero.client/candidates/RESET_ERROR';
 const initialState = {
   list: new Immutable.Map(),
   byJobId: new Immutable.Map(),
   byAccountId: new Immutable.Map(),
+  myCandidateIds: new Immutable.Map(),
+  myFavoriteCandidateIds: new Immutable.Map(),
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -148,6 +156,30 @@ export default function reducer(state = initialState, action = {}) {
 
     return state;
   }
+  case GET_MY_CANDIDATES_SUCCESS: {
+    let candidatesMap = {};
+    action.result.map((c) => {
+      candidatesMap[c.id] = c;
+    });
+
+    return{
+      ...state,
+      myCandidateIds: state.myCandidateIds.mergeDeep(candidatesMap),
+      list: state.list.mergeDeep(candidatesMap),
+    };
+  }
+  case GET_MY_FAVORITE_CANDIDATES_SUCCESS: {
+    let candidatesMap = {};
+    action.result.map((c) => {
+      candidatesMap[c.id] = c;
+    });
+
+    return{
+      ...state,
+      myFavoriteCandidateIds: state.myFavoriteCandidateIds.mergeDeep(candidatesMap),
+      list: state.list.mergeDeep(candidatesMap),
+    };
+  }
   case jobConstants.GET_MY_JOBS_SUCCESS:
     {
       let candidateList =  {};
@@ -158,7 +190,7 @@ export default function reducer(state = initialState, action = {}) {
       });
       return {
         ...state,
-        list:state.list.mergeDeep(candidateList)
+        list:state.list.mergeDeep(candidateList),
       };
     }
   case GET_CANDIDATE_DETAIL: {
@@ -173,6 +205,9 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       list: state.list.mergeDeep(listNew),
     };
+  }
+  case GET_MY_FAVORITE_CANDIDATES_FAIL: {
+    return state;
   }
   case GET_CANDIDATE_DETAIL_FAIL: {
     return state;
@@ -243,7 +278,7 @@ export function getAllJobCandidates(jobId) {
 
 export function resetError(){
   return{
-    type:RESET_ERROR
+    type:RESET_ERROR,
   };
 }
 
@@ -260,6 +295,24 @@ export function getAllAccountCandidates(accountId) {
   return {
     types: [GET_CANDIDATES, GET_CANDIDATES_SUCCESS, GET_CANDIDATES_FAIL],
     promise: (client, auth) => client.api.get(`/candidates?filter={"where": {"accountId": "${accountId}"}, "include": "contact"}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function getMyCandidates() {
+  return {
+    types: [GET_MY_CANDIDATES, GET_MY_CANDIDATES_SUCCESS, GET_MY_CANDIDATES_FAIL],
+    promise: (client, auth) => client.api.get(`/candidates/myCandidates`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function getMyFavoriteCandidates() {
+  return {
+    types: [GET_MY_FAVORITE_CANDIDATES, GET_MY_FAVORITE_CANDIDATES_SUCCESS, GET_MY_FAVORITE_CANDIDATES_FAIL],
+    promise: (client, auth) => client.api.get(`/candidates/myFavoriteCandidates`, {
       authToken: auth.authToken,
     }),
   };

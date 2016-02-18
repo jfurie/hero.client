@@ -159,7 +159,7 @@ export default class JobDetails extends React.Component {
         onTouchTap: this._onTouchTapSearch.bind(this),
       }, {
         materialIcon: 'star_rate',
-        text: job.get('isFavorited') ? 'Unsave' : 'Save',
+        text: job.get('isFavorited') ? 'Saved' : 'Save',
         active: job.get('isFavorited'),
         onTouchTap: this._onTouchTapSave.bind(this),
       }, {

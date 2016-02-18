@@ -1,31 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Header, CandidatesList } from '../../../components/web';
-import { getAllAccountCandidates } from '../../../modules/candidates';
-
-function filterMyCandidates(candidates, auth) {
-
-  let accountId = auth.authToken.accountInfo.account.id;
-
-  let myCandidates = [];
-  if (accountId && candidates && candidates.byAccountId && candidates.list) {
-    if (candidates.byAccountId.size > 0) {
-      candidates.byAccountId.get(accountId).forEach(function(candidateId) {
-        let c = candidates.list.get(candidateId);
-        if (c) {
-          myCandidates.push(c);
-        }
-      });
-    }
-  }
-
-  return myCandidates;
-}
+import { Header, ContactsList } from '../../../components/web';
+import { getMyContacts } from '../../../modules/contacts';
 
 @connect(state => ({
-  candidates: filterMyCandidates(state.candidates, state.auth),
+  contacts: state.contacts,
   auth: state.auth,
-}), { getAllAccountCandidates })
+}), { getMyContacts })
 class MyCandidatesPage extends React.Component {
 
   constructor() {
@@ -33,17 +14,17 @@ class MyCandidatesPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
+    this.props.getMyContacts();
   }
 
   render() {
 
-    let {candidates} = this.props;
+    let {contacts} = this.props;
 
     return (
       <div>
         <Header title={'Candidates'}/>
-        <CandidatesList candidates={candidates} />
+        <ContactsList contacts={contacts.myContactIds} />
       </div>);
   }
 }

@@ -194,7 +194,7 @@ export default class ClientDetails extends React.Component {
       onTouchTap: this._onTouchTapCall.bind(this),
     }, {
       materialIcon: 'star_rate',
-      text: company && company.get('isFavorited') ? 'Unsave' : 'Save',
+      text: company && company.get('isFavorited') ? 'Saved' : 'Save',
       active: company && company.get('isFavorited'),
       onTouchTap: this._onTouchTapSave.bind(this),
     }, {
