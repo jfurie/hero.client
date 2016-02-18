@@ -137,7 +137,14 @@ export default class ClientDetails extends React.Component {
   }
 
   _onTouchTapSave() {
-    console.log('_onTouchTapSave');
+    let {company} = this.props;
+
+    if (company.get('isFavorited')) {
+      this.props.unfavoriteCompany();
+    }
+    else {
+      this.props.favoriteCompany();
+    }
   }
 
   _onTouchTapCall() {
@@ -181,14 +188,14 @@ export default class ClientDetails extends React.Component {
   }
 
   renderContent(company) {
-
     let actions = [{
       materialIcon: 'phone',
       text: 'Call',
       onTouchTap: this._onTouchTapCall.bind(this),
     }, {
       materialIcon: 'star_rate',
-      text: 'Save',
+      text: company && company.get('isFavorited') ? 'Unsave' : 'Save',
+      active: company && company.get('isFavorited'),
       onTouchTap: this._onTouchTapSave.bind(this),
     }, {
       materialIcon: 'email',

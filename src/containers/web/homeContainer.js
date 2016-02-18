@@ -5,7 +5,7 @@ import { Header, JobsList, CustomTabsSwipe, CandidatesList, ClientsList, ActionB
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
-import { getAllCompanies, getMyCompanies, createTempCompany } from '../../modules/companies';
+import { getAllCompanies, getMyFavoriteCompanies, createTempCompany } from '../../modules/companies';
 import { createTempContact } from '../../modules/contacts';
 
 import { Styles } from 'material-ui';
@@ -67,7 +67,7 @@ function filterMyJobs(state){
   candidates: filterMyCandidates(state.candidates, state.auth),
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany, createTempContact})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getAllCompanies, getMyJobs, getMyFavoriteCompanies, createTempCompany, createTempContact})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -83,14 +83,10 @@ class HomePage extends React.Component {
 
   componentDidMount() {
     this.props.getMyJobs();
-    this.props.getAllJobs();
-    this.props.getAllCompanies();
-    this.props.getMyCompanies();
+    this.props.getMyFavoriteCompanies();
     if(this.props.auth && this.props.auth.authToken){
       this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
     }
-
-
   }
 
   _handleJobClick(job){
@@ -240,7 +236,7 @@ class HomePage extends React.Component {
 
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
           <div style={style.slide}>
-            <ClientsList clients={companies.myCompanyIds} />
+            <ClientsList clients={companies.myFavoriteCompanyIds} />
           </div>
           <div>
             <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={myJobs}/>

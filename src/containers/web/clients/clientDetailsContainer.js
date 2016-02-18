@@ -5,7 +5,7 @@ import Immutable from 'immutable';
 
 import { ClientDetails } from '../../../components/web';
 
-import { getOneCompany, getCompanyDetail } from '../../../modules/companies/index';
+import { getOneCompany, getCompanyDetail, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob } from '../../../modules/jobs/index';
@@ -67,7 +67,7 @@ function getData(state, props) {
 
 @connect((state, props) => (
 getData(state, props)),
-{getOneCompany, getCompanyDetail, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite, createCandidate })
+{getOneCompany, getCompanyDetail, createCompanyFavorite, deleteCompanyFavorite, getOneLocation, getAllContacts, getContactsByCompany, getJobsByCompany, pushState, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates, getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote, replaceNoteLocal, invite, createCandidate })
 class ClientDetailsPage extends React.Component {
 
   constructor(props) {
@@ -219,6 +219,14 @@ class ClientDetailsPage extends React.Component {
 
     this.props.pushState({}, `/clients/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
   }
+  favoriteCompany() {
+    let {company} = this.props;
+    this.props.createCompanyFavorite(company.get('id'));
+  }
+  unfavoriteCompany() {
+    let {company} = this.props;
+    this.props.deleteCompanyFavorite(company.get('id'));
+  }
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -248,7 +256,7 @@ class ClientDetailsPage extends React.Component {
        <JobCreateModal heroContacts={heroContacts} contacts={company.get('contacts')} saveJob={this.props.saveLocalJob} jobImage={this.props.localJobResource} onImageChange={this.onJobCreateImageChange.bind(this)} onJobChange={this.onJobCreateChange.bind(this)} job={this.props.localJob} ref='jobCreateModal'/>
         */}
 
-        <ClientDetails deleteNote={this._handleDeleteNote.bind(this)} addNoteModalOpen={this.addNoteModalOpen.bind(this)} addJobModalOpen={this.addJobModalOpen.bind(this)} addContactModalOpen={this.addContactModalOpen.bind(this)} editClientModalOpen={this.editClientModalOpen.bind(this)} onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={true} tabId={0} company={company} inline={true} ></ClientDetails>
+        <ClientDetails favoriteCompany={this.favoriteCompany.bind(this)} unfavoriteCompany={this.unfavoriteCompany.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} addNoteModalOpen={this.addNoteModalOpen.bind(this)} addJobModalOpen={this.addJobModalOpen.bind(this)} addContactModalOpen={this.addContactModalOpen.bind(this)} editClientModalOpen={this.editClientModalOpen.bind(this)} onClientDetailsClose={this.onClientDetailsClose.bind(this)} open={true} tabId={0} company={company} inline={true} ></ClientDetails>
 
       </div>
     );
