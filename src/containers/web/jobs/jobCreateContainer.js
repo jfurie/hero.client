@@ -68,14 +68,15 @@ export default class JobCreateContainer extends React.Component {
     this.props.getMyCompanies();
     this.props.getAllCategories();
 
-    if(this.props.params.jobId && this.props.params.jobId.indexOf('tmp')<=-1 ){
-      this.props.getOneJob(this.props.params.jobId);
-    }
+    // if (this.props.params.jobId && this.props.params.jobId.indexOf('tmp')<=-1 ){
+    //   this.props.getOneJob(this.props.params.jobId);
+    // }
   }
 
   componentWillReceiveProps(newProps){
     if(newProps.params.companyId && newProps.params.companyId != this.props.params.companyId ){
       this.props.getContactsByCompany(newProps.params.companyId);
+      this.props.getCompanyDetail(newProps.params.companyId);
     }
     if( newProps.job && newProps.job.get('saving') == false
     && this.props.job && this.props.job.get('saving') == true
