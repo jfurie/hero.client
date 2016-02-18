@@ -115,8 +115,15 @@ export default class JobCreateContainer extends React.Component {
   }
 
   _handleCompanyChange(companyId){
+
     let job = this.props.job.set('companyId', companyId);
+
+    if (this.props.company && this.props.company.get('feeAgreement')) {
+      job = job.set('fee', this.props.company.get('feeAgreement'));
+    }
+
     this._handleChange(job);
+
     let self = this;
     setTimeout(function () {
       if (companyId) {
@@ -141,9 +148,6 @@ export default class JobCreateContainer extends React.Component {
   }
 
   _handleCategoryChange(categoryId){
-
-    //console.log('_handleCategoryChange!', categoryId);
-
     let job = this.props.job.set('categoryId', categoryId);
     this._handleChange(job);
   }

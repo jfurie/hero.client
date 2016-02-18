@@ -62,6 +62,15 @@ class JobOrderSwipeArea extends React.Component {
     };
   }
 
+  componentWillReceiveProps(props) {
+
+    if (props.selected) {
+      this.setState({
+        slideIndex: props.selected,
+      });
+    }
+  }
+
   _onBefore() {
     this.refs.reactSwipe.swipe.prev();
     this._onChange(this.refs.reactSwipe.swipe.getPos());
