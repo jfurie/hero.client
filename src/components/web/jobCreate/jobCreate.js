@@ -157,8 +157,11 @@ export default class JobCreate extends React.Component {
   }
 
   _onCategoryChange(index) {
+    //console.log('_onCategoryChange');
     let categoryId = null;
     let pos = 1;
+
+    console.log('_onCategoryChange', index);
 
     this.props.categories.forEach(function(c, id) {
       if (pos === index) {
@@ -166,6 +169,8 @@ export default class JobCreate extends React.Component {
       }
       pos++;
     });
+
+    console.log('_onCategoryChange id', categoryId);
 
     this.props.onCategoryChange(categoryId);
   }

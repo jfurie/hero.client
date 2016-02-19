@@ -111,6 +111,9 @@ export default class JobCreateContainer extends React.Component {
   }
 
   _handleChange(job, dontMergeDeep){
+
+    dontMergeDeep = dontMergeDeep || true;
+
     this.props.updateJob(job, dontMergeDeep);
   }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Styles, FontIcon } from 'material-ui';
-import ReactSwipe from 'react-swipe';
+import SwipeableViews from 'react-swipeable-views';
 
 const style = {
   rowSwipe: {
@@ -59,11 +59,11 @@ class JobOrderSwipeArea extends React.Component {
 
     this.state = {
       slideIndex: this.props.selected || 0,
+      // disabled: false,
     };
   }
 
   componentWillReceiveProps(props) {
-
     if (props.selected) {
       this.setState({
         slideIndex: props.selected,
@@ -72,20 +72,29 @@ class JobOrderSwipeArea extends React.Component {
   }
 
   _onBefore() {
-    this.refs.reactSwipe.swipe.prev();
-    this._onChange(this.refs.reactSwipe.swipe.getPos());
+    let index = (this.state.slideIndex > 0) ? (this.state.slideIndex - 1) : (0);
+    this._onChange(index);
   }
 
   _onAfter() {
-    this.refs.reactSwipe.swipe.next();
-    this._onChange(this.refs.reactSwipe.swipe.getPos());
+    let maxIndex = this.props.items.length || 0;
+    let index = (this.state.slideIndex < maxIndex) ? (this.state.slideIndex + 1) : (this.state.slideIndex);
+    this._onChange(index);
   }
 
   _onChange(index) {
 
-    this.setState({
-      slideIndex: index,
-    });
+    if (index !== 1) { /* 1 is middle slide */
+      this.setState({
+        slideIndex: index,
+        // disabled: true,
+      });
+    } else {
+      this.setState({
+        slideIndex: index,
+        // disabled: false,
+      });
+    }
 
     if (this.props.onChange) {
       this.props.onChange(index);
@@ -101,7 +110,6 @@ class JobOrderSwipeArea extends React.Component {
     let { title } = this.props;
 
     let items = this.props.items || [];
-
     let itemsToRender = items.map((item, key) => {
       return (
         <div key={key} style={{textAlign: 'center'}}>
@@ -110,30 +118,28 @@ class JobOrderSwipeArea extends React.Component {
       );
     });
 
+    let maxIndex = this.props.items.length || 0;
+
     return (
       <div className="row center-xs" style={style.rowSwipe}>
         <div className="col-xs-12" style={style.colSwipe}>
           <div className="box">
-            <div style={style.leftNav} onTouchTap={this._onBefore.bind(this)}>
+            <div style={Object.assign({}, style.leftNav, {display: (this.state.slideIndex === 0) ? ('none') : ('flex')})} onTouchTap={this._onBefore.bind(this)}>
               <FontIcon style={style.navIcon} className="material-icons">keyboard_arrow_left</FontIcon>
             </div>
-            <div style={style.rightNav} onTouchTap={this._onAfter.bind(this)}>
+            <div style={Object.assign({}, style.rightNav, {display: (this.state.slideIndex === maxIndex) ? ('none') : ('flex')})} onTouchTap={this._onAfter.bind(this)}>
               <FontIcon style={style.navIcon} className="material-icons">keyboard_arrow_right</FontIcon>
             </div>
-            <ReactSwipe
-                key={items.length +1}
-                continuous
-                ref="reactSwipe"
-                transitionEnd={this._onChange.bind(this)}
-                slideToIndex={this.state.slideIndex}
-                shouldUpdate={this._reactSwipeShouldUpdate}
+            <SwipeableViews
+                index={this.state.slideIndex}
+                onChangeIndex={this._onChange.bind(this)}
             >
               <div style={style.slideTitle} key={'a'}>
                 <h2 style={style.rowSwipeTitle}>{title}</h2>
                 <p style={style.rowSwipeSubTitle}>swipe to select</p>
               </div>
               {itemsToRender}
-            </ReactSwipe>
+            </SwipeableViews>
           </div>
         </div>
       </div>
