@@ -205,7 +205,7 @@ class DetailsCard extends React.Component {
             let actionFontIcon = style.actionFontIcon;
 
             if (action.active) {
-              actionFontIcon = {...style.actionFontIcon, ...{color:'#FDD835'}};
+              actionFontIcon = {...style.actionFontIcon, ...{color:'#FBC02D'}};
             }
 
             return (

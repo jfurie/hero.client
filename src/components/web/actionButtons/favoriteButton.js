@@ -5,7 +5,7 @@ export default class FavoriteButton extends React.Component {
     let color = '#4A4A4A';
 
     if (this.props.isFavorited) {
-      color = '#FDD835';
+      color = '#FBC02D';
     }
     
     return (
