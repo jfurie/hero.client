@@ -29,6 +29,18 @@ class JobsList extends React.Component {
     this.props.pushState(null, `/clients/${job.get('companyId')}/jobs/${job.get('id')}`);
   }
 
+  favoriteJob(job) {
+    if (this.props.favoriteJob) {
+      this.props.favoriteJob(job);
+    }
+  }
+
+  unfavoriteJob(job) {
+    if (this.props.unfavoriteJob) {
+      this.props.unfavoriteJob(job);
+    }
+  }
+
   render() {
     // let { jobs, ressourceName, ressourceNamePlurial } = this.props;
     //
@@ -95,7 +107,13 @@ class JobsList extends React.Component {
         <Infinite containerHeight={clientHeight - (56+64)} elementHeight={heights} useWindowAsScrollContainer>
           {jobs.map((job, key) => {
             return (
-              <JobListItem key={key} onJobClick={this._showJobDetails.bind(this)} job={job} / >
+              <JobListItem
+                key={key}
+                onJobClick={this._showJobDetails.bind(this)}
+                job={job}
+                favoriteJob={this.favoriteJob.bind(this)}
+                unfavoriteJob={this.unfavoriteJob.bind(this)}
+              />
             );
           })}
         </Infinite>

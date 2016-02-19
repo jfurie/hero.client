@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
-import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs } from '../../modules/jobs/index';
+import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs, createJobFavorite, deleteJobFavorite } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
 import { createTempContact, getMyFavoriteContacts } from '../../modules/contacts';
@@ -31,7 +31,7 @@ const style = {
   contacts: state.contacts,
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -46,18 +46,9 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getMyJobs();
-    this.props.getAllJobs();
-    this.props.getAllCompanies();
-    this.props.getMyCompanies();
-
     this.props.getMyFavoriteJobs();
     this.props.getMyFavoriteCompanies();
     this.props.getMyFavoriteContacts();
-
-    if(this.props.auth && this.props.auth.authToken){
-      this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
-    }
   }
 
   _handleJobClick(job){
@@ -200,6 +191,14 @@ class HomePage extends React.Component {
     this.props.deleteCompanyFavorite(company.get('id'));
   }
 
+  favoriteJob(job) {
+    this.props.createJobFavorite(job.get('id'));
+  }
+
+  unfavoriteJob(job) {
+    this.props.deleteJobFavorite(job.get('id'));
+  }
+
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -237,7 +236,12 @@ class HomePage extends React.Component {
             />
           </div>
           <div>
-            <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.myFavoriteJobIds}/>
+            <JobsList
+                onJobClick={this._handleJobClick.bind(this)}
+                jobs={jobs.myFavoriteJobIds}
+                favoriteJob={this.favoriteJob.bind(this)}
+                unfavoriteJob={this.unfavoriteJob.bind(this)}
+            />
           </div>
           <div style={style.slide}>
             <ContactsList contacts={contacts.myFavoriteContactIds}/>

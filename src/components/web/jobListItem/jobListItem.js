@@ -124,6 +124,18 @@ export default class JobListItem extends React.Component {
     let body = encodeURIComponent(this.props.job.get('name')) +'%0A' + encodeURIComponent(window.location.href);
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
+
+  _onTouchTapSave() {
+    let {job} = this.props;
+
+    if (job.get('isFavorited')) {
+      this.props.unfavoriteJob(job);
+    }
+    else {
+      this.props.favoriteJob(job);
+    }
+  }
+
   render(){
     let {job,type} = this.props;
 
@@ -289,7 +301,7 @@ export default class JobListItem extends React.Component {
 
           }}>
             <FindButton />
-            <FavoriteButton isFavorited={job.get('isFavorited')} />
+            <FavoriteButton isFavorited={job.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
             <ShareButton />
           </CardActions>
         </div>):(<div></div>)}
