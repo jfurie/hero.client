@@ -500,7 +500,12 @@ export default class ContactDetails extends React.Component {
               {contact.get('jobs') && contact.get('jobs').map((job, key) => {
                 return (
                   <div key={key}>
-                    <JobListItem onJobClick={this._showJobDetails.bind(this)} job={job} / >
+                    <JobListItem
+                        onJobClick={this._showJobDetails.bind(this)}
+                        job={job}
+                        favoriteJob={this.props.favoriteJob.bind(this)}
+                        unfavoriteJob={this.props.unfavoriteJob.bind(this)}
+                    />
                   </div>
                 );
               })}

@@ -41,3 +41,4 @@ export const CREATE_JOB_FAVORITE_FAIL = 'hero.client/jobs/CREATE_JOB_FAVORITE_FA
 export const DELETE_JOB_FAVORITE = 'hero.client/jobs/DELETE_JOB_FAVORITE';
 export const DELETE_JOB_FAVORITE_SUCCESS = 'hero.client/jobs/DELETE_JOB_FAVORITE_SUCCESS';
 export const DELETE_JOB_FAVORITE_FAIL = 'hero.client/jobs/DELETE_JOB_FAVORITE_FAIL';
+export const GET_JOBS_BY_CONTACT_SUCCESS = 'hero.client/jobs/GET_JOBS_BY_CONTACT_SUCCESS';

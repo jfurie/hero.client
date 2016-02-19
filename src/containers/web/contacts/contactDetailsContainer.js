@@ -5,17 +5,19 @@ import Immutable from 'immutable';
 import { ContactDetails } from '../../../components/web';
 import { getContactDetail, createContactFavorite, deleteContactFavorite } from '../../../modules/contacts';
 import { replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
+import { createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
 //const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
+import getContactDataFromState from '../../../dataHelpers/contact';
 
 function getData(state, props) {
   return {
-    contact: state.contacts.list.get(props.params.contactId) || null,
+    contact: getContactDataFromState(state, props.params.contactId),
   };
 }
 
 @connect((state, props) => (
 getData(state, props)),
-{getContactDetail, createContactFavorite, deleteContactFavorite, replaceNoteLocal,pushState, deleteNote})
+{getContactDetail, createContactFavorite, deleteContactFavorite, replaceNoteLocal,pushState, deleteNote, createJobFavorite, deleteJobFavorite})
 class ContactDetailsPage extends React.Component {
 
   constructor(props) {
@@ -72,12 +74,29 @@ class ContactDetailsPage extends React.Component {
     this.props.deleteContactFavorite(contact.get('id'));
   }
 
+  favoriteJob(job) {
+    this.props.createJobFavorite(job.get('id'));
+  }
+
+  unfavoriteJob(job) {
+    this.props.deleteJobFavorite(job.get('id'));
+  }
+
   render() {
 
     let {contact} = this.props;
     return (
       <div>
-        <ContactDetails favoriteContact={this.favoriteContact.bind(this)} unfavoriteContact={this.unfavoriteContact.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} location={this.props.location} onContactDetailsClose={this.onContactDetailsClose.bind(this)} open={true} contact={contact} />
+        <ContactDetails
+        favoriteContact={this.favoriteContact.bind(this)}
+        unfavoriteContact={this.unfavoriteContact.bind(this)}
+        favoriteJob={this.favoriteJob.bind(this)}
+        unfavoriteJob={this.unfavoriteJob.bind(this)}
+        deleteNote={this._handleDeleteNote.bind(this)}
+        location={this.props.location}
+        onContactDetailsClose={this.onContactDetailsClose.bind(this)}
+        open={true}
+        contact={contact} />
       </div>
     );
   }

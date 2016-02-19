@@ -3,6 +3,7 @@ import * as constants from './constants';
 const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
+  byContactId: new Immutable.Map(),
   localJob: new Immutable.Map(),
   myJobIds: new Immutable.Map(),
   myFavoriteJobIds: new Immutable.Map(),
@@ -89,6 +90,23 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       loading:false,
+    };
+  }
+  case constants.GET_JOBS_BY_CONTACT_SUCCESS:{
+
+    let contactId = action.result.contactId;
+
+    let byContactMap = {};
+    byContactMap[contactId] = action.result.jobs.map((contact) => contact.id);
+    let contactMap = {};
+    action.result.jobs.map((c) => {
+      contactMap[c.id] = c;
+    });
+
+    return {
+      ...state,
+      byContactId: state.byContactId.mergeDeep(byContactMap),
+      list: state.list.mergeDeep(contactMap),
     };
   }
   case constants.CREATE_JOB:{
