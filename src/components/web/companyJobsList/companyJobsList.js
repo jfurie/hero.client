@@ -38,6 +38,18 @@ class CompanyJobsList extends React.Component {
     this.props.pushState(null, `/clients/${job.get('companyId')}/jobs/${job.get('id')}`);
   }
 
+  favoriteJob(job) {
+    if (this.props.favoriteJob) {
+      this.props.favoriteJob(job);
+    }
+  }
+
+  unfavoriteJob(job) {
+    if (this.props.unfavoriteJob) {
+      this.props.unfavoriteJob(job);
+    }
+  }
+
   render() {
 
     // let { jobs, company } = this.props;
@@ -113,7 +125,12 @@ class CompanyJobsList extends React.Component {
         {jobs.map((job) => {
           return (
             <div>
-              <JobListItem onJobClick={this._showJobDetails.bind(this)} job={job} / >
+              <JobListItem
+                  onJobClick={this._showJobDetails.bind(this)}
+                  job={job}
+                  favoriteJob={this.favoriteJob.bind(this)}
+                  unfavoriteJob={this.unfavoriteJob.bind(this)}
+              />
             </div>
           );
         })}
