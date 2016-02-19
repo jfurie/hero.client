@@ -5,6 +5,7 @@ import Immutable from 'immutable';
 import { JobDetails } from '../../../components/web';
 import { getJobDetail, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs';
 import { getAllJobCandidates } from '../../../modules/candidates';
+import { createContactFavorite, deleteContactFavorite } from '../../../modules/contacts';
 import { getImageByJobId } from '../../../modules/resources';
 import { getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 
@@ -18,7 +19,7 @@ function getData(state, jobId) {
   };
 }
 
-@connect((state, props) => (getData(state, props.params.jobId)), {pushState, getJobDetail, createJobFavorite, deleteJobFavorite, getAllJobCandidates, getImageByJobId, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote})
+@connect((state, props) => (getData(state, props.params.jobId)), {pushState, getJobDetail, createJobFavorite, deleteJobFavorite, getAllJobCandidates, getImageByJobId, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote, createContactFavorite, deleteContactFavorite})
 class JobDetailsPage extends React.Component {
 
   constructor(props) {
@@ -87,6 +88,14 @@ class JobDetailsPage extends React.Component {
     this.props.deleteJobFavorite(job.get('id'));
   }
 
+  favoriteContact(contact) {
+    this.props.createContactFavorite(contact.get('id'));
+  }
+
+  unfavoriteContact(contact) {
+    this.props.deleteContactFavorite(contact.get('id'));
+  }
+
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -103,7 +112,16 @@ class JobDetailsPage extends React.Component {
 
     return (
       <div>
-        <JobDetails favoriteJob={this.favoriteJob.bind(this)} unfavoriteJob={this.unfavoriteJob.bind(this)} deleteNote={this._handleDeleteNote.bind(this)} addNoteModalOpen={this.addNoteModalOpen.bind(this)} onJobDetailsClose={this.onJobDetailsClose.bind(this)} open job={job} />
+        <JobDetails
+        favoriteJob={this.favoriteJob.bind(this)}
+        unfavoriteJob={this.unfavoriteJob.bind(this)}
+        favoriteContact={this.favoriteContact.bind(this)}
+        unfavoriteContact={this.unfavoriteContact.bind(this)}
+        deleteNote={this._handleDeleteNote.bind(this)}
+        addNoteModalOpen={this.addNoteModalOpen.bind(this)}
+        onJobDetailsClose={this.onJobDetailsClose.bind(this)}
+        open
+        job={job} />
       </div>
     );
   }

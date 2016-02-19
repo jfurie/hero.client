@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, ClientsCreateModal, ClientsList } from '../../../components/web';
-import { getAllCompanies, getMyCompanies, createCompany, searchCompany } from '../../../modules/companies';
+import { getAllCompanies, getMyCompanies, createCompany, searchCompany, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies';
 import { getCurrentAccount } from '../../../modules/currentAccount';
 import { getContactsByCompany } from '../../../modules/contacts';
 
@@ -34,7 +34,7 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
     currentAccount: state.currentAccount,
     heroContacts,
   });
-}, { getAllCompanies, getMyCompanies, createCompany, searchCompany, pushState, getCurrentAccount, getContactsByCompany })
+}, { getAllCompanies, getMyCompanies, createCompany, searchCompany, pushState, getCurrentAccount, getContactsByCompany, createCompanyFavorite, deleteCompanyFavorite })
 class ClientPage extends React.Component {
 
   constructor(props) {
@@ -96,6 +96,14 @@ class ClientPage extends React.Component {
     this.props.history.goBack();
   }
 
+  favoriteCompany(company) {
+    this.props.createCompanyFavorite(company.get('id'));
+  }
+
+  unfavoriteCompany(company) {
+    this.props.deleteCompanyFavorite(company.get('id'));
+  }
+
   render() {
 
     let { visibleCompanies, heroContacts } = this.props;
@@ -104,7 +112,11 @@ class ClientPage extends React.Component {
       <div>
         <ClientsCreateModal heroContacts={heroContacts} onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen} />
         <Header title={'Clients'} />
-        <ClientsList clients={visibleCompanies} />
+        <ClientsList
+            clients={visibleCompanies}
+            favoriteCompany={this.favoriteCompany.bind(this)}
+            unfavoriteCompany={this.unfavoriteCompany.bind(this)}
+        />
 
       </div>);
   }

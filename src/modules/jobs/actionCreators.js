@@ -234,6 +234,13 @@ export function saveJobsByCompanyResult(jobs){
   };
 }
 
+export function saveJobsByContactResult(jobs, contactId){
+  return {
+    type: constants.GET_JOBS_BY_CONTACT_SUCCESS,
+    result: {jobs, contactId},
+  };
+}
+
 export function getJobDetail(id) {
   return (dispatch) => {
     dispatch({

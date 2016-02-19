@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, JobsList } from '../../../components/web';
 import { toggleNav } from '../../../modules/leftNav';
-import { getMyJobs } from '../../../modules/jobs/index';
+import { getMyJobs, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
 
 @connect(state => ({
   user: state.auth.user,
   jobs: state.jobs,
-}), {pushState, toggleNav, getMyJobs})
+}), {pushState, toggleNav, getMyJobs, createJobFavorite, deleteJobFavorite})
 class MyJobsPage extends React.Component {
 
   constructor(props) {
@@ -23,6 +23,14 @@ class MyJobsPage extends React.Component {
     this.props.pushState({}, `/clients/${company.get('id')}/jobs/${job.get('id')}`);
   }
 
+  favoriteJob(job) {
+    this.props.createJobFavorite(job.get('id'));
+  }
+
+  unfavoriteJob(job) {
+    this.props.deleteJobFavorite(job.get('id'));
+  }
+
   render () {
 
     let { jobs } = this.props;
@@ -33,6 +41,8 @@ class MyJobsPage extends React.Component {
         <JobsList
             onJobClick={this._handleJobClick.bind(this)}
             jobs={jobs.list}
+            favoriteJob={this.favoriteJob.bind(this)}
+            unfavoriteJob={this.unfavoriteJob.bind(this)}
         />
       </div>
     );

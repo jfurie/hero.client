@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
-import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs } from '../../modules/jobs/index';
+import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs, createJobFavorite, deleteJobFavorite } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
-import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies } from '../../modules/companies';
-import { createTempContact, getMyFavoriteContacts } from '../../modules/contacts';
+import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
+import { createTempContact, getMyFavoriteContacts, createContactFavorite, deleteContactFavorite } from '../../modules/contacts';
 
 import { Styles } from 'material-ui';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
@@ -31,7 +31,7 @@ const style = {
   contacts: state.contacts,
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, getMyFavoriteJobs})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs, createContactFavorite, deleteContactFavorite})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -46,18 +46,9 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getMyJobs();
-    this.props.getAllJobs();
-    this.props.getAllCompanies();
-    this.props.getMyCompanies();
-
     this.props.getMyFavoriteJobs();
     this.props.getMyFavoriteCompanies();
     this.props.getMyFavoriteContacts();
-
-    if(this.props.auth && this.props.auth.authToken){
-      this.props.getAllAccountCandidates(this.props.auth.authToken.accountInfo.account.id);
-    }
   }
 
   _handleJobClick(job){
@@ -192,6 +183,30 @@ class HomePage extends React.Component {
     //this.props.history.pushState(null,'/jobs/search');
   }
 
+  favoriteCompany(company) {
+    this.props.createCompanyFavorite(company.get('id'));
+  }
+
+  unfavoriteCompany(company) {
+    this.props.deleteCompanyFavorite(company.get('id'));
+  }
+
+  favoriteJob(job) {
+    this.props.createJobFavorite(job.get('id'));
+  }
+
+  unfavoriteJob(job) {
+    this.props.deleteJobFavorite(job.get('id'));
+  }
+
+  favoriteContact(contact) {
+    this.props.createContactFavorite(contact.get('id'));
+  }
+
+  unfavoriteContact(contact) {
+    this.props.deleteContactFavorite(contact.get('id'));
+  }
+
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -222,13 +237,26 @@ class HomePage extends React.Component {
         <Header title="Dashboard" />
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
           <div style={style.slide}>
-            <ClientsList clients={companies.myFavoriteCompanyIds} />
+            <ClientsList
+                clients={companies.myFavoriteCompanyIds}
+                favoriteCompany={this.favoriteCompany.bind(this)}
+                unfavoriteCompany={this.unfavoriteCompany.bind(this)}
+            />
           </div>
           <div>
-            <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.myFavoriteJobIds}/>
+            <JobsList
+                onJobClick={this._handleJobClick.bind(this)}
+                jobs={jobs.myFavoriteJobIds}
+                favoriteJob={this.favoriteJob.bind(this)}
+                unfavoriteJob={this.unfavoriteJob.bind(this)}
+            />
           </div>
           <div style={style.slide}>
-            <ContactsList contacts={contacts.myFavoriteContactIds}/>
+            <ContactsList
+                contacts={contacts.myFavoriteContactIds}
+                favoriteContact={this.favoriteContact.bind(this)}
+                unfavoriteContact={this.unfavoriteContact.bind(this)}
+            />
           </div>
         </CustomTabsSwipe>
         <ActionButton ref="actionButtons" actions={actions}/>

@@ -449,8 +449,20 @@ export default class ClientDetails extends React.Component {
 
               </Card>
             </div>
-            <CompanyJobsList company={company} onJobClick={this._handleJobClick.bind(this)} jobs={company.get('jobs')}/>
-            <ContactsList contacts={company.get('contacts')} company={company} type="mini"/>
+            <CompanyJobsList
+                company={company}
+                onJobClick={this._handleJobClick.bind(this)}
+                jobs={company.get('jobs')}
+                favoriteJob={this.props.favoriteJob.bind(this)}
+                unfavoriteJob={this.props.unfavoriteJob.bind(this)}
+            />
+            <ContactsList
+                contacts={company.get('contacts')}
+                company={company}
+                type="mini"
+                favoriteContact={this.props.favoriteContact.bind(this)}
+                unfavoriteContact={this.props.unfavoriteContact.bind(this)}
+            />
             <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
               <CompanyNotesList company={company} editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={company.get('notes')}/>
             </List>

@@ -8,9 +8,9 @@ import { ClientDetails } from '../../../components/web';
 import { getOneCompany, getCompanyDetail, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByJobId } from '../../../modules/resources';
-import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob } from '../../../modules/jobs/index';
+import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
 import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
-import { getAllContacts, getContactsByCompany } from '../../../modules/contacts';
+import { getAllContacts, getContactsByCompany, createContactFavorite, deleteContactFavorite } from '../../../modules/contacts';
 import { getAllJobCandidates, createCandidate } from '../../../modules/candidates';
 
 import { invite } from '../../../modules/users';
@@ -74,6 +74,8 @@ getData(state, props)), {
   getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote,
   replaceNoteLocal, invite, createCandidate, createTempJob,
   createCompanyFavorite, deleteCompanyFavorite,
+  createJobFavorite, deleteJobFavorite,
+  createContactFavorite, deleteContactFavorite,
 })
 class ClientDetailsPage extends React.Component {
 
@@ -244,6 +246,22 @@ class ClientDetailsPage extends React.Component {
     this.props.deleteCompanyFavorite(company.get('id'));
   }
 
+  favoriteJob(job) {
+    this.props.createJobFavorite(job.get('id'));
+  }
+
+  unfavoriteJob(job) {
+    this.props.deleteJobFavorite(job.get('id'));
+  }
+
+  favoriteContact(contact) {
+    this.props.createContactFavorite(contact.get('id'));
+  }
+
+  unfavoriteContact(contact) {
+    this.props.deleteContactFavorite(contact.get('id'));
+  }
+
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -273,6 +291,10 @@ class ClientDetailsPage extends React.Component {
             inline
             favoriteCompany={this.favoriteCompany.bind(this)}
             unfavoriteCompany={this.unfavoriteCompany.bind(this)}
+            favoriteJob={this.favoriteJob.bind(this)}
+            unfavoriteJob={this.unfavoriteJob.bind(this)}
+            favoriteContact={this.favoriteContact.bind(this)}
+            unfavoriteContact={this.unfavoriteContact.bind(this)}
         />
 
       </div>

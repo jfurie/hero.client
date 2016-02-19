@@ -3,8 +3,9 @@ import * as constants from './constants';
 const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
+  byContactId: new Immutable.Map(),
   localJob: new Immutable.Map(),
-  myJobIds: new Immutable.List(),
+  myJobIds: new Immutable.Map(),
   myFavoriteJobIds: new Immutable.Map(),
   queries: new Immutable.Map(),
 };
@@ -89,6 +90,23 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       loading:false,
+    };
+  }
+  case constants.GET_JOBS_BY_CONTACT_SUCCESS:{
+
+    let contactId = action.result.contactId;
+
+    let byContactMap = {};
+    byContactMap[contactId] = action.result.jobs.map((contact) => contact.id);
+    let contactMap = {};
+    action.result.jobs.map((c) => {
+      contactMap[c.id] = c;
+    });
+
+    return {
+      ...state,
+      byContactId: state.byContactId.mergeDeep(byContactMap),
+      list: state.list.mergeDeep(contactMap),
     };
   }
   case constants.CREATE_JOB:{
@@ -255,16 +273,14 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.GET_MY_JOBS_SUCCESS:{
-    let myJobIds = [];
-    let jobList = {};
-    myJobIds = action.result.map(job =>{
-      jobList[job.id] = job;
-      return job.id;
+    let jobsMap = {};
+    action.result.map((job) => {
+      jobsMap[job.id] = job;
     });
     return{
       ...state,
-      myJobIds: new Immutable.List(myJobIds),
-      list: state.list.mergeDeep(jobList)
+      myJobIds: state.myJobIds.mergeDeep(jobsMap),
+      list: state.list.mergeDeep(jobsMap),
     };
   }
   case constants.GET_MY_FAVORITE_JOBS_SUCCESS: {
@@ -290,6 +306,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       list: state.list.mergeDeep(jobMap),
+      myJobIds: state.myJobIds.mergeDeep(jobMap),
       myFavoriteJobIds: state.myFavoriteJobIds.mergeDeep(jobMap),
     };
   }
@@ -303,6 +320,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       list: state.list.mergeDeep(jobMap),
+      myJobIds: state.myJobIds.mergeDeep(jobMap),
       myFavoriteJobIds: state.myFavoriteJobIds.delete(action.result.favorableId),
     };
   }

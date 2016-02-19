@@ -252,7 +252,11 @@ export default class JobDetails extends React.Component {
               </Card>
             </div>
             <div>
-              <CandidatesList candidates={job.get('candidates')} />
+              <CandidatesList
+                  candidates={job.get('candidates')}
+                  favoriteContact={this.props.favoriteContact.bind(this)}
+                  unfavoriteContact={this.props.unfavoriteContact.bind(this)}
+              />
             </div>
             <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
               <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
