@@ -125,6 +125,17 @@ export default class ClientListItem extends React.Component {
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
+  _onTouchTapSave() {
+    let {company} = this.props;
+
+    if (company.get('isFavorited')) {
+      this.props.unfavoriteCompany(company);
+    }
+    else {
+      this.props.favoriteCompany(company);
+    }
+  }
+
   renderBasic() {
     let {company} = this.props;
 
@@ -263,7 +274,7 @@ export default class ClientListItem extends React.Component {
             }}>
               <PhoneButton phone={this.props.company && this.props.company.get('phone')} />
               <EmailButton email={this.props.company && this.props.company.get('email')} />
-              <FavoriteButton isFavorited={company.get('isFavorited')}/>
+              <FavoriteButton isFavorited={company.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
               <ShareButton />
             </CardActions>
           </div>):(<div></div>)}

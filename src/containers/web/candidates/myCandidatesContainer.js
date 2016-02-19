@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Header, CandidatesList } from '../../../components/web';
-import { getMyCandidates } from '../../../modules/contacts';
+import { getMyCandidates } from '../../../modules/candidates';
 
 @connect(state => ({
   candidates: state.candidates,

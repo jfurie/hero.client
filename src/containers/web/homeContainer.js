@@ -5,7 +5,7 @@ import { Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionBut
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
-import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies } from '../../modules/companies';
+import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
 import { createTempContact, getMyFavoriteContacts } from '../../modules/contacts';
 
 import { Styles } from 'material-ui';
@@ -31,7 +31,7 @@ const style = {
   contacts: state.contacts,
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, getMyFavoriteJobs})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -192,6 +192,14 @@ class HomePage extends React.Component {
     //this.props.history.pushState(null,'/jobs/search');
   }
 
+  favoriteCompany(company) {
+    this.props.createCompanyFavorite(company.get('id'));
+  }
+
+  unfavoriteCompany(company) {
+    this.props.deleteCompanyFavorite(company.get('id'));
+  }
+
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -222,7 +230,11 @@ class HomePage extends React.Component {
         <Header title="Dashboard" />
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
           <div style={style.slide}>
-            <ClientsList clients={companies.myFavoriteCompanyIds} />
+            <ClientsList
+                clients={companies.myFavoriteCompanyIds}
+                favoriteCompany={this.favoriteCompany.bind(this)}
+                unfavoriteCompany={this.unfavoriteCompany.bind(this)}
+            />
           </div>
           <div>
             <JobsList onJobClick={this._handleJobClick.bind(this)} jobs={jobs.myFavoriteJobIds}/>

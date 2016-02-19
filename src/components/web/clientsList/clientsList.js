@@ -56,6 +56,18 @@ class ClientsList extends React.Component {
     console.log('toto');
   }
 
+  favoriteCompany(company) {
+    if (this.props.favoriteCompany) {
+      this.props.favoriteCompany(company);
+    }
+  }
+
+  unfavoriteCompany(company) {
+    if (this.props.unfavoriteCompany) {
+      this.props.unfavoriteCompany(company);
+    }
+  }
+
   render() {
 
     let { clients } = this.props;
@@ -110,7 +122,12 @@ class ClientsList extends React.Component {
               return (
                 <div>
 
-                  <ClientListItem onClientClick={this._showClientDetails.bind(this)} company={company} / >
+                  <ClientListItem
+                      onClientClick={this._showClientDetails.bind(this)}
+                      company={company}
+                      favoriteCompany={this.favoriteCompany.bind(this)}
+                      unfavoriteCompany={this.unfavoriteCompany.bind(this)}
+                  />
                 {/*
                   <ListItem
                       leftAvatar={<CompanyAvatar url={company.get('website')} />}

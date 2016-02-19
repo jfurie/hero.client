@@ -207,6 +207,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       list: state.list.mergeDeep(companyMap),
+      myCompanyIds: state.myCompanyIds.mergeDeep(companyMap),
       myFavoriteCompanyIds: state.myFavoriteCompanyIds.mergeDeep(companyMap),
     };
   }
@@ -220,6 +221,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       list: state.list.mergeDeep(companyMap),
+      myCompanyIds: state.myCompanyIds.mergeDeep(companyMap),
       myFavoriteCompanyIds: state.myFavoriteCompanyIds.delete(action.result.favorableId),
     };
   }
