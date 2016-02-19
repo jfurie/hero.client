@@ -19,6 +19,8 @@ const GET_MY_CANDIDATES_FAIL = 'hero.client/candidates/GET_MY_CANDIDATES_FAIL';
 const GET_MY_FAVORITE_CANDIDATES = 'hero.client/candidates/GET_MY_FAVORITE_CANDIDATES';
 const GET_MY_FAVORITE_CANDIDATES_SUCCESS = 'hero.client/candidates/GET_MY_FAVORITE_CANDIDATES_SUCCESS';
 const GET_MY_FAVORITE_CANDIDATES_FAIL = 'hero.client/candidates/GET_MY_FAVORITE_CANDIDATES_FAIL';
+const CREATE_CANDIDATE_FAVORITE_SUCCESS = 'hero.client/candidates/CREATE_CANDIDATE_FAVORITE_SUCCESS';
+const DELETE_CANDIDATE_FAVORITE_SUCCESS = 'hero.client/candidates/DELETE_CANDIDATE_FAVORITE_SUCCESS';
 
 const RESET_ERROR = 'hero.client/candidates/RESET_ERROR';
 const initialState = {
@@ -212,6 +214,41 @@ export default function reducer(state = initialState, action = {}) {
   case GET_CANDIDATE_DETAIL_FAIL: {
     return state;
   }
+
+  case CREATE_CANDIDATE_FAVORITE_SUCCESS: {
+    let candidates = state.list.filter(x => {
+      return x.get('contactId') == action.result.favorableId;
+    });
+
+    let candidatesMap = {};
+
+    candidates.forEach(function(candidate) {
+      candidatesMap[candidate.get('id')] = candidate.set('contact', candidate.get('contact').set('isFavorited', true));
+    });
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(candidatesMap),
+      myCandidateIds: state.myCandidateIds.mergeDeep(candidatesMap),
+    };
+  }
+  case DELETE_CANDIDATE_FAVORITE_SUCCESS: {
+    let candidates = state.list.filter(x => {
+      return x.get('contactId') == action.result.favorableId;
+    });
+
+    let candidatesMap = {};
+
+    candidates.forEach(function(candidate) {
+      candidatesMap[candidate.get('id')] = candidate.set('contact', candidate.get('contact').set('isFavorited', false));
+    });
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(candidatesMap),
+      myCandidateIds: state.myCandidateIds.mergeDeep(candidatesMap),
+    };
+  }
   default:
     return state;
   }
@@ -328,5 +365,19 @@ export function getCandidateDetail(id) {
         return candidate;
       }),
     });
+  };
+}
+
+export function createCandidateFavorite(favorite){
+  return {
+    type: CREATE_CANDIDATE_FAVORITE_SUCCESS,
+    result: favorite,
+  };
+}
+
+export function deleteCandidateFavorite(favorite){
+  return {
+    type: DELETE_CANDIDATE_FAVORITE_SUCCESS,
+    result: favorite,
   };
 }

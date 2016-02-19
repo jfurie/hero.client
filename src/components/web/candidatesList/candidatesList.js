@@ -16,6 +16,18 @@ class CandidatesList extends React.Component {
     this.props.pushState(null, `/contacts/${candidate.get('id')}`);
   }
 
+  favoriteContact(contact) {
+    if (this.props.favoriteContact) {
+      this.props.favoriteContact(contact);
+    }
+  }
+
+  unfavoriteContact(contact) {
+    if (this.props.unfavoriteContact) {
+      this.props.unfavoriteContact(contact);
+    }
+  }
+
   render() {
     let { candidates } = this.props;
 
@@ -32,7 +44,14 @@ class CandidatesList extends React.Component {
       <List style={{backgroundColor: 'transparent'}} subheader={`${candidateCount} Candidate${(candidateCount !== 1) ? ('s') : ('')}`}>
           {candidates.map((candidate, key) => {
             return (
-              <ContactListItem key={key} contact={candidate.get('contact')} company={candidate.get('company')} onContactClick={this.openDetails.bind(this)}/>
+              <ContactListItem
+                  key={key}
+                  contact={candidate.get('contact')}
+                  company={candidate.get('company')}
+                  onContactClick={this.openDetails.bind(this)}
+                  favoriteContact={this.favoriteContact.bind(this)}
+                  unfavoriteContact={this.unfavoriteContact.bind(this)}
+              />
             );
           })}
       </List>

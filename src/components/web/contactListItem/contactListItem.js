@@ -127,6 +127,17 @@ export default class ContactListItem extends React.Component {
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
+  _onTouchTapSave() {
+    let {contact} = this.props;
+
+    if (contact.get('isFavorited')) {
+      this.props.unfavoriteContact(contact);
+    }
+    else {
+      this.props.favoriteContact(contact);
+    }
+  }
+
   renderBasic() {
     let {contact, company} = this.props;
 
@@ -283,7 +294,7 @@ export default class ContactListItem extends React.Component {
           <PhoneButton phone={contact.get('phone')} />
           <SmsButton phone={contact.get('phone')} />
           <EmailButton email={contact.get('email')} />
-          <FavoriteButton isFavorited={contact.get('isFavorited')} />
+          <FavoriteButton isFavorited={contact.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
         </CardActions>
 
       </Card>

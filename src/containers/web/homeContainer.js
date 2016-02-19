@@ -6,7 +6,7 @@ import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs, createJobFavorite, deleteJobFavorite } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
-import { createTempContact, getMyFavoriteContacts } from '../../modules/contacts';
+import { createTempContact, getMyFavoriteContacts, createContactFavorite, deleteContactFavorite } from '../../modules/contacts';
 
 import { Styles } from 'material-ui';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
@@ -31,7 +31,7 @@ const style = {
   contacts: state.contacts,
   auth: state.auth,
   companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs})
+}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs, createContactFavorite, deleteContactFavorite})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -199,6 +199,14 @@ class HomePage extends React.Component {
     this.props.deleteJobFavorite(job.get('id'));
   }
 
+  favoriteContact(contact) {
+    this.props.createContactFavorite(contact.get('id'));
+  }
+
+  unfavoriteContact(contact) {
+    this.props.deleteContactFavorite(contact.get('id'));
+  }
+
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -244,7 +252,11 @@ class HomePage extends React.Component {
             />
           </div>
           <div style={style.slide}>
-            <ContactsList contacts={contacts.myFavoriteContactIds}/>
+            <ContactsList
+                contacts={contacts.myFavoriteContactIds}
+                favoriteContact={this.favoriteContact.bind(this)}
+                unfavoriteContact={this.unfavoriteContact.bind(this)}
+            />
           </div>
         </CustomTabsSwipe>
         <ActionButton ref="actionButtons" actions={actions}/>

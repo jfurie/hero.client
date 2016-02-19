@@ -19,6 +19,18 @@ class ContactsList extends React.Component {
     this.props.pushState(null, `/contacts/${contact.get('id')}`);
   }
 
+  favoriteContact(contact) {
+    if (this.props.favoriteContact) {
+      this.props.favoriteContact(contact);
+    }
+  }
+
+  unfavoriteContact(contact) {
+    if (this.props.unfavoriteContact) {
+      this.props.unfavoriteContact(contact);
+    }
+  }
+
   render() {
     let { contacts, company, type } = this.props;
 
@@ -36,7 +48,14 @@ class ContactsList extends React.Component {
         {contacts.map((contact) => {
           return (
             <div>
-              <ContactListItem onContactClick={this._showContactDetails.bind(this)} contact={contact} company={company} type={type} / >
+              <ContactListItem
+                  onContactClick={this._showContactDetails.bind(this)}
+                  contact={contact}
+                  company={company}
+                  type={type}
+                  favoriteContact={this.favoriteContact.bind(this)}
+                  unfavoriteContact={this.unfavoriteContact.bind(this)}
+              />
             </div>
           );
         })}

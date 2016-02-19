@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 import * as companyConstants from './companies/constants';
 import * as jobConstants from './jobs/constants';
+import { createCandidateFavorite, deleteCandidateFavorite } from './candidates';
 const GET_CONTACTS = 'hero.client/contacts/GET_CONTACTS';
 const GET_CONTACTS_SUCCESS = 'hero.client/contacts/GET_CONTACTS_SUCCESS';
 const GET_CONTACTS_FAIL = 'hero.client/contacts/GET_CONTACTS_FAIL';
@@ -378,29 +379,43 @@ export default function reducer(state = initialState, action = {}) {
   }
   case CREATE_CONTACT_FAVORITE_SUCCESS: {
     let contact = state.list.get(action.result.favorableId);
-    contact = contact.set('isFavorited', true);
 
-    let contactMap = {};
-    contactMap[contact.get('id')] = contact;
+    if (contact) {
+      contact = contact.set('isFavorited', true);
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(contactMap),
-      myFavoriteContactIds: state.myFavoriteContactIds.mergeDeep(contactMap),
-    };
+      let contactMap = {};
+      contactMap[contact.get('id')] = contact;
+
+      return {
+        ...state,
+        list: state.list.mergeDeep(contactMap),
+        myContactIds: state.myContactIds.mergeDeep(contactMap),
+        myFavoriteContactIds: state.myFavoriteContactIds.mergeDeep(contactMap),
+      };
+    }
+    else {
+      return state;
+    }
   }
   case DELETE_CONTACT_FAVORITE_SUCCESS: {
     let contact = state.list.get(action.result.favorableId);
-    contact = contact.set('isFavorited', false);
 
-    let contactMap = {};
-    contactMap[contact.get('id')] = contact;
+    if (contact) {
+      contact = contact.set('isFavorited', false);
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(contactMap),
-      myFavoriteContactIds: state.myFavoriteContactIds.delete(action.result.favorableId),
-    };
+      let contactMap = {};
+      contactMap[contact.get('id')] = contact;
+
+      return {
+        ...state,
+        list: state.list.mergeDeep(contactMap),
+        myContactIds: state.myContactIds.mergeDeep(contactMap),
+        myFavoriteContactIds: state.myFavoriteContactIds.delete(action.result.favorableId),
+      };
+    }
+    else {
+      return state;
+    }
   }
   default:
     return state;
@@ -570,19 +585,29 @@ export function getMyFavoriteContacts() {
 }
 
 export function createContactFavorite(contactId){
-  return {
-    types: [CREATE_CONTACT_FAVORITE, CREATE_CONTACT_FAVORITE_SUCCESS, CREATE_CONTACT_FAVORITE_FAIL],
-    promise: (client, auth) => client.api.post(`/contacts/${contactId}/favorites`, {
-      authToken: auth.authToken,
-    }),
+  return (dispatch) => {
+    dispatch({
+      types: [CREATE_CONTACT_FAVORITE, CREATE_CONTACT_FAVORITE_SUCCESS, CREATE_CONTACT_FAVORITE_FAIL],
+      promise: (client, auth) => client.api.post(`/contacts/${contactId}/favorites`, {
+        authToken: auth.authToken,
+      }).then(function (favorite) {
+        dispatch(createCandidateFavorite(favorite));
+        return favorite;
+      }),
+    });
   };
 }
 
 export function deleteContactFavorite(contactId){
-  return {
-    types: [DELETE_CONTACT_FAVORITE, DELETE_CONTACT_FAVORITE_SUCCESS, DELETE_CONTACT_FAVORITE_FAIL],
-    promise: (client, auth) => client.api.del(`/contacts/unfavorite?id=${contactId}`, {
-      authToken: auth.authToken,
-    }),
+  return (dispatch) => {
+    dispatch({
+      types: [DELETE_CONTACT_FAVORITE, DELETE_CONTACT_FAVORITE_SUCCESS, DELETE_CONTACT_FAVORITE_FAIL],
+      promise: (client, auth) => client.api.del(`/contacts/unfavorite?id=${contactId}`, {
+        authToken: auth.authToken,
+      }).then(function (favorite) {
+        dispatch(deleteCandidateFavorite(favorite));
+        return favorite;
+      }),
+    });
   };
 }
