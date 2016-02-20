@@ -172,6 +172,7 @@ export default class JobCreateContainer extends React.Component {
         minSalary: money.value[0],
         maxSalary: money.value[1],
         isHourly: money.isHourly,
+        jobType: (money.isHourly) ? ('Contract') : ('Permanent'),
       });
 
       let job = this.props.job.merge(data);
