@@ -1,6 +1,7 @@
 import React from 'react';
 import { Styles, FontIcon } from 'material-ui';
 import SwipeableViews from 'react-swipeable-views';
+import debounce from 'debounce';
 
 const style = {
   rowSwipe: {
@@ -61,6 +62,7 @@ class JobOrderSwipeArea extends React.Component {
       slideIndex: this.props.selected || 0,
       // disabled: false,
     };
+    this._onChangeDelay = debounce(this._onChangeDelay.bind(this), 1000);
   }
 
   componentWillReceiveProps(props) {
@@ -92,15 +94,18 @@ class JobOrderSwipeArea extends React.Component {
     this._onChange(index);
   }
 
+  _onChangeDelay(index){
+    if (this.props.onChange) {
+      this.props.onChange(index);
+    }
+  }
+
   _onChange(index) {
 
     this.setState({
       slideIndex: index,
     });
-
-    if (this.props.onChange) {
-      this.props.onChange(index);
-    }
+    this._onChangeDelay(index);
   }
 
   _reactSwipeShouldUpdate() {
