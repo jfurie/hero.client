@@ -16,20 +16,22 @@ let getData = (state, props) => {
   let job = state.jobs.list.get(props.params.jobId);
   let categories = state.categories.list;
   let company = null;
-  if (props.params.companyId) {
-    company = getCompanyDataFromState(state, props.params.companyId);
+
+  if (props.params.companyId || (job && job.get('companyId'))) {
+    let companyId = props.params.companyId || job.get('companyId');
+    company = getCompanyDataFromState(state, companyId);
   }
 
-  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
-  let heroContacts = null;
-  if(heroContactIds){
-    heroContacts = state.contacts.list.filter(x =>{
-      return heroContactIds.indexOf(x.get('id')) > -1;
-    });
-  }
+  // let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+  // let heroContacts = null;
+  // if(heroContactIds){
+  //   heroContacts = state.contacts.list.filter(x =>{
+  //     return heroContactIds.indexOf(x.get('id')) > -1;
+  //   });
+  // }
 
   let jobImage = null;
-  if(job){
+  if (job) {
     let imageId = job.get('imageId');
     if (imageId) {
       jobImage = state.resources.list.get(imageId);
@@ -42,8 +44,8 @@ let getData = (state, props) => {
     categories,
     companies: state.companies.myCompanyIds,
     jobImage,
-    heroContacts: heroContacts ? heroContacts : new Immutable.Map(),
-    contacts: company ? company.get('contacts') : new Immutable.Map(),
+    //heroContacts: heroContacts ? heroContacts : new Immutable.Map(),
+    //contacts: company ? company.get('contacts') : new Immutable.Map(),
   };
 };
 
@@ -54,6 +56,7 @@ export default class JobCreateContainer extends React.Component {
     this.state = {
       open: true,
       error: false,
+      // companyId: null,
     };
   }
 
@@ -137,12 +140,17 @@ export default class JobCreateContainer extends React.Component {
 
     this._handleChange(job);
 
-    let self = this;
-    setTimeout(function () {
-      if (companyId) {
-        self.props.history.replaceState(null, `/clients/${companyId}/jobs/${self.props.params.jobId}/create`);
-      }
-    }, 500);
+    if (companyId) {
+      //this.props.getContactsByCompany(companyId);
+      this.props.getCompanyDetail(companyId);
+    }
+
+    // let self = this;
+    // setTimeout(function () {
+    //   if (companyId) {
+    //     self.props.history.replaceState(null, `/clients/${companyId}/jobs/${self.props.params.jobId}/create`);
+    //   }
+    // }, 500);
   }
 
   _handleSave(job) {
@@ -224,6 +232,8 @@ export default class JobCreateContainer extends React.Component {
     }
 
     let { job } = this.props;
+
+    console.log(this.props.company);
 
     return (
       <JobCreate
