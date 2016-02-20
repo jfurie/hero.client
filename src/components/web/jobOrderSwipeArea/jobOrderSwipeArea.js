@@ -64,9 +64,19 @@ class JobOrderSwipeArea extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.selected) {
+    if (props.selected && props.selected != this.state.slideIndex) {
       this.setState({
         slideIndex: props.selected,
+      });
+
+      if (this.props.onChange) {
+        this.props.onChange(props.selected);
+      }
+    }
+
+    if (props.items && props.items.length != this.props.items.length) {
+      this.setState({
+        slideIndex: this.props.selected || 0,
       });
     }
   }
@@ -84,17 +94,9 @@ class JobOrderSwipeArea extends React.Component {
 
   _onChange(index) {
 
-    if (index !== 1) { /* 1 is middle slide */
-      this.setState({
-        slideIndex: index,
-        // disabled: true,
-      });
-    } else {
-      this.setState({
-        slideIndex: index,
-        // disabled: false,
-      });
-    }
+    this.setState({
+      slideIndex: index,
+    });
 
     if (this.props.onChange) {
       this.props.onChange(index);
@@ -133,6 +135,7 @@ class JobOrderSwipeArea extends React.Component {
             <SwipeableViews
                 index={this.state.slideIndex}
                 onChangeIndex={this._onChange.bind(this)}
+                disabled={false}
             >
               <div style={style.slideTitle} key={'a'}>
                 <h2 style={style.rowSwipeTitle}>{title}</h2>

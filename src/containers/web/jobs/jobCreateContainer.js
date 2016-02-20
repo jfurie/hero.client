@@ -4,7 +4,7 @@ import Immutable from 'immutable';
 import { pushState /*, replaceState */ } from 'redux-router';
 //import { Snackbar } from 'material-ui';
 import { getMyCompanies, getCompanyDetail } from '../../../modules/companies/index';
-import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs } from '../../../modules/jobs/index';
+import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs, createTempJob } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { getAllCategories } from '../../../modules/categories';
 import { JobCreate } from '../../../components/web';
@@ -47,7 +47,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, getCompanyDetail, replaceJob, getOneJob, getContactsByCompany, getMyJobs, getAllCategories, getMyCompanies })
+@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, getCompanyDetail, replaceJob, getOneJob, getContactsByCompany, getMyJobs, getAllCategories, getMyCompanies, createTempJob })
 export default class JobCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -71,6 +71,14 @@ export default class JobCreateContainer extends React.Component {
     // if (this.props.params.jobId && this.props.params.jobId.indexOf('tmp')<=-1 ){
     //   this.props.getOneJob(this.props.params.jobId);
     // }
+
+    //console.log(this.props.job);
+
+    if (!this.props.job && this.props.params.jobId.indexOf('tmp') !== -1) {
+      this.props.createTempJob({
+        id: this.props.params.jobId,
+      });
+    }
   }
 
   componentWillReceiveProps(newProps){
@@ -102,6 +110,8 @@ export default class JobCreateContainer extends React.Component {
     if(newProps.params.jobId != this.props.params.jobId && newProps.params.jobId.indexOf('tmp')<=-1 ){
       this.props.getOneJob(newProps.params.jobId);
     }
+
+    //console.log('componentWillReceiveProps', newProps.job);
   }
 
   _handleErrorClose() {
@@ -138,15 +148,14 @@ export default class JobCreateContainer extends React.Component {
   _handleSave(job) {
 
     let categoryId = job.get('categoryId');
-    let contactId =  job.get('contactId');
     let minSalary = job.get('minSalary');
     let maxSalary = job.get('maxSalary');
     let companyId = job.get('companyId');
 
-    if (categoryId && contactId && minSalary && maxSalary && companyId) {
+    if (categoryId && minSalary && maxSalary && companyId) {
       this.props.saveJob(job, this.props.categories.get(job.get('categoryId')));
     } else {
-      console.log('can\'t save', categoryId,contactId,minSalary,maxSalary,companyId);
+      console.log('can\'t save', categoryId, minSalary, maxSalary, companyId);
     }
   }
 
@@ -213,12 +222,14 @@ export default class JobCreateContainer extends React.Component {
       //clients = [company];
     }
 
+    let { job } = this.props;
+
     return (
       <JobCreate
           company={this.props.company}
           contacts={contacts}
           clients={this.props.companies}
-          job={this.props.job}
+          job={job}
           categories={this.props.categories}
           locations={locations}
           jobImage={this.props.jobImage}

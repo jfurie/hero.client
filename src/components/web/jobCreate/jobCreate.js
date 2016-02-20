@@ -157,11 +157,8 @@ export default class JobCreate extends React.Component {
   }
 
   _onCategoryChange(index) {
-    //console.log('_onCategoryChange');
     let categoryId = null;
     let pos = 1;
-
-    console.log('_onCategoryChange', index);
 
     this.props.categories.forEach(function(c, id) {
       if (pos === index) {
@@ -169,8 +166,6 @@ export default class JobCreate extends React.Component {
       }
       pos++;
     });
-
-    console.log('_onCategoryChange id', categoryId);
 
     this.props.onCategoryChange(categoryId);
   }
@@ -222,6 +217,7 @@ export default class JobCreate extends React.Component {
       }
       pos++;
     });
+
     this.props.onContactChange(contactId);
   }
 
@@ -235,6 +231,7 @@ export default class JobCreate extends React.Component {
       }
       pos++;
     });
+
     this.props.onLocationChange(locationId);
   }
 
@@ -242,11 +239,12 @@ export default class JobCreate extends React.Component {
 
     let { company } = this.props;
     let contacts = [];
+    //let self = this;
 
     // default indexes
     let clientDefaultSlide = 0;
-    let locationDefaultSlide = 0;
-    let hrDefaultSlide = 0;
+    //let locationDefaultSlide = 0;
+    //let hrDefaultSlide = 0;
 
     /* clients */
 
@@ -272,7 +270,8 @@ export default class JobCreate extends React.Component {
     if (company) {
       this.props.contacts.forEach(function(c) {
         contacts.push(<ContactListItem contact={c} company={company} type="tiny" />);
-        hrDefaultSlide = 1;
+        //hrDefaultSlide = 1;
+        //self._onHiringManagerChange(hrDefaultSlide);
       });
     }
 
@@ -281,7 +280,8 @@ export default class JobCreate extends React.Component {
     let locations = [];
     this.props.locations.forEach(function(l) {
       locations.push(<LocationListItem location={l} type="tiny" />);
-      locationDefaultSlide = 1;
+      //locationDefaultSlide = 1;
+      //self._onLocationChange(locationDefaultSlide);
     });
 
     /* salary */
@@ -301,7 +301,7 @@ export default class JobCreate extends React.Component {
         <RangeSlider
             min={0}
             max={180000}
-            step={1000}
+            step={5000}
             value={this.state.salary}
             onChange={this._onSalaryChange.bind(this)}
             format="money"
@@ -340,8 +340,8 @@ export default class JobCreate extends React.Component {
           <JobOrderSwipeArea title={'Client'} items={clients} onChange={this._onCompanyChange.bind(this)} selected={clientDefaultSlide}/>
           <JobOrderSwipeArea title={'Job Description'} items={categories} onChange={this._onCategoryChange.bind(this)} />
           <JobOrderMoneySwipeArea title={'Hourly - Salary'} leftItems={[money[0]]} rightItems={[money[1]]} onChange={this._onMoneyChange.bind(this)} />
-          <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} onChange={this._onHiringManagerChange.bind(this)} selected={hrDefaultSlide} />
-          <JobOrderSwipeArea title={'Location'} items={locations} onChange={this._onLocationChange.bind(this)} selected={locationDefaultSlide}/>
+          <JobOrderSwipeArea title={'Hiring Manager'} items={contacts} onChange={this._onHiringManagerChange.bind(this)} selected={0}/>
+          <JobOrderSwipeArea title={'Location'} items={locations} onChange={this._onLocationChange.bind(this)} selected={0}/>
         </div>
       </div>
     );
