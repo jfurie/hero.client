@@ -22,14 +22,6 @@ let getData = (state, props) => {
     company = getCompanyDataFromState(state, companyId);
   }
 
-  // let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
-  // let heroContacts = null;
-  // if(heroContactIds){
-  //   heroContacts = state.contacts.list.filter(x =>{
-  //     return heroContactIds.indexOf(x.get('id')) > -1;
-  //   });
-  // }
-
   let jobImage = null;
   if (job) {
     let imageId = job.get('imageId');
@@ -141,16 +133,8 @@ export default class JobCreateContainer extends React.Component {
     this._handleChange(job);
 
     if (companyId) {
-      //this.props.getContactsByCompany(companyId);
       this.props.getCompanyDetail(companyId);
     }
-
-    // let self = this;
-    // setTimeout(function () {
-    //   if (companyId) {
-    //     self.props.history.replaceState(null, `/clients/${companyId}/jobs/${self.props.params.jobId}/create`);
-    //   }
-    // }, 500);
   }
 
   _handleSave(job) {
@@ -220,7 +204,6 @@ export default class JobCreateContainer extends React.Component {
     let { company } = this.props;
     let locations = [];
     let contacts = [];
-    //let clients = [];
 
     if (company) {
       if (company.get('location')) {
@@ -228,12 +211,9 @@ export default class JobCreateContainer extends React.Component {
       }
 
       contacts = company.get('contacts');
-      //clients = [company];
     }
 
     let { job } = this.props;
-
-    console.log(this.props.company);
 
     return (
       <JobCreate
