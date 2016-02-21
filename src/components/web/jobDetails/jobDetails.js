@@ -206,7 +206,7 @@ export default class JobDetails extends React.Component {
               subtitle={`${companyName} - ${job.get('department')}`}
               extraLeftLine={`${salaryMin} - ${salaryMax}`}
               extraCenterLine={fee}
-              extraRightLine={job.get('employmentType') || 'Permanent'}
+              extraRightLine={job.get('jobType') || 'Permanent'}
               cover={cover}
               mainColor={Styles.Colors.amber700}
               actions={actions}

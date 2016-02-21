@@ -4,7 +4,7 @@ import Immutable from 'immutable';
 import { pushState /*, replaceState */ } from 'redux-router';
 //import { Snackbar } from 'material-ui';
 import { getMyCompanies, getCompanyDetail } from '../../../modules/companies/index';
-import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs } from '../../../modules/jobs/index';
+import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs, createTempJob } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { getAllCategories } from '../../../modules/categories';
 import { JobCreate } from '../../../components/web';
@@ -16,20 +16,14 @@ let getData = (state, props) => {
   let job = state.jobs.list.get(props.params.jobId);
   let categories = state.categories.list;
   let company = null;
-  if (props.params.companyId) {
-    company = getCompanyDataFromState(state, props.params.companyId);
-  }
 
-  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
-  let heroContacts = null;
-  if(heroContactIds){
-    heroContacts = state.contacts.list.filter(x =>{
-      return heroContactIds.indexOf(x.get('id')) > -1;
-    });
+  if (props.params.companyId || (job && job.get('companyId'))) {
+    let companyId = props.params.companyId || job.get('companyId');
+    company = getCompanyDataFromState(state, companyId);
   }
 
   let jobImage = null;
-  if(job){
+  if (job) {
     let imageId = job.get('imageId');
     if (imageId) {
       jobImage = state.resources.list.get(imageId);
@@ -42,18 +36,19 @@ let getData = (state, props) => {
     categories,
     companies: state.companies.myCompanyIds,
     jobImage,
-    heroContacts: heroContacts ? heroContacts : new Immutable.Map(),
-    contacts: company ? company.get('contacts') : new Immutable.Map(),
+    //heroContacts: heroContacts ? heroContacts : new Immutable.Map(),
+    //contacts: company ? company.get('contacts') : new Immutable.Map(),
   };
 };
 
-@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, getCompanyDetail, replaceJob, getOneJob, getContactsByCompany, getMyJobs, getAllCategories, getMyCompanies })
+@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, getCompanyDetail, replaceJob, getOneJob, getContactsByCompany, getMyJobs, getAllCategories, getMyCompanies, createTempJob })
 export default class JobCreateContainer extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       open: true,
       error: false,
+      // companyId: null,
     };
   }
 
@@ -71,6 +66,14 @@ export default class JobCreateContainer extends React.Component {
     // if (this.props.params.jobId && this.props.params.jobId.indexOf('tmp')<=-1 ){
     //   this.props.getOneJob(this.props.params.jobId);
     // }
+
+    //console.log(this.props.job);
+
+    if (!this.props.job && this.props.params.jobId.indexOf('tmp') !== -1) {
+      this.props.createTempJob({
+        id: this.props.params.jobId,
+      });
+    }
   }
 
   componentWillReceiveProps(newProps){
@@ -102,6 +105,8 @@ export default class JobCreateContainer extends React.Component {
     if(newProps.params.jobId != this.props.params.jobId && newProps.params.jobId.indexOf('tmp')<=-1 ){
       this.props.getOneJob(newProps.params.jobId);
     }
+
+    //console.log('componentWillReceiveProps', newProps.job);
   }
 
   _handleErrorClose() {
@@ -111,6 +116,9 @@ export default class JobCreateContainer extends React.Component {
   }
 
   _handleChange(job, dontMergeDeep){
+
+    dontMergeDeep = dontMergeDeep || true;
+
     this.props.updateJob(job, dontMergeDeep);
   }
 
@@ -124,26 +132,22 @@ export default class JobCreateContainer extends React.Component {
 
     this._handleChange(job);
 
-    let self = this;
-    setTimeout(function () {
-      if (companyId) {
-        self.props.history.replaceState(null, `/clients/${companyId}/jobs/${self.props.params.jobId}/create`);
-      }
-    }, 500);
+    if (companyId) {
+      this.props.getCompanyDetail(companyId);
+    }
   }
 
   _handleSave(job) {
 
     let categoryId = job.get('categoryId');
-    let contactId =  job.get('contactId');
     let minSalary = job.get('minSalary');
     let maxSalary = job.get('maxSalary');
     let companyId = job.get('companyId');
 
-    if (categoryId && contactId && minSalary && maxSalary && companyId) {
+    if (categoryId && minSalary && maxSalary && companyId) {
       this.props.saveJob(job, this.props.categories.get(job.get('categoryId')));
     } else {
-      console.log('can\'t save', categoryId,contactId,minSalary,maxSalary,companyId);
+      console.log('can\'t save', categoryId, minSalary, maxSalary, companyId);
     }
   }
 
@@ -160,6 +164,7 @@ export default class JobCreateContainer extends React.Component {
         minSalary: money.value[0],
         maxSalary: money.value[1],
         isHourly: money.isHourly,
+        jobType: (money.isHourly) ? ('Contract') : ('Permanent'),
       });
 
       let job = this.props.job.merge(data);
@@ -199,7 +204,6 @@ export default class JobCreateContainer extends React.Component {
     let { company } = this.props;
     let locations = [];
     let contacts = [];
-    //let clients = [];
 
     if (company) {
       if (company.get('location')) {
@@ -207,15 +211,16 @@ export default class JobCreateContainer extends React.Component {
       }
 
       contacts = company.get('contacts');
-      //clients = [company];
     }
+
+    let { job } = this.props;
 
     return (
       <JobCreate
           company={this.props.company}
           contacts={contacts}
           clients={this.props.companies}
-          job={this.props.job}
+          job={job}
           categories={this.props.categories}
           locations={locations}
           jobImage={this.props.jobImage}
