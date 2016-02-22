@@ -19,28 +19,35 @@ let style = {
   },
   title: {
     color: Styles.Colors.white,
-    fontSize: '23px',
+    fontSize: '19px',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    fontWeight: 500,
   },
   subtitle: {
     color: Styles.Colors.white,
     fontWeight: 200,
     opacity: 0.5,
-    fontSize: '13px',
+    fontSize: '12px',
   },
   extraLine: {
     marginTop: '25px',
   },
   extraLeftLine: {
     color: Styles.Colors.white,
+    fontWeight: 300,
+    fontSize: '15px',
   },
   extraRightLine: {
     color: Styles.Colors.white,
+    fontWeight: 300,
+    fontSize: '15px',
   },
   extraCenterLine: {
     color: Styles.Colors.white,
+    fontWeight: 300,
+    fontSize: '15px',
   },
   extraLineLeftCol: {
     paddingLeft: '3px',
@@ -64,9 +71,12 @@ let style = {
   },
   avatar: {
     position: 'absolute',
-    top: '-60px',
-    left: '9px',
-    maxHeight: '50px',
+    top: '-72px',
+    left: '10px',
+    maxHeight: '70px',
+    border: '2px solid white',
+    borderBottom: '0px',
+    boxShadow: '1px -1px 5px rgba(0, 0, 0, 0.21)',
   },
   actionButton: {
     minWidth: '0px',

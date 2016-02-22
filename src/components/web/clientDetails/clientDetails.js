@@ -270,7 +270,7 @@ export default class ClientDetails extends React.Component {
               cover={'/img/default-company.jpg'}
               mainColor={Styles.Colors.deepPurple500}
               actions={actions}
-              avatar={<CompanyAvatar style={{width: '50px'}} url={company.get('website')}/>}
+              avatar={<CompanyAvatar style={{width: '70px'}} url={company.get('website')}/>}
               floatActionOnTap={this._handleDirections.bind(this)}
               floatActionContent={<MapsDirections color={Styles.Colors.deepPurple500}/>}
               extraLeftLine={recruiterData}

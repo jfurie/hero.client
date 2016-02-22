@@ -210,7 +210,7 @@ export default class JobDetails extends React.Component {
               cover={cover}
               mainColor={Styles.Colors.amber700}
               actions={actions}
-              avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '50px'}} url={companyWebsite}/>}
+              avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '70px'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
               topTags={job.get('tags') || []}
