@@ -62,7 +62,7 @@ let style = {
   },
   floatActionButton: {
     position: 'absolute',
-    right: '10px',
+    right: '13px',
     top: '-28px',
     zIndex: '50',
   },
@@ -98,6 +98,14 @@ let style = {
   },
   topTags: {
     paddingLeft: '3px',
+  },
+  floatActionLabel: {
+    position: 'relative',
+    top: '24px',
+    left: '24px',
+    fontSize: '11px',
+    fontWeight: '100',
+    color: Styles.Colors.white,
   },
 };
 
@@ -165,11 +173,16 @@ class DetailsCard extends React.Component {
 
           {/* title and subtitle */}
           <div className="row">
-            <div className="col-xs-12" style={style.titlesub}>
+            <div className="col-xs-9" style={style.titlesub}>
               <div className="box">
                 <h2 style={style.title}>{this.props.title}</h2>
                 <p style={style.subtitle}>{this.props.subtitle}</p>
               </div>
+            </div>
+            <div className="col-xs-3" style={style.floatActionLabel}>
+              {(this.props.floatActionLabel) ? (
+                <p>{this.props.floatActionLabel}</p>
+              ) : (<p></p>)}
             </div>
           </div>
 
@@ -245,6 +258,7 @@ DetailsCard.propTypes = {
   extraLeftLine: React.PropTypes.string,
   extraRightLine: React.PropTypes.string,
   floatActionContent: React.PropTypes.object,
+  floatActionLabel: React.PropTypes.string,
   floatActionOnTap: React.PropTypes.func,
   mainColor: React.PropTypes.string,
   subtitle: React.PropTypes.string.isRequired,

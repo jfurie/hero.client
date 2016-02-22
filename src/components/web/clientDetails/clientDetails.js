@@ -273,6 +273,7 @@ export default class ClientDetails extends React.Component {
               avatar={<CompanyAvatar style={{width: '70px'}} url={company.get('website')}/>}
               floatActionOnTap={this._handleDirections.bind(this)}
               floatActionContent={<MapsDirections color={Styles.Colors.deepPurple500}/>}
+              floatActionLabel={'Directions'}
               extraLeftLine={recruiterData}
               topTags={company.get('tags') || []}
           />
