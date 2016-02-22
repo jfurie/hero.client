@@ -280,7 +280,7 @@ export default function reducer(state = initialState, action = {}) {
   }
   case companyConstants.GET_COMPANY_SUCCESS:{
     let contactsMap = {};
-    if(action.result.clientAdvocate){
+    if(action.result && action.result.clientAdvocate){
       let id = action.result.clientAdvocate.id;
       contactsMap[id] = action.result.clientAdvocate;
     }
