@@ -5,15 +5,21 @@ import { Styles } from 'material-ui';
 
 const style = {
   badge:{
-    fontSize: '13px',
+    fontSize: '12px',
     lineHeight: '18px',
     color: 'rgba(255, 255, 255, 1.00)',
     borderRadius: '4px',
     display: 'inline-block',
     padding: '1px 16px',
-    marginBottom: '8px',
     height: '17px',
-    marginRight: '4px',
+    marginRight: '8px',
+    textTransform: 'uppercase',
+    minWidth: '50px',
+    maxWidth: '50px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    textAlign: 'center',
   },
 };
 
@@ -30,15 +36,20 @@ export default class Tag extends React.Component {
     let { value } = this.props;
     let color = null;
 
+    value = value.toLowerCase();
+
     // text
-    switch (this.props.value) {
-    case 'HOT!':
+    switch (value) {
+    case 'hot!':
       color = '#E91B62'; // default pink
       break;
-    case 'Vetted':
+    case 'vetted':
       color = Styles.Colors.green500;
       break;
-    case 'Active':
+    case 'active':
+      color = Styles.Colors.green500;
+      break;
+    case 'lead':
       color = Styles.Colors.green500;
       break;
     default:

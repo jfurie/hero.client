@@ -14,7 +14,7 @@ let style = {
     position: 'relative',
   },
   cardTitleComponent: {
-    padding: '11px 16px 11px',
+    padding: '0px 16px 11px 16px',
     position: 'relative',
   },
   title: {
@@ -62,7 +62,7 @@ let style = {
   },
   floatActionButton: {
     position: 'absolute',
-    right: '13px',
+    right: '9px',
     top: '-28px',
     zIndex: '50',
   },
@@ -101,11 +101,12 @@ let style = {
   },
   floatActionLabel: {
     position: 'relative',
-    top: '24px',
-    left: '24px',
+    top: '35px',
+    right: '-3px',
     fontSize: '11px',
     fontWeight: '100',
     color: Styles.Colors.white,
+    textAlign: 'right',
   },
 };
 
@@ -151,6 +152,12 @@ class DetailsCard extends React.Component {
             {this.props.floatActionContent}
           </FloatingActionButton>
 
+          <div style={style.floatActionLabel}>
+            {(this.props.floatActionLabel) ? (
+              <p>{this.props.floatActionLabel}</p>
+            ) : (<p></p>)}
+          </div>
+
           {/* TOP TAGS */}
           <div className="row">
             <div className="col-xs-12" style={style.topTags}>
@@ -178,11 +185,6 @@ class DetailsCard extends React.Component {
                 <h2 style={style.title}>{this.props.title}</h2>
                 <p style={style.subtitle}>{this.props.subtitle}</p>
               </div>
-            </div>
-            <div className="col-xs-3" style={style.floatActionLabel}>
-              {(this.props.floatActionLabel) ? (
-                <p>{this.props.floatActionLabel}</p>
-              ) : (<p></p>)}
             </div>
           </div>
 
