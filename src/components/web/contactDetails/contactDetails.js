@@ -277,6 +277,26 @@ export default class ContactDetails extends React.Component {
       onTouchTap: this._onTouchTapShare.bind(this),
     }];
 
+    let stats = [{
+      title: 'Applied',
+      value: 12,
+    }, {
+      title: 'Submitted',
+      value: 4,
+    }, {
+      title: 'Accepted',
+      value: 4,
+    }, {
+      title: 'Interviews',
+      value: 5,
+    }, {
+      title: 'Offers',
+      value: 1,
+    }, {
+      title: 'Jobs',
+      value: 0,
+    }];
+
     // salary
     let salaryMin = null;
     let salaryMax = null;
@@ -308,6 +328,7 @@ export default class ContactDetails extends React.Component {
           cover={common.cover}
           mainColor={Styles.Colors.indigo500}
           actions={actions}
+          stats={stats}
           floatActionOnTap={this._handleTapOnChat.bind(this)}
           floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
           topTags={contact.get('tags') || []}

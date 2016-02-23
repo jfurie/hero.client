@@ -92,6 +92,12 @@ let style = {
   actionBox: {
     marginRight: '0px',
   },
+  statsBox: {
+    marginRight: '0px',
+  },
+  statsRow: {
+    borderBottom: '1px solid #CCC',
+  },
   cardmedia: {
     maxHeight: '250px',
     overflow: 'hidden',
@@ -107,6 +113,17 @@ let style = {
     fontWeight: '100',
     color: Styles.Colors.white,
     textAlign: 'right',
+  },
+  statTitle: {
+    fontSize: '11px',
+    opacity: '0.5',
+    textTransform: 'capitalize',
+    lineHeight: '20px',
+  },
+  statNumber: {
+    fontSize: '25px',
+    marginBottom: '0px',
+    lineHeight: '31px',
   },
 };
 
@@ -130,7 +147,7 @@ class DetailsCard extends React.Component {
 
   render() {
 
-    let { actions, topTags } = this.props;
+    let { actions, topTags, stats } = this.props;
     topTags = topTags || [];
 
     if (this.props.mainColor) {
@@ -189,7 +206,7 @@ class DetailsCard extends React.Component {
           </div>
 
           {/* extra line (if any) */}
-          {(this.props.extraLeftLine || this.props.extraRightLine) ? (
+          {(this.props.extraLeftLine || this.props.extraCenterLine || this.props.extraRightLine) ? (
             <div className="row" style={style.extraLine}>
               {(this.props.extraLeftLine) ? (
                 <div className="col-xs" style={style.extraLineLeftCol}>
@@ -215,9 +232,25 @@ class DetailsCard extends React.Component {
                 </div>
               ) : (null)}
             </div>
-          ) : (null)}
+          ) : (<div></div>)}
 
         </div>
+
+        <CardActions className="row center-xs" style={style.statsRow}>
+          {stats.map((stat, key) => {
+
+            return (
+              <div className="col-xs" style={style.statsBox} key={key}>
+                <div className="box">
+                  <FlatButton style={style.actionButton}>
+                    <p style={style.statTitle}>{stat.title}</p>
+                    <p style={style.statNumber}>{stat.value}</p>
+                  </FlatButton>
+                </div>
+              </div>
+            );
+          })}
+        </CardActions>
 
         <CardActions className="row center-xs">
           {actions.map((action, key) => {
@@ -263,9 +296,10 @@ DetailsCard.propTypes = {
   floatActionLabel: React.PropTypes.string,
   floatActionOnTap: React.PropTypes.func,
   mainColor: React.PropTypes.string,
+  stats: React.PropTypes.array,
   subtitle: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
-  topTags: React.PropTypes.array,
+  topTags: React.PropTypes.object,
 };
 
 export default DetailsCard;
