@@ -222,7 +222,7 @@ export default class ContactDetails extends React.Component {
     }
 
     // location stuff
-    let address = contact.get('_address');
+    let address = contact.get('location');
     let city = null;
 
     if (address) {
@@ -234,6 +234,13 @@ export default class ContactDetails extends React.Component {
       }
     }
 
+    //companyName
+    let company =null;
+    let companies = contact.get('companies');
+    if(companies.size >0){
+      company =companies.first();
+    }
+
     // displayName
     let displayName = contact.get('displayName') || null;
 
@@ -241,6 +248,7 @@ export default class ContactDetails extends React.Component {
       cover: image, //`http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       city,
       displayName,
+      avatarUrl: `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
     };
   }
 
@@ -303,11 +311,13 @@ export default class ContactDetails extends React.Component {
     let extraLeftLine = null;
 
     if (contact.get('currentSalary')) {
-      salaryMin = `$${~~(contact.get('currentSalary')) / 1000}k`;
+      let currentSalary = parseInt(contact.get('currentSalary'));
+      salaryMin = `$${~~(currentSalary) / 1000}k`;
     }
 
     if (contact.get('desiredSalary')) {
-      salaryMax = `$${~~(contact.get('desiredSalary')) / 1000}k`;
+      let desiredSalary = parseInt(contact.get('desiredSalary'));
+      salaryMax = `$${~~(desiredSalary) / 1000}k`;
     }
 
     if (salaryMin && salaryMax) {
@@ -317,20 +327,41 @@ export default class ContactDetails extends React.Component {
     } else if (!salaryMin && salaryMax) {
       extraLeftLine = `${salaryMin} -`;
     }
-
+    let style ={
+      title:{
+        color:Styles.Colors.black
+      },
+      subtitle:{
+        color:Styles.Colors.black
+      },
+      extraLeftLine:{
+        color:Styles.Colors.black
+      },
+      extraRightLine:{
+        color:Styles.Colors.black
+      },
+      extraCenterLine:{
+        color:Styles.Colors.black
+      },
+      floatActionLabel:{
+        color:Styles.Colors.black
+      }
+    }
     // workAuthorization
     let workAuthorization = contact.get('workAuthorization') || null;
 
     return (
       <DetailsCard
           title={common.displayName}
+          style={style}
           subtitle={common.city}
           cover={common.cover}
-          mainColor={Styles.Colors.indigo500}
+          mainColor={Styles.Colors.white}
           actions={actions}
           stats={stats}
+          avatar={<img style={{width: '95px', height:'95px', borderRadius:'0px'}} src={common.avatarUrl}/>}
           floatActionOnTap={this._handleTapOnChat.bind(this)}
-          floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
+          floatActionContent={<CommunicationChat color={Styles.Colors.black}/>}
           topTags={contact.get('tags') || []}
           extraLeftLine={extraLeftLine}
           extraRightLine={workAuthorization}
@@ -383,7 +414,7 @@ export default class ContactDetails extends React.Component {
       }
 
       // location stuff
-      let location = contact.get('_address');
+      let location = contact.get('location');
 
       if (location) {
         let address = location.get('addressLine') || '';

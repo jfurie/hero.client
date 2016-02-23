@@ -33,7 +33,7 @@ class Header extends React.Component {
     };
 
     if (transparent) {
-      style.background = 'none';
+      style.background = 'linear-gradient(to bottom, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%)';
       style.boxShadow = 'none';
     }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { FontIcon, Styles } from 'material-ui';
 
 import { Tag } from '../';
-
+import _ from 'lodash';
 import Card from 'material-ui/lib/card/card';
 import CardActions from 'material-ui/lib/card/card-actions';
 import CardMedia from 'material-ui/lib/card/card-media';
@@ -34,6 +34,8 @@ let style = {
   },
   extraLine: {
     marginTop: '25px',
+    marginLeft:'0px',
+    marginRight:'0px',
   },
   extraLeftLine: {
     color: Styles.Colors.white,
@@ -63,7 +65,7 @@ let style = {
   },
   floatActionButton: {
     position: 'absolute',
-    right: '9px',
+    right: '16px',
     top: '-28px',
     zIndex: '50',
   },
@@ -72,9 +74,9 @@ let style = {
   },
   avatar: {
     position: 'absolute',
-    top: '-72px',
-    left: '10px',
-    maxHeight: '70px',
+    top: '-97px',
+    left: '16px',
+    maxHeight: '95px',
     border: '2px solid white',
     borderBottom: '0px',
     boxShadow: '1px -1px 5px rgba(0, 0, 0, 0.21)',
@@ -98,6 +100,7 @@ let style = {
   },
   statsRow: {
     borderBottom: '1px solid #CCC',
+    borderTop: '1px solid #CCC',
   },
   cardmedia: {
     maxHeight: '250px',
@@ -109,7 +112,7 @@ let style = {
   floatActionLabel: {
     position: 'absolute',
     top: '37px',
-    right: '2px',
+    right: '9px',
     fontSize: '11px',
     fontWeight: '100',
     color: Styles.Colors.white,
@@ -149,38 +152,38 @@ class DetailsCard extends React.Component {
   }
 
   render() {
-
+    let styleNew = _.merge({},style,this.props.style);
     let { actions, topTags, stats } = this.props;
     topTags = topTags || [];
 
     if (this.props.mainColor) {
-      style.cardTitleComponent.backgroundColor = this.props.mainColor;
-      style.floatActionButton.color = this.props.mainColor;
+      styleNew.cardTitleComponent.backgroundColor = this.props.mainColor;
+      styleNew.floatActionButton.color = this.props.mainColor;
     } else {
-      style.cardTitleComponent.backgroundColor = Styles.Colors.indigo500; // default
-      style.floatActionButton.color = Styles.Colors.indigo500; // default
+      styleNew.cardTitleComponent.backgroundColor = Styles.Colors.indigo500; // default
+      styleNew.floatActionButton.color = Styles.Colors.indigo500; // default
     }
 
     return (
       <Card>
-        <CardMedia style={style.cardmedia}>
+        <CardMedia style={styleNew.cardmedia}>
           <img src={this.props.cover} />
         </CardMedia>
-        <div style={style.cardTitleComponent}>
+        <div style={styleNew.cardTitleComponent}>
 
-          <FloatingActionButton onTouchTap={this._onTouchTapFloatAction.bind(this)} style={style.floatActionButton} backgroundColor={Styles.Colors.white}>
+          <FloatingActionButton onTouchTap={this._onTouchTapFloatAction.bind(this)} style={styleNew.floatActionButton} backgroundColor={Styles.Colors.white}>
             {this.props.floatActionContent}
           </FloatingActionButton>
 
-          <div style={style.floatActionLabel}>
+          <div style={styleNew.floatActionLabel}>
             {(this.props.floatActionLabel) ? (
               <p>{this.props.floatActionLabel}</p>
             ) : (<p></p>)}
           </div>
 
           {/* TOP TAGS */}
-          <div className="row">
-            <div className="col-xs-12" style={style.topTags}>
+          <div style={{marginLeft:'0px', marginright:'0px'}} className="row">
+            <div className="col-xs-12" style={styleNew.topTags}>
               <div className="box">
                 {topTags.map((tag, key) => {
                   return (
@@ -193,44 +196,45 @@ class DetailsCard extends React.Component {
 
           {/* avatar (if any) */}
           {(this.props.avatar) ? (
-            <div style={style.avatar}>
+            <div style={styleNew.avatar}>
               {this.props.avatar}
             </div>
           ) : (null)}
 
           {/* title and subtitle */}
-          <div className="row">
-            <div className="col-xs-9" style={style.titlesub}>
+          <div style={{marginLeft:'0px', marginright:'0px'}} className="row">
+            <div className="col-xs-9" style={styleNew.titlesub}>
               <div className="box">
-                <h2 style={style.title}>{this.props.title}</h2>
-                <p style={style.subtitle}>{this.props.subtitle}</p>
+                <h2 style={styleNew.title}>{this.props.title}</h2>
+                <p style={styleNew.subtitle}>{this.props.subtitle}</p>
+                <p style={styleNew.subtitle}>{this.props.subtitle2}</p>
               </div>
             </div>
           </div>
 
           {/* extra line (if any) */}
           {(this.props.extraLeftLine || this.props.extraCenterLine || this.props.extraRightLine) ? (
-            <div className="row" style={style.extraLine}>
+            <div className="row" style={styleNew.extraLine}>
               {(this.props.extraLeftLine) ? (
-                <div className="col-xs" style={style.extraLineLeftCol}>
+                <div className="col-xs" style={styleNew.extraLineLeftCol}>
                   <div className="box">
-                    <span style={style.extraLeftLine}>{this.props.extraLeftLine}</span>
+                    <span style={styleNew.extraLeftLine}>{this.props.extraLeftLine}</span>
                   </div>
                 </div>
               ) : (null)}
 
               {(this.props.extraCenterLine) ? (
-                <div className="col-xs" style={style.extraLineCenterCol}>
+                <div className="col-xs" style={styleNew.extraLineCenterCol}>
                   <div className="box">
-                    <span style={style.extraCenterLine}>{this.props.extraCenterLine}</span>
+                    <span style={styleNew.extraCenterLine}>{this.props.extraCenterLine}</span>
                   </div>
                 </div>
               ) : (null)}
 
               {(this.props.extraRightLine) ? (
-                <div className="col-xs" style={style.extraLineRightCol}>
+                <div className="col-xs" style={styleNew.extraLineRightCol}>
                   <div className="box">
-                    <span style={style.extraRightLine}>{this.props.extraRightLine}</span>
+                    <span style={styleNew.extraRightLine}>{this.props.extraRightLine}</span>
                   </div>
                 </div>
               ) : (null)}
@@ -239,15 +243,15 @@ class DetailsCard extends React.Component {
 
         </div>
 
-        <CardActions className="row center-xs" style={style.statsRow}>
+        <CardActions className="row center-xs" style={styleNew.statsRow}>
           {stats.map((stat, key) => {
 
             return (
-              <div className="col-xs" style={style.statsBox} key={key}>
+              <div className="col-xs" style={styleNew.statsBox} key={key}>
                 <div className="box">
-                  <FlatButton style={style.actionButton}>
-                    <p style={style.statTitle}>{stat.title}</p>
-                    <p style={style.statNumber}>{stat.value}</p>
+                  <FlatButton style={styleNew.actionButton}>
+                    <p style={styleNew.statTitle}>{stat.title}</p>
+                    <p style={styleNew.statNumber}>{stat.value}</p>
                   </FlatButton>
                 </div>
               </div>
@@ -263,16 +267,16 @@ class DetailsCard extends React.Component {
               disabled = true;
             }
 
-            let actionFontIcon = style.actionFontIcon;
+            let actionFontIcon = styleNew.actionFontIcon;
 
             if (action.active) {
-              actionFontIcon = {...style.actionFontIcon, ...{color:'#FBC02D'}};
+              actionFontIcon = {...styleNew.actionFontIcon, ...{color:'#FBC02D'}};
             }
 
             return (
-              <div className="col-xs" style={style.actionBox} key={key}>
+              <div className="col-xs" style={styleNew.actionBox} key={key}>
                 <div className="box" onTouchTap={this._onTouchTapAction.bind(this, action)}>
-                  <FlatButton style={style.actionButton} disabled={disabled}>
+                  <FlatButton style={styleNew.actionButton} disabled={disabled}>
                     <div style={(disabled) ? ({opacity: '0.25'}) : ({})}>
                       <FontIcon style={actionFontIcon} className="material-icons">{action.materialIcon}</FontIcon>
                     </div>
@@ -301,6 +305,7 @@ DetailsCard.propTypes = {
   mainColor: React.PropTypes.string,
   stats: React.PropTypes.array,
   subtitle: React.PropTypes.string.isRequired,
+  subtitle2: React.PropTypes.string,
   title: React.PropTypes.string.isRequired,
   topTags: React.PropTypes.object,
 };
