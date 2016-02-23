@@ -1,7 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { pushState } from 'redux-router';
-import { getUserContact, getUserStats } from '../../../modules/users';
 import { Gravatar } from '../../../components/web';
 
 import './leftNavTop.scss';
@@ -25,7 +22,6 @@ class LeftNavTop extends React.Component {
   }
 
   componentDidMount() {
-    let self = this;
   }
 
   refresh() {

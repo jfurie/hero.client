@@ -105,7 +105,6 @@ class Layout extends React.Component {
   }
 
   render () {
-    let contact = this.props.users.userContact;
     let {leftNav, user} = this.props;
 
     return (
