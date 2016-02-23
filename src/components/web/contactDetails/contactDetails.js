@@ -578,11 +578,11 @@ export default class ContactDetails extends React.Component {
       <div>
         <Header transparent goBack={this.goBack.bind(this)} iconRight={
           <IconMenu iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}>
+            <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (
               <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />
             ) : (null)}
             <MenuItem index={0} onTouchTap={this.addNoteModalOpen.bind(this)} primaryText={`Create Note`} />
-            <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
           </IconMenu>
         }
         />
