@@ -11,7 +11,7 @@ import {
   IconButton, List, ListItem, FontIcon, Avatar,
   Divider, Styles, IconMenu, MenuItem, CardText, Card,
 } from 'material-ui';
-
+import image from './image';
 function defineContext(props) {
   let context = {
     isCandidate: false,
@@ -238,7 +238,7 @@ export default class ContactDetails extends React.Component {
     let displayName = contact.get('displayName') || null;
 
     return {
-      cover: `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      cover: image, //`http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       city,
       displayName,
     };
