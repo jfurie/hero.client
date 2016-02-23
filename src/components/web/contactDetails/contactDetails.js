@@ -237,7 +237,7 @@ export default class ContactDetails extends React.Component {
     //companyName
     let company =null;
     let companies = contact.get('companies');
-    if(companies.size >0){
+    if(companies && companies.size >0){
       company =companies.first();
     }
 
