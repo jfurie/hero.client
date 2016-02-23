@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { LeftNav, FontIcon, MenuItem} from 'material-ui';
+import { getUserContact, getUserStats } from '../../modules/users';
 
 //let MenuItem = require('material-ui/lib/menus/menu-item');
 
@@ -11,9 +12,11 @@ import { logout } from '../../modules/auth';
 
 @connect(state => ({
   auth: state.auth,
+  authToken: state.auth.authToken,
   user: state.auth.user,
   leftNav: state.leftNav,
-}),{pushState, onNavOpen, onNavClose, toggleNav, logout})
+  users: state.users,
+}),{pushState, onNavOpen, onNavClose, toggleNav, logout,getUserContact, getUserStats})
 
 class Layout extends React.Component {
 
@@ -22,6 +25,12 @@ class Layout extends React.Component {
     this.state = {
       open: false
     };
+  }
+  componentDidMount(){
+    if (this.props.user)
+      this.props.getUserContact(this.props.user.id);
+    if (this.props.authToken)
+      this.props.getUserStats(this.props.authToken.accountInfo.account.id, this.props.user.id);
   }
 
   componentWillReceiveProps(nextProps){
@@ -34,8 +43,11 @@ class Layout extends React.Component {
         open: !this.state.open,
       });
     }
+    if (nextProps.user && !this.props.user)
+      this.props.getUserContact(this.props.user.id);
 
-    this.refs.leftNavTop.getWrappedInstance().refresh();
+    if (nextProps.authToken && !this.props.authToken)
+      this.props.getUserStats(this.props.authToken.accountInfo.account.id, this.props.user.id);
   }
 
   handleTouchTap (e) {
@@ -84,16 +96,34 @@ class Layout extends React.Component {
       open: false,
     });
   }
+  clickContact(){
+    let contact = this.props.users.userContact;
+    this.props.pushState(null, '/contacts/'+contact.id);
+    this.setState({
+      open: false,
+    });
+  }
 
   render () {
-
+    let contact = this.props.users.userContact;
     let {leftNav, user} = this.props;
 
     return (
       <div style={{
       }}>
-      <LeftNav style={{backgroundColor:'#424242'}} ref="leftNavChildren" open={this.state.open} onRequestChange={open => this.setState({open})} docked={false} disableSwipeToOpen={leftNav.disableSwipeToOpen}>
-        <LeftNavTop ref="leftNavTop"></LeftNavTop>
+      <LeftNav
+        style={{backgroundColor:'#424242'}}
+        ref="leftNavChildren" open={this.state.open}
+        onRequestChange={open => this.setState({open})}
+        docked={false}
+        disableSwipeToOpen={leftNav.disableSwipeToOpen}>
+        <LeftNavTop
+          {...this.props}
+          onContactClick={this.clickContact.bind(this)}
+          onContactsClick={this.clickMyCandidates.bind(this)}
+          onJobsClick={this.clickMyJobs.bind(this)}
+          onClientsClick={this.clickClients.bind(this)}
+          ></LeftNavTop>
         <MenuItem style={{color:'#e0e0e0'}} primaryText="Dashboard" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">view_quilt</FontIcon>} onTouchTap={this.clickHome.bind(this)} index={0} />
         <MenuItem style={{color:'#e0e0e0'}} primaryText="Clients" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">business</FontIcon>} onTouchTap={this.clickClients.bind(this)} index={0} />
         <MenuItem style={{color:'#e0e0e0'}} primaryText="Jobs" leftIcon={<FontIcon style={{color:'#e0e0e0'}} className="material-icons">work</FontIcon>} onTouchTap={this.clickMyJobs.bind(this)} index={0} />

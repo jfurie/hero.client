@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { pushState } from 'redux-router';
 import { getUserContact, getUserStats } from '../../../modules/users';
 import { Gravatar } from '../../../components/web';
 
@@ -18,11 +19,6 @@ const style = {
   },
 };
 
-@connect(state => ({
-  authToken: state.auth.authToken,
-  user: state.auth.user,
-  users: state.users,
-}), { getUserContact, getUserStats }, null, { withRef: true })
 class LeftNavTop extends React.Component {
   constructor(props) {
     super(props);
@@ -30,13 +26,6 @@ class LeftNavTop extends React.Component {
 
   componentDidMount() {
     let self = this;
-
-    let id = setInterval(() => {
-      if (self.props.user) {
-        self.refresh();
-        clearInterval(id);
-      }
-    }, 500);
   }
 
   refresh() {
@@ -46,6 +35,26 @@ class LeftNavTop extends React.Component {
     if (this.props.authToken)
       this.props.getUserStats(this.props.authToken.accountInfo.account.id, this.props.user.id);
   }
+  _handleContactClick(){
+    if(this.props.onContactClick){
+      this.props.onContactClick();
+    }
+  }
+  _handleContactsClick(){
+    if(this.props.onContactsClick){
+      this.props.onContactsClick();
+    }
+  }
+  _handleClientsClick(){
+    if(this.props.onClientsClick){
+      this.props.onClientsClick();
+    }
+  }
+  _handleJobsClick(){
+    if(this.props.onJobsClick){
+      this.props.onJobsClick();
+    }
+  }
 
   render(){
     let contact = this.props.users.userContact;
@@ -54,30 +63,30 @@ class LeftNavTop extends React.Component {
     if (contact) {
       return (
         <div className="leftNavTop row center-xs">
-          <div className="leftNavTop-image col-xs-12">
+          <div onTouchTap={this._handleContactClick.bind(this)} className="leftNavTop-image col-xs-12">
             <div className='box'>
               <Gravatar style={style.gravatar} email={contact.email} />
             </div>
           </div>
-          <div className="leftNavTop-name col-xs-12">
+          <div onTouchTap={this._handleContactClick.bind(this)} className="leftNavTop-name col-xs-12">
             <div className='box'>
               <p>{contact.displayName}</p>
             </div>
           </div>
-          <div className="leftNavTop-tab col-xs-4" style={{marginLeft: '-12px'}}>
-            <div className="box">
+          <div className="leftNavTop-tab col-xs-4">
+            <div onTouchTap={this._handleClientsClick.bind(this)} className="box">
               <div>{stats && stats.companyCount}</div>
               <div className="leftNavTop-label">Clients</div>
             </div>
           </div>
           <div className="leftNavTop-tab col-xs-4">
-            <div className="box">
+            <div onTouchTap={this._handleJobsClick.bind(this)} className="box">
               <div>{stats && stats.jobCount}</div>
               <div className="leftNavTop-label">Jobs</div>
             </div>
           </div>
           <div className="leftNavTop-tab col-xs-4">
-            <div className="box">
+            <div onTouchTap={this._handleContactsClick.bind(this)} className="box">
               <div>{stats && stats.candidateCount}</div>
               <div className="leftNavTop-label">Candidates</div>
             </div>
