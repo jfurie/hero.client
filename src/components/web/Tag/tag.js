@@ -14,8 +14,6 @@ const style = {
     height: '17px',
     marginRight: '8px',
     textTransform: 'uppercase',
-    minWidth: '50px',
-    maxWidth: '50px',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -33,7 +31,7 @@ export default class Tag extends React.Component {
 
   render() {
 
-    let { value } = this.props;
+    let { value, fixedWidth } = this.props;
     let color = null;
 
     value = value.toLowerCase();
@@ -72,7 +70,9 @@ export default class Tag extends React.Component {
       }
     }
 
-    let currentStyle = _.merge(style, {badge: {backgroundColor: color}});
+    fixedWidth = fixedWidth || 50;
+
+    let currentStyle = _.merge(style, {badge: {backgroundColor: color, minWidth: `${fixedWidth}px`, maxWidth: `${fixedWidth}px`}});
 
     return (
       <span onTouchTap={this._onTouchTap.bind(this)} style={currentStyle.badge} >{value}</span>
@@ -82,6 +82,7 @@ export default class Tag extends React.Component {
 
 Tag.propTypes = {
   color: React.PropTypes.string,
+  fixedWidth: React.PropTypes.number,
   onTouchTap: React.PropTypes.func,
   value: React.PropTypes.string.isRequired,
 };

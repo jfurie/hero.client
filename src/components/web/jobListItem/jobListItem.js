@@ -44,12 +44,12 @@ let style = {
     display:'inline-block',
     padding:'0px 16px',
     marginBottom:'8px',
-    height:'18px'
+    height:'18px',
   },
   starOn:{
     color:'#F5A623',
     fontSize:'22px',
-    width:'22px'
+    width:'22px',
   },
   status:{
     color:'#4A4A4A',
@@ -120,8 +120,8 @@ export default class JobListItem extends React.Component {
   }
 
   _onTouchTapShare() {
-    let subject = 'Check out '+ this.props.job.get('name')+ ' on HERO';
-    let body = encodeURIComponent(this.props.job.get('name')) +'%0A' + encodeURIComponent(window.location.href);
+    let subject = `Check out ${this.props.job.get('name')} on HERO`;
+    let body = `${encodeURIComponent(this.props.job.get('name'))}%0A${encodeURIComponent(window.location.href)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
@@ -168,7 +168,7 @@ export default class JobListItem extends React.Component {
     let location = job.get('location') && job.get('location').get('city') ? (
       <span>
         <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
-        {job.get('location').get('city') }
+        {job.get('location').get('city')}
         , {job.get('location').get('countrySubDivisionCode')}
       </span>
     ) : (<span></span>);
@@ -189,7 +189,7 @@ export default class JobListItem extends React.Component {
       salary = (<span>No Salary Info</span>);
     }
 
-    let jobImg = <img style={{width: '40px', height: '40px'}} src='http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png' />;
+    let jobImg = <img style={{width: '40px', height: '40px'}} src="http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png" />;
 
     let isHot = false;
     let isInterviewing = false;
@@ -200,16 +200,18 @@ export default class JobListItem extends React.Component {
     }
     return (
       <Card
-        style={{
-          height: type !=='mini'?'auto':'80px',
-          marginBottom:'8px',
-          marginLeft:'8px',
-          marginRight:'8px',
-        }}>
-        <CardText
           style={{
-            height: type !=='mini'?'auto':'auto'
-          }}>
+            height: type !=='mini'?'auto':'80px',
+            marginBottom:'8px',
+            marginLeft:'8px',
+            marginRight:'8px',
+          }}
+      >
+        <CardText
+            style={{
+              height: type !=='mini'?'auto':'auto',
+            }}
+        >
           {type !=='mini'?(<div>
             <div>
               <div className="row between-xs" style={style.badgeWrap}>
@@ -224,10 +226,7 @@ export default class JobListItem extends React.Component {
                 }
               </div>
               <div style={{textAlign: 'right'}}>
-                {job.get('employmentType')?
-                <Tag value={job.get('employmentType')} color={'green'} />
-                :<span></span>
-                }
+                <Tag value={job.get('jobType') || 'Permanent'} color={'green'} fixedWidth={75}/>
               </div>
               </div>
             </div>
@@ -238,10 +237,10 @@ export default class JobListItem extends React.Component {
                 subtitle1={job.get('company')&&job.get('company').get('name')}
                 subtitle2={<span>{job.get('department')?job.get('department'):'Tech'} Department</span>}
                 onTouchTap={this.clickJob.bind(this)}
-              ></CardBasic>
+            />
             {type !== 'mini'?
             (<div>
-              <Divider style={{marginTop:'8px'}}></Divider>
+              <Divider style={{marginTop:'8px'}} />
               <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
                 <div className="row" style={{display:'flex', alignItems: 'stretch', position:'relative', marginTop: '15px'}}>
                   <div style={{flex:'0 0 56px'}}>
@@ -258,14 +257,13 @@ export default class JobListItem extends React.Component {
                   <div>
                   <div style={{lineHeight:'25px', marginTop:'0px', position:'absolute', bottom: '-7px', right: 0, textAlign: 'right'}}>
                       {job.get('talentAdvocate')?(<div>
-                        <Gravatar url={job.get('talentAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}></Gravatar> <div style={{display:'inline-block',lineHeight:'25px'}}>{job.get('talentAdvocate').get('displayName')}</div>
+                        <Gravatar url={job.get('talentAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{job.get('talentAdvocate').get('displayName')}</div>
                       </div>):(<div></div>)}
                       <div style={{marginTop:'5px'}}>
-
                         <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
                         {job.get('positionCount')|| 0}
                         <FontIcon style={style.status} className="material-icons">assignment_ind</FontIcon>
-                        { job.get('stats') && job.get('stats').get('candidateCount')|| 0}
+                        {job.get('stats') && job.get('stats').get('candidateCount')|| 0}
                         <FontIcon style={style.statusRed} className="material-icons">assignment_late</FontIcon>
                         {job.get('stats') && job.get('stats').get('actionsCount')|| 0}
                         <FontIcon style={style.statusGreen} className="material-icons">assignment_turned_in</FontIcon>
@@ -276,7 +274,7 @@ export default class JobListItem extends React.Component {
                 </div>
               </div>
             </div>
-            <Divider style={{marginTop:'8px'}}></Divider>
+            <Divider style={{marginTop:'8px'}} />
             <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
             <div className="row between-xs" style={style.layoutJobDetails}>
             <div></div>
@@ -297,9 +295,9 @@ export default class JobListItem extends React.Component {
         {type !== 'mini'?(<div>
           <CardActions style={{
             backgroundColor:'rgba(100,100,100,0.2)',
-            boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)'
-
-          }}>
+            boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)',
+          }}
+          >
             <FindButton />
             <FavoriteButton isFavorited={job.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
             <ShareButton />
