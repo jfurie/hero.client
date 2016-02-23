@@ -334,6 +334,7 @@ export default class ContactDetails extends React.Component {
           topTags={contact.get('tags') || []}
           extraLeftLine={extraLeftLine}
           extraRightLine={workAuthorization}
+          floatActionLabel={'Text'}
       />
     );
   }

@@ -14,7 +14,7 @@ let style = {
     position: 'relative',
   },
   cardTitleComponent: {
-    padding: '0px 16px 11px 16px',
+    padding: '11px 16px 11px 16px',
     position: 'relative',
   },
   title: {
@@ -106,13 +106,14 @@ let style = {
     paddingLeft: '3px',
   },
   floatActionLabel: {
-    position: 'relative',
-    top: '35px',
-    right: '-3px',
+    position: 'absolute',
+    top: '37px',
+    right: '2px',
     fontSize: '11px',
     fontWeight: '100',
     color: Styles.Colors.white,
-    textAlign: 'right',
+    textAlign: 'center',
+    width: '70px',
   },
   statTitle: {
     fontSize: '11px',
