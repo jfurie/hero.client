@@ -1,5 +1,5 @@
 import React from 'react';
-import { FontIcon, IconButton } from 'material-ui';
+import { FontIcon, IconButton, Styles } from 'material-ui';
 export default class FavoriteButton extends React.Component {
   constructor(props) {
     super(props);
@@ -12,7 +12,7 @@ export default class FavoriteButton extends React.Component {
   }
 
   render(){
-    let color = '#4A4A4A';
+    let color = Styles.Colors.grey600;
 
     if (this.props.isFavorited) {
       color = '#FBC02D';

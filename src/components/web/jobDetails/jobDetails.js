@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List } from 'material-ui';
 
-import { Header, DetailsCard, CustomTabsSwipe, CandidatesList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -168,6 +168,26 @@ export default class JobDetails extends React.Component {
         onTouchTap: this._onTouchTapShare.bind(this),
       }];
 
+      let stats = [{
+        title: 'Applied',
+        value: 12,
+      }, {
+        title: 'Submitted',
+        value: 4,
+      }, {
+        title: 'Accepted',
+        value: 4,
+      }, {
+        title: 'Interviews',
+        value: 5,
+      }, {
+        title: 'Offers',
+        value: 1,
+      }, {
+        title: 'Jobs',
+        value: 0,
+      }];
+
       // company
       let company = job.get('company');
       let companyWebsite = null;
@@ -213,7 +233,9 @@ export default class JobDetails extends React.Component {
               avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '70px'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
+              floatActionLabel={'Share'}
               topTags={job.get('tags') || []}
+              stats={stats}
           />
           <CustomTabsSwipe isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
             <Card style={style.card}>
@@ -252,7 +274,7 @@ export default class JobDetails extends React.Component {
               </Card>
             </div>
             <div>
-              <CandidatesList
+              <JobApplicantList
                   candidates={job.get('candidates')}
                   favoriteContact={this.props.favoriteContact.bind(this)}
                   unfavoriteContact={this.props.unfavoriteContact.bind(this)}

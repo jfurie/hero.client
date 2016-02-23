@@ -192,6 +192,7 @@ export default class ClientDetails extends React.Component {
       materialIcon: 'phone',
       text: 'Call',
       onTouchTap: this._onTouchTapCall.bind(this),
+      disabled: (company && company.get('phone') ? (false) : (true)),
     }, {
       materialIcon: 'star_rate',
       text: company && company.get('isFavorited') ? 'Saved' : 'Save',
@@ -201,10 +202,31 @@ export default class ClientDetails extends React.Component {
       materialIcon: 'email',
       text: 'Email',
       onTouchTap: this._onTouchTapEmail.bind(this),
+      disabled: (company && company.get('email') ? (false) : (true)),
     }, {
       materialIcon: 'share',
       text: 'Share',
       onTouchTap: this._onTouchTapShare.bind(this),
+    }];
+
+    let stats = [{
+      title: 'Applied',
+      value: 0,
+    }, {
+      title: 'Submitted',
+      value: 0,
+    }, {
+      title: 'Accepted',
+      value: 0,
+    }, {
+      title: 'Interviews',
+      value: 0,
+    }, {
+      title: 'Offers',
+      value: 0,
+    }, {
+      title: 'Jobs',
+      value: 0,
     }];
 
     let inline = true;
@@ -255,9 +277,9 @@ export default class ClientDetails extends React.Component {
         }
 
         addressLine = address;
-        if (addressLine.length) {
+        if (addressLine.length && city) {
           addressLine += `. ${city}`;
-        } else {
+        } else if (!addressLine.length && city) {
           addressLine = city;
         }
       }
@@ -276,6 +298,7 @@ export default class ClientDetails extends React.Component {
               floatActionLabel={'Directions'}
               extraLeftLine={recruiterData}
               topTags={company.get('tags') || []}
+              stats={stats}
           />
 
           <CustomTabsSwipe isLight isInline={inline} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
@@ -288,10 +311,9 @@ export default class ClientDetails extends React.Component {
                     <ListItem
                         leftIcon={<FontIcon className="material-icons">place</FontIcon>}
                         primaryText={addressLine}
-                        secondaryText={<p>address</p>}
-                        secondaryTextLines={1}
+                        // secondaryText={<p>address</p>}
+                        // secondaryTextLines={0}
                     />
-                    <Divider />
                   </div>
                 ) : (null)}
 
@@ -300,10 +322,9 @@ export default class ClientDetails extends React.Component {
                     <ListItem
                         leftIcon={<FontIcon className="material-icons">public</FontIcon>}
                         primaryText={website}
-                        secondaryText={<p>website</p>}
-                        secondaryTextLines={1}
+                        // secondaryText={<p>website</p>}
+                        // secondaryTextLines={0}
                     />
-                    <Divider />
                   </div>
                 ) : (null)}
 
@@ -312,8 +333,8 @@ export default class ClientDetails extends React.Component {
                     <ListItem
                         leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
                         primaryText={phone}
-                        secondaryText={<p>phone</p>}
-                        secondaryTextLines={1}
+                        // secondaryText={<p>phone</p>}
+                        // secondaryTextLines={0}
                     />
                   </div>
                 ) : (null)}

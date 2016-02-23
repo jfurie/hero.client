@@ -5,6 +5,8 @@ export UsersList from './usersList/usersList';
 export EmailForm from './emailForm/emailForm';
 export ContactsList from './contactsList/contactsList';
 export CandidatesList from './candidatesList/candidatesList';
+export JobApplicantList from './jobApplicantList/jobApplicantList';
+export JobApplicantListItem from './jobApplicantListItem/jobApplicantListItem';
 export ChangePasswordForm from './changePasswordForm/changePasswordForm';
 export CompanyAvatar from './companyAvatar/companyAvatar';
 export LocationCard from './locationCard/locationCard';

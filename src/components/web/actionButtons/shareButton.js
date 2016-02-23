@@ -1,5 +1,5 @@
 import React from 'react';
-import { FontIcon, IconButton } from 'material-ui';
+import { FontIcon, IconButton, Styles } from 'material-ui';
 export default class ShareButton extends React.Component {
   _onTouchTapShare() {
     let subject = 'Check out '+ this.props.company.get('name')+ ' on HERO';
@@ -8,7 +8,7 @@ export default class ShareButton extends React.Component {
   }
   render(){
     return (
-      <IconButton onTouchTap={this._onTouchTapShare.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Share">
+      <IconButton onTouchTap={this._onTouchTapShare.bind(this)} iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Share">
         <FontIcon style={{width:'24px'}} className="material-icons">share</FontIcon>
       </IconButton>
     );

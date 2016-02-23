@@ -7,19 +7,17 @@ const style = {
   badge:{
     fontSize: '12px',
     lineHeight: '18px',
-    color: 'rgba(255, 255, 255, 1.00)',
     borderRadius: '4px',
     display: 'inline-block',
     padding: '1px 16px',
     height: '17px',
     marginRight: '8px',
     textTransform: 'uppercase',
-    minWidth: '50px',
-    maxWidth: '50px',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     textAlign: 'center',
+    marginBottom: '10px',
   },
 };
 
@@ -33,46 +31,56 @@ export default class Tag extends React.Component {
 
   render() {
 
-    let { value } = this.props;
+    let { value, active, fixedWidth } = this.props;
+    let bgColor = null;
     let color = null;
 
     value = value.toLowerCase();
 
     // text
-    switch (value) {
-    case 'hot!':
-      color = '#E91B62'; // default pink
-      break;
-    case 'vetted':
-      color = Styles.Colors.green500;
-      break;
-    case 'active':
-      color = Styles.Colors.green500;
-      break;
-    case 'lead':
-      color = Styles.Colors.green500;
-      break;
-    default:
-      color = Styles.Colors.grey500;
-      break;
+    if (active) {
+      color = '#fff';
+      switch (value) {
+      case 'hot!':
+        bgColor = Styles.Colors.pink500; // default pink
+        break;
+      case 'vetted':
+        bgColor = Styles.Colors.green500;
+        break;
+      case 'active':
+        bgColor = Styles.Colors.grey500;
+        break;
+      case 'lead':
+        bgColor = Styles.Colors.green500;
+        break;
+      default:
+        bgColor = Styles.Colors.grey500;
+        break;
+      }
+    }
+    else {
+      color = Styles.Colors.grey400;
+      bgColor = Styles.Colors.grey200;
     }
 
     // color
     if (this.props.color) {
       switch (this.props.color) {
       case 'green':
-        color = Styles.Colors.green500;
+        bgColor = Styles.Colors.green500;
         break;
       case 'pink':
-        color = '#E91B62'; // default pink
+        bgColor = Styles.Colors.pink500; // default pink
         break;
       default:
-        color = Styles.Colors.grey500; // default
+        bgColor = Styles.Colors.grey500; // default
         break;
       }
     }
 
-    let currentStyle = _.merge(style, {badge: {backgroundColor: color}});
+    fixedWidth = fixedWidth || 50;
+
+    let currentStyle = _.merge(style, {badge: {backgroundColor: bgColor, color, minWidth: `${fixedWidth}px`, maxWidth: `${fixedWidth}px`}});
 
     return (
       <span onTouchTap={this._onTouchTap.bind(this)} style={currentStyle.badge} >{value}</span>
@@ -82,6 +90,7 @@ export default class Tag extends React.Component {
 
 Tag.propTypes = {
   color: React.PropTypes.string,
+  fixedWidth: React.PropTypes.number,
   onTouchTap: React.PropTypes.func,
   value: React.PropTypes.string.isRequired,
 };
