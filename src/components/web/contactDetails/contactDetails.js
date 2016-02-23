@@ -240,6 +240,7 @@ export default class ContactDetails extends React.Component {
     if(companies && companies.size >0){
       company =companies.first();
     }
+    
 
     // displayName
     let displayName = contact.get('displayName') || null;
