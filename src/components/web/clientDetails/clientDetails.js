@@ -211,19 +211,19 @@ export default class ClientDetails extends React.Component {
 
     let stats = [{
       title: 'Applied',
-      value: 12,
+      value: 0,
     }, {
       title: 'Submitted',
-      value: 4,
+      value: 0,
     }, {
       title: 'Accepted',
-      value: 4,
+      value: 0,
     }, {
       title: 'Interviews',
-      value: 5,
+      value: 0,
     }, {
       title: 'Offers',
-      value: 1,
+      value: 0,
     }, {
       title: 'Jobs',
       value: 0,
