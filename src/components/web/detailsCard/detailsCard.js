@@ -16,6 +16,7 @@ let style = {
   cardTitleComponent: {
     padding: '11px 16px 11px 16px',
     position: 'relative',
+    minHeight: '50px',
   },
   title: {
     color: Styles.Colors.white,
