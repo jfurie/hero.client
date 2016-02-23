@@ -7,7 +7,6 @@ const style = {
   badge:{
     fontSize: '13px',
     lineHeight: '18px',
-    color: 'rgba(255, 255, 255, 1.00)',
     borderRadius: '4px',
     display: 'inline-block',
     padding: '1px 16px',
@@ -27,41 +26,49 @@ export default class Tag extends React.Component {
 
   render() {
 
-    let { value } = this.props;
+    let { value, active } = this.props;
+    let bgColor = null;
     let color = null;
 
     // text
-    switch (this.props.value) {
-    case 'HOT!':
-      color = '#E91B62'; // default pink
-      break;
-    case 'Vetted':
-      color = Styles.Colors.green500;
-      break;
-    case 'Active':
-      color = Styles.Colors.green500;
-      break;
-    default:
-      color = Styles.Colors.grey500;
-      break;
+    if (active) {
+      color = '#fff';
+      switch (this.props.value) {
+      case 'HOT!':
+        bgColor = Styles.Colors.pink500; // default pink
+        break;
+      case 'Vetted':
+        bgColor = Styles.Colors.green500;
+        break;
+      case 'Active':
+        bgColor = Styles.Colors.grey500;
+        break;
+      default:
+        bgColor = Styles.Colors.grey500;
+        break;
+      }
+    }
+    else {
+      color = Styles.Colors.grey400;
+      bgColor = Styles.Colors.grey200;
     }
 
     // color
     if (this.props.color) {
       switch (this.props.color) {
       case 'green':
-        color = Styles.Colors.green500;
+        bgColor = Styles.Colors.green500;
         break;
       case 'pink':
-        color = '#E91B62'; // default pink
+        bgColor = Styles.Colors.pink500; // default pink
         break;
       default:
-        color = Styles.Colors.grey500; // default
+        bgColor = Styles.Colors.grey500; // default
         break;
       }
     }
 
-    let currentStyle = _.merge(style, {badge: {backgroundColor: color}});
+    let currentStyle = _.merge(style, {badge: {backgroundColor: bgColor, color}});
 
     return (
       <span onTouchTap={this._onTouchTap.bind(this)} style={currentStyle.badge} >{value}</span>

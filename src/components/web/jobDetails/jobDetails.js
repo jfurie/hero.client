@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List } from 'material-ui';
 
-import { Header, DetailsCard, CustomTabsSwipe, CandidatesList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -252,7 +252,7 @@ export default class JobDetails extends React.Component {
               </Card>
             </div>
             <div>
-              <CandidatesList
+              <JobApplicantList
                   candidates={job.get('candidates')}
                   favoriteContact={this.props.favoriteContact.bind(this)}
                   unfavoriteContact={this.props.unfavoriteContact.bind(this)}

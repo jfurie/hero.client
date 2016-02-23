@@ -1,5 +1,5 @@
 import React from 'react';
-import { FontIcon, IconButton } from 'material-ui';
+import { FontIcon, IconButton, Styles } from 'material-ui';
 
 export default class EmailButton extends React.Component {
   _onTouchTapEmail() {
@@ -11,7 +11,7 @@ export default class EmailButton extends React.Component {
   render(){
     if(this.props.email){
       return (
-        <IconButton onTouchTap={this._onTouchTapEmail.bind(this)} iconStyle={{color:'#4A4A4A'}} tooltipPosition="top-center" tooltip="Email">
+        <IconButton onTouchTap={this._onTouchTapEmail.bind(this)} iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Email">
           <FontIcon style={{width:'24px'}} className="material-icons">email</FontIcon>
         </IconButton>
       );
