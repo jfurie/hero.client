@@ -17,7 +17,6 @@ const style = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     textAlign: 'center',
-    marginBottom: '10px',
   },
 };
 
@@ -31,27 +30,29 @@ export default class Tag extends React.Component {
 
   render() {
 
-    let { value, active, fixedWidth } = this.props;
+<<<<<<< HEAD
+    let { value, active } = this.props;
     let bgColor = null;
+=======
+    let { value, fixedWidth } = this.props;
+>>>>>>> master
     let color = null;
 
     value = value.toLowerCase();
 
     // text
+<<<<<<< HEAD
     if (active) {
       color = '#fff';
-      switch (value) {
-      case 'hot!':
+      switch (this.props.value) {
+      case 'HOT!':
         bgColor = Styles.Colors.pink500; // default pink
         break;
-      case 'vetted':
+      case 'Vetted':
         bgColor = Styles.Colors.green500;
         break;
-      case 'active':
+      case 'Active':
         bgColor = Styles.Colors.grey500;
-        break;
-      case 'lead':
-        bgColor = Styles.Colors.green500;
         break;
       default:
         bgColor = Styles.Colors.grey500;
@@ -61,6 +62,24 @@ export default class Tag extends React.Component {
     else {
       color = Styles.Colors.grey400;
       bgColor = Styles.Colors.grey200;
+=======
+    switch (value) {
+    case 'hot!':
+      color = '#E91B62'; // default pink
+      break;
+    case 'vetted':
+      color = Styles.Colors.green500;
+      break;
+    case 'active':
+      color = Styles.Colors.green500;
+      break;
+    case 'lead':
+      color = Styles.Colors.green500;
+      break;
+    default:
+      color = Styles.Colors.grey500;
+      break;
+>>>>>>> master
     }
 
     // color
@@ -78,9 +97,13 @@ export default class Tag extends React.Component {
       }
     }
 
+<<<<<<< HEAD
+    let currentStyle = _.merge(style, {badge: {backgroundColor: bgColor, color}});
+=======
     fixedWidth = fixedWidth || 50;
 
-    let currentStyle = _.merge(style, {badge: {backgroundColor: bgColor, color, minWidth: `${fixedWidth}px`, maxWidth: `${fixedWidth}px`}});
+    let currentStyle = _.merge(style, {badge: {backgroundColor: color, minWidth: `${fixedWidth}px`, maxWidth: `${fixedWidth}px`}});
+>>>>>>> master
 
     return (
       <span onTouchTap={this._onTouchTap.bind(this)} style={currentStyle.badge} >{value}</span>

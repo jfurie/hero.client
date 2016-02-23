@@ -5,19 +5,14 @@ import { Styles } from 'material-ui';
 
 const style = {
   badge:{
-    fontSize: '12px',
+    fontSize: '13px',
     lineHeight: '18px',
     borderRadius: '4px',
     display: 'inline-block',
     padding: '1px 16px',
+    marginBottom: '8px',
     height: '17px',
-    marginRight: '8px',
-    textTransform: 'uppercase',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    textAlign: 'center',
-    marginBottom: '10px',
+    marginRight: '4px',
   },
 };
 
@@ -31,27 +26,22 @@ export default class Tag extends React.Component {
 
   render() {
 
-    let { value, active, fixedWidth } = this.props;
+    let { value, active } = this.props;
     let bgColor = null;
     let color = null;
-
-    value = value.toLowerCase();
 
     // text
     if (active) {
       color = '#fff';
-      switch (value) {
-      case 'hot!':
+      switch (this.props.value) {
+      case 'HOT!':
         bgColor = Styles.Colors.pink500; // default pink
         break;
-      case 'vetted':
+      case 'Vetted':
         bgColor = Styles.Colors.green500;
         break;
-      case 'active':
+      case 'Active':
         bgColor = Styles.Colors.grey500;
-        break;
-      case 'lead':
-        bgColor = Styles.Colors.green500;
         break;
       default:
         bgColor = Styles.Colors.grey500;
@@ -78,9 +68,7 @@ export default class Tag extends React.Component {
       }
     }
 
-    fixedWidth = fixedWidth || 50;
-
-    let currentStyle = _.merge(style, {badge: {backgroundColor: bgColor, color, minWidth: `${fixedWidth}px`, maxWidth: `${fixedWidth}px`}});
+    let currentStyle = _.merge(style, {badge: {backgroundColor: bgColor, color}});
 
     return (
       <span onTouchTap={this._onTouchTap.bind(this)} style={currentStyle.badge} >{value}</span>
@@ -90,7 +78,6 @@ export default class Tag extends React.Component {
 
 Tag.propTypes = {
   color: React.PropTypes.string,
-  fixedWidth: React.PropTypes.number,
   onTouchTap: React.PropTypes.func,
   value: React.PropTypes.string.isRequired,
 };

@@ -277,6 +277,26 @@ export default class ContactDetails extends React.Component {
       onTouchTap: this._onTouchTapShare.bind(this),
     }];
 
+    let stats = [{
+      title: 'Applied',
+      value: 12,
+    }, {
+      title: 'Submitted',
+      value: 4,
+    }, {
+      title: 'Accepted',
+      value: 4,
+    }, {
+      title: 'Interviews',
+      value: 5,
+    }, {
+      title: 'Offers',
+      value: 1,
+    }, {
+      title: 'Jobs',
+      value: 0,
+    }];
+
     // salary
     let salaryMin = null;
     let salaryMax = null;
@@ -308,11 +328,13 @@ export default class ContactDetails extends React.Component {
           cover={common.cover}
           mainColor={Styles.Colors.indigo500}
           actions={actions}
+          stats={stats}
           floatActionOnTap={this._handleTapOnChat.bind(this)}
           floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
           topTags={contact.get('tags') || []}
           extraLeftLine={extraLeftLine}
           extraRightLine={workAuthorization}
+          floatActionLabel={'Text'}
       />
     );
   }
@@ -556,11 +578,11 @@ export default class ContactDetails extends React.Component {
       <div>
         <Header transparent goBack={this.goBack.bind(this)} iconRight={
           <IconMenu iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}>
+            <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (
               <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />
             ) : (null)}
             <MenuItem index={0} onTouchTap={this.addNoteModalOpen.bind(this)} primaryText={`Create Note`} />
-            <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
           </IconMenu>
         }
         />

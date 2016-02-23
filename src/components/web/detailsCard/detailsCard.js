@@ -14,33 +14,41 @@ let style = {
     position: 'relative',
   },
   cardTitleComponent: {
-    padding: '11px 16px 11px',
+    padding: '11px 16px 11px 16px',
     position: 'relative',
+    minHeight: '50px',
   },
   title: {
     color: Styles.Colors.white,
-    fontSize: '23px',
+    fontSize: '19px',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    fontWeight: 500,
   },
   subtitle: {
     color: Styles.Colors.white,
     fontWeight: 200,
     opacity: 0.5,
-    fontSize: '13px',
+    fontSize: '12px',
   },
   extraLine: {
     marginTop: '25px',
   },
   extraLeftLine: {
     color: Styles.Colors.white,
+    fontWeight: 300,
+    fontSize: '15px',
   },
   extraRightLine: {
     color: Styles.Colors.white,
+    fontWeight: 300,
+    fontSize: '15px',
   },
   extraCenterLine: {
     color: Styles.Colors.white,
+    fontWeight: 300,
+    fontSize: '15px',
   },
   extraLineLeftCol: {
     paddingLeft: '3px',
@@ -55,7 +63,7 @@ let style = {
   },
   floatActionButton: {
     position: 'absolute',
-    right: '10px',
+    right: '9px',
     top: '-28px',
     zIndex: '50',
   },
@@ -64,9 +72,12 @@ let style = {
   },
   avatar: {
     position: 'absolute',
-    top: '-60px',
-    left: '9px',
-    maxHeight: '50px',
+    top: '-72px',
+    left: '10px',
+    maxHeight: '70px',
+    border: '2px solid white',
+    borderBottom: '0px',
+    boxShadow: '1px -1px 5px rgba(0, 0, 0, 0.21)',
   },
   actionButton: {
     minWidth: '0px',
@@ -82,12 +93,40 @@ let style = {
   actionBox: {
     marginRight: '0px',
   },
+  statsBox: {
+    marginRight: '0px',
+  },
+  statsRow: {
+    borderBottom: '1px solid #CCC',
+  },
   cardmedia: {
     maxHeight: '250px',
     overflow: 'hidden',
   },
   topTags: {
     paddingLeft: '3px',
+  },
+  floatActionLabel: {
+    position: 'absolute',
+    top: '37px',
+    right: '2px',
+    fontSize: '11px',
+    fontWeight: '100',
+    color: Styles.Colors.white,
+    textAlign: 'center',
+    width: '70px',
+  },
+  statTitle: {
+    fontSize: '11px',
+    opacity: '0.5',
+    textTransform: 'capitalize',
+    lineHeight: '20px',
+  },
+  statNumber: {
+    fontSize: '25px',
+    marginBottom: '0px',
+    lineHeight: '31px',
+    marginTop: '0px',
   },
 };
 
@@ -111,7 +150,7 @@ class DetailsCard extends React.Component {
 
   render() {
 
-    let { actions, topTags } = this.props;
+    let { actions, topTags, stats } = this.props;
     topTags = topTags || [];
 
     if (this.props.mainColor) {
@@ -132,6 +171,12 @@ class DetailsCard extends React.Component {
           <FloatingActionButton onTouchTap={this._onTouchTapFloatAction.bind(this)} style={style.floatActionButton} backgroundColor={Styles.Colors.white}>
             {this.props.floatActionContent}
           </FloatingActionButton>
+
+          <div style={style.floatActionLabel}>
+            {(this.props.floatActionLabel) ? (
+              <p>{this.props.floatActionLabel}</p>
+            ) : (<p></p>)}
+          </div>
 
           {/* TOP TAGS */}
           <div className="row">
@@ -155,7 +200,7 @@ class DetailsCard extends React.Component {
 
           {/* title and subtitle */}
           <div className="row">
-            <div className="col-xs-12" style={style.titlesub}>
+            <div className="col-xs-9" style={style.titlesub}>
               <div className="box">
                 <h2 style={style.title}>{this.props.title}</h2>
                 <p style={style.subtitle}>{this.props.subtitle}</p>
@@ -164,7 +209,7 @@ class DetailsCard extends React.Component {
           </div>
 
           {/* extra line (if any) */}
-          {(this.props.extraLeftLine || this.props.extraRightLine) ? (
+          {(this.props.extraLeftLine || this.props.extraCenterLine || this.props.extraRightLine) ? (
             <div className="row" style={style.extraLine}>
               {(this.props.extraLeftLine) ? (
                 <div className="col-xs" style={style.extraLineLeftCol}>
@@ -190,9 +235,25 @@ class DetailsCard extends React.Component {
                 </div>
               ) : (null)}
             </div>
-          ) : (null)}
+          ) : (<div></div>)}
 
         </div>
+
+        <CardActions className="row center-xs" style={style.statsRow}>
+          {stats.map((stat, key) => {
+
+            return (
+              <div className="col-xs" style={style.statsBox} key={key}>
+                <div className="box">
+                  <FlatButton style={style.actionButton}>
+                    <p style={style.statTitle}>{stat.title}</p>
+                    <p style={style.statNumber}>{stat.value}</p>
+                  </FlatButton>
+                </div>
+              </div>
+            );
+          })}
+        </CardActions>
 
         <CardActions className="row center-xs">
           {actions.map((action, key) => {
@@ -235,11 +296,13 @@ DetailsCard.propTypes = {
   extraLeftLine: React.PropTypes.string,
   extraRightLine: React.PropTypes.string,
   floatActionContent: React.PropTypes.object,
+  floatActionLabel: React.PropTypes.string,
   floatActionOnTap: React.PropTypes.func,
   mainColor: React.PropTypes.string,
+  stats: React.PropTypes.array,
   subtitle: React.PropTypes.string.isRequired,
   title: React.PropTypes.string.isRequired,
-  topTags: React.PropTypes.array,
+  topTags: React.PropTypes.object,
 };
 
 export default DetailsCard;
