@@ -73,7 +73,7 @@ class JobApplicantList extends React.Component {
   }
 
   vetSelected() {
-    alert(this.state.selectedItems.size + ' vetted')
+    alert(this.state.selectedItems.size + ' vetted');
   }
 
   openDetails(candidate) {
