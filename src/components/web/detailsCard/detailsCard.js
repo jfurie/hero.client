@@ -126,6 +126,7 @@ let style = {
     fontSize: '25px',
     marginBottom: '0px',
     lineHeight: '31px',
+    marginTop: '0px',
   },
 };
 
