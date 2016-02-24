@@ -6,12 +6,12 @@ import md5 from 'md5';
 import Immutable from 'immutable';
 import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar } from '../../../components/web';
 import {
   IconButton, List, ListItem, FontIcon, Avatar,
-  Divider, Styles, IconMenu, MenuItem, CardText, Card,
+  Styles, IconMenu, MenuItem, CardText, Card,
 } from 'material-ui';
-
+import image from './image';
 function defineContext(props) {
   let context = {
     isCandidate: false,
@@ -43,6 +43,7 @@ const style = {
   },
   avatar: {
     margin: '8px 17px 8px 0px',
+    marginLeft:'-6px',
   },
 };
 
@@ -73,7 +74,8 @@ export default class ContactDetails extends React.Component {
   }
 
   editContactModalOpen(){
-    console.log('yo!');
+    //console.log('yo!');
+    this.props.pushState(null,`/contacts/${this.props.contact.get('id')}/create`);
   }
 
   goBack() {
@@ -208,7 +210,9 @@ export default class ContactDetails extends React.Component {
   // _handleTapOnApplications() {
   //   console.log('_handleTapOnApplications');
   // }
-
+  clickCompany(companyId){
+    this.props.pushState(null, `/clients/${companyId}`);
+  }
   getCommonDetailsCard(contact) {
 
     // build cover from gravatar
@@ -222,7 +226,10 @@ export default class ContactDetails extends React.Component {
     }
 
     // location stuff
-    let address = contact.get('_address');
+    let address = contact.get('location');
+    if(!address){
+      address = contact.get('_address');
+    }
     let city = null;
 
     if (address) {
@@ -234,13 +241,32 @@ export default class ContactDetails extends React.Component {
       }
     }
 
+    //companyName
+    let company =null;
+    let companies = contact.get('companies');
+    if(companies && companies.size >0){
+      company =companies.first();
+    }
+    let companyName = null;
+    let subtitleAvatar = null;
+    if(company){
+      companyName = company.get('name');
+      let companyId = company.get('id');
+      subtitleAvatar =(<CompanyAvatar onTouchTap={this.clickCompany.bind(this,companyId)} style={{width: '40px'}} url={company.get('website')}/>);
+    }
+    let title = contact.get('title');
+
     // displayName
     let displayName = contact.get('displayName') || null;
 
     return {
-      cover: `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      cover: image, //`http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       city,
       displayName,
+      avatarUrl: `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      companyName,
+      title,
+      subtitleAvatar
     };
   }
 
@@ -279,19 +305,19 @@ export default class ContactDetails extends React.Component {
 
     let stats = [{
       title: 'Applied',
-      value: 12,
+      value: 0,
     }, {
       title: 'Submitted',
-      value: 4,
+      value: 0,
     }, {
       title: 'Accepted',
-      value: 4,
+      value: 0,
     }, {
       title: 'Interviews',
-      value: 5,
+      value: 0,
     }, {
       title: 'Offers',
-      value: 1,
+      value: 0,
     }, {
       title: 'Jobs',
       value: 0,
@@ -303,11 +329,13 @@ export default class ContactDetails extends React.Component {
     let extraLeftLine = null;
 
     if (contact.get('currentSalary')) {
-      salaryMin = `$${~~(contact.get('currentSalary')) / 1000}k`;
+      let currentSalary = parseInt(contact.get('currentSalary'));
+      salaryMin = `$${~~(currentSalary) / 1000}k`;
     }
 
     if (contact.get('desiredSalary')) {
-      salaryMax = `$${~~(contact.get('desiredSalary')) / 1000}k`;
+      let desiredSalary = parseInt(contact.get('desiredSalary'));
+      salaryMax = `$${~~(desiredSalary) / 1000}k`;
     }
 
     if (salaryMin && salaryMax) {
@@ -317,24 +345,56 @@ export default class ContactDetails extends React.Component {
     } else if (!salaryMin && salaryMax) {
       extraLeftLine = `${salaryMin} -`;
     }
-
+    let style ={
+      title:{
+        color:Styles.Colors.black
+      },
+      subtitle:{
+        color:Styles.Colors.black
+      },
+      extraLeftLine:{
+        color:Styles.Colors.black
+      },
+      extraRightLine:{
+        color:Styles.Colors.black
+      },
+      extraCenterLine:{
+        color:Styles.Colors.black
+      },
+      floatActionLabel:{
+        color:Styles.Colors.black
+      }
+    };
     // workAuthorization
     let workAuthorization = contact.get('workAuthorization') || null;
+
+    let tags = contact.get('tags');
+    if(tags){
+      tags = tags.toArray();
+      if(tags.indexOf(contact.get('status') <=-1)){
+        tags.push(contact.get('status'));
+      }
+    }
 
     return (
       <DetailsCard
           title={common.displayName}
-          subtitle={common.city}
+          style={style}
+          subtitle={common.companyName}
+          subtitle2={common.title}
           cover={common.cover}
-          mainColor={Styles.Colors.indigo500}
+          mainColor={Styles.Colors.white}
           actions={actions}
           stats={stats}
+          showStats={false}
+          avatar={<img style={{width: '95px', height:'95px', borderRadius:'0px'}} src={common.avatarUrl}/>}
           floatActionOnTap={this._handleTapOnChat.bind(this)}
-          floatActionContent={<CommunicationChat color={Styles.Colors.indigo500}/>}
-          topTags={contact.get('tags') || []}
+          floatActionContent={<CommunicationChat color={Styles.Colors.black}/>}
+          topTags={tags || []}
           extraLeftLine={extraLeftLine}
           extraRightLine={workAuthorization}
           floatActionLabel={'Text'}
+          subtitleAvatar={common.subtitleAvatar}
       />
     );
   }
@@ -373,18 +433,20 @@ export default class ContactDetails extends React.Component {
     let phone = null;
     let addressLine = null;
     let source = null;
-
+    let website = null;
     if (contact) {
       email = contact.get('email') || null;
       phone = contact.get('phone') || null;
-
+      website = contact.get('website') || null;
       if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
         source = contact.get('sourceInfo').get('referrer');
       }
 
       // location stuff
-      let location = contact.get('_address');
-
+      let location = contact.get('location');
+      if(!location){
+        location = contact.get('_address');
+      }
       if (location) {
         let address = location.get('addressLine') || '';
         let city = location.get('city') || null;
@@ -433,6 +495,52 @@ export default class ContactDetails extends React.Component {
           {this.renderCandidateDetailsCard(contact)}
           <CustomTabsSwipe startingTab={startingTab} onChange={this.onTabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
             <div>
+
+              <List style={{position: 'relative', top: '3px'}}>
+                <div>
+
+                  <ListItem
+                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                      primaryText={addressLine || 'Somewhere, USA'}
+                  />
+
+                  {(email) ? (
+                    <div>
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
+                          primaryText={email}
+                      />
+                    </div>
+                  ) : (null)}
+
+                  {(phone) ? (
+                    <div>
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                          primaryText={phone}
+                      />
+                    </div>
+                  ) : (null)}
+
+                  {(source) ? (
+                    <div>
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                          primaryText={source}
+                      />
+                    </div>
+                  ) : (null)}
+                  {(website) ? (
+                    <div>
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                          primaryText={website}
+                      />
+                    </div>
+                  ) : (null)}
+
+                </div>
+              </List>
               <Card style={style.card}>
 
                 {(description.length > 0) ? (
@@ -469,54 +577,6 @@ export default class ContactDetails extends React.Component {
 
 
               </Card>
-              <List style={{position: 'relative', top: '3px'}}>
-                <div>
-
-                  <ListItem
-                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                      primaryText={addressLine || 'Somewhere, USA'}
-                      secondaryText={<p>location</p>}
-                      secondaryTextLines={1}
-                  />
-
-                  {(email) ? (
-                    <div>
-                      <Divider inset />
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
-                          primaryText={email}
-                          secondaryText={<p>email</p>}
-                          secondaryTextLines={1}
-                      />
-                    </div>
-                  ) : (null)}
-
-                  {(phone) ? (
-                    <div>
-                      <Divider inset />
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                          primaryText={phone}
-                          secondaryText={<p>phone</p>}
-                          secondaryTextLines={1}
-                      />
-                    </div>
-                  ) : (null)}
-
-                  {(source) ? (
-                    <div>
-                      <Divider inset />
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
-                          primaryText={source}
-                          secondaryText={<p>source</p>}
-                          secondaryTextLines={1}
-                      />
-                    </div>
-                  ) : (null)}
-
-                </div>
-              </List>
             </div>
             <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
               {contact.get('jobs') && contact.get('jobs').map((job, key) => {
@@ -576,7 +636,7 @@ export default class ContactDetails extends React.Component {
 
     return (
       <div>
-        <Header transparent goBack={this.goBack.bind(this)} iconRight={
+        <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
           <IconMenu iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}>
             <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (

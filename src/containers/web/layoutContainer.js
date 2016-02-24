@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { LeftNav, FontIcon, MenuItem} from 'material-ui';
 import { getUserContact, getUserStats } from '../../modules/users';
-
 //let MenuItem = require('material-ui/lib/menus/menu-item');
 
 import { onNavOpen, onNavClose, toggleNav } from '../../modules/leftNav';
@@ -135,7 +134,9 @@ class Layout extends React.Component {
         <MenuItem index={2}>
         </MenuItem>
       </LeftNav>
-        {this.props.children}
+        {React.cloneElement(this.props.children, {
+          key: this.props.location.pathname
+        })}
       </div>
     );
   }
