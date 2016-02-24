@@ -200,8 +200,8 @@ export default class ContactDetails extends React.Component {
   }
 
   _handleTapOnChat() {
-      let number = this.props.contact.get('phone');
-      window.location.href=`sms:${number}`;
+    let number = this.props.contact.get('phone');
+    window.location.href=`sms:${number}`;
     //console.log('_handleTapOnChat');
   }
 
