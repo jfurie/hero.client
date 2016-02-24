@@ -393,7 +393,7 @@ export default class ContactDetails extends React.Component {
           topTags={tags || []}
           extraLeftLine={extraLeftLine}
           extraRightLine={workAuthorization}
-          floatActionLabel={'Text'}
+          floatActionLabel={'Message'}
           subtitleAvatar={common.subtitleAvatar}
       />
     );
@@ -420,6 +420,10 @@ export default class ContactDetails extends React.Component {
     );
   }
 
+  clickResume(){
+    window.open(this.props.contact.get('resume').get('item'), '_blank');
+  }
+
   onTabChange(index){
     console.log(index);
     this.props.replaceState({
@@ -434,7 +438,9 @@ export default class ContactDetails extends React.Component {
     let addressLine = null;
     let source = null;
     let website = null;
+    let resume = null;
     if (contact) {
+      resume = contact.get('resume')|| null;
       email = contact.get('email') || null;
       phone = contact.get('phone') || null;
       website = contact.get('website') || null;
@@ -503,6 +509,15 @@ export default class ContactDetails extends React.Component {
                       leftIcon={<FontIcon className="material-icons">place</FontIcon>}
                       primaryText={addressLine || 'Somewhere, USA'}
                   />
+                  {(resume) ? (
+                    <div>
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">description</FontIcon>}
+                          primaryText={'Resume'}
+                          onTouchTap={this.clickResume.bind(this)}
+                      />
+                    </div>
+                  ) : (null)}
 
                   {(email) ? (
                     <div>
