@@ -132,11 +132,20 @@ export default class ContactCreate extends React.Component {
       newContact = newContact.delete('tags');
     }
 
-    this.props.onContactChange(newContact);
+    this.props.onContactChange(newContact, true);
   }
 
   _handleCompanySelectValueChange(event, index, value) {
     this.props.onCompanyChange(value);
+  }
+
+  _handleStatusSelectValueChange(event, index, value) {
+    let newContact = this.props.contact;
+
+    if (value) {
+      newContact = newContact.set('status',value);
+    }
+    this.props.onContactChange(newContact);
   }
 
   _handleSubmit(){
@@ -162,7 +171,15 @@ export default class ContactCreate extends React.Component {
     if (isCandidate === undefined) isCandidate = false;
 
     let companyId = this.props.company ? this.props.company.get('id') : null;
-
+    let tags = contact.get('tags');
+    if(tags){
+      if(tags.toArray){
+        tags = tags.toArray();
+      }
+    } else {
+      tags = [];
+    }
+    let statuses = ['New','Active','Prospect','Took a Job','Placed','Blacklisted'];
     return (
       <div className="row center-xs">
           <div className="col-xs-12 col-md-8">
@@ -251,7 +268,27 @@ export default class ContactCreate extends React.Component {
                         floatingLabelText="Phone Number" />
                   </div>
                   <div className="col-xs-10 ">
-                    <TagsInput value={contact.get('tags')} onChange={this._handleTagsChange.bind(this)} title="Tags" />
+                    <SelectField
+                        floatingLabelText="Status"
+                        floatingLabelStyle={style.floatLabel}
+                        fullWidth
+                        style={style.select}
+                        onChange={this._handleStatusSelectValueChange.bind(this)}
+                        hintText={''}
+                        value={contact.get('status')}
+                    >
+                      {statuses.map((status) => {
+                        return (
+                          <MenuItem
+                              value={status}
+                              primaryText={status}
+                          />
+                        );
+                      })}
+                    </SelectField>
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TagsInput value={tags} onChange={this._handleTagsChange.bind(this)} title="Tags" />
                   </div>
                   <div className="col-xs-10 ">
                     <TextField

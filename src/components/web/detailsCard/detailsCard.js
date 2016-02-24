@@ -113,6 +113,9 @@ let style = {
     borderBottom: '1px solid #CCC',
     borderTop: '1px solid #CCC',
   },
+  actionsRow:{
+    borderTop: '1px solid #CCC',
+  },
   cardmedia: {
     maxHeight: '250px',
     overflow: 'hidden',
@@ -274,24 +277,25 @@ class DetailsCard extends React.Component {
           ) : (<div></div>)}
 
         </div>
+        {this.props.showStats?(
+          <CardActions className="row center-xs" style={styleNew.statsRow}>
+            {stats.map((stat, key) => {
 
-        <CardActions className="row center-xs" style={styleNew.statsRow}>
-          {stats.map((stat, key) => {
-
-            return (
-              <div className="col-xs" style={styleNew.statsBox} key={key}>
-                <div className="box">
-                  <FlatButton style={styleNew.actionButton}>
-                    <p style={styleNew.statTitle}>{stat.title}</p>
-                    <p style={styleNew.statNumber}>{stat.value}</p>
-                  </FlatButton>
+              return (
+                <div className="col-xs" style={styleNew.statsBox} key={key}>
+                  <div className="box">
+                    <FlatButton style={styleNew.actionButton}>
+                      <p style={styleNew.statTitle}>{stat.title}</p>
+                      <p style={styleNew.statNumber}>{stat.value}</p>
+                    </FlatButton>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </CardActions>
+              );
+            })}
+          </CardActions>
+        ):(<span></span>)}
 
-        <CardActions className="row center-xs">
+        <CardActions className="row center-xs" style={styleNew.actionsRow}>
           {actions.map((action, key) => {
 
             let disabled = false;
@@ -336,6 +340,7 @@ DetailsCard.propTypes = {
   floatActionOnTap: React.PropTypes.func,
   mainColor: React.PropTypes.string,
   stats: React.PropTypes.array,
+  showStats: React.PropTypes.boolean,
   subtitle: React.PropTypes.string.isRequired,
   subtitleAvatar: React.PropTypes.object,
   subtitle2: React.PropTypes.string,

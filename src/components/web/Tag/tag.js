@@ -17,7 +17,7 @@ const style = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     textAlign: 'center',
-    marginBottom: '0px',
+    marginBottom: '8px',
   },
 };
 

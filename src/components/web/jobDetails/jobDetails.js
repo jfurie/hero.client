@@ -4,7 +4,7 @@ import { pushState } from 'redux-router';
 import marked from 'marked';
 
 import { List } from 'material-ui';
-
+import defaultImage from './default-job.jpg';
 import { Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
@@ -128,7 +128,7 @@ export default class JobDetails extends React.Component {
     if (job) {
 
       // get cover
-      let cover = ((job.get('image')) ? (job.get('image').get('item')) : ('/img/default-job.jpg'));
+      let cover = ((job.get('image')) ? (job.get('image').get('item')) : (defaultImage));
 
       // markdown to html
       let description = job.get('description') ? marked(job.get('description')) : '';
@@ -302,7 +302,7 @@ export default class JobDetails extends React.Component {
 
     return (
       <div>
-        <Header transparent goBack={this.goBack.bind(this)} iconRight={
+        <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
           <IconMenu iconButtonElement={
             <IconButton iconClassName="material-icons">more_vert</IconButton>
           }>

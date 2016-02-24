@@ -43,6 +43,7 @@ const style = {
   },
   avatar: {
     margin: '8px 17px 8px 0px',
+    marginLeft:'-6px',
   },
 };
 
@@ -304,19 +305,19 @@ export default class ContactDetails extends React.Component {
 
     let stats = [{
       title: 'Applied',
-      value: 12,
+      value: 0,
     }, {
       title: 'Submitted',
-      value: 4,
+      value: 0,
     }, {
       title: 'Accepted',
-      value: 4,
+      value: 0,
     }, {
       title: 'Interviews',
-      value: 5,
+      value: 0,
     }, {
       title: 'Offers',
-      value: 1,
+      value: 0,
     }, {
       title: 'Jobs',
       value: 0,
@@ -367,6 +368,14 @@ export default class ContactDetails extends React.Component {
     // workAuthorization
     let workAuthorization = contact.get('workAuthorization') || null;
 
+    let tags = contact.get('tags');
+    if(tags){
+      tags = tags.toArray();
+      if(tags.indexOf(contact.get('status') <=-1)){
+        tags.push(contact.get('status'));
+      }
+    }
+
     return (
       <DetailsCard
           title={common.displayName}
@@ -377,10 +386,11 @@ export default class ContactDetails extends React.Component {
           mainColor={Styles.Colors.white}
           actions={actions}
           stats={stats}
+          showStats={false}
           avatar={<img style={{width: '95px', height:'95px', borderRadius:'0px'}} src={common.avatarUrl}/>}
           floatActionOnTap={this._handleTapOnChat.bind(this)}
           floatActionContent={<CommunicationChat color={Styles.Colors.black}/>}
-          topTags={contact.get('tags') || []}
+          topTags={tags || []}
           extraLeftLine={extraLeftLine}
           extraRightLine={workAuthorization}
           floatActionLabel={'Text'}
@@ -423,11 +433,11 @@ export default class ContactDetails extends React.Component {
     let phone = null;
     let addressLine = null;
     let source = null;
-
+    let website = null;
     if (contact) {
       email = contact.get('email') || null;
       phone = contact.get('phone') || null;
-
+      website = contact.get('website') || null;
       if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
         source = contact.get('sourceInfo').get('referrer');
       }
@@ -485,6 +495,52 @@ export default class ContactDetails extends React.Component {
           {this.renderCandidateDetailsCard(contact)}
           <CustomTabsSwipe startingTab={startingTab} onChange={this.onTabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
             <div>
+
+              <List style={{position: 'relative', top: '3px'}}>
+                <div>
+
+                  <ListItem
+                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
+                      primaryText={addressLine || 'Somewhere, USA'}
+                  />
+
+                  {(email) ? (
+                    <div>
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
+                          primaryText={email}
+                      />
+                    </div>
+                  ) : (null)}
+
+                  {(phone) ? (
+                    <div>
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
+                          primaryText={phone}
+                      />
+                    </div>
+                  ) : (null)}
+
+                  {(source) ? (
+                    <div>
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                          primaryText={source}
+                      />
+                    </div>
+                  ) : (null)}
+                  {(website) ? (
+                    <div>
+                      <ListItem
+                          leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
+                          primaryText={website}
+                      />
+                    </div>
+                  ) : (null)}
+
+                </div>
+              </List>
               <Card style={style.card}>
 
                 {(description.length > 0) ? (
@@ -521,54 +577,6 @@ export default class ContactDetails extends React.Component {
 
 
               </Card>
-              <List style={{position: 'relative', top: '3px'}}>
-                <div>
-
-                  <ListItem
-                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                      primaryText={addressLine || 'Somewhere, USA'}
-                      secondaryText={<p>location</p>}
-                      secondaryTextLines={1}
-                  />
-
-                  {(email) ? (
-                    <div>
-                      <Divider inset />
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
-                          primaryText={email}
-                          secondaryText={<p>email</p>}
-                          secondaryTextLines={1}
-                      />
-                    </div>
-                  ) : (null)}
-
-                  {(phone) ? (
-                    <div>
-                      <Divider inset />
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                          primaryText={phone}
-                          secondaryText={<p>phone</p>}
-                          secondaryTextLines={1}
-                      />
-                    </div>
-                  ) : (null)}
-
-                  {(source) ? (
-                    <div>
-                      <Divider inset />
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
-                          primaryText={source}
-                          secondaryText={<p>source</p>}
-                          secondaryTextLines={1}
-                      />
-                    </div>
-                  ) : (null)}
-
-                </div>
-              </List>
             </div>
             <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
               {contact.get('jobs') && contact.get('jobs').map((job, key) => {
