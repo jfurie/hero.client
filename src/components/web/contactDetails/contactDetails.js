@@ -9,7 +9,7 @@ import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar } from '../../../components/web';
 import {
   IconButton, List, ListItem, FontIcon, Avatar,
-  Divider, Styles, IconMenu, MenuItem, CardText, Card,
+  Styles, IconMenu, MenuItem, CardText, Card,
 } from 'material-ui';
 import image from './image';
 function defineContext(props) {
@@ -364,7 +364,7 @@ export default class ContactDetails extends React.Component {
       floatActionLabel:{
         color:Styles.Colors.black
       }
-    }
+    };
     // workAuthorization
     let workAuthorization = contact.get('workAuthorization') || null;
 
