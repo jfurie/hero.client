@@ -6,7 +6,7 @@ import md5 from 'md5';
 import Immutable from 'immutable';
 import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar } from '../../../components/web';
 import {
   IconButton, List, ListItem, FontIcon, Avatar,
   Divider, Styles, IconMenu, MenuItem, CardText, Card,
@@ -208,7 +208,9 @@ export default class ContactDetails extends React.Component {
   // _handleTapOnApplications() {
   //   console.log('_handleTapOnApplications');
   // }
-
+  clickCompany(companyId){
+    this.props.pushState(null, `/clients/${companyId}`);
+  }
   getCommonDetailsCard(contact) {
 
     // build cover from gravatar
@@ -223,6 +225,9 @@ export default class ContactDetails extends React.Component {
 
     // location stuff
     let address = contact.get('location');
+    if(!address){
+      address = contact.get('_address');
+    }
     let city = null;
 
     if (address) {
@@ -240,7 +245,14 @@ export default class ContactDetails extends React.Component {
     if(companies && companies.size >0){
       company =companies.first();
     }
-    
+    let companyName = null;
+    let subtitleAvatar = null;
+    if(company){
+      companyName = company.get('name');
+      let companyId = company.get('id');
+      subtitleAvatar =(<CompanyAvatar onTouchTap={this.clickCompany.bind(this,companyId)} style={{width: '40px'}} url={company.get('website')}/>);
+    }
+    let title = contact.get('title');
 
     // displayName
     let displayName = contact.get('displayName') || null;
@@ -250,6 +262,9 @@ export default class ContactDetails extends React.Component {
       city,
       displayName,
       avatarUrl: `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      companyName,
+      title,
+      subtitleAvatar
     };
   }
 
@@ -355,7 +370,8 @@ export default class ContactDetails extends React.Component {
       <DetailsCard
           title={common.displayName}
           style={style}
-          subtitle={common.city}
+          subtitle={common.companyName}
+          subtitle2={common.title}
           cover={common.cover}
           mainColor={Styles.Colors.white}
           actions={actions}
@@ -367,6 +383,7 @@ export default class ContactDetails extends React.Component {
           extraLeftLine={extraLeftLine}
           extraRightLine={workAuthorization}
           floatActionLabel={'Text'}
+          subtitleAvatar={common.subtitleAvatar}
       />
     );
   }
@@ -416,7 +433,9 @@ export default class ContactDetails extends React.Component {
 
       // location stuff
       let location = contact.get('location');
-
+      if(!location){
+        location = contact.get('_address');
+      }
       if (location) {
         let address = location.get('addressLine') || '';
         let city = location.get('city') || null;
@@ -608,7 +627,7 @@ export default class ContactDetails extends React.Component {
 
     return (
       <div>
-        <Header transparent goBack={this.goBack.bind(this)} iconRight={
+        <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
           <IconMenu iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}>
             <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (

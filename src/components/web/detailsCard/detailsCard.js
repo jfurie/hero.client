@@ -28,28 +28,28 @@ let style = {
   },
   subtitle: {
     color: Styles.Colors.white,
-    fontWeight: 200,
+    fontWeight: 500,
     opacity: 0.5,
-    fontSize: '12px',
+    fontSize: '13px',
   },
   extraLine: {
-    marginTop: '25px',
+    marginTop: '8px',
     marginLeft:'0px',
     marginRight:'0px',
   },
   extraLeftLine: {
     color: Styles.Colors.white,
-    fontWeight: 300,
+    fontWeight: 800,
     fontSize: '15px',
   },
   extraRightLine: {
     color: Styles.Colors.white,
-    fontWeight: 300,
+    fontWeight: 800,
     fontSize: '15px',
   },
   extraCenterLine: {
     color: Styles.Colors.white,
-    fontWeight: 300,
+    fontWeight: 800,
     fontSize: '15px',
   },
   extraLineLeftCol: {
@@ -80,6 +80,17 @@ let style = {
     border: '2px solid white',
     borderBottom: '0px',
     boxShadow: '1px -1px 5px rgba(0, 0, 0, 0.21)',
+  },
+  subtitleAvatarWrap:{
+    position:'relative',
+    paddingLeft: '48px',
+    marginTop:'8px',
+    minHeight:'40px'
+  },
+  subtitleAvatar:{
+    position:'absolute',
+    top:'0px',
+    left:'0px',
   },
   actionButton: {
     minWidth: '0px',
@@ -151,6 +162,28 @@ class DetailsCard extends React.Component {
     }
   }
 
+  renderSubtitles(subtitle1,subtitle2,avatar, styleNew){
+    if(!avatar){
+      return (
+        <div>
+          <p style={styleNew.subtitle}>{subtitle1}</p>
+          <p style={styleNew.subtitle}>{subtitle2}</p>
+        </div>
+      );
+    } else {
+      return (
+        <div style={styleNew.subtitleAvatarWrap}>
+          <div style={styleNew.subtitleAvatar}>
+            {avatar}
+          </div>
+          <div>
+            <p style={styleNew.subtitle}>{this.props.subtitle}</p>
+            <p style={styleNew.subtitle}>{this.props.subtitle2}</p>
+          </div>
+        </div>
+      );
+    }
+  }
   render() {
     let styleNew = _.merge({},style,this.props.style);
     let { actions, topTags, stats } = this.props;
@@ -187,7 +220,7 @@ class DetailsCard extends React.Component {
               <div className="box">
                 {topTags.map((tag, key) => {
                   return (
-                    <Tag value={tag} key={key}/>
+                    <Tag active={true} value={tag} key={key}/>
                   );
                 })}
               </div>
@@ -206,8 +239,7 @@ class DetailsCard extends React.Component {
             <div className="col-xs-9" style={styleNew.titlesub}>
               <div className="box">
                 <h2 style={styleNew.title}>{this.props.title}</h2>
-                <p style={styleNew.subtitle}>{this.props.subtitle}</p>
-                <p style={styleNew.subtitle}>{this.props.subtitle2}</p>
+                {this.renderSubtitles(this.props.subtitle,this.props.subtitle2,this.props.subtitleAvatar,styleNew)}
               </div>
             </div>
           </div>
@@ -305,6 +337,7 @@ DetailsCard.propTypes = {
   mainColor: React.PropTypes.string,
   stats: React.PropTypes.array,
   subtitle: React.PropTypes.string.isRequired,
+  subtitleAvatar: React.PropTypes.object,
   subtitle2: React.PropTypes.string,
   title: React.PropTypes.string.isRequired,
   topTags: React.PropTypes.object,

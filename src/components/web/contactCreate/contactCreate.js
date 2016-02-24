@@ -6,6 +6,7 @@ import {
 } from 'material-ui';
 import {
  Location,
+ TagsInput
 } from '../';
 import validateContact from '../../../validators/contact';
 
@@ -122,6 +123,18 @@ export default class ContactCreate extends React.Component {
     this.props.onContactChange(newContact);
   }
 
+  _handleTagsChange(tags){
+    let newContact = this.props.contact;
+
+    if (tags) {
+      newContact = newContact.set('tags',tags);
+    } else {
+      newContact = newContact.delete('tags');
+    }
+
+    this.props.onContactChange(newContact);
+  }
+
   _handleCompanySelectValueChange(event, index, value) {
     this.props.onCompanyChange(value);
   }
@@ -213,6 +226,15 @@ export default class ContactCreate extends React.Component {
                   <div className="col-xs-10 ">
                     <TextField
                         style={style.textField}
+                        errorText={contact.get('errors') && contact.get('errors').title || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'title')}
+                        value={contact.get('title')}
+                        floatingLabelText="Title" />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
                         errorText={contact.get('errors') && contact.get('errors').email || ''}
                         errorStyle={style.error}
                         onChange={(e) => this._handleChange.bind(this)(e, 'email')}
@@ -227,6 +249,9 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'phone')}
                         value={contact.get('phone')}
                         floatingLabelText="Phone Number" />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TagsInput value={contact.get('tags')} onChange={this._handleTagsChange.bind(this)} title="Tags" />
                   </div>
                   <div className="col-xs-10 ">
                     <TextField
