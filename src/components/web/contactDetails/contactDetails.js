@@ -73,7 +73,8 @@ export default class ContactDetails extends React.Component {
   }
 
   editContactModalOpen(){
-    console.log('yo!');
+    //console.log('yo!');
+    this.props.pushState(null,`/contacts/${this.props.contact.get('id')}/create`);
   }
 
   goBack() {
