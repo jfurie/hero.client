@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar, IconButton } from 'material-ui';
 import { Gravatar, Tag, FavoriteButton, Stars, PhoneButton, SmsButton, EmailButton} from '../../../components/web';
 import md5 from 'md5';
@@ -142,7 +141,7 @@ let style = {
   },
 };
 
-export default class ContactListItem extends React.Component {
+export default class JobApplicantListItem extends React.Component {
   constructor(props){
     super(props);
   }
@@ -181,9 +180,21 @@ export default class ContactListItem extends React.Component {
     }
   }
 
-  vet() {
+  _onTouchTapCheck() {
     let {contact} = this.props;
-    alert(contact.get('displayName'));
+
+    if (contact.get('isVetted')) {
+      this.props.unvetContact(contact);
+    }
+    else {
+      this.props.vetContact(contact);
+    }
+  }
+
+  _onTouchTapDelete() {
+    let {contact} = this.props;
+
+    this.props.deleteContact(contact);
   }
 
   renderBasic() {
@@ -195,7 +206,7 @@ export default class ContactListItem extends React.Component {
       emailHash = md5(contact.get('email'));
     }
 
-    let avatarSrc = `http://www.gravatar.com/avatar/${emailHash}?d=blank`;
+    let avatarSrc = `http://www.gravatar.com/avatar/${emailHash}?d=mm`;
 
     return (
       <div style={style.cardBasic.layout}>
@@ -263,27 +274,6 @@ export default class ContactListItem extends React.Component {
 
   render(){
     let {contact,type} = this.props;
-
-    let candidates = contact.get('candidates');
-    candidates = candidates || new Immutable.List();
-    let peopleList = [];
-
-    let limit = candidates.count();
-
-    if (candidates.count() > 4) {
-      limit = 2;
-    }
-
-    candidates.forEach(function(c, key) {
-      if (key < limit) {
-        peopleList.push(<Gravatar style={style.gravatar} key={key} email={c.get('email')} status={'notset'}/>);
-      }
-    });
-
-    // add a + circle if needed
-    if (limit < candidates.count()) {
-      peopleList.push(<Avatar style={style.plusAvatar} key={limit} color="#FF1564" backgroundColor={Styles.Colors.grey300}>+{candidates.count() - limit}</Avatar>);
-    }
 
     let location = contact.get('location') && contact.get('location').get('city') ? (
       <span>
@@ -377,10 +367,10 @@ export default class ContactListItem extends React.Component {
             <FavoriteButton isFavorited={contact.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
           </div>
           <div style={{marginRight: 0}}>
-          <IconButton iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Delete">
+          <IconButton onTouchTap={this._onTouchTapDelete.bind(this)} iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Delete">
             <FontIcon className="material-icons">delete</FontIcon>
           </IconButton>
-          <IconButton onTouchTap={this.vet.bind(this)} iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Check">
+          <IconButton onTouchTap={this._onTouchTapCheck.bind(this)} iconStyle={{color:contact.get('isVetted') ? Styles.Colors.green500 : Styles.Colors.grey600}} tooltipPosition="top-center" tooltip={contact.get('isVetted') ? 'Vetted' : 'Vet'}>
             <FontIcon className="material-icons">check</FontIcon>
           </IconButton>
           <IconButton iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="More">
