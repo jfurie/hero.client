@@ -96,4 +96,4 @@ Tag.propTypes = {
 };
 Tag.defaultProps = {
   active:true
-}
+};
