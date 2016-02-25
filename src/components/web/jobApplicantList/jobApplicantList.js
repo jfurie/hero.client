@@ -212,12 +212,12 @@ class JobApplicantList extends React.Component {
     switch(this.state.selectedFilter) {
     case 'vetted':
       filteredCandidates = this.props.candidates.filter(x => {
-        return x.get('contact').get('isVetted') == true;
+        return x.get('contact').get('isVetted');
       });
       break;
     case 'unvetted':
       filteredCandidates = this.props.candidates.filter(x => {
-        return x.get('contact').get('isVetted') == false;
+        return !x.get('contact').get('isVetted');
       });
       break;
     default:
