@@ -39,7 +39,6 @@ class JobApplicantList extends React.Component {
       selecting: false,
       openDeleteDialog: false,
       openDeleteAllDialog: false,
-      filteredCandidates: this.props.candidates,
       selectedFilter: 'none',
     };
   }
@@ -184,25 +183,18 @@ class JobApplicantList extends React.Component {
   filterShowAll() {
     this.setState({
       selectedFilter: 'none',
-      filteredCandidates: this.props.candidates,
     });
   }
 
   filterShowVetted() {
     this.setState({
       selectedFilter: 'vetted',
-      filteredCandidates: this.props.candidates.filter(x => {
-        return x.get('contact').get('isVetted') == true;
-      }),
     });
   }
 
   filterShowUnvetted() {
     this.setState({
       selectedFilter: 'unvetted',
-      filteredCandidates: this.props.candidates.filter(x => {
-        return x.get('contact').get('isVetted') == false;
-      }),
     });
   }
 
@@ -214,6 +206,23 @@ class JobApplicantList extends React.Component {
       return x.get('contact').get('isVetted');
     }).length;
     let unvettedCount = totalCount - vettedCount;
+
+    let filteredCandidates;
+
+    switch(this.state.selectedFilter) {
+    case 'vetted':
+      filteredCandidates = this.props.candidates.filter(x => {
+        return x.get('contact').get('isVetted') == true;
+      });
+      break;
+    case 'unvetted':
+      filteredCandidates = this.props.candidates.filter(x => {
+        return x.get('contact').get('isVetted') == false;
+      });
+      break;
+    default:
+      filteredCandidates = candidates;
+    }
 
     return (
       <div>
@@ -279,7 +288,7 @@ class JobApplicantList extends React.Component {
         </div>
       </Paper>
       <List style={{backgroundColor: 'transparent'}}>
-          {this.state.filteredCandidates.map((candidate, key) => {
+          {filteredCandidates.map((candidate, key) => {
             let selected = this.state.selectedContacts.has(candidate.get('contactId'));
             return (
               <JobApplicantListItem
