@@ -2,11 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
 import { replaceNoteLocal } from '../../../modules/notes/index';
+import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
 import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal } from '../../../components/web';
 import {
   IconButton, List, ListItem, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
@@ -48,7 +49,7 @@ const style = {
 };
 
 @connect(() => (
-{}), {pushState, replaceNoteLocal,replaceState})
+{}), {pushState, replaceNoteLocal,replaceState, invite})
 export default class ContactDetails extends React.Component {
 
   constructor(props){
@@ -97,7 +98,9 @@ export default class ContactDetails extends React.Component {
   }
 
   inviteToHero() {
+    this.props.invite(this.props.contact.get('email'), window.location.origin + '/invited');
     this.setState({confirmOpen: true});
+    this.handleConfirmInviteGo();
   }
   _guid() {
     function s4() {
@@ -671,7 +674,9 @@ export default class ContactDetails extends React.Component {
         }
         />
         {this.renderContent(contact)}
+        <InviteSuccessModal email={this.props.contact && this.props.contact.get('email')} ref={'inviteSuccessModal'}></InviteSuccessModal>
       </div>
+
     );
   }
 }

@@ -43,10 +43,10 @@ class Layout extends React.Component {
       });
     }
     if (nextProps.user && !this.props.user)
-      this.props.getUserContact(this.props.user.id);
+      this.props.getUserContact(nextProps.user.id);
 
     if (nextProps.authToken && !this.props.authToken)
-      this.props.getUserStats(this.props.authToken.accountInfo.account.id, this.props.user.id);
+      this.props.getUserStats(nextProps.authToken.accountInfo.account.id, nextProps.user.id);
   }
 
   handleTouchTap (e) {
