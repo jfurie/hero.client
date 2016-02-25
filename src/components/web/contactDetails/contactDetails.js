@@ -373,10 +373,13 @@ export default class ContactDetails extends React.Component {
     let tags = contact.get('tags');
     if(tags){
       tags = tags.toArray();
-      if(tags.indexOf(contact.get('status') <=-1)){
-        tags.push(contact.get('status'));
-      }
+    } else {
+      tags = [];
     }
+    if(tags.indexOf(contact.get('status') <=-1)){
+      tags.push(contact.get('status'));
+    }
+
 
     return (
       <DetailsCard
@@ -502,7 +505,7 @@ export default class ContactDetails extends React.Component {
         <div>
           {this.renderCandidateDetailsCard(contact)}
           <CustomTabsSwipe startingTab={startingTab} onChange={this.onTabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
-            <div>
+            <div style={{minHeight:'800px'}}>
 
               <List style={{position: 'relative', top: '3px'}}>
                 <div>
@@ -595,23 +598,27 @@ export default class ContactDetails extends React.Component {
 
               </Card>
             </div>
-            <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
-              {contact.get('jobs') && contact.get('jobs').map((job, key) => {
-                return (
-                  <div key={key}>
-                    <JobListItem
-                        onJobClick={this._showJobDetails.bind(this)}
-                        job={job}
-                        favoriteJob={this.props.favoriteJob.bind(this)}
-                        unfavoriteJob={this.props.unfavoriteJob.bind(this)}
-                    />
-                  </div>
-                );
-              })}
-            </List>
-            <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
-              <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
-            </List>
+            <div style={{minHeight:'800px'}}>
+              <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
+                {contact.get('jobs') && contact.get('jobs').map((job, key) => {
+                  return (
+                    <div key={key}>
+                      <JobListItem
+                          onJobClick={this._showJobDetails.bind(this)}
+                          job={job}
+                          favoriteJob={this.props.favoriteJob.bind(this)}
+                          unfavoriteJob={this.props.unfavoriteJob.bind(this)}
+                      />
+                    </div>
+                  );
+                })}
+              </List>
+            </div>
+            <div style={{minHeight:'800px'}}>
+              <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
+                <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
+              </List>
+            </div>
           </CustomTabsSwipe>
         </div>
       );
@@ -625,7 +632,7 @@ export default class ContactDetails extends React.Component {
   render() {
 
     //let { contact } = this.props;
-    let contentHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    //let contentHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     let { isContactContext, isCandidateContext } = this.state;
 
     let invited = false;
@@ -663,9 +670,7 @@ export default class ContactDetails extends React.Component {
           </IconMenu>
         }
         />
-        <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
-          {this.renderContent(contact)}
-        </div>
+        {this.renderContent(contact)}
       </div>
     );
   }

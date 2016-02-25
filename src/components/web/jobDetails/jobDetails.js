@@ -264,7 +264,7 @@ export default class JobDetails extends React.Component {
                 />)}
               </CardText>
             </Card>
-            <div>
+            <div style={{minHeight:'800px'}}>
               <Card>
                 <CardText >
                   <div className="description">
@@ -273,7 +273,7 @@ export default class JobDetails extends React.Component {
                 </CardText>
               </Card>
             </div>
-            <div>
+            <div style={{minHeight:'800px'}}>
               <JobApplicantList
                   candidates={job.get('candidates')}
                   favoriteContact={this.props.favoriteContact.bind(this)}
@@ -297,9 +297,6 @@ export default class JobDetails extends React.Component {
   render() {
 
     let { job } = this.props;
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let contentHeight = clientHeight;
-
     return (
       <div>
         <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
@@ -312,9 +309,7 @@ export default class JobDetails extends React.Component {
           </IconMenu>
         }
         />
-        <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
-          {this.renderContent(job)}
-        </div>
+        {this.renderContent(job)}
       </div>
     );
   }
