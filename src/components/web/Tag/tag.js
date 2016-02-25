@@ -94,3 +94,6 @@ Tag.propTypes = {
   onTouchTap: React.PropTypes.func,
   value: React.PropTypes.string.isRequired,
 };
+Tag.defaultProps = {
+  active:true
+};
