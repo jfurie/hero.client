@@ -1,7 +1,7 @@
 import Immutable from 'immutable';
 import * as companyConstants from './companies/constants';
 import * as jobConstants from './jobs/constants';
-import { createCandidateFavorite, deleteCandidateFavorite } from './candidates';
+import { createCandidateFavorite, deleteCandidateFavorite, saveCandidateByContactResult } from './candidates';
 import { saveJobsByContactResult } from './jobs';
 const GET_CONTACTS = 'hero.client/contacts/GET_CONTACTS';
 const GET_CONTACTS_SUCCESS = 'hero.client/contacts/GET_CONTACTS_SUCCESS';
@@ -490,13 +490,19 @@ export function editContact(contact) {
   if(id && id.indexOf('tmp') > -1){
     contact = contact.remove('id');
   }
-  return {
-    id,
-    types: [EDIT_CONTACT, EDIT_CONTACT_SUCCESS, EDIT_CONTACT_FAIL],
-    promise: (client, auth) => client.api.put(`/contacts/${id}`, {
-      authToken: auth.authToken,
-      data:contact,
-    }),
+
+  return (dispatch) => {
+    dispatch({
+      id,
+      types: [EDIT_CONTACT, EDIT_CONTACT_SUCCESS, EDIT_CONTACT_FAIL],
+      promise: (client, auth) => client.api.put(`/contacts/${id}`, {
+        authToken: auth.authToken,
+        data:contact,
+      }).then(function (contact) {
+        dispatch(saveCandidateByContactResult(contact));
+        return contact;
+      }),
+    });
   };
 }
 

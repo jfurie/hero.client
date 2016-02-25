@@ -1,6 +1,7 @@
 import superagent from 'superagent';
 import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
+import { saveCandidatesByJobResult } from '../candidates';
 
 export function getJobsByCompany(companyId){
 
@@ -252,6 +253,9 @@ export function getJobDetail(id) {
           dispatch(saveNotesByJobResult(job.notes));
         }
 
+        if (job.candidates && job.candidates.length > 0) {
+          dispatch(saveCandidatesByJobResult(job.candidates));
+        }
         return job;
       }),
     });

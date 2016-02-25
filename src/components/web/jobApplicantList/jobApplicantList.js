@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState } from 'redux-router';
-import { Paper, List, FontIcon, IconButton, Styles } from 'material-ui';
+import { Paper, List, FontIcon, IconButton, Styles, Dialog, FlatButton } from 'material-ui';
 import { JobApplicantListItem } from '../../../components/web';
 
 const style = {
@@ -35,33 +35,35 @@ class JobApplicantList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedItems: new Immutable.Map(),
+      selectedContacts: new Immutable.Map(),
       selecting: false,
+      openDeleteDialog: false,
+      openDeleteAllDialog: false,
     };
   }
 
   select(contact) {
     let id = contact.get('id');
-    let selectedItems;
+    let selectedContacts;
 
-    if (this.state.selectedItems.has(id)) {
-      selectedItems = this.state.selectedItems.delete(id);
+    if (this.state.selectedContacts.has(id)) {
+      selectedContacts = this.state.selectedContacts.delete(id);
     }
     else {
       let contactMap = {};
       contactMap[id] = contact;
-      selectedItems = this.state.selectedItems.mergeDeep(contactMap);
+      selectedContacts = this.state.selectedContacts.mergeDeep(contactMap);
     }
 
-    if (selectedItems.size > 0) {
+    if (selectedContacts.size > 0) {
       this.setState({
-        selectedItems,
+        selectedContacts,
         selecting: true,
       });
     }
     else {
       this.setState({
-        selectedItems,
+        selectedContacts,
         selecting: false,
       });
     }
@@ -69,13 +71,23 @@ class JobApplicantList extends React.Component {
 
   unselectAll() {
     this.setState({
-      selectedItems: new Immutable.Map(),
+      selectedContacts: this.state.selectedContacts.clear(),
       selecting: false,
     });
   }
 
-  vetSelected() {
-    alert(this.state.selectedItems.size + ' vetted');
+  vetAllSelected() {
+    if (this.props.editContact) {
+      this.state.selectedContacts.forEach(x => {
+        x = x.set('isVetted', true);
+        this.props.editContact(x);
+      });
+    }
+
+    this.setState({
+      selectedContacts: this.state.selectedContacts.clear(),
+      selecting: false,
+    });
   }
 
   openDetails(candidate) {
@@ -94,8 +106,87 @@ class JobApplicantList extends React.Component {
     }
   }
 
+  vetContact(contact) {
+    if (!contact.get('isVetted') && this.props.editContact) {
+      contact = contact.set('isVetted', true);
+      this.props.editContact(contact);
+    }
+  }
+
+  unvetContact(contact) {
+    if (contact.get('isVetted') && this.props.editContact) {
+      contact = contact.set('isVetted', false);
+      this.props.editContact(contact);
+    }
+  }
+
+  confirmDeleteCandidate(contact) {
+    let candidate = this.props.candidates.filter(x => {
+      return x.get('contactId') == contact.get('id');
+    })[0];
+
+    this.setState({
+      candidatePendingDelete: candidate,
+      openDeleteDialog: true,
+    });
+  }
+
+  deleteCandidate() {
+    if (this.props.deleteCandidate) {
+      this.props.deleteCandidate(this.state.candidatePendingDelete);
+    }
+
+    this.setState({
+      candidatePendingDelete: null,
+      openDeleteDialog: false,
+    });
+  }
+
+  closeDeleteDialog() {
+    this.setState({
+      candidatePendingDelete: null,
+      openDeleteDialog: false,
+    });
+  }
+
+  confirmDeleteAllCandidates() {
+    this.setState({
+      openDeleteAllDialog: true,
+    });
+  }
+
+  deleteAllCandidates() {
+    let candidates = this.props.candidates.filter(x => {
+      return this.state.selectedContacts.has(x.get('contactId')) > -1;
+    });
+
+    if (this.props.deleteCandidate) {
+      candidates.forEach(x => {
+        this.props.deleteCandidate(x);
+      });
+    }
+
+    this.setState({
+      selectedContacts: this.state.selectedContacts.clear(),
+      selecting: false,
+      openDeleteAllDialog: false,
+    });
+  }
+
+  closeDeleteAllDialog() {
+    this.setState({
+      openDeleteAllDialog: false,
+    });
+  }
+
   render() {
     let { candidates } = this.props;
+
+    let totalCount = candidates.length;
+    let vettedCount = candidates.filter(x => {
+      return x.get('contact').get('isVetted');
+    }).length;
+    let unvettedCount = totalCount - vettedCount;
 
     return (
       <div>
@@ -108,7 +199,7 @@ class JobApplicantList extends React.Component {
                 <IconButton onTouchTap={this.unselectAll.bind(this)} iconStyle={style.bar.icon}>
                   <FontIcon className="material-icons">keyboard_arrow_left</FontIcon>
                 </IconButton>
-                {this.state.selectedItems.size}
+                {this.state.selectedContacts.size}
               </div>
             </div>
             :
@@ -117,19 +208,19 @@ class JobApplicantList extends React.Component {
                 <IconButton iconStyle={style.bar.icon}>
                   <FontIcon className="material-icons">assignment_ind</FontIcon>
                 </IconButton>
-                {0}
+                {totalCount}
               </div>
               <div style={style.bar.stats.item}>
                 <IconButton iconStyle={style.bar.icon}>
                   <FontIcon className="material-icons">assignment_late</FontIcon>
                 </IconButton>
-                {0}
+                {unvettedCount}
               </div>
               <div style={style.bar.stats.item}>
                 <IconButton iconStyle={style.bar.icon}>
                   <FontIcon className="material-icons">assignment_turned_in</FontIcon>
                 </IconButton>
-                {0}
+                {vettedCount}
               </div>
             </div>
           }
@@ -140,12 +231,12 @@ class JobApplicantList extends React.Component {
             this.state.selecting ?
             <div style={{display:'inline-block'}}>
               <div style={style.bar.actions.item}>
-                <IconButton iconStyle={style.bar.icon} tooltipPosition="top-center" tooltip="Delete">
+                <IconButton onTouchTap={this.confirmDeleteAllCandidates.bind(this)} iconStyle={style.bar.icon} tooltipPosition="top-center" tooltip="Delete">
                   <FontIcon className="material-icons">delete</FontIcon>
                 </IconButton>
               </div>
               <div style={style.bar.actions.item}>
-                <IconButton onTouchTap={this.vetSelected.bind(this)} iconStyle={style.bar.icon} tooltipPosition="top-center" tooltip="Check">
+                <IconButton onTouchTap={this.vetAllSelected.bind(this)} iconStyle={style.bar.icon} tooltipPosition="top-center" tooltip="Check">
                   <FontIcon className="material-icons">check</FontIcon>
                 </IconButton>
               </div>
@@ -162,7 +253,7 @@ class JobApplicantList extends React.Component {
       </Paper>
       <List style={{backgroundColor: 'transparent'}}>
           {candidates.map((candidate, key) => {
-            let selected = this.state.selectedItems.has(candidate.get('contactId'));
+            let selected = this.state.selectedContacts.has(candidate.get('contactId'));
             return (
               <JobApplicantListItem
                   selected={selected}
@@ -174,10 +265,55 @@ class JobApplicantList extends React.Component {
                   onContactClick={this.openDetails.bind(this)}
                   favoriteContact={this.favoriteContact.bind(this)}
                   unfavoriteContact={this.unfavoriteContact.bind(this)}
+                  vetContact={this.vetContact.bind(this)}
+                  unvetContact={this.unvetContact.bind(this)}
+                  deleteContact={this.confirmDeleteCandidate.bind(this)}
               />
             );
           })}
       </List>
+      <Dialog
+          title="Please Confirm"
+          actions=
+          {[
+            <FlatButton
+                label="No"
+                secondary={true}
+                onTouchTap={this.closeDeleteDialog.bind(this)}
+            />,
+            <FlatButton
+                label="Yes"
+                primary={true}
+                onTouchTap={this.deleteCandidate.bind(this)}
+            />,
+          ]}
+          modal={true}
+          open={this.state.openDeleteDialog}
+          onRequestClose={this.closeDeleteDialog.bind(this)}
+      >
+          Are you sure you want to remove {this.state.candidatePendingDelete ? this.state.candidatePendingDelete.get('contact').get('displayName') : 'this candidate'} from this job?
+        </Dialog>
+        <Dialog
+            title="Please Confirm"
+            actions=
+            {[
+              <FlatButton
+                  label="No"
+                  secondary={true}
+                  onTouchTap={this.closeDeleteAllDialog.bind(this)}
+              />,
+              <FlatButton
+                  label="Yes"
+                  primary={true}
+                  onTouchTap={this.deleteAllCandidates.bind(this)}
+              />,
+            ]}
+            modal={true}
+            open={this.state.openDeleteAllDialog}
+            onRequestClose={this.closeDeleteAllDialog.bind(this)}
+        >
+            Are you sure you want to remove {this.state.selectedContacts.size} candidate{this.state.selectedContacts.size == 1 ? '' : 's'} from this job?
+          </Dialog>
       </div>
     );
   }
