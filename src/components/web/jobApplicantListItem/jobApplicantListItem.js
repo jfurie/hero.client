@@ -261,10 +261,16 @@ export default class JobApplicantListItem extends React.Component {
       isHot = contact.get('tags').indexOf('HOT!') > -1;
     }
 
+    let isVetted = false;
+
+    if (contact.get('isVetted')) {
+      isVetted = true;
+    }
+
     return (
       <div>
         <div className="row" style={style.badgeWrap}>
-          <Tag value={'Vetted'} active={contact.get('isVetted')} />
+          <Tag value={'Vetted'} active={isVetted} />
           <Tag value={'Active'} active={contact.get('isActive')} />
           <Tag value={'HOT!'} active={isHot} />
         </div>
