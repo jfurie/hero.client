@@ -22,6 +22,10 @@ export default class Stars extends React.Component {
     return number;
   }
   render(){
+    let display = false;
+    if(this.props.score){
+      display = true;
+    }
     let currentScore = this.score(this.props.score);
     var halfStars = 0;
     var fullStars = 0;
@@ -37,14 +41,16 @@ export default class Stars extends React.Component {
       }
     }
     let starsArray = [];
-    for(let i=0; i <fullStars;i++){
-      starsArray.push(this.renderStar(key++));
-    }
-    for(let i=0; i <halfStars;i++){
-      starsArray.push(this.renderHalfStar(key++));
-    }
-    for(let i=0; i <emptyStars;i++){
-      starsArray.push(this.renderEmptyStar(key++));
+    if(display){
+      for(let i=0; i <fullStars;i++){
+        starsArray.push(this.renderStar(key++));
+      }
+      for(let i=0; i <halfStars;i++){
+        starsArray.push(this.renderHalfStar(key++));
+      }
+      for(let i=0; i <emptyStars;i++){
+        starsArray.push(this.renderEmptyStar(key++));
+      }
     }
     return (
       <span>{starsArray}</span>

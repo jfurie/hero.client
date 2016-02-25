@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { LeftNav, FontIcon, MenuItem} from 'material-ui';
 import { getUserContact, getUserStats } from '../../modules/users';
-
 //let MenuItem = require('material-ui/lib/menus/menu-item');
 
 import { onNavOpen, onNavClose, toggleNav } from '../../modules/leftNav';
@@ -44,10 +43,10 @@ class Layout extends React.Component {
       });
     }
     if (nextProps.user && !this.props.user)
-      this.props.getUserContact(this.props.user.id);
+      this.props.getUserContact(nextProps.user.id);
 
     if (nextProps.authToken && !this.props.authToken)
-      this.props.getUserStats(this.props.authToken.accountInfo.account.id, this.props.user.id);
+      this.props.getUserStats(nextProps.authToken.accountInfo.account.id, nextProps.user.id);
   }
 
   handleTouchTap (e) {
@@ -135,7 +134,9 @@ class Layout extends React.Component {
         <MenuItem index={2}>
         </MenuItem>
       </LeftNav>
-        {this.props.children}
+        {React.cloneElement(this.props.children, {
+          key: this.props.location.pathname
+        })}
       </div>
     );
   }

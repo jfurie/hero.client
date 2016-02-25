@@ -1,11 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {pushState} from 'redux-router';
 import {AppBar, IconButton, Styles} from 'material-ui';
 import {toggleNav} from '../../../modules/leftNav';
 
 @connect(state => ({
   user: state.auth.user,
-}), { toggleNav })
+}), { toggleNav, pushState })
 class Header extends React.Component {
 
   menuClicked() {
@@ -15,6 +16,9 @@ class Header extends React.Component {
     } else {
       this.props.toggleNav();
     }
+  }
+  homeClicked() {
+    this.props.pushState(null,'/');
   }
 
   render() {
@@ -31,21 +35,28 @@ class Header extends React.Component {
       position: 'fixed',
       backgroundColor: Styles.Colors.grey900,
     };
-
+    let iconStyle = {};
+    iconStyle.color= '#ffffff';
     if (transparent) {
-      style.background = 'none';
+      style.background = 'linear-gradient(to bottom, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%)';
       style.boxShadow = 'none';
+      iconStyle.color= '#ffffff';
     }
 
     //console.log(this.props.history);
-
+    let iconLeft = null;
+    if(this.props.showHome){
+      iconLeft = <span><IconButton iconStyle={iconStyle} onTouchTap={this.menuClicked.bind(this)} iconClassName='material-icons'>{leftIconFont}</IconButton><IconButton iconStyle={iconStyle} onTouchTap={this.homeClicked.bind(this)} iconClassName='material-icons'>home</IconButton></span>;
+    } else {
+      iconLeft = <IconButton onTouchTap={this.menuClicked.bind(this)} iconClassName='material-icons'>{leftIconFont}</IconButton>;
+    }
     return (
       <div>
         <AppBar
           iconElementRight={this.props.iconRight}
           style={style}
           title={this.props.title || ''}
-          iconElementLeft={<IconButton onTouchTap={this.menuClicked.bind(this)} iconClassName='material-icons'>{leftIconFont}</IconButton>}
+          iconElementLeft={iconLeft}
         />
       {transparent?(<div ></div>): (<div style={{height: '64px'}}></div>)}
       </div>

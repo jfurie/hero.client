@@ -13,7 +13,7 @@ import {
   Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
   CompanyNotesList, DetailsCard, CompanyAvatar,
 } from '../../../components/web';
-
+import defaultImage from './default-company.jpg';
 const style = {
   title:{
     color:'rgba(0, 0, 0, 0.87)',
@@ -289,10 +289,10 @@ export default class ClientDetails extends React.Component {
           <DetailsCard
               title={company.get('name')}
               subtitle={company.get('businessType') || 'Software Company'}
-              cover={'/img/default-company.jpg'}
+              cover={defaultImage}
               mainColor={Styles.Colors.deepPurple500}
               actions={actions}
-              avatar={<CompanyAvatar style={{width: '70px'}} url={company.get('website')}/>}
+              avatar={<CompanyAvatar style={{width: '95px'}} url={company.get('website')}/>}
               floatActionOnTap={this._handleDirections.bind(this)}
               floatActionContent={<MapsDirections color={Styles.Colors.deepPurple500}/>}
               floatActionLabel={'Directions'}
@@ -344,6 +344,7 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Company Mission',company.get('productSolution'),
                   <Avatar
+                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">store</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -352,6 +353,7 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Culture',company.get('culture'),
                   <Avatar
+                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">face</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -360,6 +362,7 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Benefits',company.get('benefits'),
                   <Avatar
+                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">redeem</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -368,6 +371,7 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Tech Stack',company.get('techstack'),
                   <Avatar
+                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">storage</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -376,6 +380,7 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Leadership',company.get('leadership'),
                   <Avatar
+                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">stars</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -506,7 +511,7 @@ export default class ClientDetails extends React.Component {
     if(this.props.inline){
       return (
         <div>
-          <Header goBack={this.goBack.bind(this)} iconRight={
+          <Header showHome={true} goBack={this.goBack.bind(this)} iconRight={
             <IconMenu iconButtonElement={<IconButton  iconClassName="material-icons">more_vert</IconButton>}>
               <MenuItem index={0} onTouchTap={this.editClientModalOpen.bind(this)} primaryText="Edit Client" />
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />

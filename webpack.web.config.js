@@ -43,6 +43,10 @@ var original = {
         },
       },
       {
+        test: /\.(png|jpg)$/,
+        loader: 'url'
+      },
+      {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract('style-loader', ['css-loader', 'sass-loader']),
       },

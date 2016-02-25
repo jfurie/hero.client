@@ -17,7 +17,7 @@ const style = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     textAlign: 'center',
-    marginBottom: '10px',
+    marginBottom: '8px',
   },
 };
 
@@ -93,4 +93,7 @@ Tag.propTypes = {
   fixedWidth: React.PropTypes.number,
   onTouchTap: React.PropTypes.func,
   value: React.PropTypes.string.isRequired,
+};
+Tag.defaultProps = {
+  active:true
 };

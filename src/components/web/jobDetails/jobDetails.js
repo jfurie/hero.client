@@ -4,7 +4,7 @@ import { pushState } from 'redux-router';
 import marked from 'marked';
 
 import { List } from 'material-ui';
-
+import defaultImage from './default-job.jpg';
 import { Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
@@ -128,7 +128,7 @@ export default class JobDetails extends React.Component {
     if (job) {
 
       // get cover
-      let cover = ((job.get('image')) ? (job.get('image').get('item')) : ('/img/default-job.jpg'));
+      let cover = ((job.get('image')) ? (job.get('image').get('item')) : (defaultImage));
 
       // markdown to html
       let description = job.get('description') ? marked(job.get('description')) : '';
@@ -230,7 +230,7 @@ export default class JobDetails extends React.Component {
               cover={cover}
               mainColor={Styles.Colors.amber700}
               actions={actions}
-              avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '70px'}} url={companyWebsite}/>}
+              avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '95px'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
               floatActionLabel={'Share'}
@@ -264,7 +264,7 @@ export default class JobDetails extends React.Component {
                 />)}
               </CardText>
             </Card>
-            <div>
+            <div style={{minHeight:'800px'}}>
               <Card>
                 <CardText >
                   <div className="description">
@@ -273,7 +273,7 @@ export default class JobDetails extends React.Component {
                 </CardText>
               </Card>
             </div>
-            <div>
+            <div style={{minHeight:'800px'}}>
               <JobApplicantList
                   candidates={job.get('candidates')}
                   favoriteContact={this.props.favoriteContact.bind(this)}
@@ -299,12 +299,9 @@ export default class JobDetails extends React.Component {
   render() {
 
     let { job } = this.props;
-    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-    let contentHeight = clientHeight;
-
     return (
       <div>
-        <Header transparent goBack={this.goBack.bind(this)} iconRight={
+        <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
           <IconMenu iconButtonElement={
             <IconButton iconClassName="material-icons">more_vert</IconButton>
           }>
@@ -314,9 +311,7 @@ export default class JobDetails extends React.Component {
           </IconMenu>
         }
         />
-        <div style={{height: `${contentHeight}px`, overflowY:'scroll', WebkitOverflowScrolling:'touch'}}>
-          {this.renderContent(job)}
-        </div>
+        {this.renderContent(job)}
       </div>
     );
   }
