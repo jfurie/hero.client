@@ -39,6 +39,8 @@ class JobApplicantList extends React.Component {
       selecting: false,
       openDeleteDialog: false,
       openDeleteAllDialog: false,
+      filteredCandidates: this.props.candidates,
+      selectedFilter: 'none',
     };
   }
 
@@ -179,6 +181,31 @@ class JobApplicantList extends React.Component {
     });
   }
 
+  filterShowAll() {
+    this.setState({
+      selectedFilter: 'none',
+      filteredCandidates: this.props.candidates,
+    });
+  }
+
+  filterShowVetted() {
+    this.setState({
+      selectedFilter: 'vetted',
+      filteredCandidates: this.props.candidates.filter(x => {
+        return x.get('contact').get('isVetted') == true;
+      }),
+    });
+  }
+
+  filterShowUnvetted() {
+    this.setState({
+      selectedFilter: 'unvetted',
+      filteredCandidates: this.props.candidates.filter(x => {
+        return x.get('contact').get('isVetted') == false;
+      }),
+    });
+  }
+
   render() {
     let { candidates } = this.props;
 
@@ -205,22 +232,22 @@ class JobApplicantList extends React.Component {
             :
             <div style={{display:'inline-block'}}>
               <div style={style.bar.stats.item}>
-                <IconButton iconStyle={style.bar.icon}>
+                <IconButton onTouchTap={this.filterShowAll.bind(this)} iconStyle={{color: this.state.selectedFilter == 'none' ? Styles.Colors.blue500 : Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Show All">
                   <FontIcon className="material-icons">assignment_ind</FontIcon>
                 </IconButton>
-                {totalCount}
+                <span style={{color: this.state.selectedFilter == 'none' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>{totalCount}</span>
               </div>
               <div style={style.bar.stats.item}>
-                <IconButton iconStyle={style.bar.icon}>
+                <IconButton onTouchTap={this.filterShowUnvetted.bind(this)} iconStyle={{color: this.state.selectedFilter == 'unvetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Show Unvetted">
                   <FontIcon className="material-icons">assignment_late</FontIcon>
                 </IconButton>
-                {unvettedCount}
+                <span style={{color: this.state.selectedFilter == 'unvetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>{unvettedCount}</span>
               </div>
               <div style={style.bar.stats.item}>
-                <IconButton iconStyle={style.bar.icon}>
+                <IconButton onTouchTap={this.filterShowVetted.bind(this)} iconStyle={{color: this.state.selectedFilter == 'vetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Show Vetted">
                   <FontIcon className="material-icons">assignment_turned_in</FontIcon>
                 </IconButton>
-                {vettedCount}
+                <span style={{color: this.state.selectedFilter == 'vetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>{vettedCount}</span>
               </div>
             </div>
           }
@@ -252,7 +279,7 @@ class JobApplicantList extends React.Component {
         </div>
       </Paper>
       <List style={{backgroundColor: 'transparent'}}>
-          {candidates.map((candidate, key) => {
+          {this.state.filteredCandidates.map((candidate, key) => {
             let selected = this.state.selectedContacts.has(candidate.get('contactId'));
             return (
               <JobApplicantListItem
