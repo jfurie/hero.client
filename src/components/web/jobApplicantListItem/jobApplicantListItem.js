@@ -195,7 +195,7 @@ export default class ContactListItem extends React.Component {
       emailHash = md5(contact.get('email'));
     }
 
-    let avatarSrc = `http://www.gravatar.com/avatar/${emailHash}?d=blank`;
+    let avatarSrc = `http://www.gravatar.com/avatar/${emailHash}?d=mm`;
 
     return (
       <div style={style.cardBasic.layout}>

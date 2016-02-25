@@ -7,7 +7,9 @@ import { JobApplicantListItem } from '../../../components/web';
 
 const style = {
   bar: {
-    padding: '10px 10px 5px 15px',
+    padding: '10px 0 5px 0px',
+    marginLeft: 0,
+    marginRight: 0,
     color: Styles.Colors.grey600,
     stats: {
       item: {
