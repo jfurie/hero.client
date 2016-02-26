@@ -114,10 +114,6 @@ export default class JobEdit extends React.Component {
     this.props.onJobChange(newJob);
   }
 
-  _handleCompanySelectValueChange(event, index, value) {
-    this.props.onCompanyChange(value);
-  }
-
   _handleSubmit(){
     if(this.props.job.get('saving') == true) return;
 
@@ -180,9 +176,9 @@ export default class JobEdit extends React.Component {
     let newJob = this.props.job;
 
     if (payload) {
-      newJob = newJob.set('employmentType',payload);
+      newJob = newJob.set('jobType',payload);
     } else {
-      newJob = newJob.delete('employmentType');
+      newJob = newJob.delete('jobType');
     }
 
     this.props.onJobChange(newJob);
@@ -209,15 +205,13 @@ export default class JobEdit extends React.Component {
   }
 
   _renderContents() {
-    let { job, companies, contacts, heroContacts } = this.props;
+    let { job, contacts, heroContacts } = this.props;
 
     job = job || new Immutable.Map({errors:new Immutable.Map()});
 
     let isCandidate = job.get('isCandidate');
 
     if (isCandidate === undefined) isCandidate = false;
-
-    let companyId = this.props.company ? this.props.company.get('id') : null;
 
     return (
       <div style={{backgroundColor:'#ffffff'}} className="row center-xs">
@@ -229,27 +223,6 @@ export default class JobEdit extends React.Component {
                   <div className="col-xs-12">
                     <Divider style={style.divider} />
                     <div style={style.subheader}>Primary</div>
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <SelectField
-                        floatingLabelText="Company"
-                        floatingLabelStyle={style.floatLabel}
-                        fullWidth
-                        style={style.select}
-                        onChange={this._handleCompanySelectValueChange.bind(this)}
-                        hintText={''}
-                        value={companyId}
-                    >
-                      {companies.map((company, index) => {
-                        return (
-                          <MenuItem
-                              value={index}
-                              primaryText={company.get('name')}
-                          />
-                        );
-                      })}
-                    </SelectField>
                   </div>
 
                   <div className="col-xs-10 ">
@@ -294,7 +267,7 @@ export default class JobEdit extends React.Component {
                   </div>
 
                   <div className="col-xs-10 ">
-                    <SelectField value={job.get('employmentType')} floatingLabelText="Employment Type" fullWidth onChange={this._handleEmploymentTypeValueChange.bind(this)}>
+                    <SelectField value={job.get('jobType')} floatingLabelText="Employment Type" fullWidth onChange={this._handleEmploymentTypeValueChange.bind(this)}>
                       <MenuItem value={'Permanent'} primaryText="Permanent"/>
                       <MenuItem value={'Contract To Hire'}  primaryText="Contract to Hire"/>
                       <MenuItem value={'Contract'} primaryText="Contract"/>
