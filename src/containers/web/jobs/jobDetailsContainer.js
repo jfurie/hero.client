@@ -113,6 +113,7 @@ class JobDetailsPage extends React.Component {
     return (
       <div>
         <JobDetails
+        {...this.props}
         favoriteJob={this.favoriteJob.bind(this)}
         unfavoriteJob={this.unfavoriteJob.bind(this)}
         favoriteContact={this.favoriteContact.bind(this)}

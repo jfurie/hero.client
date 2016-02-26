@@ -56,6 +56,13 @@ class CustomTabsSwipe extends React.Component {
   //     this.props.disableSwipeToOpen();
   //   }
   // }
+  componentWillReceiveProps(newProps){
+    if(newProps.slideIndex){
+      this.setState({
+        slideIndex: newProps.slideIndex,
+      });
+    }
+  }
 
   componentWillUnmount() {
     //this.props.enableSwipeToOpen();
