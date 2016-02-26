@@ -7,7 +7,7 @@ import {
   MenuItem, RaisedButton, Divider, Styles,
 } from 'material-ui';
 
-import { Location } from '../';
+import { Location, TagsInput } from '../';
 
 import validateCompany from '../../../validators/company';
 import Snackbar from 'material-ui/lib/snackbar';
@@ -110,6 +110,18 @@ export default class ClientsCreateModal extends React.Component {
     this.setState({windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight});
   }
 
+  _handleTagsChange(tags){
+    let newCompany = this.props.company;
+
+    if (tags) {
+      newCompany = newCompany.set('tags',tags);
+    } else {
+      newCompany = newCompany.delete('tags');
+    }
+
+    this.props.onCompanyChange(newCompany);
+  }
+
   closeModal(){
     this.props.closeModal();
   }
@@ -126,6 +138,7 @@ export default class ClientsCreateModal extends React.Component {
 
     this.props.onCompanyChange(newCompany);
   }
+
   _handleLocationChange(field, value) {
     let newCompany = this.props.company;
 
@@ -171,13 +184,20 @@ export default class ClientsCreateModal extends React.Component {
     let { heroContacts, company } = this.props;
 
 
-
     if (!heroContacts) {
       heroContacts = new Immutable.Map();
     }
 
     company = company || new Immutable.Map({errors:new Immutable.Map()});
-    console.log(company.toJS());
+
+    let tags = company.get('tags');
+    if (tags) {
+      if (tags.toArray) {
+        tags = tags.toArray();
+      }
+    } else {
+      tags = [];
+    }
 
     return (
       <div style={{backgroundColor:'#ffffff'}} className="row center-xs">
@@ -250,6 +270,9 @@ export default class ClientsCreateModal extends React.Component {
                         value={company.get('email')}
                         floatingLabelText="Email"
                     />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TagsInput value={tags} onChange={this._handleTagsChange.bind(this)} title="Tags" />
                   </div>
                   <div className="col-xs-12">
                     <Divider style={style.divider} />
