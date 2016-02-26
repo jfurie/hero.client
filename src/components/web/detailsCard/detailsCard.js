@@ -84,8 +84,8 @@ let style = {
   subtitleAvatarWrap:{
     position:'relative',
     paddingLeft: '48px',
-    marginTop:'8px',
-    minHeight:'40px'
+    marginTop: '8px',
+    minHeight: '40px',
   },
   subtitleAvatar:{
     position:'absolute',
@@ -223,7 +223,7 @@ class DetailsCard extends React.Component {
               <div className="box">
                 {topTags.map((tag, key) => {
                   return (
-                    <Tag active={true} value={tag} key={key}/>
+                    <Tag active value={tag} key={key}/>
                   );
                 })}
               </div>
@@ -339,11 +339,11 @@ DetailsCard.propTypes = {
   floatActionLabel: React.PropTypes.string,
   floatActionOnTap: React.PropTypes.func,
   mainColor: React.PropTypes.string,
-  stats: React.PropTypes.array,
   showStats: React.PropTypes.boolean,
+  stats: React.PropTypes.array,
   subtitle: React.PropTypes.string.isRequired,
-  subtitleAvatar: React.PropTypes.object,
   subtitle2: React.PropTypes.string,
+  subtitleAvatar: React.PropTypes.object,
   title: React.PropTypes.string.isRequired,
   topTags: React.PropTypes.object,
 };
