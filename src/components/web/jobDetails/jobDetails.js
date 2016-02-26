@@ -241,20 +241,20 @@ export default class JobDetails extends React.Component {
       let currentTab = 0;
       if(this.props.location.state){
         switch (this.props.location.state.tab) {
-          case 'details':
-            currentTab = 0;
-            break;
-          case 'desc':
-            currentTab = 1;
-            break;
-          case 'applicants':
-            currentTab = 2;
-            break;
-          case 'notes':
-            currentTab = 3;
-            break;
-          default:
-            currentTab = 0;
+        case 'details':
+          currentTab = 0;
+          break;
+        case 'desc':
+          currentTab = 1;
+          break;
+        case 'applicants':
+          currentTab = 2;
+          break;
+        case 'notes':
+          currentTab = 3;
+          break;
+        default:
+          currentTab = 0;
         }
       }
 
