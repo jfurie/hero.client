@@ -4,7 +4,9 @@ import Immutable from 'immutable';
 import {ClientsCreate} from '../../../components/web';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { editCompany, createCompany, getMyCompanies, getOneCompany } from '../../../modules/companies';
+
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
+
 let getData = (state, props) => {
   let company = null;
   if(props.params.companyId){
@@ -20,7 +22,7 @@ let getData = (state, props) => {
   }
   return {
     heroContacts,
-    company
+    company,
   };
 };
 
@@ -30,7 +32,7 @@ export default class ClientCreateContainer extends React.Component {
     super(props);
     this.state = {
       company : this.props.company || new Immutable.Map({errors:new Immutable.Map()}),
-      open:true
+      open: true,
     };
   }
 
@@ -95,35 +97,22 @@ export default class ClientCreateContainer extends React.Component {
   render(){
     return (
       <ClientsCreate
-        {...this.props}
-        closeModal={this._handleClose.bind(this)}
-        heroContacts={this.props.heroContacts}
-        company={this.state.company}
-        onSubmit={this._handleSave.bind(this)} o
-        onCompanyChange={this._handleChange.bind(this)}
-        open={true}
-        inline={true}  />
+          {...this.props}
+          closeModal={this._handleClose.bind(this)}
+          heroContacts={this.props.heroContacts}
+          company={this.state.company}
+          onSubmit={this._handleSave.bind(this)} o
+          onCompanyChange={this._handleChange.bind(this)}
+          open
+          inline
+      />
     );
   }
 }
 
 ClientCreateContainer.propTypes = {
   inline: React.PropTypes.bool,
-  open: React.PropTypes.bool,
   onClose:React.PropTypes.func,
   onSave:React.PropTypes.func,
+  open: React.PropTypes.bool,
 };
-
-// function guid() {
-//   function s4() {
-//     return Math.floor((1 + Math.random()) * 0x10000)
-//       .toString(16)
-//       .substring(1);
-//   }
-//   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-//     s4() + '-' + s4() + s4() + s4();
-// }
-//
-// ClientCreateContainer.defaultProps = {
-//     companyId: 'tmp_'+ guid()
-// }
