@@ -1,11 +1,20 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState } from 'redux-router';
 import { Paper, List, FontIcon, IconButton, Styles, Dialog, FlatButton } from 'material-ui';
+let Sticky = require('react-sticky');
 import { JobApplicantListItem } from '../../../components/web';
 
 const style = {
+  sticky: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 9999,
+  },
   bar: {
     padding: '10px 0 5px 0px',
     marginLeft: 0,
@@ -40,6 +49,7 @@ class JobApplicantList extends React.Component {
       openDeleteDialog: false,
       openDeleteAllDialog: false,
       selectedFilter: 'none',
+      isStuck: false,
     };
   }
 
@@ -198,6 +208,21 @@ class JobApplicantList extends React.Component {
     });
   }
 
+  handleStickyStateChange(isStuck) {
+    this.setState({
+      isStuck,
+    });
+  }
+
+  handleBarClick() {
+    if (this.state.isStuck) {
+      ReactDOM.findDOMNode(this.refs.jobApplicantList).scrollIntoView();
+    }
+    else {
+      ReactDOM.findDOMNode(this.refs.jobApplicantBar).scrollIntoView();
+    }
+  }
+
   render() {
     let { candidates } = this.props;
 
@@ -226,7 +251,8 @@ class JobApplicantList extends React.Component {
 
     return (
       <div>
-      <Paper style={style.bar} className="row between-xs">
+      <Sticky topOffset={-220} onStickyStateChange={this.handleStickyStateChange.bind(this)} stickyStyle={style.sticky}>
+      <Paper ref="jobApplicantBar" onClick={this.handleBarClick.bind(this)} style={style.bar} className="row between-xs">
         <div style={style.bar.stats}>
           {
             this.state.selecting ?
@@ -241,19 +267,19 @@ class JobApplicantList extends React.Component {
             :
             <div style={{display:'inline-block'}}>
               <div style={style.bar.stats.item}>
-                <IconButton onTouchTap={this.filterShowAll.bind(this)} iconStyle={{color: this.state.selectedFilter == 'none' ? Styles.Colors.blue500 : Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Show All">
+                <IconButton onTouchTap={this.filterShowAll.bind(this)} iconStyle={{color: this.state.selectedFilter == 'none' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>
                   <FontIcon className="material-icons">assignment_ind</FontIcon>
                 </IconButton>
                 <span style={{color: this.state.selectedFilter == 'none' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>{totalCount}</span>
               </div>
               <div style={style.bar.stats.item}>
-                <IconButton onTouchTap={this.filterShowUnvetted.bind(this)} iconStyle={{color: this.state.selectedFilter == 'unvetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Show Unvetted">
+                <IconButton onTouchTap={this.filterShowUnvetted.bind(this)} iconStyle={{color: this.state.selectedFilter == 'unvetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>
                   <FontIcon className="material-icons">assignment_late</FontIcon>
                 </IconButton>
                 <span style={{color: this.state.selectedFilter == 'unvetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>{unvettedCount}</span>
               </div>
               <div style={style.bar.stats.item}>
-                <IconButton onTouchTap={this.filterShowVetted.bind(this)} iconStyle={{color: this.state.selectedFilter == 'vetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Show Vetted">
+                <IconButton onTouchTap={this.filterShowVetted.bind(this)} iconStyle={{color: this.state.selectedFilter == 'vetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>
                   <FontIcon className="material-icons">assignment_turned_in</FontIcon>
                 </IconButton>
                 <span style={{color: this.state.selectedFilter == 'vetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>{vettedCount}</span>
@@ -267,12 +293,12 @@ class JobApplicantList extends React.Component {
             this.state.selecting ?
             <div style={{display:'inline-block'}}>
               <div style={style.bar.actions.item}>
-                <IconButton onTouchTap={this.confirmDeleteAllCandidates.bind(this)} iconStyle={style.bar.icon} tooltipPosition="top-center" tooltip="Delete">
+                <IconButton onTouchTap={this.confirmDeleteAllCandidates.bind(this)} iconStyle={style.bar.icon}>
                   <FontIcon className="material-icons">delete</FontIcon>
                 </IconButton>
               </div>
               <div style={style.bar.actions.item}>
-                <IconButton onTouchTap={this.vetAllSelected.bind(this)} iconStyle={style.bar.icon} tooltipPosition="top-center" tooltip="Check">
+                <IconButton onTouchTap={this.vetAllSelected.bind(this)} iconStyle={style.bar.icon}>
                   <FontIcon className="material-icons">check</FontIcon>
                 </IconButton>
               </div>
@@ -281,12 +307,14 @@ class JobApplicantList extends React.Component {
           }
 
           <div style={style.bar.actions.item}>
-            <IconButton iconStyle={style.bar.icon} tooltipPosition="top-center" tooltip="More">
+            <IconButton iconStyle={style.bar.icon}>
               <FontIcon className="material-icons">more_vert</FontIcon>
             </IconButton>
           </div>
         </div>
       </Paper>
+      </Sticky>
+      <div ref="jobApplicantList" style={{paddingTop: this.state.isStuck ? '60px' : '0'}}></div>
       <List style={{backgroundColor: 'transparent'}}>
           {filteredCandidates.map((candidate, key) => {
             let selected = this.state.selectedContacts.has(candidate.get('contactId'));
