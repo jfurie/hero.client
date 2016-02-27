@@ -297,7 +297,8 @@ export default class ContactCreate extends React.Component {
                         errorStyle={style.error}
                         onChange={(e) => this._handleChange.bind(this)(e, 'website')}
                         value={contact.get('website')}
-                        floatingLabelText="Website" />
+                        floatingLabelText="Website"
+                    />
                   </div>
                   <div className="col-xs-12">
                     <Divider style={style.divider} />
