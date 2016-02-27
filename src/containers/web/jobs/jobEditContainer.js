@@ -4,27 +4,28 @@ import Immutable from 'immutable';
 import { pushState } from 'redux-router';
 
 import { getOneCompany, getMyCompanies } from '../../../modules/companies/index';
-import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs } from '../../../modules/jobs/index';
+import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getJobDetail, getMyJobs } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { JobEdit } from '../../../components/web';
-import getCompanyDataFromState from '../../../dataHelpers/company';
 
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 let getData = (state, props) => {
   let job = state.jobs.list.get(props.params.jobId);
 
-  let company = null;
-
-  if (props.params.companyId) {
-    company = getCompanyDataFromState(state, props.params.companyId);
-  }
-
   let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
   let heroContacts = null;
   if(heroContactIds){
     heroContacts = state.contacts.list.filter(x =>{
       return heroContactIds.indexOf(x.get('id')) > -1;
+    });
+  }
+
+  let contactIds = state.contacts.byCompanyId.get(props.params.companyId);
+  let contacts = null;
+  if(contactIds){
+    contacts = state.contacts.list.filter(x =>{
+      return contactIds.indexOf(x.get('id')) > -1;
     });
   }
 
@@ -35,19 +36,16 @@ let getData = (state, props) => {
       jobImage = state.resources.list.get(imageId);
     }
   }
-
-
+  
   return {
     job,
-    company,
-    companies: state.companies.myCompanyIds,
     jobImage,
     heroContacts: heroContacts ? heroContacts : new Immutable.Map(),
-    contacts: company ? company.get('contacts') : new Immutable.Map(),
+    contacts: contacts ? contacts : new Immutable.Map(),
   };
 };
 
-@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getOneCompany, getContactsByCompany, getMyJobs, getMyCompanies })
+@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getJobDetail, getOneCompany, getContactsByCompany, getMyJobs, getMyCompanies })
 export default class JobEditContainer extends React.Component {
   constructor(props){
     super(props);
@@ -59,9 +57,8 @@ export default class JobEditContainer extends React.Component {
   componentDidMount() {
     this.props.getContactsByCompany(HEROCOMPANYID);
     this.props.getContactsByCompany(this.props.params.companyId);
-    this.props.getMyCompanies();
     if(this.props.params.jobId && this.props.params.jobId.indexOf('tmp')<=-1 ){
-      this.props.getOneJob(this.props.params.jobId);
+      this.props.getJobDetail(this.props.params.jobId);
     }
   }
 
@@ -99,15 +96,6 @@ export default class JobEditContainer extends React.Component {
     this.props.updateJob(job, dontMergeDeep);
   }
 
-  _handleCompanyChange(companyId){
-    let job = this.props.job.set('companyId', companyId);
-    this._handleChange(job);
-    let self = this;
-    setTimeout(function () {
-      self.props.history.replaceState(null, `/clients/${companyId}/jobs/${self.props.params.jobId}/create`);
-    }, 500);
-  }
-
   _handleSave(job){
     this.props.saveJob(job);
   }
@@ -137,7 +125,6 @@ export default class JobEditContainer extends React.Component {
         closeModal={this._handleClose.bind(this)}
         onSubmit={this._handleSave.bind(this)}
         onJobChange={this._handleChange.bind(this)}
-        onCompanyChange={this._handleCompanyChange.bind(this)}
         open={this.state.open}
         onImageChange={this.onJobCreateImageChange.bind(this)}
         inline={true}  />
