@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState /*, replaceState */ } from 'redux-router';
-//import { Snackbar } from 'material-ui';
+import { Snackbar } from 'material-ui';
 import { getMyCompanies, getCompanyDetail } from '../../../modules/companies/index';
 import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs, createTempJob } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
@@ -147,6 +147,7 @@ export default class JobCreateContainer extends React.Component {
     if (categoryId && minSalary && maxSalary && companyId) {
       this.props.saveJob(job, this.props.categories.get(job.get('categoryId')));
     } else {
+      this.setState({error: true});
       console.log('can\'t save', categoryId, minSalary, maxSalary, companyId);
     }
   }
@@ -216,26 +217,41 @@ export default class JobCreateContainer extends React.Component {
     let { job } = this.props;
 
     return (
-      <JobCreate
-          company={this.props.company}
-          contacts={contacts}
-          clients={this.props.companies}
-          job={job}
-          categories={this.props.categories}
-          locations={locations}
-          jobImage={this.props.jobImage}
-          closeModal={this._handleClose.bind(this)}
-          onSubmit={this._handleSave.bind(this)}
-          onJobChange={this._handleChange.bind(this)}
-          onCompanyChange={this._handleCompanyChange.bind(this)}
-          onCategoryChange={this._handleCategoryChange.bind(this)}
-          onSalaryChange={this._handleSalaryChange.bind(this)}
-          onLocationChange={this._handleLocationChange.bind(this)}
-          onContactChange={this._handleContactChange.bind(this)}
-          open={this.state.open}
-          onImageChange={this.onJobCreateImageChange.bind(this)}
-          inline
-      />
+      <div>
+        <div>
+          <JobCreate
+              company={this.props.company}
+              contacts={contacts}
+              clients={this.props.companies}
+              job={job}
+              categories={this.props.categories}
+              locations={locations}
+              jobImage={this.props.jobImage}
+              closeModal={this._handleClose.bind(this)}
+              onSubmit={this._handleSave.bind(this)}
+              onJobChange={this._handleChange.bind(this)}
+              onCompanyChange={this._handleCompanyChange.bind(this)}
+              onCategoryChange={this._handleCategoryChange.bind(this)}
+              onSalaryChange={this._handleSalaryChange.bind(this)}
+              onLocationChange={this._handleLocationChange.bind(this)}
+              onContactChange={this._handleContactChange.bind(this)}
+              open={this.state.open}
+              onImageChange={this.onJobCreateImageChange.bind(this)}
+              inline
+          />
+        </div>
+        <div>
+          <Snackbar
+              action="ok"
+              open={this.state.error}
+              onRequestClose={this._handleErrorClose.bind(this)}
+              autoHideDuration={2500}
+              message="Something is wrong!"
+              ref="snackbar"
+              className="snackbar"
+          />
+        </div>
+      </div>
     );
   }
 }

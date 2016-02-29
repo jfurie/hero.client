@@ -2,7 +2,7 @@ import React from 'react';
 import {
   IconButton, ToolbarGroup, Toolbar,
   FlatButton, ToolbarTitle, Styles,
-  LinearProgress,
+  LinearProgress, FontIcon,
 } from 'material-ui';
 import { FileInput } from '../';
 
@@ -54,8 +54,8 @@ const style = {
     marginLeft:'-16px',
   },
   addImageIcon: {
-    position: 'absolute',
-    left: '20px',
+    // position: 'absolute',
+    // left: '20px',
   },
   toolbarFlat: {
     marginTop:'14px',
@@ -80,11 +80,12 @@ const style = {
   },
   pictureRow: {
     backgroundColor: Styles.Colors.grey900,
-    position: 'relative',
+    // position: 'relative',
     margin: '0px',
   },
   pictureBox: {
     marginBottom: '-4px',
+    position: 'relative',
   },
   orderDefault: {
     width: '100%',
@@ -96,14 +97,17 @@ const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    marginLeft: '-40px',
-    marginTop: '-20px',
+    marginLeft: '-44px',
+    marginTop: '-61px',
   },
   addImageLabel: {
     margin: '0px',
   },
   progress: {
     borderRadius: '0px',
+    position: 'absolute',
+    width: '100%',
+    bottom: '4px',
   },
 };
 
@@ -326,13 +330,14 @@ export default class JobCreate extends React.Component {
                     label={
                       <div>
                         <div>{this.props.jobImage ? 'Change Image' : 'Add Image'}</div>
-                        <IconButton style={style.addImageIcon} iconClassName="material-icons">camera_alt</IconButton>
+                        <FontIcon style={style.addImageIcon} className="material-icons">camera_alt</FontIcon>
                       </div>
                     }
                     onFileChanged={this.onImageChange.bind(this)}
                 />
-                  <LinearProgress mode="determinate" style={style.progress} value={this.props.job && this.props.job.get('percentUploaded')} />
+                {/**/}
               </div>
+              <LinearProgress mode="determinate" style={style.progress} value={this.props.job && this.props.job.get('percentUploaded')} />
             </div>
           </div>
         </div>
