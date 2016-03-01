@@ -7,10 +7,12 @@ import { createContact, getOneContact, getContactsByCompany, editContact } from 
 import {createCompanyContact} from '../../../modules/companyContacts';
 import { ContactCreate } from '../../../components/web';
 import { getMyCompanies } from '../../../modules/companies/index';
+import { getAllCategories } from '../../../modules/categories';
 
 let getData = (state, props) => {
   let contact = null;
   let company = null;
+  let categories = state.categories.list;
 
   if (props.params.contactId) {
     contact = state.contacts.list.get(props.params.contactId);
@@ -24,10 +26,11 @@ let getData = (state, props) => {
     contact,
     company,
     companies: state.companies.myCompanyIds,
+    categories,
   };
 };
 
-@connect(getData, { pushState, getMyCompanies, createContact, createCompanyContact, getOneContact, getContactsByCompany, editContact })
+@connect(getData, { pushState, getMyCompanies, createContact, createCompanyContact, getOneContact, getContactsByCompany, editContact, getAllCategories })
 export default class ContactCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -40,6 +43,7 @@ export default class ContactCreateContainer extends React.Component {
   componentDidMount() {
     this.props.getMyCompanies();
     this.props.getOneContact(this.props.params.contactId);
+    this.props.getAllCategories();
   }
 
   componentWillReceiveProps(newProps){
@@ -54,7 +58,7 @@ export default class ContactCreateContainer extends React.Component {
         setTimeout(function () {
           if(self.props.location.query.returnUrl){
             self.props.history.replaceState(null, self.props.location.query.returnUrl);
-          } else{
+          } else {
             self.props.history.replaceState(null, `/contacts/${newProps.contact.get('newId')}`);
           }
         }, 500);
@@ -95,10 +99,6 @@ export default class ContactCreateContainer extends React.Component {
   _handleSave(contact){
     contact.set('displayName', `${this.state.contact.get('firstName')} ${this.state.contact.get('lastName')}`);
 
-    contact.set('sourceInfo', {
-      referrer: 'hero.client',
-    });
-
     this.setState({
       contact,
     });
@@ -107,11 +107,15 @@ export default class ContactCreateContainer extends React.Component {
       if(this.props.params.companyId){
         this.props.createCompanyContact(this.props.params.companyId,null,contact.get('id'));
       }
-
     } else {
       let companyId = this.props.company ? this.props.company.get('id') : null;
-      if(this.props.params.jobId){
+      if (this.props.params.jobId) {
+
         //This is a candidate creation
+        contact.set('sourceInfo', {
+          referrer: 'hero.client',
+        });
+
         this.props.createCandidate(contact, self.props.params.jobId);
       } else if (companyId) {
         this.props.createCompanyContact(companyId, contact);
@@ -134,14 +138,16 @@ export default class ContactCreateContainer extends React.Component {
   render(){
     return (
       <ContactCreate
-        {...this.props}
-        contact={this.state.contact}
-        closeModal={this._handleClose.bind(this)}
-        onSubmit={this._handleSave.bind(this)}
-        onContactChange={this._handleChange.bind(this)}
-        onCompanyChange={this._handleCompanyChange.bind(this)}
-        open={this.state.open}
-        inline={false}  />
+          {...this.props}
+          contact={this.state.contact}
+          closeModal={this._handleClose.bind(this)}
+          onSubmit={this._handleSave.bind(this)}
+          onContactChange={this._handleChange.bind(this)}
+          onCompanyChange={this._handleCompanyChange.bind(this)}
+          categories={this.props.categories}
+          open={this.state.open}
+          inline={false}
+      />
     );
   }
 }
