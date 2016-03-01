@@ -72,7 +72,7 @@ class ContactSearchContainer extends React.Component {
         },4000);
       } else {
         //Redirect to Job
-        self.props.history.replaceState(null,`/clients/${self.props.params.companyId}/jobs/${self.props.params.jobId}`);
+        self.props.history.replaceState(null,`/jobs/${self.props.params.jobId}/applicants`);
       }
     }
   }

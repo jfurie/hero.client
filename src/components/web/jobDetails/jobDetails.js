@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-router';
+import { pushState, replaceState } from 'redux-router';
 import marked from 'marked';
 
 import { List } from 'material-ui';
@@ -46,7 +46,7 @@ const style = {
 };
 
 @connect(() => (
-{}), {pushState})
+{}), {pushState, replaceState})
 export default class JobDetails extends React.Component {
 
   constructor(props){
@@ -121,6 +121,27 @@ export default class JobDetails extends React.Component {
 
   deleteNote(note){
     this.props.deleteNote(note);
+  }
+  tabChange(number){
+    if(number){
+      number = parseInt(number);
+      switch (number) {
+      case 0:
+        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}`);
+        break;
+      case 1:
+        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}/desc`);
+        break;
+      case 2:
+        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}/applicants`);
+        break;
+      case 3:
+        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}/notes`);
+        break;
+      default:
+        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}`);
+      }
+    }
   }
 
   renderContent(job) {
@@ -217,6 +238,25 @@ export default class JobDetails extends React.Component {
           addressLine = city;
         }
       }
+      let currentTab = 0;
+      if(this.props.location.state){
+        switch (this.props.location.state.tab) {
+        case 'details':
+          currentTab = 0;
+          break;
+        case 'desc':
+          currentTab = 1;
+          break;
+        case 'applicants':
+          currentTab = 2;
+          break;
+        case 'notes':
+          currentTab = 3;
+          break;
+        default:
+          currentTab = 0;
+        }
+      }
 
       return (
 
@@ -237,7 +277,7 @@ export default class JobDetails extends React.Component {
               topTags={job.get('tags') || []}
               stats={stats}
           />
-          <CustomTabsSwipe isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
+        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={currentTab} slideIndex={currentTab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
             <Card style={style.card}>
               <CardText>
                 {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
