@@ -21,6 +21,10 @@ const GET_MY_FAVORITE_CANDIDATES_SUCCESS = 'hero.client/candidates/GET_MY_FAVORI
 const GET_MY_FAVORITE_CANDIDATES_FAIL = 'hero.client/candidates/GET_MY_FAVORITE_CANDIDATES_FAIL';
 const CREATE_CANDIDATE_FAVORITE_SUCCESS = 'hero.client/candidates/CREATE_CANDIDATE_FAVORITE_SUCCESS';
 const DELETE_CANDIDATE_FAVORITE_SUCCESS = 'hero.client/candidates/DELETE_CANDIDATE_FAVORITE_SUCCESS';
+const DELETE_CANDIDATE = 'hero.client/candidates/DELETE_CANDIDATE';
+const DELETE_CANDIDATE_SUCCESS = 'hero.client/candidates/DELETE_CANDIDATE_SUCCESS';
+const DELETE_CANDIDATE_FAIL = 'hero.client/candidates/DELETE_CANDIDATE_FAIL';
+const SAVE_CANDIDATE_BY_CONTACT_RESULT = 'hero.client/candidates/SAVE_CANDIDATE_BY_CONTACT_RESULT';
 
 const RESET_ERROR = 'hero.client/candidates/RESET_ERROR';
 const initialState = {
@@ -249,6 +253,43 @@ export default function reducer(state = initialState, action = {}) {
       myCandidateIds: state.myCandidateIds.mergeDeep(candidatesMap),
     };
   }
+  case DELETE_CANDIDATE_SUCCESS: {
+    let byJobIdMap = {};
+
+    let candidates = state.byJobId.get(action.jobId);
+
+    if (candidates) {
+      let index = candidates.indexOf(action.id);
+
+      if (index > -1) {
+        byJobIdMap = state.byJobId.set(action.jobId, candidates.splice(index, 1));
+      }
+    }
+
+    return {
+      ...state,
+      list: state.list.delete(action.id),
+      byJobId: byJobIdMap,
+      myCandidateIds: state.myCandidateIds.delete(action.id),
+    };
+  }
+  case SAVE_CANDIDATE_BY_CONTACT_RESULT: {
+    let candidates = state.list.filter(x => {
+      return x.get('contactId') == action.result.id;
+    });
+
+    let candidatesMap = {};
+
+    candidates.forEach(function(candidate) {
+      candidatesMap[candidate.get('id')] = candidate.set('contact', new Immutable.Map(action.result));
+    });
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(candidatesMap),
+      myCandidateIds: state.myCandidateIds.mergeDeep(candidatesMap),
+    };
+  }
   default:
     return state;
   }
@@ -379,5 +420,30 @@ export function deleteCandidateFavorite(favorite){
   return {
     type: DELETE_CANDIDATE_FAVORITE_SUCCESS,
     result: favorite,
+  };
+}
+
+export function deleteCandidate(candidate){
+  return {
+    id: candidate.get('id'),
+    jobId: candidate.get('jobId'),
+    types: [DELETE_CANDIDATE, DELETE_CANDIDATE_SUCCESS, DELETE_CANDIDATE_FAIL],
+    promise: (client, auth) => client.api.del(`/candidates/${candidate.get('id')}`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function saveCandidatesByJobResult(candidates){
+  return {
+    type: GET_CANDIDATES_SUCCESS,
+    result: candidates,
+  };
+}
+
+export function saveCandidateByContactResult(contact){
+  return {
+    type: SAVE_CANDIDATE_BY_CONTACT_RESULT,
+    result: contact,
   };
 }
