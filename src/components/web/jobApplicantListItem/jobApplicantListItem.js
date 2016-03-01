@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar, IconButton } from 'material-ui';
+import { Card, CardText, ListItem, FontIcon, Divider, CardActions, Styles,Avatar, IconButton } from 'material-ui';
 import { Gravatar, Tag, FavoriteButton, Stars, PhoneButton, SmsButton, EmailButton} from '../../../components/web';
 import md5 from 'md5';
 
@@ -197,6 +197,12 @@ export default class JobApplicantListItem extends React.Component {
     this.props.deleteContact(contact);
   }
 
+  _onTouchTapState() {
+    let {contact} = this.props;
+
+    this.props.selectApplicantState(contact);
+  }
+
   renderBasic() {
     let {contact, company, selected, selecting} = this.props;
 
@@ -321,6 +327,16 @@ export default class JobApplicantListItem extends React.Component {
           marginLeft:'8px',
           marginRight:'8px',
         }}>
+        <ListItem
+            onTouchTap={this._onTouchTapState.bind(this)}
+            leftIcon={<FontIcon className="material-icons" style={{color: '#fff'}}>{this.props.selectedApplicantStateOption ? this.props.selectedApplicantStateOption.icon : ''}</FontIcon>}
+            style={{
+              color: '#fff',
+              backgroundColor: this.props.selectedApplicantStateOption && this.props.selectedApplicantStateOption.color ? this.props.selectedApplicantStateOption.color : Styles.Colors.grey600,
+            }}
+          >
+          {contact.get('applicantState') || 'New'}
+        </ListItem>
         <CardText
           style={{
             height: type !=='mini'?'auto':'auto',
@@ -373,18 +389,11 @@ export default class JobApplicantListItem extends React.Component {
             <FavoriteButton isFavorited={contact.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
           </div>
           <div style={{marginRight: 0}}>
-          <IconButton onTouchTap={this._onTouchTapDelete.bind(this)} iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="Delete">
-            <FontIcon className="material-icons">delete</FontIcon>
-          </IconButton>
-          <IconButton onTouchTap={this._onTouchTapCheck.bind(this)} iconStyle={{color:contact.get('isVetted') ? Styles.Colors.green500 : Styles.Colors.grey600}} tooltipPosition="top-center" tooltip={contact.get('isVetted') ? 'Vetted' : 'Vet'}>
-            <FontIcon className="material-icons">check</FontIcon>
-          </IconButton>
           <IconButton iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="More">
             <FontIcon className="material-icons">more_vert</FontIcon>
           </IconButton>
           </div>
         </CardActions>
-
       </Card>
     );
   }

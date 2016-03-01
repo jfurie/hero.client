@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState } from 'redux-router';
-import { Paper, List, FontIcon, IconButton, Styles, Dialog, FlatButton } from 'material-ui';
+import { Paper, List, ListItem, FontIcon, IconButton, RaisedButton, Styles, Dialog, FlatButton } from 'material-ui';
 let Sticky = require('react-sticky');
 import { JobApplicantListItem } from '../../../components/web';
 
@@ -13,7 +13,7 @@ const style = {
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 9999,
+    zIndex: 1200,
   },
   bar: {
     padding: '10px 0 5px 0px',
@@ -48,6 +48,8 @@ class JobApplicantList extends React.Component {
       selecting: false,
       openDeleteDialog: false,
       openDeleteAllDialog: false,
+      openApplicantStateDialog: false,
+      openRejectAllCandidatesDialog: false,
       selectedFilter: 'none',
       isStuck: false,
     };
@@ -129,6 +131,68 @@ class JobApplicantList extends React.Component {
       contact = contact.set('isVetted', false);
       this.props.editContact(contact);
     }
+  }
+
+  editApplicantState(state) {
+    let contact = this.state.contactPendingApplicantStateChange;
+
+    if (this.props.editContactApplicantState && contact && contact.get('applicantState') != state) {
+      this.props.editContactApplicantState(contact.get('id'), state);
+    }
+
+    this.setState({
+      contactPendingApplicantStateChange: null,
+      openApplicantStateDialog: false,
+    });
+  }
+
+  selectApplicantState(contact) {
+    this.setState({
+      contactPendingApplicantStateChange: contact,
+      openApplicantStateDialog: true,
+    });
+  }
+
+  selectAllApplicantState() {
+    this.setState({
+      openApplicantStateDialog: true,
+      multiApplicantStateDialog: true,
+    });
+  }
+
+  editAllApplicantState(state) {
+    if (this.props.editContactApplicantState) {
+      this.state.selectedContacts.forEach(x => {
+        this.props.editContactApplicantState(x.get('id'), state);
+      });
+    }
+
+    this.setState({
+      openRejectAllCandidatesModal: false,
+      contactPendingApplicantStateChange: null,
+      openApplicantStateDialog: false,
+      multiApplicantStateDialog: false,
+      selectedContacts: this.state.selectedContacts.clear(),
+      selecting: false,
+    });
+  }
+
+  closeApplicantStateDialog() {
+    this.setState({
+      openApplicantStateDialog: false,
+    });
+  }
+
+  confirmRejectAllCandidates() {
+    this.setState({
+      openRejectAllCandidatesModal: true,
+    });
+  }
+
+  closeRejectAllCandidatesDialog() {
+    this.setState({
+      openRejectAllCandidatesModal: false,
+    });
   }
 
   confirmDeleteCandidate(contact) {
@@ -249,6 +313,52 @@ class JobApplicantList extends React.Component {
       filteredCandidates = candidates;
     }
 
+    let applicantStateOptions = [{
+      value: 'Applied',
+      icon: 'person',
+    }, {
+      value: 'Matched',
+      icon: 'android',
+    }, {
+      value: 'Sourced',
+      icon: 'headset_mic',
+    }, {
+      value: 'Reffered',
+      icon: 'people',
+    }, {
+      value: 'Reviewed',
+      icon: 'assignment_turned_in',
+    }, {
+      value: 'Contacted',
+      icon: 'perm_phone_msg',
+    }, {
+      value: 'Queued',
+      icon: 'playlist_add',
+    }, {
+      value: 'Submitted',
+      icon: 'inbox',
+    }, {
+      value: 'Accepted',
+      icon: 'thumb_up',
+      color: Styles.Colors.purple500,
+    }, {
+      value: 'Interviewing',
+      icon: 'event',
+      color: Styles.Colors.pink500,
+    }, {
+      value: 'Offer Letter',
+      icon: 'attach_money',
+      color: Styles.Colors.green500,
+    }, {
+      value: 'Hired',
+      icon: 'verified_user',
+      color: Styles.Colors.blue500,
+    }, {
+      value: 'REJECTED',
+      icon: 'warning',
+      color: Styles.Colors.red500,
+    }];
+
     return (
       <div>
       <Sticky topOffset={-220} onStickyStateChange={this.handleStickyStateChange.bind(this)} stickyStyle={style.sticky}>
@@ -266,6 +376,7 @@ class JobApplicantList extends React.Component {
             </div>
             :
             <div style={{display:'inline-block'}}>
+            {/*
               <div style={style.bar.stats.item}>
                 <IconButton onTouchTap={this.filterShowAll.bind(this)} iconStyle={{color: this.state.selectedFilter == 'none' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>
                   <FontIcon className="material-icons">assignment_ind</FontIcon>
@@ -284,6 +395,7 @@ class JobApplicantList extends React.Component {
                 </IconButton>
                 <span style={{color: this.state.selectedFilter == 'vetted' ? Styles.Colors.blue500 : Styles.Colors.grey600}}>{vettedCount}</span>
               </div>
+            */}
             </div>
           }
 
@@ -293,12 +405,12 @@ class JobApplicantList extends React.Component {
             this.state.selecting ?
             <div style={{display:'inline-block'}}>
               <div style={style.bar.actions.item}>
-                <IconButton onTouchTap={this.confirmDeleteAllCandidates.bind(this)} iconStyle={style.bar.icon}>
+                <IconButton onTouchTap={this.confirmRejectAllCandidates.bind(this)} iconStyle={style.bar.icon}>
                   <FontIcon className="material-icons">delete</FontIcon>
                 </IconButton>
               </div>
               <div style={style.bar.actions.item}>
-                <IconButton onTouchTap={this.vetAllSelected.bind(this)} iconStyle={style.bar.icon}>
+                <IconButton onTouchTap={this.selectAllApplicantState.bind(this)} iconStyle={style.bar.icon}>
                   <FontIcon className="material-icons">check</FontIcon>
                 </IconButton>
               </div>
@@ -318,6 +430,12 @@ class JobApplicantList extends React.Component {
       <List style={{backgroundColor: 'transparent'}}>
           {filteredCandidates.map((candidate, key) => {
             let selected = this.state.selectedContacts.has(candidate.get('contactId'));
+            let selectedApplicantStateOption = applicantStateOptions.filter(x => {
+              return x.value == candidate.get('contact').get('applicantState');
+            });
+
+            selectedApplicantStateOption = selectedApplicantStateOption.length > 0 ? selectedApplicantStateOption[0] : null;
+
             return (
               <JobApplicantListItem
                   selected={selected}
@@ -332,10 +450,35 @@ class JobApplicantList extends React.Component {
                   vetContact={this.vetContact.bind(this)}
                   unvetContact={this.unvetContact.bind(this)}
                   deleteContact={this.confirmDeleteCandidate.bind(this)}
+                  selectApplicantState={this.selectApplicantState.bind(this)}
+                  applicantStateOptions={applicantStateOptions}
+                  selectedApplicantStateOption={selectedApplicantStateOption}
               />
             );
           })}
       </List>
+      <Dialog
+          modal={false}
+          contentStyle={{}}
+          autoScrollBodyContent={true}
+          open={this.state.openApplicantStateDialog}
+          onRequestClose={this.closeApplicantStateDialog.bind(this)}
+        >
+        <div style={{paddingBottom: '30px'}}>
+          {applicantStateOptions.map((option, key) => {
+            return (
+              <ListItem
+                  key={key}
+                  leftIcon={<FontIcon className="material-icons" style={{color: option.color || Styles.Colors.grey600}}>{option.icon}</FontIcon>}
+                  onTouchTap={this.state.multiApplicantStateDialog ? this.editAllApplicantState.bind(this, option.value) : this.editApplicantState.bind(this, option.value)}
+              >
+                {option.value}
+              </ListItem>
+            );
+          })}
+        </div>
+          <RaisedButton onTouchTap={this.closeApplicantStateDialog.bind(this)} style={{position: 'absolute', bottom: 0, left: 0, right: 0}} label="Cancel" />
+        </Dialog>
       <Dialog
           title="Please Confirm"
           actions=
@@ -378,6 +521,27 @@ class JobApplicantList extends React.Component {
         >
             Are you sure you want to remove {this.state.selectedContacts.size} candidate{this.state.selectedContacts.size == 1 ? '' : 's'} from this job?
           </Dialog>
+          <Dialog
+              title="Please Confirm"
+              actions=
+              {[
+                <FlatButton
+                    label="No"
+                    secondary={true}
+                    onTouchTap={this.closeRejectAllCandidatesDialog.bind(this)}
+                />,
+                <FlatButton
+                    label="Yes"
+                    primary={true}
+                    onTouchTap={this.editAllApplicantState.bind(this, 'REJECTED')}
+                />,
+              ]}
+              modal={true}
+              open={this.state.openRejectAllCandidatesModal}
+              onRequestClose={this.closeRejectAllCandidatesDialog.bind(this)}
+          >
+              Are you sure you want to reject {this.state.selectedContacts.size} candidate{this.state.selectedContacts.size == 1 ? '' : 's'}?
+            </Dialog>
       </div>
     );
   }
