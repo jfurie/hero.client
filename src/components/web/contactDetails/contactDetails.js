@@ -352,23 +352,23 @@ export default class ContactDetails extends React.Component {
     }
     let style ={
       title:{
-        color:Styles.Colors.black
+        color:Styles.Colors.black,
       },
       subtitle:{
-        color:Styles.Colors.black
+        color:Styles.Colors.black,
       },
       extraLeftLine:{
-        color:Styles.Colors.black
+        color:Styles.Colors.black,
       },
       extraRightLine:{
-        color:Styles.Colors.black
+        color:Styles.Colors.black,
       },
       extraCenterLine:{
-        color:Styles.Colors.black
+        color:Styles.Colors.black,
       },
       floatActionLabel:{
-        color:Styles.Colors.black
-      }
+        color:Styles.Colors.black,
+      },
     };
     // workAuthorization
     let workAuthorization = contact.get('workAuthorization') || null;
@@ -497,8 +497,8 @@ export default class ContactDetails extends React.Component {
       if (summary) {
         description += summary;
       }
+      
       let startingTab = 0;
-      console.log(this.props.location.state);
       if(this.props.location.state && this.props.location.state.tab){
         startingTab = parseInt(this.props.location.state.tab);
       }

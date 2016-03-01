@@ -137,6 +137,14 @@ export default class ContactCreate extends React.Component {
     this.props.onCompanyChange(value);
   }
 
+  _handleCategorySelectValueChange(event, index, value) {
+    let newContact = this.props.contact;
+    if (value) {
+      newContact = newContact.set('candidateType', value);
+    }
+    this.props.onContactChange(newContact);
+  }
+
   _handleStatusSelectValueChange(event, index, value) {
     let newContact = this.props.contact;
 
@@ -153,6 +161,7 @@ export default class ContactCreate extends React.Component {
 
     let newContact = this.props.contact.set('errors',errors);
     if (errors.validationErrors === 0) {
+      //console.log('onSubmit', newContact.toJS());
       this.props.onSubmit(newContact);
     } else {
       this.props.onContactChange(newContact);
@@ -160,7 +169,7 @@ export default class ContactCreate extends React.Component {
   }
 
   _renderContents() {
-    let { contact, companies } = this.props;
+    let { contact, companies, categories } = this.props;
 
     contact = contact || new Immutable.Map({errors:new Immutable.Map()});
 
@@ -422,14 +431,32 @@ export default class ContactCreate extends React.Component {
                           />
                         </div>
                         <div>
-                          <TextField
+                          <SelectField
+                              floatingLabelText="Candidate Type"
+                              floatingLabelStyle={style.floatLabel}
+                              fullWidth
+                              style={style.select}
+                              onChange={this._handleCategorySelectValueChange.bind(this)}
+                              hintText={''}
+                              value={contact.get('candidateType')}
+                          >
+                            {categories.map((category) => {
+                              return (
+                                <MenuItem
+                                    value={category.get('title')}
+                                    primaryText={category.get('title')}
+                                />
+                              );
+                            })}
+                          </SelectField>
+                          {/*<TextField
                               style={style.textField}
                               errorText={(contact.get('errors') && contact.get('errors').candidateType) || ''}
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'candidateType')}
                               value={contact.get('candidateType')}
                               floatingLabelText="Candidate Type"
-                          />
+                          />*/}
                         </div>
                         <div>
                           <TextField
