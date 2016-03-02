@@ -140,8 +140,12 @@ export default class ContactCreate extends React.Component {
   _handleCategorySelectValueChange(event, index, value) {
     let newContact = this.props.contact;
     if (value) {
-      newContact = newContact.set('candidateType', value);
+      newContact = newContact.merge({
+        'candidateType': value.get('title'),
+        'categoryId': value.get('id'),
+      });
     }
+    console.log(newContact.toJS());
     this.props.onContactChange(newContact);
   }
 
@@ -166,6 +170,19 @@ export default class ContactCreate extends React.Component {
     } else {
       this.props.onContactChange(newContact);
     }
+  }
+
+  getCategoryFromTitle(title) {
+
+    let category = null;
+
+    this.props.categories.forEach(function(c) {
+      if (c.get('title') === title) {
+        category = c;
+      }
+    });
+
+    return category;
   }
 
   _renderContents() {
@@ -438,12 +455,12 @@ export default class ContactCreate extends React.Component {
                               style={style.select}
                               onChange={this._handleCategorySelectValueChange.bind(this)}
                               hintText={''}
-                              value={contact.get('candidateType')}
+                              value={this.getCategoryFromTitle(contact.get('candidateType'))}
                           >
                             {categories.map((category) => {
                               return (
                                 <MenuItem
-                                    value={category.get('title')}
+                                    value={category}
                                     primaryText={category.get('title')}
                                 />
                               );
