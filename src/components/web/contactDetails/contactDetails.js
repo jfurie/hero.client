@@ -497,7 +497,7 @@ export default class ContactDetails extends React.Component {
       if (summary) {
         description += summary;
       }
-      
+
       let startingTab = 0;
       if(this.props.location.state && this.props.location.state.tab){
         startingTab = parseInt(this.props.location.state.tab);
