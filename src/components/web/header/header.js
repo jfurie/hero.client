@@ -20,6 +20,9 @@ class Header extends React.Component {
   homeClicked() {
     this.props.pushState(null,'/');
   }
+  searchClicked() {
+    this.props.pushState(null,'/search');
+  }
 
   render() {
 
@@ -43,6 +46,13 @@ class Header extends React.Component {
       iconStyle.color= '#ffffff';
     }
 
+    let iconRightProp = {...this.props.iconRight};
+    if(iconRightProp){
+      iconRightProp.style = iconStyle;
+    }
+
+    let iconRight = <span><IconButton iconStyle={iconStyle} onTouchTap={this.searchClicked.bind(this)} iconClassName='material-icons'>search</IconButton> {this.props.iconRight}</span>
+
     //console.log(this.props.history);
     let iconLeft = null;
     if(this.props.showHome){
@@ -53,7 +63,7 @@ class Header extends React.Component {
     return (
       <div>
         <AppBar
-          iconElementRight={this.props.iconRight}
+          iconElementRight={iconRight}
           style={style}
           title={this.props.title || ''}
           iconElementLeft={iconLeft}
