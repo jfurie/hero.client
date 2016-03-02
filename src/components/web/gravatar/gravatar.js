@@ -50,7 +50,7 @@ class Gravatar extends React.Component {
       email = '00000000000000000000000000000000';
     }
 
-    let imgSrc = `http://www.gravatar.com/avatar/${email}?d=mm`;
+    let imgSrc = `https://www.gravatar.com/avatar/${email}?d=mm`;
 
     return (
       <div style={style}>
