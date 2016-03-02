@@ -145,7 +145,6 @@ export default class ContactCreate extends React.Component {
         'categoryId': value.get('id'),
       });
     }
-    console.log(newContact.toJS());
     this.props.onContactChange(newContact);
   }
 
@@ -165,7 +164,6 @@ export default class ContactCreate extends React.Component {
 
     let newContact = this.props.contact.set('errors',errors);
     if (errors.validationErrors === 0) {
-      //console.log('onSubmit', newContact.toJS());
       this.props.onSubmit(newContact);
     } else {
       this.props.onContactChange(newContact);
