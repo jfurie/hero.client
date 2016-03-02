@@ -40,7 +40,7 @@ export function search(query,offset, limit) {
         },
         limit:limit || 20,
         offset:offset||0,
-      }
+      };
       let filterstring = encodeURIComponent(JSON.stringify(filter));
       client.api.get(`/search?filter=${filterstring}`, {
         authToken: auth.authToken,

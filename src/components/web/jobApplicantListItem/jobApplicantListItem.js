@@ -362,7 +362,6 @@ export default class JobApplicantListItem extends React.Component {
         <CardActions
             style={{
               backgroundColor:'rgba(100,100,100,0.2)',
-              boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)',
             }}
             className="row between-xs"
         >

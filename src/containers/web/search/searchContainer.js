@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { GlobalSearch } from '../../../components/web';
 import { search } from '../../../modules/search';
 import { replaceState, pushState } from 'redux-router';
+import _ from 'lodash';
 let getData = (state, props) => {
   var query = props.location.state && props.location.state.query || '';
   let searchResults = state.search.bySearchQuery.get(query);
