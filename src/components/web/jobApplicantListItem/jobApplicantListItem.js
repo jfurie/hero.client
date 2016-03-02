@@ -206,7 +206,7 @@ export default class JobApplicantListItem extends React.Component {
       emailHash = md5(contact.get('email'));
     }
 
-    let avatarSrc = `http://www.gravatar.com/avatar/${emailHash}?d=mm`;
+    let avatarSrc = `https://www.gravatar.com/avatar/${emailHash}?d=mm`;
 
     return (
       <div style={style.cardBasic.layout}>

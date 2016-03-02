@@ -265,10 +265,10 @@ export default class ContactDetails extends React.Component {
     let displayName = contact.get('displayName') || null;
 
     return {
-      cover: image, //`http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      cover: image, //`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       city,
       displayName,
-      avatarUrl: `http://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      avatarUrl: `https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       companyName,
       title,
       subtitleAvatar
