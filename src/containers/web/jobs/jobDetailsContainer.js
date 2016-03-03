@@ -5,7 +5,7 @@ import Immutable from 'immutable';
 import { JobDetails } from '../../../components/web';
 import { getJobDetail, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs';
 import { getAllJobCandidates, deleteCandidate } from '../../../modules/candidates';
-import { createContactFavorite, deleteContactFavorite, editContact } from '../../../modules/contacts';
+import { createContactFavorite, deleteContactFavorite, editContact, editContactApplicantState } from '../../../modules/contacts';
 import { getImageByJobId } from '../../../modules/resources';
 import { getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 
@@ -19,7 +19,7 @@ function getData(state, jobId) {
   };
 }
 
-@connect((state, props) => (getData(state, props.params.jobId)), {pushState, getJobDetail, createJobFavorite, deleteJobFavorite, getAllJobCandidates, getImageByJobId, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote, createContactFavorite, deleteContactFavorite, editContact, deleteCandidate})
+@connect((state, props) => (getData(state, props.params.jobId)), {pushState, getJobDetail, createJobFavorite, deleteJobFavorite, getAllJobCandidates, getImageByJobId, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote, createContactFavorite, deleteContactFavorite, editContact, editContactApplicantState, deleteCandidate})
 class JobDetailsPage extends React.Component {
 
   constructor(props) {
@@ -95,6 +95,10 @@ class JobDetailsPage extends React.Component {
     this.props.deleteContactFavorite(contact.get('id'));
   }
 
+  editContactApplicantState(contactId, state) {
+    this.props.editContactApplicantState(contactId, state);
+  }
+
   _guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -122,6 +126,7 @@ class JobDetailsPage extends React.Component {
         onJobDetailsClose={this.onJobDetailsClose.bind(this)}
         editContact={this.props.editContact.bind(this)}
         deleteCandidate={this.props.deleteCandidate.bind(this)}
+        editContactApplicantState={this.props.editContactApplicantState.bind(this)}
         open
         job={job} />
       </div>

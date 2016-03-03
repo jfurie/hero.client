@@ -89,6 +89,10 @@ export default class JobDetails extends React.Component {
     }
   }
 
+  _onTouchTapHot() {
+    //this.props.toggleJobTag('HOT!');
+  }
+
   _onTouchTapShare() {
     let subject = `Check out ${this.props.job.get('title')} on HERO`;
     let body = `${encodeURIComponent(this.props.job.get('title'))}%0A${encodeURIComponent(window.location.href)}`;
@@ -173,6 +177,12 @@ export default class JobDetails extends React.Component {
         fee = `Fee: ${job.get('fee')}%`;
       }
 
+      let isHot = false;
+
+      if (job.get('tags')) {
+        isHot = job.get('tags').indexOf('HOT!') > -1;
+      }
+
       // details card
       let actions = [{
         materialIcon: 'search',
@@ -183,6 +193,12 @@ export default class JobDetails extends React.Component {
         text: job.get('isFavorited') ? 'Saved' : 'Save',
         active: job.get('isFavorited'),
         onTouchTap: this._onTouchTapSave.bind(this),
+      }, {
+        materialIcon: 'favorite',
+        text: 'HOT!',
+        active: isHot,
+        activeColor: Styles.Colors.pink500,
+        onTouchTap: this._onTouchTapHot.bind(this),
       }, {
         materialIcon: 'share',
         text: 'Share',
@@ -320,6 +336,7 @@ export default class JobDetails extends React.Component {
                   unfavoriteContact={this.props.unfavoriteContact.bind(this)}
                   editContact={this.props.editContact.bind(this)}
                   deleteCandidate={this.props.deleteCandidate.bind(this)}
+                  editContactApplicantState={this.props.editContactApplicantState.bind(this)}
               />
             </div>
             <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
