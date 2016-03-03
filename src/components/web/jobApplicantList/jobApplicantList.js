@@ -460,7 +460,7 @@ class JobApplicantList extends React.Component {
           <FlatButton label="FILTER" onTouchTap={this.selectFilter.bind(this)} />
         </div>
       </Paper>
-      <Sticky topOffset={-220} onStickyStateChange={this.handleStickyStateChange.bind(this)} stickyStyle={style.sticky}>
+      <Sticky topOffset={0} onStickyStateChange={this.handleStickyStateChange.bind(this)} stickyStyle={style.sticky}>
       <Paper ref="jobApplicantMultiActionBar" onClick={this.handleBarClick.bind(this)} style={style.multiSelectBar} className="row between-xs">
         <div style={style.multiSelectBar.stats}>
           {
