@@ -10,6 +10,8 @@ import { saveContactsByCompanyResult } from '../contacts';
 import { saveNotesByCompanyResult } from '../notes';
 import { saveLocationByCompanyResult } from '../locations';
 
+import superagent from 'superagent';
+
 const initialState = {
   list: new Immutable.Map(),
   myCompanyIds: new Immutable.Map(),
@@ -249,6 +251,43 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       err: action.err,
     };
+  case constants.UPDATE_COMPANY_IMAGE:{
+    let company = {};
+    company[action.id] = {
+      isUploading:true,
+      percentUploaded:0
+    };
+    return{
+      ...state,
+      list: state.list.mergeDeep(company),
+    };
+  }
+  case constants.UPDATE_COMPANY_IMAGE_SUCCESS:{
+    let company = {};
+    let image = {
+      imageId:action.result.id,
+      isUploading:false,
+      percentUploaded:100
+    };
+    company[action.id] = image;
+    return{
+      ...state,
+      list: state.list.mergeDeep(company),
+    };
+  }
+  case constants.UPDATE_COMPANY_IMAGE_PROGRESS:{
+    let company = {};
+
+    let image = {
+      isUploading:true,
+      percentUploaded:action.result
+    };
+    company[action.id] = image;
+    return{
+      ...state,
+      list: state.list.mergeDeep(company),
+    };
+  }
   default:
     return state;
   }
@@ -417,6 +456,51 @@ export function getCompanyDetail(id) {
         }
 
         return company;
+      }),
+    });
+  };
+}
+
+export function updateCompanyImage(id,file) {
+  return (dispatch) => {
+    dispatch({
+      id,
+      types: [constants.UPDATE_COMPANY_IMAGE, constants.UPDATE_COMPANY_IMAGE_SUCCESS, constants.UPDATE_COMPANY_IMAGE_FAIL],
+      promise: (client, auth) => client.api.post('/resources/signUrl', {
+        authToken: auth.authToken,
+        data: {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+        },
+      }).then((signUrlData) => new Promise((resolve, reject) => {
+        superagent.put(signUrlData.signed_request)
+            .send(file)
+            .on('progress', function(e) {
+              dispatch({
+                id,
+                type: constants.UPDATE_COMPANY_IMAGE_PROGRESS,
+                result: e.percent,
+              });
+            })
+            .end((err, {
+              body,
+            } = {}) => {
+              if (err) {
+                return reject(body || err);
+              } else {
+                return resolve(signUrlData.url);
+              }
+            });
+      })).then((signUrlData) => {
+        console.log(signUrlData);
+        return client.api.post('/resources', {
+          authToken: auth.authToken,
+          data: {
+            resourceType: 'image',
+            item: signUrlData,
+          },
+        });
       }),
     });
   };

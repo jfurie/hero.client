@@ -4,10 +4,10 @@ import Immutable from 'immutable';
 import {
   Dialog, IconButton, ToolbarGroup, Toolbar,
   FlatButton, TextField, ToolbarTitle, SelectField,
-  MenuItem, RaisedButton, Divider, Styles,
+  MenuItem, RaisedButton, Divider, Styles, LinearProgress, Card, CardMedia, CardText,
 } from 'material-ui';
 
-import { Location, TagsInput } from '../';
+import { Location, TagsInput, FileInput } from '../';
 
 import validateCompany from '../../../validators/company';
 import Snackbar from 'material-ui/lib/snackbar';
@@ -180,6 +180,10 @@ export default class ClientsCreateModal extends React.Component {
     this.props.onCompanyChange(newCompany);
   }
 
+  onImageChange(value){
+    this.props.onImageChange(value);
+  }
+
   renderContents(){
     let { heroContacts, company } = this.props;
 
@@ -229,6 +233,24 @@ export default class ClientsCreateModal extends React.Component {
                   <div className="col-xs-12">
                     <Divider style={style.divider} />
                     <div style={style.subheader}>Primary</div>
+                  </div>
+
+                  <div className="col-xs-10 ">
+                      <Card>
+                        <CardMedia>
+                          {(() => {
+                            if(this.props.companyImage){
+                              return (<div><img style={{maxWidth:'100%', maxHeight:'300px'}} src={this.props.companyImage.get('item')}></img></div>);
+                            } else {
+                              return (<div></div>);
+                            }
+                          })()}
+                        </CardMedia>
+                        <CardText>
+                          <LinearProgress mode="determinate" value={company.get('percentUploaded')} />
+                          <FileInput label={this.props.companyImage?'Change Photo':'Add Photo'} onFileChanged={this.onImageChange.bind(this)} />
+                        </CardText>
+                      </Card>
                   </div>
 
                   <div className="col-xs-10 ">

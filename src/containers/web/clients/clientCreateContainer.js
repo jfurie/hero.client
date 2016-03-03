@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import {ClientsCreate} from '../../../components/web';
 import { getContactsByCompany } from '../../../modules/contacts';
-import { editCompany, createCompany, getMyCompanies, getOneCompany } from '../../../modules/companies';
+import { editCompany, createCompany, getMyCompanies, getOneCompany, updateCompanyImage } from '../../../modules/companies';
 
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
@@ -20,13 +20,23 @@ let getData = (state, props) => {
       return heroContactIds.indexOf(x.get('id')) > -1;
     });
   }
+
+  let companyImage = null;
+  if(company){
+    let imageId = company.get('imageId');
+    if (imageId) {
+      companyImage = state.resources.list.get(imageId);
+    }
+  }
+
   return {
+    companyImage,
     heroContacts,
     company,
   };
 };
 
-@connect(getData,{getContactsByCompany, editCompany, createCompany, getOneCompany, getMyCompanies})
+@connect(getData,{getContactsByCompany, editCompany, createCompany, getOneCompany, getMyCompanies, updateCompanyImage})
 export default class ClientCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -93,6 +103,9 @@ export default class ClientCreateContainer extends React.Component {
 
   }
 
+  onCompanyCreateImageChange(imageArray){
+    this.props.updateCompanyImage(this.props.params.companyId,imageArray);
+  }
 
   render(){
     return (
@@ -103,6 +116,7 @@ export default class ClientCreateContainer extends React.Component {
           company={this.state.company}
           onSubmit={this._handleSave.bind(this)} o
           onCompanyChange={this._handleChange.bind(this)}
+          onImageChange={this.onCompanyCreateImageChange.bind(this)}
           open
           inline
       />

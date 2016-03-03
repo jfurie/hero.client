@@ -7,7 +7,7 @@ import { ClientDetails } from '../../../components/web';
 
 import { getOneCompany, getCompanyDetail, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
-import { getImageByJobId } from '../../../modules/resources';
+import { getImageByCompanyId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
 import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany, createContactFavorite, deleteContactFavorite } from '../../../modules/contacts';
@@ -70,7 +70,7 @@ getData(state, props)), {
   getOneCompany, getCompanyDetail, getOneLocation,
   getAllContacts, getContactsByCompany, getJobsByCompany,
   pushState, updateJobLocal, updateJobImageLocal, saveLocalJob,
-  replaceJobLocal, getOneJob, getImageByJobId, getAllJobCandidates,
+  replaceJobLocal, getOneJob, getImageByCompanyId, getAllJobCandidates,
   getNotesByCompany, updateNoteLocal, deleteNote, saveLocalNote,
   replaceNoteLocal, invite, createCandidate, createTempJob,
   createCompanyFavorite, deleteCompanyFavorite,
@@ -95,6 +95,7 @@ class ClientDetailsPage extends React.Component {
     setTimeout(() => {
       if(self.props.params.companyId){
         self.props.getCompanyDetail(self.props.params.companyId);
+        self.props.getImageByCompanyId(self.props.params.companyId);
       }
 
 
