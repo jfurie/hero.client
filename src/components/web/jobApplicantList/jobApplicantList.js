@@ -62,7 +62,7 @@ class JobApplicantList extends React.Component {
       openApplicantStateDialog: false,
       openRejectAllCandidatesDialog: false,
       openFilterDialog: false,
-      selectedFilter: 'none',
+      selectedFilter: 'Any',
       includeUnvetted: true,
       isStuck: false,
     };
@@ -299,7 +299,7 @@ class JobApplicantList extends React.Component {
 
   clearSelectedFilter() {
     this.setState({
-      pendingSelectedFilter: 'none',
+      pendingSelectedFilter: 'Any',
       pendingIncludeUnvetted: true,
     });
   }
@@ -312,7 +312,7 @@ class JobApplicantList extends React.Component {
 
   filterShowAll() {
     this.setState({
-      selectedFilter: 'none',
+      selectedFilter: 'Any',
     });
   }
 
@@ -355,17 +355,17 @@ class JobApplicantList extends React.Component {
     let filteredCandidates;
 
     switch(this.state.selectedFilter) {
-    case 'matched':
+    case 'Matched':
       filteredCandidates = this.props.candidates.filter(x => {
         return ['Applied', 'Matched', 'Sourced', 'Reffered'].indexOf(x.get('contact').get('applicantState')) > -1;
       });
       break;
-    case 'in process':
+    case 'In Process':
       filteredCandidates = this.props.candidates.filter(x => {
         return ['Screened', 'Contacted', 'Queued', 'Submitted', 'Accepted', 'Interviewing', 'Offer Letter', 'Hired'].indexOf(x.get('contact').get('applicantState')) > -1;
       });
       break;
-    case 'declined':
+    case 'Declined':
       filteredCandidates = this.props.candidates.filter(x => {
         return ['REJECTED', 'CANDIDATE REJECTED'].indexOf(x.get('contact').get('applicantState')) > -1;
       });
@@ -433,31 +433,29 @@ class JobApplicantList extends React.Component {
     style.filterBar.display = this.state.isStuck ? 'flex' : 'none';
 
     let processFilterOptions = [{
-      name: 'ANY',
-      value: 'none',
+      value: 'Any',
       size: 20,
     }, {
-      name: 'Matched',
-      value: 'matched',
+      value: 'Matched',
       size: 25,
     }, {
-      name: 'IN PROCESS',
-      value: 'in process',
+      value: 'In Process',
       size: 30,
     }, {
-      name: 'Declined',
-      value: 'declined',
+      value: 'Declined',
       size: 25,
     }];
 
+    let filterLabel = `${(this.state.selectedFilter == 'Any' ? 'Any Rating - Any Status' : this.state.selectedFilter)} ${(!this.state.includeUnvetted ? ' - Vetted Only' : '')}`;
+
     return (
       <div>
-      <Paper ref="jobApplicantFilterBar" className="row between-xs" style={style.filterBar}>
+      <Paper ref="jobApplicantFilterBar" onTouchTap={this.selectFilter.bind(this)} className="row between-xs" style={style.filterBar}>
         <div>
-
+          <FlatButton label={filterLabel} style={{textTransform: 'normal'}} onTouchTap={this.selectFilter.bind(this)} />
         </div>
         <div>
-          <FlatButton label="FILTER" onTouchTap={this.selectFilter.bind(this)} />
+          <FlatButton label="FILTER" />
         </div>
       </Paper>
       <Sticky topOffset={0} onStickyStateChange={this.handleStickyStateChange.bind(this)} stickyStyle={style.sticky}>

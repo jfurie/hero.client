@@ -31,6 +31,7 @@ let styles = {
       color: '#fff',
       borderLeftStyle: 'none',
       borderRightStyle: 'none',
+      textTransform: 'uppercase',
     },
   },
 };
@@ -45,23 +46,24 @@ export default class SelectToggle extends React.Component {
   }
 
   render() {
-    let { options } = this.props;
+    let { options, value } = this.props;
 
     return (
       <div style={styles}>
         <div style={styles.selectBoxRow}>
         {
           options.map((option, key) => {
+            let isSelected = option.value == value;
             return (
               <div onClick={this._onChange.bind(this, option.value)} key={key} style={{...styles.selectBoxCell, width: `${option.size}%`}}>
                 <div style={{
                   ...styles.selectBoxLabel,
                   ...(key == 0 ? styles.selectBoxLabel.firstCell : {}),
                   ...(key == options.length - 1 ? styles.selectBoxLabel.lastCell : {}),
-                  ...(option.value == this.props.value ? styles.selectBoxLabel.selectedCell : {}),
+                  ...(isSelected ? styles.selectBoxLabel.selectedCell : {}),
                 }}
                 >
-                {option.name}
+                {option.value}
                 </div>
               </div>
             );
