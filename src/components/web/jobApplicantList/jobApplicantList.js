@@ -355,17 +355,17 @@ class JobApplicantList extends React.Component {
     let filteredCandidates;
 
     switch(this.state.selectedFilter) {
-    case 'matched':
+    case 'Matched':
       filteredCandidates = this.props.candidates.filter(x => {
         return ['Applied', 'Matched', 'Sourced', 'Reffered'].indexOf(x.get('contact').get('applicantState')) > -1;
       });
       break;
-    case 'in process':
+    case 'In Process':
       filteredCandidates = this.props.candidates.filter(x => {
         return ['Screened', 'Contacted', 'Queued', 'Submitted', 'Accepted', 'Interviewing', 'Offer Letter', 'Hired'].indexOf(x.get('contact').get('applicantState')) > -1;
       });
       break;
-    case 'declined':
+    case 'Declined':
       filteredCandidates = this.props.candidates.filter(x => {
         return ['REJECTED', 'CANDIDATE REJECTED'].indexOf(x.get('contact').get('applicantState')) > -1;
       });
