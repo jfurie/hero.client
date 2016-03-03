@@ -231,7 +231,9 @@ export default class ClientDetails extends React.Component {
 
     let inline = true;
     if (company) {
-
+      // get cover
+      let cover = ((company.get('image')) ? (company.get('image').get('item')) : (defaultImage));
+      
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
       let angelList = company.get('angelList');
@@ -289,7 +291,7 @@ export default class ClientDetails extends React.Component {
           <DetailsCard
               title={company.get('name')}
               subtitle={company.get('businessType') || 'Software Company'}
-              cover={defaultImage}
+              cover={cover}
               mainColor={Styles.Colors.deepPurple500}
               actions={actions}
               avatar={<CompanyAvatar style={{width: '95px'}} url={company.get('website')}/>}

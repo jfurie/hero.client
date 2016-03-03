@@ -6,6 +6,8 @@ export default function getCompanyDataFromState(state, companyId) {
   let company = ((state.companies.list.size > 0) ? (state.companies.list.get(companyId)) : (null));
 
   if (company) {
+    let companyImage = company ? state.resources.list.get(company.get('imageId')) : new Immutable.Map();
+    company = company.set('image', companyImage);
 
     // filter down company jobs
 
