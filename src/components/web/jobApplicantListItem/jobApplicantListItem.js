@@ -212,7 +212,7 @@ export default class JobApplicantListItem extends React.Component {
       emailHash = md5(contact.get('email'));
     }
 
-    let avatarSrc = `http://www.gravatar.com/avatar/${emailHash}?d=mm`;
+    let avatarSrc = `https://www.gravatar.com/avatar/${emailHash}?d=mm`;
 
     return (
       <div style={style.cardBasic.layout}>
@@ -378,7 +378,6 @@ export default class JobApplicantListItem extends React.Component {
         <CardActions
             style={{
               backgroundColor:'rgba(100,100,100,0.2)',
-              boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)',
             }}
             className="row between-xs"
         >

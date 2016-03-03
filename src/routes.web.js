@@ -42,6 +42,8 @@ import MyJobsPage from './containers/web/jobs/myJobsContainer';
 import JobCreatePage from './containers/web/jobs/jobCreateContainer';
 import JobEditPage from './containers/web/jobs/jobEditContainer';
 
+//search
+import SearchContainer from './containers/web/search/searchContainer';
 //notes
 import NoteCreatePage from './containers/web/notes/noteCreateContainer';
 
@@ -200,7 +202,20 @@ export default(store) => {
           <Route path="jobs">
               <IndexRoute component={MyJobsPage}/>
               <Route path="search" component={JobSearchContainer}/>
+                <Route path=":jobId/applicants" component={JobDetailsPage}
+                  onEnter={(nextState) => {
+                    nextState.location.state={'tab':'applicants'};}}
+                />
+              <Route path=":jobId/desc" component={JobDetailsPage}
+                  onEnter={(nextState) => {
+                    nextState.location.state={'tab':'desc'};}}
+                />
+              <Route path=":jobId/notes" component={JobDetailsPage}
+                  onEnter={(nextState) => {
+                    nextState.location.state={'tab':'notes'};}}
+                />
               <Route path=":jobId" component={JobDetailsPage}/>
+
               <Route path=":jobId/create" component={JobCreatePage}/>
               <Route path=":jobId/edit" component={JobEditPage}/>
           </Route>
@@ -212,7 +227,9 @@ export default(store) => {
             <Route path=":candidateId" component={CandidateDetailsPage}/>
             <Route path=":candidateId/notes/:noteId/create" component={NoteCreatePage} />
           </Route>
-
+          <Route path="search">
+            <IndexRoute component={SearchContainer}/>
+          </Route>
           {/* Settings  */}
           <Route path="settings">
             <IndexRoute component={SettingsHomePage}/>

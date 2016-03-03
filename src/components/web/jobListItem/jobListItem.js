@@ -295,7 +295,6 @@ export default class JobListItem extends React.Component {
         {type !== 'mini'?(<div>
           <CardActions style={{
             backgroundColor:'rgba(100,100,100,0.2)',
-            boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)',
           }}
           >
             <FindButton />

@@ -4,10 +4,8 @@ import {
   Dialog, IconButton, ToolbarGroup, Toolbar, Toggle, SelectField, MenuItem,
   FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles, Snackbar,
 } from 'material-ui';
-import {
- Location,
- TagsInput
-} from '../';
+import { Location, TagsInput } from '../';
+
 import validateContact from '../../../validators/contact';
 
 const style = {
@@ -139,6 +137,17 @@ export default class ContactCreate extends React.Component {
     this.props.onCompanyChange(value);
   }
 
+  _handleCategorySelectValueChange(event, index, value) {
+    let newContact = this.props.contact;
+    if (value) {
+      newContact = newContact.merge({
+        'candidateType': value.get('title'),
+        'categoryId': value.get('id'),
+      });
+    }
+    this.props.onContactChange(newContact);
+  }
+
   _handleStatusSelectValueChange(event, index, value) {
     let newContact = this.props.contact;
 
@@ -161,8 +170,21 @@ export default class ContactCreate extends React.Component {
     }
   }
 
+  getCategoryFromTitle(title) {
+
+    let category = null;
+
+    this.props.categories.forEach(function(c) {
+      if (c.get('title') === title) {
+        category = c;
+      }
+    });
+
+    return category;
+  }
+
   _renderContents() {
-    let { contact, companies } = this.props;
+    let { contact, companies, categories } = this.props;
 
     contact = contact || new Immutable.Map({errors:new Immutable.Map()});
 
@@ -194,10 +216,10 @@ export default class ContactCreate extends React.Component {
 
                   <div className="col-xs-10 ">
                     <Toggle
-                      style={style.toggle}
-                      label="Flag as Job Seeker"
-                      defaultToggled={isCandidate}
-                      onToggle={(e) => this._handleIsCandidateToggle.bind(this)(e, 'isCandidate')}
+                        style={style.toggle}
+                        label="Flag as Job Seeker"
+                        defaultToggled={isCandidate}
+                        onToggle={(e) => this._handleIsCandidateToggle.bind(this)(e, 'isCandidate')}
                     />
                   </div>
 
@@ -229,7 +251,8 @@ export default class ContactCreate extends React.Component {
                         errorStyle={style.error}
                         onChange={(e) => this._handleChange.bind(this)(e, 'firstName')}
                         value={contact.get('firstName')}
-                        floatingLabelText="First Name" />
+                        floatingLabelText="First Name"
+                    />
                   </div>
                   <div className="col-xs-10 ">
                     <TextField
@@ -238,7 +261,8 @@ export default class ContactCreate extends React.Component {
                         errorStyle={style.error}
                         onChange={(e) => this._handleChange.bind(this)(e, 'lastName')}
                         value={contact.get('lastName')}
-                        floatingLabelText="Last Name" />
+                        floatingLabelText="Last Name"
+                    />
                   </div>
                   <div className="col-xs-10 ">
                     <TextField
@@ -247,7 +271,8 @@ export default class ContactCreate extends React.Component {
                         errorStyle={style.error}
                         onChange={(e) => this._handleChange.bind(this)(e, 'title')}
                         value={contact.get('title')}
-                        floatingLabelText="Title" />
+                        floatingLabelText="Title"
+                    />
                   </div>
                   <div className="col-xs-10 ">
                     <TextField
@@ -256,7 +281,8 @@ export default class ContactCreate extends React.Component {
                         errorStyle={style.error}
                         onChange={(e) => this._handleChange.bind(this)(e, 'email')}
                         value={contact.get('email')}
-                        floatingLabelText="Email" />
+                        floatingLabelText="Email"
+                    />
                   </div>
                   <div className="col-xs-10 ">
                     <TextField
@@ -265,7 +291,8 @@ export default class ContactCreate extends React.Component {
                         errorStyle={style.error}
                         onChange={(e) => this._handleChange.bind(this)(e, 'phone')}
                         value={contact.get('phone')}
-                        floatingLabelText="Phone Number" />
+                        floatingLabelText="Phone Number"
+                    />
                   </div>
                   <div className="col-xs-10 ">
                     <SelectField
@@ -325,7 +352,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'workAuthorization')}
                               value={contact.get('workAuthorization')}
-                              floatingLabelText="Work Authorization" />
+                              floatingLabelText="Work Authorization"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -334,7 +362,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'summary')}
                               value={contact.get('summary')}
-                              floatingLabelText="Summary" />
+                              floatingLabelText="Summary"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -343,7 +372,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'pitch')}
                               value={contact.get('pitch')}
-                              floatingLabelText="Pitch" />
+                              floatingLabelText="Pitch"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -352,7 +382,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'currentSalary')}
                               value={contact.get('currentSalary')}
-                              floatingLabelText="Current Salary" />
+                              floatingLabelText="Current Salary"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -361,7 +392,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'currentHourly')}
                               value={contact.get('currentHourly')}
-                              floatingLabelText="Current Hourly" />
+                              floatingLabelText="Current Hourly"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -370,7 +402,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'desiredSalary')}
                               value={contact.get('desiredSalary')}
-                              floatingLabelText="Desired Salary" />
+                              floatingLabelText="Desired Salary"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -379,7 +412,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'desiredHourly')}
                               value={contact.get('desiredHourly')}
-                              floatingLabelText="Desired Hourly" />
+                              floatingLabelText="Desired Hourly"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -388,7 +422,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'bonusNotes')}
                               value={contact.get('bonusNotes')}
-                              floatingLabelText="Bonus Notes" />
+                              floatingLabelText="Bonus Notes"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -397,7 +432,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'availability')}
                               value={contact.get('availability')}
-                              floatingLabelText="Availability" />
+                              floatingLabelText="Availability"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -406,16 +442,36 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'rfl')}
                               value={contact.get('rfl')}
-                              floatingLabelText="rfl" />
+                              floatingLabelText="rfl"
+                          />
                         </div>
                         <div>
-                          <TextField
+                          <SelectField
+                              floatingLabelText="Candidate Type"
+                              floatingLabelStyle={style.floatLabel}
+                              fullWidth
+                              style={style.select}
+                              onChange={this._handleCategorySelectValueChange.bind(this)}
+                              hintText={''}
+                              value={this.getCategoryFromTitle(contact.get('candidateType'))}
+                          >
+                            {categories.map((category) => {
+                              return (
+                                <MenuItem
+                                    value={category}
+                                    primaryText={category.get('title')}
+                                />
+                              );
+                            })}
+                          </SelectField>
+                          {/*<TextField
                               style={style.textField}
                               errorText={(contact.get('errors') && contact.get('errors').candidateType) || ''}
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'candidateType')}
                               value={contact.get('candidateType')}
-                              floatingLabelText="Candidate Type" />
+                              floatingLabelText="Candidate Type"
+                          />*/}
                         </div>
                         <div>
                           <TextField
@@ -424,7 +480,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'startDate')}
                               value={contact.get('startDate')}
-                              floatingLabelText="Start Date" />
+                              floatingLabelText="Start Date"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -433,7 +490,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'targetLocations')}
                               value={contact.get('targetLocations')}
-                              floatingLabelText="Target Locations" />
+                              floatingLabelText="Target Locations"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -442,7 +500,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'jobsAppliedFor')}
                               value={contact.get('jobsAppliedFor')}
-                              floatingLabelText="Jobs Applied For" />
+                              floatingLabelText="Jobs Applied For"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -451,7 +510,8 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'xfactors')}
                               value={contact.get('xfactors')}
-                              floatingLabelText="xfactors" />
+                              floatingLabelText="xfactors"
+                          />
                         </div>
                         <div>
                           <TextField
@@ -460,21 +520,22 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'contactable')}
                               value={contact.get('contactable')}
-                              floatingLabelText="Contactable" />
+                              floatingLabelText="Contactable"
+                          />
                         </div>
                       </div>
                       : <div></div>
                   }
 
                   <div className="col-xs-10 " style={{marginTop:'20px', marginBottom:'20px'}}>
-                    <RaisedButton primary={true} label='Save' onTouchTap={this._handleSubmit.bind(this)}></RaisedButton>
+                    <RaisedButton primary label="Save" onTouchTap={this._handleSubmit.bind(this)} />
                   </div>
                   </div>
                 </form>
               </div>
           </div>
           <Snackbar
-              open={ (this.props.candidates && this.props.candidates.errorMessage)?true:false}
+              open={(this.props.candidates && this.props.candidates.errorMessage)?true:false}
               message={this.props.candidates && this.props.candidates.errorMessage}
               autoHideDuration={4000}
           />
@@ -493,19 +554,19 @@ export default class ContactCreate extends React.Component {
       return (
       <div>
           <Dialog
-                open={this.props.open}
-                autoDetectWindowHeight={false}
-                autoScrollBodyContent={false}
-                repositionOnUpdate={false}
-                defaultOpen={false}
-                style={style.dialog}
-                bodyStyle={style.bodyStyle}
-                contentStyle={style.contentStyle}
-            >
+              open={this.props.open}
+              autoDetectWindowHeight={false}
+              autoScrollBodyContent={false}
+              repositionOnUpdate={false}
+              defaultOpen={false}
+              style={style.dialog}
+              bodyStyle={style.bodyStyle}
+              contentStyle={style.contentStyle}
+          >
             <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
               <Toolbar style={style.toolbar}>
                 <ToolbarGroup key={0} float="left">
-                  <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
+                  <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName="material-icons">close</IconButton>
                   <ToolbarTitle style={style.toolbarTitle} text="Create Contact" />
                 </ToolbarGroup>
                 <ToolbarGroup key={1} float="right">

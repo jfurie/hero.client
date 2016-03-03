@@ -51,9 +51,6 @@ export ShareButton from './actionButtons/shareButton';
 export CardBasic from './cardBasic/cardBasic';
 export JobOrderSwipeArea from './jobOrderSwipeArea/jobOrderSwipeArea';
 export JobOrderMoneySwipeArea from './jobOrderMoneySwipeArea/jobOrderMoneySwipeArea';
-export FilterDialog from './filterDialog/filterDialog';
-export SelectToggle from './selectToggle/selectToggle';
-export GlobalSearch from './globalSearch/globalSearch';
 
 /* all the web modals components */
 

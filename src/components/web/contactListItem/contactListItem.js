@@ -138,14 +138,14 @@ export default class ContactListItem extends React.Component {
     }
   }
 
-  renderBasic() {
+  renderBasic(companies) {
     let {contact, company} = this.props;
 
     return (
       <CardBasic
           image={<Gravatar style={{width:'40px'}} email={contact.get('email')} status={contact.get('status')} />}
           title= {<div style={{fontWeight: 'bold'}}>{contact.get('displayName')}</div>}
-          subtitle1={company?company.get('name'):''}
+          subtitle1={company?company.get('name'):companies}
           subtitle2={contact.get('title')}
           onTouchTap={this.clickContact.bind(this)}
           stars={<Stars score={contact.get('rating')} />}
@@ -240,7 +240,7 @@ export default class ContactListItem extends React.Component {
     }
 
     return (
-      type == 'tiny' ? (<div>{this.renderTags()}{this.renderBasic()}</div>) :
+      type == 'tiny' ? (<div>{this.renderTags()}{this.renderBasic(companies)}</div>) :
       <Card
         style={{
           height: type !=='mini'?'auto':'169px',
@@ -253,7 +253,7 @@ export default class ContactListItem extends React.Component {
             height: type !=='mini'?'auto':'auto',
           }}>
             {this.renderTags()}
-            {this.renderBasic()}
+            {this.renderBasic(companies)}
             {type !== 'mini'?
             (<div>
               <Divider style={{marginTop:'8px'}}></Divider>
@@ -288,7 +288,6 @@ export default class ContactListItem extends React.Component {
         </CardText>
         <CardActions style={{
           backgroundColor:'rgba(100,100,100,0.2)',
-          boxShadow:'inset 0 1px 6px rgba(0, 0, 0, 0.24)',
 
         }}>
           <PhoneButton phone={contact.get('phone')} />
