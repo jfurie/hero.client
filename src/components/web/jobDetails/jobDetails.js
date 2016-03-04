@@ -11,6 +11,8 @@ import {
   IconMenu, MenuItem, Card, CardText, Avatar,
 } from 'material-ui';
 
+import './jobDetails.scss';
+
 const style = {
   dialog: {
     height: '100%',
