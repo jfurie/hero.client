@@ -149,8 +149,12 @@ class JobApplicantList extends React.Component {
   editApplicantState(state) {
     let contact = this.state.contactPendingApplicantStateChange;
 
-    if (this.props.editContactApplicantState && contact && contact.get('applicantState') != state) {
-      this.props.editContactApplicantState(contact.get('id'), state);
+    let candidate = this.props.candidates.filter(x => {
+      return x.get('contactId') == contact.get('id');
+    })[0];
+
+    if (this.props.editApplicantState && candidate.get('applicantState') != state) {
+      this.props.editApplicantState(candidate.get('id'), state);
     }
 
     this.setState({
@@ -174,9 +178,15 @@ class JobApplicantList extends React.Component {
   }
 
   editAllApplicantState(state) {
-    if (this.props.editContactApplicantState) {
-      this.state.selectedContacts.forEach(x => {
-        this.props.editContactApplicantState(x.get('id'), state);
+    if (this.props.editApplicantState) {
+      let candidates = this.props.candidates.filter(x => {
+        return this.state.selectedContacts.filter(y => {
+          return x.get('contactId') == y.get('id');
+        }).length > 0;
+      });
+
+      candidates.forEach(x => {
+        this.props.editApplicantState(x.get('id'), state);
       });
     }
 
@@ -357,17 +367,17 @@ class JobApplicantList extends React.Component {
     switch(this.state.selectedFilter) {
     case 'Matched':
       filteredCandidates = this.props.candidates.filter(x => {
-        return ['Applied', 'Matched', 'Sourced', 'Reffered'].indexOf(x.get('contact').get('applicantState')) > -1;
+        return ['Applied', 'Matched', 'Sourced', 'Reffered'].indexOf(x.get('applicantState')) > -1;
       });
       break;
     case 'In Process':
       filteredCandidates = this.props.candidates.filter(x => {
-        return ['Screened', 'Contacted', 'Queued', 'Submitted', 'Accepted', 'Interviewing', 'Offer Letter', 'Hired'].indexOf(x.get('contact').get('applicantState')) > -1;
+        return ['Screened', 'Contacted', 'Queued', 'Submitted', 'Accepted', 'Interviewing', 'Offer Letter', 'Hired'].indexOf(x.get('applicantState')) > -1;
       });
       break;
     case 'Declined':
       filteredCandidates = this.props.candidates.filter(x => {
-        return ['REJECTED', 'CANDIDATE REJECTED'].indexOf(x.get('contact').get('applicantState')) > -1;
+        return ['REJECTED', 'CANDIDATE REJECTED'].indexOf(x.get('applicantState')) > -1;
       });
       break;
     default:
@@ -506,7 +516,7 @@ class JobApplicantList extends React.Component {
           {filteredCandidates.map((candidate, key) => {
             let selected = this.state.selectedContacts.has(candidate.get('contactId'));
             let selectedApplicantStateOption = applicantStateOptions.filter(x => {
-              return x.value == candidate.get('contact').get('applicantState');
+              return x.value == candidate.get('applicantState');
             });
 
             selectedApplicantStateOption = selectedApplicantStateOption.length > 0 ? selectedApplicantStateOption[0] : null;
@@ -528,6 +538,7 @@ class JobApplicantList extends React.Component {
                   selectApplicantState={this.selectApplicantState.bind(this)}
                   applicantStateOptions={applicantStateOptions}
                   selectedApplicantStateOption={selectedApplicantStateOption}
+                  applicantState={candidate.get('applicantState')}
               />
             );
           })}

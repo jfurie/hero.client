@@ -4,8 +4,8 @@ import { pushState } from 'redux-router';
 import Immutable from 'immutable';
 import { JobDetails } from '../../../components/web';
 import { getJobDetail, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs';
-import { getAllJobCandidates, deleteCandidate } from '../../../modules/candidates';
-import { createContactFavorite, deleteContactFavorite, editContact, editContactApplicantState } from '../../../modules/contacts';
+import { getAllJobCandidates, deleteCandidate, editApplicantState } from '../../../modules/candidates';
+import { createContactFavorite, deleteContactFavorite, editContact } from '../../../modules/contacts';
 import { getImageByJobId } from '../../../modules/resources';
 import { getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 
@@ -19,7 +19,7 @@ function getData(state, jobId) {
   };
 }
 
-@connect((state, props) => (getData(state, props.params.jobId)), {pushState, getJobDetail, createJobFavorite, deleteJobFavorite, getAllJobCandidates, getImageByJobId, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote, createContactFavorite, deleteContactFavorite, editContact, editContactApplicantState, deleteCandidate})
+@connect((state, props) => (getData(state, props.params.jobId)), {pushState, getJobDetail, createJobFavorite, deleteJobFavorite, getAllJobCandidates, getImageByJobId, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote, createContactFavorite, deleteContactFavorite, editContact, editApplicantState, deleteCandidate})
 class JobDetailsPage extends React.Component {
 
   constructor(props) {
@@ -95,8 +95,8 @@ class JobDetailsPage extends React.Component {
     this.props.deleteContactFavorite(contact.get('id'));
   }
 
-  editContactApplicantState(contactId, state) {
-    this.props.editContactApplicantState(contactId, state);
+  editApplicantState(candidateId, state) {
+    this.props.editApplicantState(candidateId, state);
   }
 
   _guid() {
@@ -126,7 +126,7 @@ class JobDetailsPage extends React.Component {
         onJobDetailsClose={this.onJobDetailsClose.bind(this)}
         editContact={this.props.editContact.bind(this)}
         deleteCandidate={this.props.deleteCandidate.bind(this)}
-        editContactApplicantState={this.props.editContactApplicantState.bind(this)}
+        editApplicantState={this.props.editApplicantState.bind(this)}
         open
         job={job} />
       </div>

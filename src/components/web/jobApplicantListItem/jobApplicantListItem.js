@@ -335,7 +335,7 @@ export default class JobApplicantListItem extends React.Component {
               backgroundColor: this.props.selectedApplicantStateOption && this.props.selectedApplicantStateOption.color ? this.props.selectedApplicantStateOption.color : Styles.Colors.grey600,
             }}
           >
-          {contact.get('applicantState') || 'New'}
+          {this.props.applicantState || 'New'}
         </ListItem>
         <CardText
           style={{

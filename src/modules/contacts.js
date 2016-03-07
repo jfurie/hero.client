@@ -621,17 +621,3 @@ export function deleteContactFavorite(contactId){
     });
   };
 }
-
-export function editContactApplicantState(contactId, state){
-  return (dispatch) => {
-    dispatch({
-      types: [EDIT_CONTACT, EDIT_CONTACT_SUCCESS, EDIT_CONTACT_FAIL],
-      promise: (client, auth) => client.api.put(`/contacts/editApplicantState?id=${contactId}&state=${state}`, {
-        authToken: auth.authToken,
-      }).then(function (contact) {
-        dispatch(saveCandidateByContactResult(contact));
-        return contact;
-      }),
-    });
-  };
-}

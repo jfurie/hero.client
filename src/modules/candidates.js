@@ -4,6 +4,9 @@ import * as jobConstants from './jobs/constants';
 const CREATE_CANDIDATE = 'hero.client/candidates/CREATE_CANDIDATE';
 const CREATE_CANDIDATE_SUCCESS = 'hero.client/candidates/CREATE_CANDIDATE_SUCCESS';
 const CREATE_CANDIDATE_FAIL = 'hero.client/candidates/CREATE_CANDIDATE_FAIL';
+const EDIT_CANDIDATE = 'hero.client/candidates/EDIT_CANDIDATE';
+const EDIT_CANDIDATE_SUCCESS = 'hero.client/candidates/EDIT_CANDIDATE_SUCCESS';
+const EDIT_CANDIDATE_FAIL = 'hero.client/candidates/EDIT_CANDIDATE_FAIL';
 const GET_CANDIDATES = 'hero.client/candidates/GET_CANDIDATES';
 const GET_CANDIDATES_SUCCESS = 'hero.client/candidates/GET_CANDIDATES_SUCCESS';
 const GET_CANDIDATES_FAIL = 'hero.client/candidates/GET_CANDIDATES_FAIL';
@@ -290,6 +293,23 @@ export default function reducer(state = initialState, action = {}) {
       myCandidateIds: state.myCandidateIds.mergeDeep(candidatesMap),
     };
   }
+  case EDIT_CANDIDATE_SUCCESS:
+    {
+      let candidateMap = {};
+      candidateMap[action.result.id] = action.result;
+
+      candidateMap[action.id] = {
+        saving: false,
+        savingError: '',
+      };
+
+      return {
+        ...state,
+        saving:false,
+        savingError:'',
+        list:state.list.mergeDeep(candidateMap),
+      };
+    }
   default:
     return state;
   }
@@ -445,5 +465,19 @@ export function saveCandidateByContactResult(contact){
   return {
     type: SAVE_CANDIDATE_BY_CONTACT_RESULT,
     result: contact,
+  };
+}
+
+export function editApplicantState(id, state){
+  return (dispatch) => {
+    dispatch({
+      types: [EDIT_CANDIDATE, EDIT_CANDIDATE_SUCCESS, EDIT_CANDIDATE_FAIL],
+      promise: (client, auth) => client.api.put(`/candidates/editApplicantState?id=${id}&state=${state}`, {
+        authToken: auth.authToken,
+      }).then(function (candidate) {
+
+        return candidate;
+      }),
+    });
   };
 }
