@@ -23,7 +23,7 @@ import AccountHomePage from './containers/web/account/accountHomeContainer';
 import ContactDetailsPage from './containers/web/contacts/contactDetailsContainer';
 import ContactSearchContainer from './containers/web/contacts/contactSearchContainer';
 import ContactCreatePage from './containers/web/contacts/contactCreateContainer';
-import ContactEditCategoriesContainer from './containers/web/contacts/ContactEditCategoriesContainer';
+import ContactEditCategoriesContainer from './containers/web/contacts/contactEditCategoriesContainer';
 // candidates
 import MyCandidatesPage from './containers/web/candidates/myCandidatesContainer';
 import CandidateDetailsPage from './containers/web/candidates/candidateDetailsContainer';
