@@ -54,7 +54,7 @@ export JobOrderMoneySwipeArea from './jobOrderMoneySwipeArea/jobOrderMoneySwipeA
 export FilterDialog from './filterDialog/filterDialog';
 export SelectToggle from './selectToggle/selectToggle';
 export GlobalSearch from './globalSearch/globalSearch';
-
+export ContactEditCategories from './contactEditCategories/contactEditCategories';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';

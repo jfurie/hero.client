@@ -13,9 +13,11 @@ let styles = {
     textAlign: 'center',
   },
   selectBoxLabel: {
+    fontSize:'13px',
+    color: 'rgba(0, 0, 0, 0.87)',
     width: '100%',
-    padding: '15px 0',
-    border: '3px solid #ddd',
+    padding: '8px 0',
+    border: '1px solid #ddd',
     borderLeftStyle: 'none',
     borderRightStyle: 'none',
     borderColor: '#ddd',
@@ -28,10 +30,10 @@ let styles = {
     selectedCell: {
       borderColor: Styles.Colors.blue600,
       backgroundColor: Styles.Colors.blue600,
+      borderRadius: '3px',
       color: '#fff',
       borderLeftStyle: 'none',
       borderRightStyle: 'none',
-      textTransform: 'uppercase',
     },
   },
 };
@@ -63,7 +65,7 @@ export default class SelectToggle extends React.Component {
                   ...(isSelected ? styles.selectBoxLabel.selectedCell : {}),
                 }}
                 >
-                {option.value}
+                {option.title || option.value}
                 </div>
               </div>
             );

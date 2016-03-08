@@ -25,6 +25,18 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
+export function shouldGetCategories(state){
+  return state && state.categories && state.categories.list && state.categories.list.size <= 0;
+}
+
+export function getCategoriesIfNeeded(){
+  return (dispatch, getState) => {
+    if(shouldGetCategories(getState())){
+      return dispatch(getAllCategories());
+    }
+  };
+}
+
 export function getAllCategories() {
   return {
     types: [GET_CATEGORIES, GET_CATEGORIES_SUCCESS, GET_CATEGORIES_FAIL],

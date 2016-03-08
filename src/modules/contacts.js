@@ -43,6 +43,23 @@ const GET_MY_CONTACTS_FAIL = 'hero.client/candidates/GET_MY_CONTACTS_FAIL';
 const GET_MY_FAVORITE_CONTACTS = 'hero.client/candidates/GET_MY_FAVORITE_CONTACTS';
 const GET_MY_FAVORITE_CONTACTS_SUCCESS = 'hero.client/candidates/GET_MY_FAVORITE_CONTACTS_SUCCESS';
 const GET_MY_FAVORITE_CONTACTS_FAIL = 'hero.client/candidates/GET_MY_FAVORITE_CONTACTS_FAIL';
+const SET_CONTACT_CATEGORIES_LOCAL = 'hero.client/contacts/SET_CONTACT_CATEGORIES_LOCAL';
+const SET_EXPERIENCE = 'hero.client/contacts/SET_EXPERIENCE';
+const SET_PRIMARY = 'hero.client/contacts/SET_PRIMARY';
+const CREATE_CONTACT_CATEGORY = 'hero.client/contacts/CREATE_CONTACT_CATEGORY';
+const CREATE_CONTACT_CATEGORY_SUCCESS = 'hero.client/contacts/CREATE_CONTACT_CATEGORY_SUCCESS';
+const CREATE_CONTACT_CATEGORY_FAIL = 'hero.client/contacts/CREATE_CONTACT_CATEGORY_FAIL';
+const EDIT_CONTACT_CATEGORY = 'hero.client/contacts/EDIT_CONTACT_CATEGORY';
+const EDIT_CONTACT_CATEGORY_SUCCESS = 'hero.client/contacts/EDIT_CONTACT_CATEGORY_SUCCESS';
+const EDIT_CONTACT_CATEGORY_FAIL = 'hero.client/contacts/EDIT_CONTACT_CATEGORY_FAIL';
+let ContactCategory = new Immutable.Record({
+  id:null,
+  categoryId:null,
+  contactId:null,
+  experience:0,
+  primary:true,
+  frameworkInclude: []
+});
 
 const initialState = {
   list: new Immutable.Map(),
@@ -86,7 +103,7 @@ export default function reducer(state = initialState, action = {}) {
 
     return {
       ...state,
-      list: state.list.mergeDeep(contactsMap),
+      list: state.list.merge(contactsMap),
     };
   }
   case GET_ONE_CONTACT_FAIL: {
@@ -418,6 +435,96 @@ export default function reducer(state = initialState, action = {}) {
       return state;
     }
   }
+  case SET_EXPERIENCE:{
+    let contactCategory = action.result;
+    let list = state.list.updateIn([action.contactId,'_contactCategories'],arr =>{
+      let returnArr = null;
+      let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
+      if(row){
+        let newItem = row[1].set('experience',contactCategory.experience);
+        returnArr = arr.set(row[0],newItem);
+      } else {
+        returnArr = arr;
+      }
+      return returnArr;
+    });
+    return {
+      ...state,
+      list,
+    };
+  }
+  case SET_CONTACT_CATEGORIES_LOCAL:{
+    //find current contact
+    let contactCategory = action.result;
+    let list = state.list.updateIn([action.contactId,'_contactCategories'],arr =>{
+      let returnArr = null;
+      let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
+      if(!row){
+        returnArr = arr.push( new ContactCategory(contactCategory));
+      } else {
+        returnArr = arr.set(row[0],new ContactCategory(contactCategory));
+      }
+      return returnArr;
+    });
+    return {
+      ...state,
+      list,
+    };
+  }
+  case SET_PRIMARY:{
+    let contactCategory = action.result;
+    let list = state.list.updateIn([action.contactId,'_contactCategories'],arr =>{
+      let returnArr = null;
+      let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
+      if(row){
+        let newItem = row[1].set('primary',contactCategory.primary);
+        returnArr = arr.set(row[0],newItem);
+      } else {
+        returnArr = arr;
+      }
+      return returnArr;
+    });
+    return {
+      ...state,
+      list,
+    };
+  }
+  case CREATE_CONTACT_CATEGORY_SUCCESS:{
+    let contactCategory = action.result.response;
+    let contactId = action.result.contactId;
+    let list = state.list.updateIn([contactId,'_contactCategories'],arr =>{
+      let returnArr = null;
+      let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
+      if(row){
+        returnArr = arr.set(row[0],new ContactCategory(contactCategory));
+      } else {
+        returnArr = arr;
+      }
+      return returnArr;
+    });
+    return {
+      ...state,
+      list,
+    };
+  }
+  case EDIT_CONTACT_CATEGORY_SUCCESS:{
+    let contactCategory = action.result.response;
+    let contactId = action.result.contactId;
+    let list = state.list.updateIn([contactId,'_contactCategories'],arr =>{
+      let returnArr = null;
+      let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
+      if(row){
+        returnArr = arr.set(row[0],new ContactCategory(contactCategory));
+      } else {
+        returnArr = arr;
+      }
+      return returnArr;
+    });
+    return {
+      ...state,
+      list,
+    };
+  }
   default:
     return state;
   }
@@ -620,4 +727,117 @@ export function deleteContactFavorite(contactId){
       }),
     });
   };
+}
+
+let guid = function() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+};
+
+export function setCategoryLocal(contactId, contactCategory){
+  if(contactCategory){
+    if(contactCategory.toJSON){
+      contactCategory = contactCategory.toJSON();
+    }
+    if(!contactCategory.id){
+      contactCategory.id = 'tmp_' + guid();
+    }
+  }
+  return {
+    type:SET_CONTACT_CATEGORIES_LOCAL,
+    result:contactCategory,
+    contactId,
+  };
+}
+export function setPrimary(contactId,contactCategory){
+  return (dispatch) => {
+    if(contactCategory){
+      if(contactCategory.toJSON){
+        contactCategory = contactCategory.toJSON();
+      }
+    }
+    if((contactCategory.id && contactCategory.id.indexOf('tmp')>-1 )|| !contactCategory.id){
+      //is a temp object, delete the id and createContactCategory
+      delete contactCategory.id;
+      dispatch(createContactCategory(contactId, contactCategory));
+    } else{
+      dispatch(saveContactCategory(contactId, contactCategory));
+    }
+    dispatch({
+      type:SET_PRIMARY,
+      result:contactCategory,
+      contactId,
+    });
+  };
+
+}
+
+export function saveContactCategory(contactId,contactCategory){
+  return {
+    types: [EDIT_CONTACT_CATEGORY, EDIT_CONTACT_CATEGORY_SUCCESS, EDIT_CONTACT_CATEGORY_FAIL],
+    promise: (client, auth) => client.api.put(`/contacts/${contactId}/contactCategories/${contactCategory.id}`, {
+      authToken: auth.authToken,
+      data: contactCategory,
+    }).then((response) => {
+      return {
+        response,
+        contactId,
+      }
+    }),
+  };
+}
+export function createContactCategory(contactId,contactCategory){
+  return {
+    types: [CREATE_CONTACT_CATEGORY, CREATE_CONTACT_CATEGORY_SUCCESS, CREATE_CONTACT_CATEGORY_FAIL],
+    promise: (client, auth) => client.api.post(`/contacts/${contactId}/contactCategories`, {
+      authToken: auth.authToken,
+      data: contactCategory,
+    }).then((response) =>{
+      return {
+        response,
+        contactId,
+      }
+    }),
+  };
+}
+
+export function setExperience(contactId,contactCategory, category){
+  return (dispatch, getState) => {
+    if(contactCategory){
+      if(contactCategory.toJSON){
+        contactCategory = contactCategory.toJSON();
+      }
+    }
+    let currentContact = getState().contacts.list.get(contactId);
+    let _contactCategories = currentContact.get('_contactCategories');
+    let currentContactCategory = _contactCategories.find(x=>x.get('categoryId') == contactCategory.categoryId );
+    if(currentContactCategory){
+      if(currentContactCategory.get('experience') == 0 && contactCategory.experience > 0){
+        //Setting from zero to something, set the Tags
+        contactCategory.frameworkInclude = category.get('frameworkArr').toArray();
+        frameworkIncludeDirty = true;
+      } else if (currentContactCategory.get('experience') != 0 && contactCategory.experience <=0) {
+        contactCategory.frameworkInclude = [];
+        frameworkIncludeDirty = true;
+      }
+    }
+    if((contactCategory.id && contactCategory.id.indexOf('tmp')>-1 )|| !contactCategory.id){
+      //is a temp object, delete the id and createContactCategory
+      delete contactCategory.id;
+      dispatch(createContactCategory(contactId, contactCategory));
+    } else{
+      dispatch(saveContactCategory(contactId, contactCategory));
+    }
+    dispatch({
+      type:SET_EXPERIENCE,
+      result:contactCategory,
+      contactId,
+      category,
+    });
+  };
+
 }

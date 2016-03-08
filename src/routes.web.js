@@ -23,7 +23,7 @@ import AccountHomePage from './containers/web/account/accountHomeContainer';
 import ContactDetailsPage from './containers/web/contacts/contactDetailsContainer';
 import ContactSearchContainer from './containers/web/contacts/contactSearchContainer';
 import ContactCreatePage from './containers/web/contacts/contactCreateContainer';
-
+import ContactEditCategoriesContainer from './containers/web/contacts/ContactEditCategoriesContainer';
 // candidates
 import MyCandidatesPage from './containers/web/candidates/myCandidatesContainer';
 import CandidateDetailsPage from './containers/web/candidates/candidateDetailsContainer';
@@ -195,6 +195,7 @@ export default(store) => {
             <Route path="search" component={ContactSearchContainer}/>
             <Route path=":contactId" component={ContactDetailsPage}/>
             <Route path=":contactId/create" component={ContactCreatePage}/>
+            <Route path=":contactId/categories/edit" component={ContactEditCategoriesContainer}/>
             <Route path=":contactId/notes/:noteId/create" component={NoteCreatePage} />
           </Route>
 
