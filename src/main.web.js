@@ -15,7 +15,11 @@ const history = useScroll(createHistory);
 //import DevTools from './utils/devTools';
 import Config from './utils/config';
 
-injectTapEventPlugin();
+injectTapEventPlugin({
+  shouldRejectClick() {
+    return true;
+  }
+});
 
 let client = {};
 client.api = new ApiClient({
