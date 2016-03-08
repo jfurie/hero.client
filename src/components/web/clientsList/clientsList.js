@@ -101,6 +101,11 @@ class ClientsList extends React.Component {
     if(!heights || heights.length <= 0){
       heights = 261;
     }
+
+    clients = clients.sort((a, b) => {
+      return a.get('name').localeCompare(b.get('name'));
+    });
+
     return (
 
       <div>

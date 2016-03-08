@@ -43,6 +43,10 @@ class ContactsList extends React.Component {
       contactCount = contacts.size;
     }
 
+    contacts = contacts.sort((a, b) => {
+      return a.get('displayName').localeCompare(b.get('displayName'));
+    });
+
     return (
       <List style={{backgroundColor: 'transparent'}} subheader={`${contactCount} Contact${(contactCount !== 1) ? ('s') : ('')}`}>
         {contacts.map((contact) => {

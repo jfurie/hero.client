@@ -95,6 +95,11 @@ class JobsList extends React.Component {
     if(!heights || heights.length <= 0){
       heights = 271;
     }
+
+    jobs = jobs.sort((a, b) => {
+      return a.get('title').localeCompare(b.get('title'));
+    });
+
     return (
       /*<List subheader={subheader}>
         {companies.map(function(company){
