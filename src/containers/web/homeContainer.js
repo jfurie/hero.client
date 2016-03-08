@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-router';
+import { pushState, replaceState } from 'redux-router';
 import { Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs, createJobFavorite, deleteJobFavorite } from '../../modules/jobs/index';
@@ -25,13 +25,22 @@ const style = {
   },
 };
 
-@connect((state) => ({
-  user: state.auth.user,
-  jobs: state.jobs,
-  contacts: state.contacts,
-  auth: state.auth,
-  companies: state.companies,
-}), {pushState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs, createContactFavorite, deleteContactFavorite})
+let getData = (state, props) => {
+  let tab = props.location.query.tab;
+
+  tab = tab ? parseInt(tab) : 1;
+
+  return {
+    tab,
+    user: state.auth.user,
+    jobs: state.jobs,
+    contacts: state.contacts,
+    auth: state.auth,
+    companies: state.companies,
+  };
+};
+
+@connect(getData, {pushState, replaceState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs, createContactFavorite, deleteContactFavorite})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -216,6 +225,10 @@ class HomePage extends React.Component {
     return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
   }
 
+  tabChange(tab) {
+    this.props.replaceState({}, `?tab=${tab}`);
+  }
+
   render () {
 
     let { contacts, companies, jobs } = this.props;
@@ -235,7 +248,7 @@ class HomePage extends React.Component {
     return (
       <div>
         <Header title="Dashboard" />
-        <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={1}>
+        <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={this.props.tab} onChange={this.tabChange.bind(this)}>
           <div style={style.slide}>
             <ClientsList
                 clients={companies.myFavoriteCompanyIds}

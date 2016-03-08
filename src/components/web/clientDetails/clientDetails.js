@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-router';
+import { pushState, replaceState } from 'redux-router';
 import {
   List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog, CardText,
 } from 'material-ui';
@@ -65,7 +65,7 @@ const style = {
 };
 
 @connect(() => (
-{}), {pushState})
+{}), {pushState, replaceState})
 export default class ClientDetails extends React.Component {
 
   constructor(props){
@@ -187,6 +187,25 @@ export default class ClientDetails extends React.Component {
       this.props.onClientDetailsClose();
   }
 
+  tabChange(number){
+    if(number){
+      number = parseInt(number);
+      switch (number) {
+      case 1:
+        this.props.replaceState(null,`/clients/${this.props.company.get('id')}?tab=1`);
+        break;
+      case 2:
+        this.props.replaceState(null,`/clients/${this.props.company.get('id')}?tab=2`);
+        break;
+      case 3:
+        this.props.replaceState(null,`/clients/${this.props.company.get('id')}?tab=3`);
+        break;
+      default:
+        this.props.replaceState(null,`/clients/${this.props.company.get('id')}?tab=0`);
+      }
+    }
+  }
+
   renderContent(company) {
     let actions = [{
       materialIcon: 'phone',
@@ -233,7 +252,7 @@ export default class ClientDetails extends React.Component {
     if (company) {
       // get cover
       let cover = ((company.get('image')) ? (company.get('image').get('item')) : (defaultImage));
-      
+
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
       let angelList = company.get('angelList');
@@ -303,7 +322,7 @@ export default class ClientDetails extends React.Component {
               stats={stats}
           />
 
-          <CustomTabsSwipe isLight isInline={inline} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
+        <CustomTabsSwipe isLight isInline={inline} startingTab={this.props.tab} onChange={this.tabChange.bind(this)} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
             <div>
 
               <List>
