@@ -40,6 +40,10 @@ class CandidatesList extends React.Component {
       candidateCount = candidates.size;
     }
 
+    candidates = candidates.sort((a, b) => {
+      return a.get('contact').get('displayName').localeCompare(b.get('contact').get('displayName'));
+    });
+
     return (
       <List style={{backgroundColor: 'transparent'}} subheader={`${candidateCount} Candidate${(candidateCount !== 1) ? ('s') : ('')}`}>
           {candidates.map((candidate, key) => {
