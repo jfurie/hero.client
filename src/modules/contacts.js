@@ -786,7 +786,7 @@ export function saveContactCategory(contactId,contactCategory){
       return {
         response,
         contactId,
-      }
+      };
     }),
   };
 }
@@ -800,7 +800,7 @@ export function createContactCategory(contactId,contactCategory){
       return {
         response,
         contactId,
-      }
+      };
     }),
   };
 }
@@ -819,10 +819,8 @@ export function setExperience(contactId,contactCategory, category){
       if(currentContactCategory.get('experience') == 0 && contactCategory.experience > 0){
         //Setting from zero to something, set the Tags
         contactCategory.frameworkInclude = category.get('frameworkArr').toArray();
-        frameworkIncludeDirty = true;
       } else if (currentContactCategory.get('experience') != 0 && contactCategory.experience <=0) {
         contactCategory.frameworkInclude = [];
-        frameworkIncludeDirty = true;
       }
     }
     if((contactCategory.id && contactCategory.id.indexOf('tmp')>-1 )|| !contactCategory.id){

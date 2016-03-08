@@ -3,7 +3,6 @@ import { routerStateReducer } from 'redux-router';
 import auth from './auth';
 import users from './users';
 import contacts from './contacts';
-import contactCategories from './contactCategories';
 import companies from './companies/index';
 import leftNav from './leftNav';
 import locations from './locations';
@@ -29,5 +28,4 @@ export default combineReducers({
   candidates,
   categories,
   search,
-  contactCategories,
 });

@@ -16,7 +16,7 @@ const history = useScroll(createHistory);
 import Config from './utils/config';
 
 injectTapEventPlugin({
-  shouldRejectClick(lastTouchEventTimestamp, clickEventTimestamp) {
+  shouldRejectClick() {
     return true;
   }
 });

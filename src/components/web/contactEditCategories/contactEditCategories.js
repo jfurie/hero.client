@@ -2,8 +2,8 @@ import React from 'react';
 import Immutable from 'immutable';
 import {SelectToggle} from '../';
 import {
-  Dialog, IconButton, ToolbarGroup, Toolbar, Toggle, SelectField, MenuItem,
-  FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles, Snackbar,
+   IconButton, ToolbarGroup, Toolbar, Toggle,
+  FlatButton, ToolbarTitle, Styles,
 } from 'material-ui';
 
 const style = {

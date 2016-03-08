@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getCategoriesIfNeeded } from '../../../modules/categories';
 import { getOneContact, setCategoryLocal, setExperience, setPrimary } from '../../../modules/contacts';
-import { getContactCategoriesByContact } from '../../../modules/contactCategories';
 import { ContactEditCategories } from '../../../components/web';
 function getData(state, props) {
   return {
@@ -11,25 +10,7 @@ function getData(state, props) {
     contactCategories: state.contactCategories.byContactId.get(props.params.contactId),
   };
 }
-function setContactCategories(){
-  if(this.props.categories){
-    this.props.categories.map(function(category){
-      let currentContactCategory = null;
-      if(this.props.contactCategories && this.props.contactCategories.get(this.props.params.contactId)){
-        currentContactCategory = this.props.contactCategories.get(this.props.params.contactId).get(category.get('id'));
-      }
-      if(!currentContactCategory){
-        this.props.setCategoryLocal(contactId,{
-          categoryId:category.id,
-          experience:0,
-          primary:true,
-          frameworkInclude: category.get('frameworkArr').toArray()
-        });
-      }
-    });
-  }
-}
-@connect(getData, {getCategoriesIfNeeded, getOneContact,getContactCategoriesByContact,setCategoryLocal, setExperience, setPrimary})
+@connect(getData, {getCategoriesIfNeeded, getOneContact,setCategoryLocal, setExperience, setPrimary})
 export default class ContactEditCategoriesContainer extends React.Component {
 
   constructor(props){
@@ -44,7 +25,7 @@ export default class ContactEditCategoriesContainer extends React.Component {
           currentContactCategory = props.contact
           .get('_contactCategories')
           .find(x=>{
-            return x.get('categoryId') == category.get('id')
+            return x.get('categoryId') == category.get('id');
           });
         }
         if(!currentContactCategory){
