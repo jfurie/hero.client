@@ -11,15 +11,20 @@ import { getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, delete
 
 import getJobDataFromState from '../../../dataHelpers/job';
 
-function getData(state, jobId) {
+function getData(state, props, jobId) {
+  let tab = props.location.query.tab;
+
+  tab = tab ? parseInt(tab) : 0;
+
   return {
+    tab,
     job: getJobDataFromState(state, jobId),
     notes: state.notes,
     localNote: state.notes.localNote,
   };
 }
 
-@connect((state, props) => (getData(state, props.params.jobId)), {pushState, getJobDetail, createJobFavorite, deleteJobFavorite, getAllJobCandidates, getImageByJobId, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote, createContactFavorite, deleteContactFavorite, editContact, editApplicantState, deleteCandidate})
+@connect((state, props) => (getData(state, props, props.params.jobId)), {pushState, getJobDetail, createJobFavorite, deleteJobFavorite, getAllJobCandidates, getImageByJobId, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote, createContactFavorite, deleteContactFavorite, editContact, editApplicantState, deleteCandidate})
 class JobDetailsPage extends React.Component {
 
   constructor(props) {
@@ -117,6 +122,7 @@ class JobDetailsPage extends React.Component {
       <div>
         <JobDetails
         {...this.props}
+        tab={this.props.tab}
         favoriteJob={this.favoriteJob.bind(this)}
         unfavoriteJob={this.unfavoriteJob.bind(this)}
         favoriteContact={this.favoriteContact.bind(this)}

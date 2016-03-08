@@ -439,6 +439,22 @@ export default class ContactDetails extends React.Component {
     }, location.pathname+location.search);
   }
 
+  tabChange(number){
+    if(number){
+      number = parseInt(number);
+      switch (number) {
+      case 1:
+        this.props.replaceState(null,`/contacts/${this.props.contact.get('id')}?tab=1`);
+        break;
+      case 2:
+        this.props.replaceState(null,`/contacts/${this.props.contact.get('id')}?tab=2`);
+        break;
+      default:
+        this.props.replaceState(null,`/contacts/${this.props.contact.get('id')}?tab=0`);
+      }
+    }
+  }
+
   renderContent(contact) {
 
     let email = null;
@@ -498,16 +514,11 @@ export default class ContactDetails extends React.Component {
         description += summary;
       }
 
-      let startingTab = 0;
-      if(this.props.location.state && this.props.location.state.tab){
-        startingTab = parseInt(this.props.location.state.tab);
-      }
-
       return (
 
         <div>
           {this.renderCandidateDetailsCard(contact)}
-          <CustomTabsSwipe startingTab={startingTab} onChange={this.onTabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
+          <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
             <div style={{minHeight:'800px'}}>
 
               <List style={{position: 'relative', top: '3px'}}>

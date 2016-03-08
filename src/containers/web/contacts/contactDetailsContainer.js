@@ -10,7 +10,12 @@ import { createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/inde
 import getContactDataFromState from '../../../dataHelpers/contact';
 
 function getData(state, props) {
+  let tab = props.location.query.tab;
+
+  tab = tab ? parseInt(tab) : 0;
+  
   return {
+    tab,
     contact: getContactDataFromState(state, props.params.contactId),
   };
 }
@@ -96,6 +101,7 @@ class ContactDetailsPage extends React.Component {
         location={this.props.location}
         onContactDetailsClose={this.onContactDetailsClose.bind(this)}
         open={true}
+        tab={this.props.tab}
         contact={contact} />
       </div>
     );

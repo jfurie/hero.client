@@ -21,9 +21,7 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 function getData(state, props) {
 
   let companyId = props.params.companyId;
-  // let jobId = props.params.jobId;
-  let tab = props.tabId;
-  let tabId = 0;
+
   let localJobResource = null;
 
 
@@ -35,16 +33,9 @@ function getData(state, props) {
     });
   }
 
-  switch (tab) {
-  case 'jobs':
-    tabId = 1;
-    break;
-  case 'notes':
-    tabId = 3;
-    break;
-  default:
-    tabId = 0;
-  }
+  let tab = props.location.query.tab;
+
+  tab = tab ? parseInt(tab) : 0;
 
   let imageId = state.jobs.localJob.get('imageId');
   if (imageId) {
@@ -52,7 +43,7 @@ function getData(state, props) {
   }
 
   return {
-    tabId,
+    tab,
     company: getCompanyDataFromState(state, companyId),
     //job: getJobDataFromState(state, jobId),
     notes: state.notes,
@@ -287,7 +278,7 @@ class ClientDetailsPage extends React.Component {
             editClientModalOpen={this.editClientModalOpen.bind(this)}
             onClientDetailsClose={this.onClientDetailsClose.bind(this)}
             open
-            tabId={0}
+            tab={this.props.tab}
             company={company}
             inline
             favoriteCompany={this.favoriteCompany.bind(this)}

@@ -49,14 +49,14 @@ export default class NoteCreateContainer extends React.Component {
         let self = this;
         setTimeout(function () {
           if (self.props.notableType == 'job') {
-            self.props.history.replaceState(null, `/jobs/${newProps.note.get('notableId')}`);
+            self.props.history.replaceState(null, `/jobs/${newProps.note.get('notableId')}?tab=3`);
           }
           else if (self.props.notableType == 'company') {
-            self.props.history.replaceState(null, `/clients/${newProps.note.get('notableId')}`);
+            self.props.history.replaceState(null, `/clients/${newProps.note.get('notableId')}?tab=3`);
           } else if(self.props.params.contactId){
-            self.props.history.replaceState({tab:2}, `/contacts/${newProps.note.get('notableId')}`);
+            self.props.history.replaceState({tab:2}, `/contacts/${newProps.note.get('notableId')}?tab=2`);
           } else if(self.props.params.candidateId){
-            self.props.history.replaceState({tab:2}, `/candidates/${newProps.note.get('notableId')}`);
+            self.props.history.replaceState({tab:2}, `/candidates/${newProps.note.get('notableId')}?tab=2`);
           }
           else {
             self.props.history.replaceState(null, `/`);

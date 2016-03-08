@@ -132,20 +132,17 @@ export default class JobDetails extends React.Component {
     if(number){
       number = parseInt(number);
       switch (number) {
-      case 0:
-        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}`);
-        break;
       case 1:
-        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}/desc`);
+        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}?tab=1`);
         break;
       case 2:
-        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}/applicants`);
+        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}?tab=2`);
         break;
       case 3:
-        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}/notes`);
+        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}?tab=3`);
         break;
       default:
-        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}`);
+        this.props.replaceState(null,`/jobs/${this.props.job.get('id')}?tab=0`);
       }
     }
   }
@@ -256,25 +253,7 @@ export default class JobDetails extends React.Component {
           addressLine = city;
         }
       }
-      let currentTab = 0;
-      if(this.props.location.state){
-        switch (this.props.location.state.tab) {
-        case 'details':
-          currentTab = 0;
-          break;
-        case 'desc':
-          currentTab = 1;
-          break;
-        case 'applicants':
-          currentTab = 2;
-          break;
-        case 'notes':
-          currentTab = 3;
-          break;
-        default:
-          currentTab = 0;
-        }
-      }
+
 
       return (
 
@@ -295,7 +274,7 @@ export default class JobDetails extends React.Component {
               topTags={job.get('tags') || []}
               stats={stats}
           />
-        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={currentTab} slideIndex={currentTab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
+        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
             <Card style={style.card}>
               <CardText>
                 {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
