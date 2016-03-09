@@ -1,8 +1,27 @@
 import React from 'react';
-import { Styles } from 'material-ui';
+import { Styles, Tooltip } from 'material-ui';
 import md5 from 'md5';
 
 class Gravatar extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showTooltip: false,
+    };
+  }
+
+  showTooltip() {
+    this.setState({
+      showTooltip: true,
+    });
+  }
+
+  hideTooltip() {
+    this.setState({
+      showTooltip: false,
+    });
+  }
 
   render() {
 
@@ -51,11 +70,15 @@ class Gravatar extends React.Component {
     }
 
     let imgSrc = `https://www.gravatar.com/avatar/${email}?d=mm`;
-
+    //todo: add tooltip position (left, center, right)
     return (
       <div style={style}>
         <div style={style.container}>
-          <img style={style.picture} src={imgSrc} />
+          <img style={style.picture} src={imgSrc} onMouseOver={this.showTooltip.bind(this)} onMouseOut={this.hideTooltip.bind(this)} />
+          <Tooltip
+            label={this.props.label}
+            show={this.state.showTooltip}
+            style={{boxSizing: 'border-box', top: `-${style.picture.width}`, right: 0}} />
         </div>
       </div>
     );

@@ -425,6 +425,13 @@ export function saveCompanyResult(company){
   };
 }
 
+export function saveCompaniesResult(companies){
+  return {
+    type: constants.GET_COMPANIES_SUCCESS,
+    result: companies,
+  };
+}
+
 export function getCompanyDetail(id) {
 
   return (dispatch) => {
