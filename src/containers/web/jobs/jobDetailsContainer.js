@@ -12,9 +12,7 @@ import { getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, delete
 import getJobDataFromState from '../../../dataHelpers/job';
 
 function getData(state, props, jobId) {
-  let tab = props.location.query.tab;
-
-  tab = tab ? parseInt(tab) : 0;
+  let tab = props.location.query.tab || 'Details';
 
   return {
     tab,

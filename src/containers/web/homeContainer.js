@@ -26,9 +26,7 @@ const style = {
 };
 
 let getData = (state, props) => {
-  let tab = props.location.query.tab;
-
-  tab = tab ? parseInt(tab) : 1;
+  let tab = props.location.query.tab || 'Active Jobs';
 
   return {
     tab,

@@ -10,10 +10,8 @@ import { createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/inde
 import getContactDataFromState from '../../../dataHelpers/contact';
 
 function getData(state, props) {
-  let tab = props.location.query.tab;
+  let tab = props.location.query.tab || 'Details';
 
-  tab = tab ? parseInt(tab) : 0;
-  
   return {
     tab,
     contact: getContactDataFromState(state, props.params.contactId),

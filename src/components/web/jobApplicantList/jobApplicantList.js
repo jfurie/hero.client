@@ -468,49 +468,55 @@ class JobApplicantList extends React.Component {
           <FlatButton label="FILTER" />
         </div>
       </Paper>
-      <Sticky topOffset={0} onStickyStateChange={this.handleStickyStateChange.bind(this)} stickyStyle={style.sticky}>
-      <Paper ref="jobApplicantMultiActionBar" onClick={this.handleBarClick.bind(this)} style={style.multiSelectBar} className="row between-xs">
-        <div style={style.multiSelectBar.stats}>
-          {
-            this.state.selecting ?
-            <div style={{display:'inline-block'}}>
-              <div style={style.multiSelectBar.stats.item}>
-                <IconButton onTouchTap={this.unselectAll.bind(this)} iconStyle={style.icon}>
-                  <FontIcon className="material-icons">keyboard_arrow_left</FontIcon>
-                </IconButton>
-                {this.state.selectedContacts.size}
+      {
+        this.props.tab == 'Applicants' ?
+        <Sticky topOffset={0} onStickyStateChange={this.handleStickyStateChange.bind(this)} stickyStyle={style.sticky}>
+        <Paper ref="jobApplicantMultiActionBar" onClick={this.handleBarClick.bind(this)} style={style.multiSelectBar} className="row between-xs">
+          <div style={style.multiSelectBar.stats}>
+            {
+              this.state.selecting ?
+              <div style={{display:'inline-block'}}>
+                <div style={style.multiSelectBar.stats.item}>
+                  <IconButton onTouchTap={this.unselectAll.bind(this)} iconStyle={style.icon}>
+                    <FontIcon className="material-icons">keyboard_arrow_left</FontIcon>
+                  </IconButton>
+                  {this.state.selectedContacts.size}
+                </div>
               </div>
-            </div>
-            :
-            <div style={{display:'inline-block'}}></div>
-          }
-        </div>
-        <div style={style.multiSelectBar.actions}>
-          {
-            this.state.selecting ?
-            <div style={{display:'inline-block'}}>
-              <div style={style.multiSelectBar.actions.item}>
-                <IconButton onTouchTap={this.confirmRejectAllCandidates.bind(this)} iconStyle={style.icon}>
-                  <FontIcon className="material-icons">delete</FontIcon>
-                </IconButton>
-              </div>
-              <div style={style.multiSelectBar.actions.item}>
-                <IconButton onTouchTap={this.selectAllApplicantState.bind(this)} iconStyle={style.icon}>
-                  <FontIcon className="material-icons">check</FontIcon>
-                </IconButton>
-              </div>
-            </div>
-            :<div></div>
-          }
-
-          <div style={style.multiSelectBar.actions.item}>
-            <IconButton iconStyle={style.icon}>
-              <FontIcon className="material-icons">more_vert</FontIcon>
-            </IconButton>
+              :
+              <div style={{display:'inline-block'}}></div>
+            }
           </div>
-        </div>
-      </Paper>
-      </Sticky>
+          <div style={style.multiSelectBar.actions}>
+            {
+              this.state.selecting ?
+              <div style={{display:'inline-block'}}>
+                <div style={style.multiSelectBar.actions.item}>
+                  <IconButton onTouchTap={this.confirmRejectAllCandidates.bind(this)} iconStyle={style.icon}>
+                    <FontIcon className="material-icons">delete</FontIcon>
+                  </IconButton>
+                </div>
+                <div style={style.multiSelectBar.actions.item}>
+                  <IconButton onTouchTap={this.selectAllApplicantState.bind(this)} iconStyle={style.icon}>
+                    <FontIcon className="material-icons">check</FontIcon>
+                  </IconButton>
+                </div>
+              </div>
+              :<div></div>
+            }
+
+            <div style={style.multiSelectBar.actions.item}>
+              <IconButton iconStyle={style.icon}>
+                <FontIcon className="material-icons">more_vert</FontIcon>
+              </IconButton>
+            </div>
+          </div>
+        </Paper>
+        </Sticky>
+        :
+        <div></div>
+      }
+
       <div ref="jobApplicantList" style={{paddingTop: this.state.isStuck ? '60px' : '0'}}></div>
       <List style={{backgroundColor: 'transparent'}}>
           {filteredCandidates.map((candidate, key) => {
