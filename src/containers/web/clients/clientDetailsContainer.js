@@ -33,9 +33,7 @@ function getData(state, props) {
     });
   }
 
-  let tab = props.location.query.tab;
-
-  tab = tab ? parseInt(tab) : 0;
+  let tab = props.location.query.tab || 'Details';
 
   let imageId = state.jobs.localJob.get('imageId');
   if (imageId) {

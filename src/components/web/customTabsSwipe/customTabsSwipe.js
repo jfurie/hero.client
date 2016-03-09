@@ -45,8 +45,12 @@ class CustomTabsSwipe extends React.Component {
   constructor(props) {
     super(props);
 
+    let slideIndex = props.tabs.indexOf(this.props.startingTab);
+
+    if (slideIndex < 0) slideIndex = 0;
+
     this.state = {
-      slideIndex: this.props.startingTab || 0,
+      slideIndex,
     };
   }
 
@@ -99,7 +103,7 @@ class CustomTabsSwipe extends React.Component {
       slideIndex: index,
     });
     if(this.props.onChange){
-      this.props.onChange(value);
+      this.props.onChange(this.props.tabs[value]);
     }
   }
 
@@ -141,7 +145,7 @@ class CustomTabsSwipe extends React.Component {
         <Tabs
             tabItemContainerStyle={tabsStyle}
             onChange={this._handleChangeTabs.bind(this)}
-            initialSelectedIndex={(this.props.startingTab || 0)}
+            initialSelectedIndex={this.state.slideIndex}
             inkBarStyle={inkBarStyle}
         >
           {tabs.map((tab, key) => {
@@ -150,10 +154,12 @@ class CustomTabsSwipe extends React.Component {
             if (this.state.slideIndex == key && isLight) {
               tabStyleItem = style.tabLightSelected;
             }
+
+            let selected = this.state.slideIndex == key;
             // console.log('slideIndex ',this.state.slideIndex);
             // console.log('key ',key);
             return (
-              <Tab selected={this.state.slideIndex == key} label={tab} key={key} style={tabStyleItem} value={`${key}`}>
+              <Tab selected={selected} label={tab} key={key} style={tabStyleItem} value={`${key}`}>
                 <div style={{paddingTop: (isInline) ? ('0px') : ('48px')}}>
                   {this.props.children[key]}
                 </div>
