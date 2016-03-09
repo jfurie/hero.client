@@ -1,5 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
+import { connect } from 'react-redux';
+import { pushState } from 'redux-router';
 import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar } from 'material-ui';
 import { CompanyAvatar, Gravatar, Tag, FindButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
 let style = {
@@ -105,6 +107,8 @@ let style = {
   },
 };
 
+@connect(() => (
+{}), {pushState})
 export default class JobListItem extends React.Component {
   constructor(props){
     super(props);
@@ -115,7 +119,11 @@ export default class JobListItem extends React.Component {
   }
 
   clickTalentAdvocate() {
-    alert('poo');
+    this.props.pushState(null, `/contacts/${this.props.job.get('talentAdvocateId')}`);
+  }
+
+  clickApplicants() {
+    this.props.pushState(null, `/jobs/${this.props.job.get('id')}?tab=Applicants`);
   }
 
   _onTouchTapEmail() {
@@ -172,7 +180,7 @@ export default class JobListItem extends React.Component {
       peopleList.push(<Avatar style={style.plusAvatar} key={limit} color="#FF1564" backgroundColor={Styles.Colors.grey300}>+{candidates.count() - limit}</Avatar>);
     }
 
-    let candidatesElm = (<div>No Candidates Yet</div>);
+    let candidatesElm = (<div></div>);
     if (peopleList.length > 0) {
       candidatesElm = (<div>{peopleList}</div>);
     }
@@ -273,7 +281,7 @@ export default class JobListItem extends React.Component {
                     </div>
                   </div>
                   <div>
-                  <div style={{marginTop:'0px', position:'absolute', bottom: 0, right: 0, textAlign: 'right'}}>
+                  <div onClick={this.clickApplicants.bind(this)} style={{marginTop:'0px', position:'absolute', bottom: 0, right: 0, textAlign: 'right'}}>
                       <div>{candidatesElm}</div>
                       <div>
                         <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
