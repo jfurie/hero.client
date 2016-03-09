@@ -82,14 +82,14 @@ let style = {
   },
   plusAvatar: {
     display: 'inline',
-    width: '30px',
-    height: '30px',
-    padding: '7px 8px 7px 7px',
-    fontSize: '16px',
+    width: '20px',
+    height: '20px',
+    padding: '5px 6px 5px 5px',
+    fontSize: '12px',
     position: 'relative',
-    top: '-11px',
-  },
-  badgeWrap:{
+    marginLeft: '7px',
+    top: '-8px',
+    lineHeight: 0,
   },
   accountOwnerGravatar:{
     display: 'inline',
@@ -157,14 +157,13 @@ export default class JobListItem extends React.Component {
 
     candidates.forEach(function(c, key) {
       if (key < limit) {
-        peopleList.push(<div style={{position: 'relative'}}>
+        peopleList.push(
         <Gravatar
           style={style.gravatar}
           key={key} email={c.get('email')}
           status={'notset'}
           label={c.get('contact').get('displayName')}
-        />
-        </div>);
+        />);
       }
     });
 
