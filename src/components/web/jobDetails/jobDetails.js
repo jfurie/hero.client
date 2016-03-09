@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import { Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, JSONTree } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -261,7 +261,7 @@ export default class JobDetails extends React.Component {
               topTags={job.get('tags') || []}
               stats={stats}
           />
-        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
+        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes','Data']}>
             <Card style={style.card}>
               <CardText>
                 {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
@@ -310,6 +310,9 @@ export default class JobDetails extends React.Component {
             <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
               <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
             </List>
+            <div>
+              <JSONTree data={this.props}></JSONTree>
+            </div>
           </CustomTabsSwipe>
 
         </div>

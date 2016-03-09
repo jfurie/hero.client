@@ -11,7 +11,7 @@ import Avatar from 'material-ui/lib/avatar';
 
 import {
   Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
-  CompanyNotesList, DetailsCard, CompanyAvatar,
+  CompanyNotesList, DetailsCard, CompanyAvatar, JSONTree,
 } from '../../../components/web';
 import defaultImage from './default-company.jpg';
 const style = {
@@ -309,7 +309,7 @@ export default class ClientDetails extends React.Component {
               stats={stats}
           />
 
-        <CustomTabsSwipe isLight isInline={inline} startingTab={this.props.tab} onChange={this.tabChange.bind(this)} tabs={['Details', 'Jobs', 'Contacts', 'Notes']}>
+        <CustomTabsSwipe isLight isInline={inline} startingTab={this.props.tab} onChange={this.tabChange.bind(this)} tabs={['Details', 'Jobs', 'Contacts', 'Notes','Data']}>
             <div>
 
               <List>
@@ -501,6 +501,9 @@ export default class ClientDetails extends React.Component {
             <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
               <CompanyNotesList company={company} editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={company.get('notes')}/>
             </List>
+            <div>
+              <JSONTree data={this.props}></JSONTree>
+            </div>
           </CustomTabsSwipe>
 
         </div>
