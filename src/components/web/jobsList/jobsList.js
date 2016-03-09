@@ -82,7 +82,7 @@ class JobsList extends React.Component {
       ressourceName += 's';
     }
     let heights = jobs.map(() =>{
-      let height = 208;
+      let height = 224;
 
       return height;
     });
