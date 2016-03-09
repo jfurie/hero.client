@@ -7,7 +7,7 @@ import md5 from 'md5';
 import Immutable from 'immutable';
 import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
-import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal } from '../../../components/web';
+import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, JSONTree } from '../../../components/web';
 import {
   IconButton, List, ListItem, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
@@ -518,7 +518,7 @@ export default class ContactDetails extends React.Component {
 
         <div>
           {this.renderCandidateDetailsCard(contact)}
-          <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
+          <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes','Data']}>
             <div style={{minHeight:'800px'}}>
 
               <List style={{position: 'relative', top: '3px'}}>
@@ -632,6 +632,9 @@ export default class ContactDetails extends React.Component {
               <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
                 <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
               </List>
+            </div>
+            <div>
+              <JSONTree data={this.props}></JSONTree>
             </div>
           </CustomTabsSwipe>
         </div>
