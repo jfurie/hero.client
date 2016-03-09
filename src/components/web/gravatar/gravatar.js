@@ -73,8 +73,8 @@ class Gravatar extends React.Component {
     //todo: add tooltip position (left, center, right)
     return (
       <div style={style}>
-        <div style={style.container} onMouseOver={this.showTooltip.bind(this)} onMouseOut={this.hideTooltip.bind(this)}>
-          <img style={style.picture} src={imgSrc} />
+        <div style={style.container}>
+          <img style={style.picture} src={imgSrc} onMouseOver={this.showTooltip.bind(this)} onMouseOut={this.hideTooltip.bind(this)} />
           <Tooltip
             label={this.props.label}
             show={this.state.showTooltip}
