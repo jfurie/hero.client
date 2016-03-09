@@ -11,9 +11,6 @@ let style = {
   layoutJobDetails:{
     position:'relative',
   },
-  imageLayout:{
-    flex:'0 0 56px',
-  },
   contactsLayout:{
     flex:'0 0 150px',
     marginTop:'8px',
@@ -265,7 +262,7 @@ export default class JobListItem extends React.Component {
               <Divider style={{marginTop:'8px'}} />
               <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
                 <div className="row" style={{display:'flex', alignItems: 'stretch', position:'relative', marginTop: '10px'}}>
-                  <div style={{flex:'0 0 56px'}}>
+                  <div style={{flex:'0 0 50px'}}>
                     {jobImg}
                   </div>
                   <div>

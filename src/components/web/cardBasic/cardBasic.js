@@ -11,7 +11,7 @@ let style = {
     position:'relative',
   },
   imageLayout:{
-    flex:'0 0 56px',
+    flex:'0 0 50px',
   },
   contactsLayout:{
     flex:'0 0 150px',
