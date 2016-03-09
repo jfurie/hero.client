@@ -230,7 +230,6 @@ export default class JobListItem extends React.Component {
         <CardText
             style={{
               height: type !=='mini'?'auto':'auto',
-              padding: '8px 10px',
             }}
         >
           {type !=='mini'?(<div>
