@@ -3,6 +3,8 @@ import * as companyConstants from './companies/constants';
 import * as jobConstants from './jobs/constants';
 import { createCandidateFavorite, deleteCandidateFavorite, saveCandidateByContactResult } from './candidates';
 import { saveJobsByContactResult } from './jobs';
+import { saveCompaniesResult } from './companies';
+
 const GET_CONTACTS = 'hero.client/contacts/GET_CONTACTS';
 const GET_CONTACTS_SUCCESS = 'hero.client/contacts/GET_CONTACTS_SUCCESS';
 const GET_CONTACTS_FAIL = 'hero.client/contacts/GET_CONTACTS_FAIL';
@@ -676,6 +678,7 @@ export function getContactDetail(id) {
       }).then((contact)=> {
         if (contact.jobs && contact.jobs.length > 0) {
           dispatch(saveJobsByContactResult(contact.jobs, contact.id));
+          dispatch(saveCompaniesResult(contact.companies));
         }
         return contact;
       }),

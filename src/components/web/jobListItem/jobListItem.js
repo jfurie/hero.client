@@ -74,8 +74,14 @@ let style = {
   },
   gravatar: {
     display: 'inline',
-    width: '30px',
-    height: '30px',
+    width: '20px',
+    height: '20px',
+    container: {
+      display: 'inline',
+      position: 'relative',
+      marginRight: 0,
+      marginLeft: '7px',
+    },
   },
   plusAvatar: {
     display: 'inline',
@@ -111,6 +117,9 @@ export default class JobListItem extends React.Component {
     this.props.onJobClick(job);
   }
 
+  clickTalentAdvocate() {
+    alert('poo');
+  }
 
   _onTouchTapEmail() {
     let email = this.props.job.get('email');
@@ -151,7 +160,14 @@ export default class JobListItem extends React.Component {
 
     candidates.forEach(function(c, key) {
       if (key < limit) {
-        peopleList.push(<Gravatar style={style.gravatar} key={key} email={c.get('email')} status={'notset'}/>);
+        peopleList.push(<div style={{position: 'relative'}}>
+        <Gravatar
+          style={style.gravatar}
+          key={key} email={c.get('email')}
+          status={'notset'}
+          label={c.get('contact').get('displayName')}
+        />
+        </div>);
       }
     });
 
@@ -162,7 +178,7 @@ export default class JobListItem extends React.Component {
 
     let candidatesElm = (<div>No Candidates Yet</div>);
     if (peopleList.length > 0) {
-      candidatesElm = (<div style={style.peopleList}>{peopleList}</div>);
+      candidatesElm = (<div>{peopleList}</div>);
     }
 
     let location = job.get('location') && job.get('location').get('city') ? (
@@ -210,6 +226,7 @@ export default class JobListItem extends React.Component {
         <CardText
             style={{
               height: type !=='mini'?'auto':'auto',
+              padding: '8px 10px',
             }}
         >
           {type !=='mini'?(<div>
@@ -237,12 +254,17 @@ export default class JobListItem extends React.Component {
                 subtitle1={job.get('company')&&job.get('company').get('name')}
                 subtitle2={<span>{job.get('department')?job.get('department'):'Tech'} Department</span>}
                 onTouchTap={this.clickJob.bind(this)}
+                rightContent={
+                  job.get('talentAdvocate')?(<div onClick={this.clickTalentAdvocate.bind(this)}>
+                    <Gravatar url={job.get('talentAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{job.get('talentAdvocate').get('displayName')}</div>
+                  </div>):(<div></div>)
+                }
             />
             {type !== 'mini'?
             (<div>
               <Divider style={{marginTop:'8px'}} />
               <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
-                <div className="row" style={{display:'flex', alignItems: 'stretch', position:'relative', marginTop: '15px'}}>
+                <div className="row" style={{display:'flex', alignItems: 'stretch', position:'relative', marginTop: '10px'}}>
                   <div style={{flex:'0 0 56px'}}>
                     {jobImg}
                   </div>
@@ -255,11 +277,9 @@ export default class JobListItem extends React.Component {
                     </div>
                   </div>
                   <div>
-                  <div style={{lineHeight:'25px', marginTop:'0px', position:'absolute', bottom: '-7px', right: 0, textAlign: 'right'}}>
-                      {job.get('talentAdvocate')?(<div>
-                        <Gravatar url={job.get('talentAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{job.get('talentAdvocate').get('displayName')}</div>
-                      </div>):(<div></div>)}
-                      <div style={{marginTop:'5px'}}>
+                  <div style={{marginTop:'0px', position:'absolute', bottom: 0, right: 0, textAlign: 'right'}}>
+                      <div>{candidatesElm}</div>
+                      <div>
                         <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
                         {job.get('positionCount')|| 0}
                         <FontIcon style={style.status} className="material-icons">assignment_ind</FontIcon>
@@ -274,17 +294,6 @@ export default class JobListItem extends React.Component {
                 </div>
               </div>
             </div>
-            <Divider style={{marginTop:'8px'}} />
-            <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
-            <div className="row between-xs" style={style.layoutJobDetails}>
-            <div></div>
-            <div>
-              <div style={{marginTop: '10px'}}>
-                {candidatesElm}
-              </div>
-            </div>
-            </div>
-          </div>
             </div>
             )
             :(<div>
@@ -295,6 +304,7 @@ export default class JobListItem extends React.Component {
         {type !== 'mini'?(<div>
           <CardActions style={{
             backgroundColor:'rgba(100,100,100,0.2)',
+            padding: 0,
           }}
           >
             <FindButton />

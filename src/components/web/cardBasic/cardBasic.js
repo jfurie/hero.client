@@ -2,7 +2,10 @@
 import React from 'react';
 
 let style = {
-  layout:{
+  layout: {
+    position: 'relative',
+  },
+  leftContent:{
     display:'flex',
     alignItems: 'stretch',
     position:'relative',
@@ -30,6 +33,11 @@ let style = {
     lineHeight: '18px',
     textAlign: 'left',
   },
+  rightContent: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  }
 };
 
 export default class CardBasic extends React.Component {
@@ -38,26 +46,32 @@ export default class CardBasic extends React.Component {
       this.props.onTouchTap(...args);
     }
   }
+  clickRight(...args){
+    if(this.props.onTouchTapRightContent){
+      this.props.onTouchTapRightContent(...args);
+    }
+  }
   render(){
     return (
-      <div onTouchTap={this.click.bind(this)} style={style.layout}>
-        <div style={style.imageLayout}>
-          {this.props.image}
-        </div>
-        <div>
-          <div style={style.title}>
-              {this.props.title}
+      <div style={style.layout}>
+        <div onTouchTap={this.click.bind(this)} style={style.leftContent}>
+          <div style={style.imageLayout}>
+            {this.props.image}
           </div>
-          <div style={style.subtitle}>
-              {this.props.subtitle1}
-          </div>
-          <div style={style.subtitle}>
+          <div>
+            <div style={style.title}>
+                {this.props.title}
+            </div>
+            <div style={style.subtitle}>
+                {this.props.subtitle1}
+            </div>
+            <div style={style.subtitle}>
                 {this.props.subtitle2}
+            </div>
           </div>
-
         </div>
-        <div style={{position: 'absolute', bottom:'0', right:'0'}}>
-          {this.props.stars}
+        <div style={style.rightContent}>
+          {this.props.rightContent}
         </div>
       </div>
     );
