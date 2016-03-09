@@ -189,20 +189,7 @@ export default class ClientDetails extends React.Component {
 
   tabChange(number){
     if(number){
-      number = parseInt(number);
-      switch (number) {
-      case 1:
-        this.props.replaceState(null,`/clients/${this.props.company.get('id')}?tab=1`);
-        break;
-      case 2:
-        this.props.replaceState(null,`/clients/${this.props.company.get('id')}?tab=2`);
-        break;
-      case 3:
-        this.props.replaceState(null,`/clients/${this.props.company.get('id')}?tab=3`);
-        break;
-      default:
-        this.props.replaceState(null,`/clients/${this.props.company.get('id')}?tab=0`);
-      }
+      this.props.replaceState(null,`/clients/${this.props.company.get('id')}?tab=${number}`);
     }
   }
 

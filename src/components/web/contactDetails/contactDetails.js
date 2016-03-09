@@ -441,17 +441,7 @@ export default class ContactDetails extends React.Component {
 
   tabChange(number){
     if(number){
-      number = parseInt(number);
-      switch (number) {
-      case 1:
-        this.props.replaceState(null,`/contacts/${this.props.contact.get('id')}?tab=1`);
-        break;
-      case 2:
-        this.props.replaceState(null,`/contacts/${this.props.contact.get('id')}?tab=2`);
-        break;
-      default:
-        this.props.replaceState(null,`/contacts/${this.props.contact.get('id')}?tab=0`);
-      }
+      this.props.replaceState(null,`/contacts/${this.props.contact.get('id')}?tab=${number}`);
     }
   }
 
