@@ -81,7 +81,7 @@ class JobsList extends React.Component {
     if (count !== 1) {
       ressourceName += 's';
     }
-    let heights = jobs.map(job =>{
+    let heights = jobs.map(() =>{
       let height = 208;
 
       return height;
