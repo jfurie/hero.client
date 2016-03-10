@@ -70,7 +70,16 @@ class Gravatar extends React.Component {
     }
 
     let imgSrc = `https://www.gravatar.com/avatar/${email}?d=mm`;
-    //todo: add tooltip position (left, center, right)
+    let tooltipStyle = {
+      boxSizing: 'border-box',
+      top: `-${style.picture.width}`,
+    };
+    if (this.props.tooltipPosition == 'right') {
+      tooltipStyle.right = 0;
+    }
+    else {
+      tooltipStyle.left = 0;
+    }
     return (
       <div style={style}>
         <div style={style.container}>
@@ -78,7 +87,7 @@ class Gravatar extends React.Component {
           <Tooltip
             label={this.props.label}
             show={this.state.showTooltip}
-            style={{boxSizing: 'border-box', top: `-${style.picture.width}`, right: 0}} />
+            style={tooltipStyle} />
         </div>
       </div>
     );
