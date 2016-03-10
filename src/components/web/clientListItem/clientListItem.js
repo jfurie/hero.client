@@ -87,8 +87,6 @@ let style = {
     top: '-8px',
     lineHeight: 0,
   },
-  badgeWrap:{
-  },
   accountOwnerGravatar:{
     display: 'inline',
     width: '25px',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardText, ListItem, FontIcon, Divider, CardActions, Styles,Avatar, IconButton } from 'material-ui';
-import { Gravatar, Tag, FavoriteButton, Stars, PhoneButton, SmsButton, EmailButton} from '../../../components/web';
+import { Tag, FavoriteButton, PhoneButton, SmsButton, EmailButton} from '../../../components/web';
 import md5 from 'md5';
 
 let style = {
@@ -15,7 +15,7 @@ let style = {
       position:'relative',
     },
     imageLayout:{
-      flex:'0 0 56px',
+      flex:'0 0 50px',
       height: '50px',
     },
     contactsLayout:{
@@ -46,9 +46,6 @@ let style = {
   },
   layoutContactDetails:{
     position:'relative',
-  },
-  imageLayout:{
-    flex:'0 0 56px',
   },
   contactsLayout:{
     flex:'0 0 150px',
@@ -251,9 +248,6 @@ export default class JobApplicantListItem extends React.Component {
             {contact.get('title')}
           </div>
         </div>
-        <div style={{position: 'absolute', bottom:'0', right:'0'}}>
-          <Stars score={contact.get('rating')} />
-        </div>
       </div>
     );
   }
@@ -275,7 +269,7 @@ export default class JobApplicantListItem extends React.Component {
 
     return (
       <div>
-        <div className="row" style={style.badgeWrap}>
+        <div className="row" style={{justifyContent: 'flex-end'}}>
           <Tag value={'Vetted'} active={isVetted} />
           <Tag value={'Active'} active={contact.get('isActive')} />
           <Tag value={'HOT!'} active={isHot} />
@@ -287,19 +281,29 @@ export default class JobApplicantListItem extends React.Component {
   render(){
     let {contact,type} = this.props;
 
-    let location = contact.get('location') && contact.get('location').get('city') ? (
-      <span>
-        <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
-        {contact.get('location').get('city') }
-        , {contact.get('location').get('countrySubDivisionCode')}
-      </span>
-    ) : (<span></span>);
     function kFormatter(num) {
       return num > 999 ? `${(num/1000).toFixed(0)}k` : num;
     }
+
+    let showSecondRow = false;
+
+    let location;
+    if (contact.get('location') && contact.get('location').get('city')) {
+      location = (<span>
+        <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
+        {contact.get('location').get('city') }
+        , {contact.get('location').get('countrySubDivisionCode')}
+      </span>);
+      showSecondRow = true;
+    }
+    else {
+      location = (<span></span>);
+    }
+
     let salary;
     if (contact.get('desiredSalary')) {
       salary = (<span>${kFormatter(contact.get('desiredSalary'))}</span>);
+      showSecondRow = true;
     }
     else {
       salary = (<span>No Salary Info</span>);
@@ -322,7 +326,6 @@ export default class JobApplicantListItem extends React.Component {
       type == 'tiny' ? (<div>{this.renderTags()}{this.renderBasic()}</div>) :
       <Card
         style={{
-          height: type !=='mini'?'auto':'169px',
           marginBottom:'8px',
           marginLeft:'8px',
           marginRight:'8px',
@@ -343,12 +346,12 @@ export default class JobApplicantListItem extends React.Component {
           }}>
             {this.renderTags()}
             {this.renderBasic()}
-            {type !== 'mini'?
+            {type !== 'mini' && showSecondRow?
             (<div>
               <Divider style={{marginTop:'8px'}}></Divider>
               <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
-                <div className="row" style={{display:'flex', alignItems: 'stretch', position:'relative', marginTop: '15px', marginLeft: '47px'}}>
-                  <div style={{flex:'0 0 56px'}}>
+                <div className="row" style={{display:'flex', alignItems: 'stretch', position:'relative', marginTop: '15px', marginLeft: '42px'}}>
+                  <div style={{flex:'0 0 50px'}}>
                     {skillImg}
                   </div>
                   <div>
@@ -360,11 +363,6 @@ export default class JobApplicantListItem extends React.Component {
                     </div>
                   </div>
                   <div>
-                  <div style={{lineHeight:'25px', marginTop:'0px', position:'absolute', bottom: '-7px', right: 0, textAlign: 'right'}}>
-                    {contact.get('talentAdvocate')?(<div>
-                      <Gravatar url={contact.get('talentAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}></Gravatar> <div style={{display:'inline-block',lineHeight:'25px'}}>{contact.get('talentAdvocate').get('displayName')}</div>
-                    </div>):(<div></div>)}
-                  </div>
                 </div>
               </div>
             </div>
@@ -378,6 +376,7 @@ export default class JobApplicantListItem extends React.Component {
         <CardActions
             style={{
               backgroundColor:'rgba(100,100,100,0.2)',
+              padding: '0 10px',
             }}
             className="row between-xs"
         >
