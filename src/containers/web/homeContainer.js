@@ -34,6 +34,7 @@ let getData = (state, props) => {
     favoriteMap[favorites.get('favorableId')] = 1;
   })
   let favoriteContacts = state.contacts.list.filter(x=>favoriteMap[x.get('id')]);
+  let favoriteCompanies = state.companies.list.filter(x=>favoriteMap[x.get('id')]);
   return {
     tab,
     user: state.auth.user,
@@ -42,6 +43,7 @@ let getData = (state, props) => {
     auth: state.auth,
     companies: state.companies,
     favoriteContacts,
+    favoriteCompanies,
   };
 };
 
@@ -236,7 +238,7 @@ class HomePage extends React.Component {
 
   render () {
 
-    let { contacts, companies, jobs, favoriteContacts } = this.props;
+    let { contacts, companies, jobs, favoriteContacts, favoriteCompanies } = this.props;
 
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
@@ -256,7 +258,7 @@ class HomePage extends React.Component {
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={this.props.tab} onChange={this.tabChange.bind(this)}>
           <div style={style.slide}>
             <ClientsList
-                clients={companies.myFavoriteCompanyIds}
+                clients={favoriteCompanies}
                 favoriteCompany={this.favoriteCompany.bind(this)}
                 unfavoriteCompany={this.unfavoriteCompany.bind(this)}
             />

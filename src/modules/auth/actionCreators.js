@@ -1,6 +1,7 @@
 import * as constants from './constants';
 import { getFavoritesByUserId } from '../favorites';
 import { getContactByIdsIfNeeded } from '../contacts';
+import { getCompanyByIdsIfNeeded } from '../companies';
 export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;
 }
@@ -77,14 +78,20 @@ function postLogin(auth, client, state, dispatch){
   });
   dispatch(getFavoritesByUserId(auth.userId)).then((response)=>{
     let contactIds = [];
+    let companyIds = [];
     if(response.result){
       response.result.map(function(favorite){
-        if(favorite.favorableType == 'contact'){
+        switch(favorite.favorableType){
+          case 'contact':
           contactIds.push(favorite.favorableId);
+          break;
+          case 'company':
+          companyIds.push(favorite.favorableId);
         }
       })
     }
-    return dispatch(getContactByIdsIfNeeded(contactIds));
+    dispatch(getContactByIdsIfNeeded(contactIds));
+    dispatch(getCompanyByIdsIfNeeded(companyIds));
   });
   return getDataBasedOnUserId(context).then((context)=>{
     return context.response;

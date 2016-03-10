@@ -13,23 +13,36 @@ import { saveLocationByCompanyResult } from '../locations';
 import superagent from 'superagent';
 import {actionTypes} from 'redux-localstorage';
 
-const initialState = new Immutable.Map({
+const initialState = {
   list: new Immutable.Map(),
   myCompanyIds: new Immutable.Map(),
   myFavoriteCompanyIds: new Immutable.Map(),
   searches: new Immutable.Map(),
   currentSearch: '',
   queries: new Immutable.Map(),
-});
+};
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case actionTypes.INIT:{
     const persistedState = action.payload && action.payload['companies'];
     if(persistedState){
-      return Immutable.fromJS(persistedState);
+      return {
+        ...state,
+        list: Immutable.fromJS(persistedState.list),
+      };
     } else{
       return state;
+    }
+  }
+  case constants.GET_COMPANIES_BY_IDS_SUCCESS:{
+    let companiesMap = {};
+    action.result.map((c) => {
+      companiesMap[c.id] = c;
+    });
+    return {
+      ...state,
+      list: state.list.merge(companiesMap),
     }
   }
   case constants.GET_COMPANIES: {
@@ -458,5 +471,32 @@ export function updateCompanyImage(id,file) {
         });
       }),
     });
+  };
+}
+
+export function getCompaniesByIds(companyIds){
+  return (dispatch) => {
+    return dispatch({
+      types:[constants.GET_COMPANIES_BY_IDS, constants.GET_COMPANIES_BY_IDS_SUCCESS, constants.GET_COMPANIES_BY_IDS_FAIL],
+      promise:(client,auth) => {
+        let filter= {where:{id:{inq:companyIds}}};
+        let filterString = encodeURIComponent(JSON.stringify(filter));
+        return client.api.get(`/companies?filter=${filterString}`,{
+          authToken: auth.authToken,
+        });
+      }
+    });
+  }
+}
+
+export function getCompanyByIdsIfNeeded(companyIds){
+  return (dispatch, getState) => {
+    var newCompanyIds =[];
+    companyIds.map((companyId => {
+      if(!getState().companies.list.get(companyId)){
+        newCompanyIds.push(companyId);
+      }
+    }));
+    return dispatch(getCompaniesByIds(newCompanyIds));
   };
 }
