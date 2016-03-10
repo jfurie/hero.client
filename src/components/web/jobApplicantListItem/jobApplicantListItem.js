@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardText, ListItem, FontIcon, Divider, CardActions, Styles,Avatar, IconButton } from 'material-ui';
-import { Gravatar, Tag, FavoriteButton, PhoneButton, SmsButton, EmailButton} from '../../../components/web';
+import { Tag, FavoriteButton, PhoneButton, SmsButton, EmailButton} from '../../../components/web';
 import md5 from 'md5';
 
 let style = {
