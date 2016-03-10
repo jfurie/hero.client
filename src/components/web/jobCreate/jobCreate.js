@@ -255,7 +255,7 @@ export default class JobCreate extends React.Component {
     let clients = [];
     let pos = 1;
     this.props.clients.forEach(function(c) {
-      clients.push(<ClientListItem company={c} type="tiny" />);
+      clients.push(<ClientListItem company={c} type="tiny" hideRecruiter />);
       if (company && company.get('id') === c.get('id')) {
         clientDefaultSlide = pos;
       }
