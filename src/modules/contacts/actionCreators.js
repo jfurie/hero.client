@@ -1,5 +1,6 @@
 import { createCandidateFavorite, deleteCandidateFavorite, saveCandidateByContactResult } from '../candidates';
 import { saveJobsByContactResult } from '../jobs';
+		 +import { saveCompaniesResult } from '../companies';
 import * as constants from './constants';
 
 export function getAllContacts() {
@@ -148,19 +149,11 @@ export function getContactDetail(id) {
       }).then((contact)=> {
         if (contact.jobs && contact.jobs.length > 0) {
           dispatch(saveJobsByContactResult(contact.jobs, contact.id));
+          dispatch(saveCompaniesResult(contact.companies));
         }
         return contact;
       }),
     });
-  };
-}
-
-export function getMyContacts() {
-  return {
-    types: [constants.GET_MY_CONTACTS, constants.GET_MY_CONTACTS_SUCCESS, constants.GET_MY_CONTACTS_FAIL],
-    promise: (client, auth) => client.api.get(`/contacts/myContacts`, {
-      authToken: auth.authToken,
-    }),
   };
 }
 

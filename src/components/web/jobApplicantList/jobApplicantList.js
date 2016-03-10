@@ -16,7 +16,7 @@ const style = {
     zIndex: 1200,
   },
   multiSelectBar: {
-    padding: '10px 0 5px 0px',
+    padding: '5px 0 5px 0px',
     marginLeft: 0,
     marginRight: 0,
     color: Styles.Colors.grey600,
@@ -38,7 +38,7 @@ const style = {
     right: 0,
     bottom: 0,
     zIndex: 1200,
-    padding: '10px 0 5px 0px',
+    padding: '5px 0 5px 0px',
     marginLeft: 0,
     marginRight: 0,
     color: Styles.Colors.grey600,
@@ -518,7 +518,7 @@ class JobApplicantList extends React.Component {
       }
 
       <div ref="jobApplicantList" style={{paddingTop: this.state.isStuck ? '60px' : '0'}}></div>
-      <List style={{backgroundColor: 'transparent'}}>
+      <List style={{backgroundColor: 'transparent', marginBottom: '100px'}}>
           {filteredCandidates.map((candidate, key) => {
             let selected = this.state.selectedContacts.has(candidate.get('contactId'));
             let selectedApplicantStateOption = applicantStateOptions.filter(x => {

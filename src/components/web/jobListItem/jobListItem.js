@@ -1,5 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
+import { connect } from 'react-redux';
+import { pushState } from 'redux-router';
 import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar } from 'material-ui';
 import { CompanyAvatar, Gravatar, Tag, FindButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
 let style = {
@@ -10,9 +12,6 @@ let style = {
   },
   layoutJobDetails:{
     position:'relative',
-  },
-  imageLayout:{
-    flex:'0 0 56px',
   },
   contactsLayout:{
     flex:'0 0 150px',
@@ -74,19 +73,25 @@ let style = {
   },
   gravatar: {
     display: 'inline',
-    width: '30px',
-    height: '30px',
+    width: '20px',
+    height: '20px',
+    container: {
+      display: 'inline',
+      position: 'relative',
+      marginRight: 0,
+      marginLeft: '7px',
+    },
   },
   plusAvatar: {
     display: 'inline',
-    width: '30px',
-    height: '30px',
-    padding: '7px 8px 7px 7px',
-    fontSize: '16px',
+    width: '20px',
+    height: '20px',
+    padding: '5px 6px 5px 5px',
+    fontSize: '12px',
     position: 'relative',
-    top: '-11px',
-  },
-  badgeWrap:{
+    marginLeft: '7px',
+    top: '-8px',
+    lineHeight: 0,
   },
   accountOwnerGravatar:{
     display: 'inline',
@@ -102,6 +107,8 @@ let style = {
   },
 };
 
+@connect(() => (
+{}), {pushState})
 export default class JobListItem extends React.Component {
   constructor(props){
     super(props);
@@ -111,6 +118,13 @@ export default class JobListItem extends React.Component {
     this.props.onJobClick(job);
   }
 
+  clickTalentAdvocate() {
+    this.props.pushState(null, `/contacts/${this.props.job.get('talentAdvocateId')}`);
+  }
+
+  clickApplicants() {
+    this.props.pushState(null, `/jobs/${this.props.job.get('id')}?tab=Applicants`);
+  }
 
   _onTouchTapEmail() {
     let email = this.props.job.get('email');
@@ -151,7 +165,14 @@ export default class JobListItem extends React.Component {
 
     candidates.forEach(function(c, key) {
       if (key < limit) {
-        peopleList.push(<Gravatar style={style.gravatar} key={key} email={c.get('email')} status={'notset'}/>);
+        peopleList.push(
+        <Gravatar
+          style={style.gravatar}
+          key={key} email={c.get('email')}
+          status={'notset'}
+          label={c.get('contact').get('displayName')}
+          tooltipPosition="right"
+        />);
       }
     });
 
@@ -160,9 +181,9 @@ export default class JobListItem extends React.Component {
       peopleList.push(<Avatar style={style.plusAvatar} key={limit} color="#FF1564" backgroundColor={Styles.Colors.grey300}>+{candidates.count() - limit}</Avatar>);
     }
 
-    let candidatesElm = (<div>No Candidates Yet</div>);
+    let candidatesElm = (<div></div>);
     if (peopleList.length > 0) {
-      candidatesElm = (<div style={style.peopleList}>{peopleList}</div>);
+      candidatesElm = (<div>{peopleList}</div>);
     }
 
     let location = job.get('location') && job.get('location').get('city') ? (
@@ -237,13 +258,18 @@ export default class JobListItem extends React.Component {
                 subtitle1={job.get('company')&&job.get('company').get('name')}
                 subtitle2={<span>{job.get('department')?job.get('department'):'Tech'} Department</span>}
                 onTouchTap={this.clickJob.bind(this)}
+                rightContent={
+                  job.get('talentAdvocate')?(<div onClick={this.clickTalentAdvocate.bind(this)}>
+                    <Gravatar url={job.get('talentAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{job.get('talentAdvocate').get('displayName')}</div>
+                  </div>):(<div></div>)
+                }
             />
             {type !== 'mini'?
             (<div>
               <Divider style={{marginTop:'8px'}} />
               <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
-                <div className="row" style={{display:'flex', alignItems: 'stretch', position:'relative', marginTop: '15px'}}>
-                  <div style={{flex:'0 0 56px'}}>
+                <div className="row" style={{display:'flex', alignItems: 'stretch', position:'relative', marginTop: '10px'}}>
+                  <div style={{flex:'0 0 50px'}}>
                     {jobImg}
                   </div>
                   <div>
@@ -255,11 +281,9 @@ export default class JobListItem extends React.Component {
                     </div>
                   </div>
                   <div>
-                  <div style={{lineHeight:'25px', marginTop:'0px', position:'absolute', bottom: '-7px', right: 0, textAlign: 'right'}}>
-                      {job.get('talentAdvocate')?(<div>
-                        <Gravatar url={job.get('talentAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{job.get('talentAdvocate').get('displayName')}</div>
-                      </div>):(<div></div>)}
-                      <div style={{marginTop:'5px'}}>
+                  <div onClick={this.clickApplicants.bind(this)} style={{marginTop:'0px', position:'absolute', bottom: 0, right: 0, textAlign: 'right'}}>
+                      <div>{candidatesElm}</div>
+                      <div>
                         <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
                         {job.get('positionCount')|| 0}
                         <FontIcon style={style.status} className="material-icons">assignment_ind</FontIcon>
@@ -274,17 +298,6 @@ export default class JobListItem extends React.Component {
                 </div>
               </div>
             </div>
-            <Divider style={{marginTop:'8px'}} />
-            <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
-            <div className="row between-xs" style={style.layoutJobDetails}>
-            <div></div>
-            <div>
-              <div style={{marginTop: '10px'}}>
-                {candidatesElm}
-              </div>
-            </div>
-            </div>
-          </div>
             </div>
             )
             :(<div>
@@ -295,6 +308,7 @@ export default class JobListItem extends React.Component {
         {type !== 'mini'?(<div>
           <CardActions style={{
             backgroundColor:'rgba(100,100,100,0.2)',
+            padding: 0,
           }}
           >
             <FindButton />

@@ -82,24 +82,16 @@ class ClientsList extends React.Component {
     }
     let heights = clients.map(company =>{
 
-      let height = 198;
+      let height = 169;
       let tags = company.get('tags');
       if(tags && tags.count() >0){
         height = height +26;
-      }
-      let clientAdvocate = company.get('clientAdvocate');
-      let contacts = company.get('contacts');
-      if(clientAdvocate){
-        height = height +37;
-      }
-      else if(contacts && contacts.count() >0){
-        height = height +25;
       }
       return height;
     });
     heights = heights.toArray();
     if(!heights || heights.length <= 0){
-      heights = 261;
+      heights = 169;
     }
 
     clients = clients.sort((a, b) => {
