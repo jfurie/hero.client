@@ -1,7 +1,9 @@
 import React from 'react';
 import Immutable from 'immutable';
+import { connect } from 'react-redux';
+import { pushState } from 'redux-router';
 import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar } from 'material-ui';
-import { CompanyAvatar, Gravatar, Stars, Tag, PhoneButton, EmailButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
+import { CompanyAvatar, Gravatar, Tag, PhoneButton, EmailButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
 let style = {
   layout:{
     display:'flex',
@@ -10,13 +12,10 @@ let style = {
   },
   layoutCompanyDetails:{
     position:'relative',
+    paddingTop: '10px',
   },
   imageLayout:{
     flex:'0 0 56px',
-  },
-  contactsLayout:{
-    flex:'0 0 150px',
-    marginTop:'8px',
   },
   starLayout:{
     flex:'0 0 150px',
@@ -74,17 +73,19 @@ let style = {
   },
   gravatar: {
     display: 'inline',
-    width: '30px',
-    height: '30px',
+    width: '20px',
+    height: '20px',
   },
   plusAvatar: {
     display: 'inline',
-    width: '30px',
-    height: '30px',
-    padding: '7px 8px 7px 7px',
-    fontSize: '16px',
+    width: '20px',
+    height: '20px',
+    padding: '5px 6px 5px 5px',
+    fontSize: '12px',
     position: 'relative',
-    top: '-11px',
+    marginRight: '7px',
+    top: '-8px',
+    lineHeight: 0,
   },
   badgeWrap:{
   },
@@ -102,6 +103,8 @@ let style = {
   },
 };
 
+@connect(() => (
+{}), {pushState})
 export default class ClientListItem extends React.Component {
   constructor(props){
     super(props);
@@ -111,6 +114,13 @@ export default class ClientListItem extends React.Component {
     this.props.onClientClick(company.get('id'));
   }
 
+  clickClientAdvocate() {
+    this.props.pushState(null, `/contacts/${this.props.company.get('clientAdvocateId')}`);
+  }
+
+  clickContacts() {
+    this.props.pushState(null, `/clients/${this.props.company.get('id')}?tab=Contacts`);
+  }
 
   _onTouchTapEmail() {
     let email = this.props.company.get('email');
@@ -139,33 +149,26 @@ export default class ClientListItem extends React.Component {
   renderBasic() {
     let {company} = this.props;
 
-    let line = '';
-
-    if (company.get('location')) {
-      line = company.get('location').get('city');
-      let countrySubDivisionCode = company.get('location').get('countrySubDivisionCode');
-      if (line && line.length && countrySubDivisionCode && countrySubDivisionCode.length) {
-        line += `, ${countrySubDivisionCode}`;
-      } else {
-        line = countrySubDivisionCode;
-      }
-    }
-
-    let subTitle2 = (
+    let location = company.get('location') && company.get('location').get('city') ? (
       <span>
         <FontIcon style={style.icon} className="material-icons">location_on</FontIcon>
-        {line || ''}
+        {company.get('location').get('city')}
+        , {company.get('location').get('countrySubDivisionCode')}
       </span>
-    );
+    ) : (<span></span>);
 
     return (
       <CardBasic
           image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
           title={company && company.get('name')}
           subtitle1={company.get('businessType') || 'Software Company'}
-          subtitle2={subTitle2}
-          stars={<Stars score={company.get('rating')} />}
+          subtitle2={location}
           onTouchTap={this.clickClient.bind(this)}
+          rightContent={
+            company.get('clientAdvocate')?(<div onClick={this.clickClientAdvocate.bind(this)}>
+              <Gravatar url={company.get('clientAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{company.get('clientAdvocate').get('displayName')}</div>
+            </div>):(<div></div>)
+          }
       />
     );
   }
@@ -205,7 +208,14 @@ export default class ClientListItem extends React.Component {
 
       contacts.forEach(function(c, key) {
         if (key < limit) {
-          peopleList.push(<Gravatar style={style.gravatar} key={key} email={c.get('email')} status={'notset'}/>);
+          peopleList.push(<Gravatar
+            style={style.gravatar}
+            key={key}
+            email={c.get('email')}
+            status={'notset'}
+            label={c.get('displayName')}
+            tooltipPosition="left"
+          />);
         }
       });
 
@@ -241,26 +251,19 @@ export default class ClientListItem extends React.Component {
                 <div>
                   <Divider style={{marginTop:'8px'}} />
                   <div style={{marginLeft:'0.5rem', marginRight:'0.5rem'}} >
-                    <div className="row between-xs" style={style.layoutCompanyDetails}>
+                    <div onClick={this.clickContacts.bind(this)} className="row between-xs" style={style.layoutCompanyDetails}>
                       <div style={style.contactsLayout} >
                         {secondaryText}
                       </div>
-                      <div>
-                      <div style={{lineHeight:'25px', marginTop:'0px', textAlign:'right'}}>
-                          {company.get('clientAdvocate')?(<div>
-                            <Gravatar url={company.get('clientAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar} /><div style={{display:'inline-block',lineHeight:'25px'}}>{company.get('clientAdvocate').get('displayName')}</div>
-                          </div>):(<div></div>)}
-                          <div style={{marginTop:'8px'}}>
-                              <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
-                              {company.get('stats') && company.get('stats').get('jobCount')|| 0}
-                              <FontIcon style={style.status} className="material-icons">assignment_ind</FontIcon>
-                              {company.get('stats') && company.get('stats').get('candidateCount')|| 0}
-                              <FontIcon style={style.statusRed} className="material-icons">assignment_late</FontIcon>
-                              {company.get('stats') && company.get('stats').get('actionsCount')|| 0}
-                              <FontIcon style={style.statusGreen} className="material-icons">assignment_turned_in</FontIcon>
-                              {company.get('stats') && company.get('stats').get('hiredCount')|| 0}
-                            </div>
-                        </div>
+                      <div style={{marginTop:'0px', textAlign: 'right'}}>
+                        <FontIcon style={style.status} className="material-icons">assignment</FontIcon>
+                        {company.get('stats') && company.get('stats').get('jobCount')|| 0}
+                        <FontIcon style={style.status} className="material-icons">assignment_ind</FontIcon>
+                        {company.get('stats') && company.get('stats').get('candidateCount')|| 0}
+                        <FontIcon style={style.statusRed} className="material-icons">assignment_late</FontIcon>
+                        {company.get('stats') && company.get('stats').get('actionsCount')|| 0}
+                        <FontIcon style={style.statusGreen} className="material-icons">assignment_turned_in</FontIcon>
+                        {company.get('stats') && company.get('stats').get('hiredCount')|| 0}
                       </div>
                     </div>
                   </div>
@@ -270,6 +273,7 @@ export default class ClientListItem extends React.Component {
           {type !== 'mini'?(<div>
             <CardActions style={{
               backgroundColor:'rgba(100,100,100,0.2)',
+              padding: 0,
             }}>
               <PhoneButton phone={this.props.company && this.props.company.get('phone')} />
               <EmailButton email={this.props.company && this.props.company.get('email')} />

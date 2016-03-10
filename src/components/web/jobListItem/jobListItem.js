@@ -171,6 +171,7 @@ export default class JobListItem extends React.Component {
           key={key} email={c.get('email')}
           status={'notset'}
           label={c.get('contact').get('displayName')}
+          tooltipPosition="right"
         />);
       }
     });
