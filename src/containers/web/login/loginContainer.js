@@ -39,14 +39,21 @@ class LogoutPage extends React.Component {
       loginError: false,
     };
   }
+  componentDidMount(){
+    if(this.props.auth.authToken){
+      let param = this.getParameterByName('redirect');
+      if (param) {
+        param = param.replace('//', '/');
+        this.props.pushState(null, param);
+      } else {
+        this.props.pushState(null, '/');
+      }
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
-
-    if (nextProps.auth && nextProps.auth.loginError) { // fail to log
-      this.setState({
-        loginError: true,
-      });
-    } else if (!this.props.user && nextProps.user) { // login
+    if(nextProps.auth.authToken){
+      //User is logged in
       let param = this.getParameterByName('redirect');
 
       if (param) {
@@ -56,9 +63,11 @@ class LogoutPage extends React.Component {
       else {
         this.props.pushState(null, '/');
       }
-
-    } else if (this.props.user && !nextProps.user) { // logout
-      this.props.pushState(null, '/');
+    }
+    if (nextProps.auth && nextProps.auth.loginError) { // fail to log
+      this.setState({
+        loginError: true,
+      });
     }
   }
 

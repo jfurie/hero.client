@@ -13,6 +13,9 @@ import currentAccount from './currentAccount';
 import candidates from './candidates';
 import categories from './categories';
 import search from './search';
+import myProfile from './myProfile';
+
+
 export default combineReducers({
   router: routerStateReducer,
   auth,
@@ -28,4 +31,5 @@ export default combineReducers({
   candidates,
   categories,
   search,
+  myProfile
 });

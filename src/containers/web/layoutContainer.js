@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { pushState } from 'redux-router';
+import { pushState, replaceState } from 'redux-router';
 import { LeftNav, FontIcon, MenuItem} from 'material-ui';
 import { getUserContact, getUserStats } from '../../modules/users';
 //let MenuItem = require('material-ui/lib/menus/menu-item');
 
 import { onNavOpen, onNavClose, toggleNav } from '../../modules/leftNav';
 import { LeftNavTop } from '../../components/web';
-import { logout } from '../../modules/auth';
+import { logout, resetLogoutReady } from '../../modules/auth';
 
 @connect(state => ({
   auth: state.auth,
@@ -15,7 +15,7 @@ import { logout } from '../../modules/auth';
   user: state.auth.user,
   leftNav: state.leftNav,
   users: state.users,
-}),{pushState, onNavOpen, onNavClose, toggleNav, logout,getUserContact, getUserStats})
+}),{pushState, onNavOpen, onNavClose, toggleNav, logout,getUserContact, getUserStats, replaceState, resetLogoutReady})
 
 class Layout extends React.Component {
 
@@ -34,7 +34,8 @@ class Layout extends React.Component {
 
   componentWillReceiveProps(nextProps){
     if (nextProps.auth.logoutReady) {
-      window.location.href = '/login';
+      this.props.resetLogoutReady();
+      this.props.replaceState(null,'/login');
     }
 
     if (nextProps.leftNav.open != this.props.leftNav.open) {
