@@ -11,7 +11,7 @@ import {
 from 'redux';
 import { serialize, deserialize } from 'redux-localstorage-immutable';
 const storage = compose(
-  filter(['auth','myProfile','contacts'])
+  filter(['auth','myProfile','contacts','companies'])
 )(adapter(window.localStorage));
 
 export default function createStore(reduxReactRouter, getRoutes, createHistory, client, data, isDev) {
