@@ -1,5 +1,6 @@
 import * as constants from './constants';
-
+import { getFavoritesByUserId } from '../favorites';
+import { getContactByIdsIfNeeded } from '../contacts';
 export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;
 }
@@ -54,11 +55,14 @@ function getContact(context){
     return context;
   });
 }
+
+
 function getDataBasedOnUserId(context){
   return Promise.all([getUser(context),getContact(context)]).then(()=>context);
 }
 
-function postLogin(auth, client, state){
+function postLogin(auth, client, state, dispatch){
+
   let context = {
     auth,
     client,
@@ -67,6 +71,21 @@ function postLogin(auth, client, state){
     },
     state
   };
+  dispatch({
+    type:constants.SET_AUTH,
+    result:{authToken: auth},
+  });
+  dispatch(getFavoritesByUserId(auth.userId)).then((response)=>{
+    let contactIds = [];
+    if(response.result){
+      response.result.map(function(favorite){
+        if(favorite.favorableType == 'contact'){
+          contactIds.push(favorite.favorableId);
+        }
+      })
+    }
+    return dispatch(getContactByIdsIfNeeded(contactIds));
+  });
   return getDataBasedOnUserId(context).then((context)=>{
     return context.response;
   });
@@ -93,7 +112,7 @@ export function changePassword(password, tmpAuthToken) {
 
 export function login(email, password) {
   return (dispatch, getState) => {
-    dispatch({
+    return dispatch({
       types: [constants.LOGIN, constants.LOGIN_SUCCESS, constants.LOGIN_FAIL],
       promise: (client, authToken) => {
         return client.api.post('/users/login', {
@@ -102,7 +121,7 @@ export function login(email, password) {
             password,
           },
           authToken,
-        }).then((auth)=>postLogin(auth,client,getState()));
+        }).then((auth)=>postLogin(auth,client,getState(),dispatch));
       }
     })
   };
@@ -122,7 +141,7 @@ export function logginWithAuthLocalStorage() {
         return new Promise((resolve, reject) => {
           let auth =  getState().auth && getState().auth.authToken;
           if (auth) {
-            return postLogin(auth,client,getState()).then((response)=>{
+            return postLogin(auth,client,getState(),dispatch).then((response)=>{
               resolve(response);
             }).catch(()=>{
               reject();
@@ -175,7 +194,7 @@ export function logginWithAccessToken(accessToken,cb) {
             }).then((token)=> {
               //client.localStorage.set('Auth', token);
               //TODO:set authToken to store
-              resolve(postLogin(token,client,getState()));
+              resolve(postLogin(token,client,getState(),dispatch));
               cb();
             }).catch((err) => {
               reject({

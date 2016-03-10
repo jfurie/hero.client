@@ -34,6 +34,16 @@ export default function reducer(state = initialState, action = {}) {
       return state;
     }
   }
+  case constants.GET_CONTACTS_BY_IDS_SUCCESS:{
+    let contactsMap = {};
+    action.result.map((c) => {
+      contactsMap[c.id] = c;
+    });
+    return {
+      ...state,
+      list: state.list.merge(contactsMap),
+    }
+  }
   case constants.GET_CONTACTS:
     return {
       ...state,

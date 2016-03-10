@@ -9,7 +9,7 @@ import {
   createStore as _createStore, applyMiddleware, compose
 }
 from 'redux';
-
+import { serialize, deserialize } from 'redux-localstorage-immutable';
 const storage = compose(
   filter(['auth','myProfile','contacts'])
 )(adapter(window.localStorage));

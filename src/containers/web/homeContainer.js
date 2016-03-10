@@ -28,6 +28,12 @@ const style = {
 let getData = (state, props) => {
   let tab = props.location.query.tab || 'Active Jobs';
 
+  let currentFavorites = state.favorites.get('list');
+  let favoriteMap = {};
+  currentFavorites.map(function(favorites){
+    favoriteMap[favorites.get('favorableId')] = 1;
+  })
+  let favoriteContacts = state.contacts.list.filter(x=>favoriteMap[x.get('id')]);
   return {
     tab,
     user: state.auth.user,
@@ -35,6 +41,7 @@ let getData = (state, props) => {
     contacts: state.contacts,
     auth: state.auth,
     companies: state.companies,
+    favoriteContacts,
   };
 };
 
@@ -53,9 +60,9 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getMyFavoriteJobs();
-    this.props.getMyFavoriteCompanies();
-    this.props.getMyFavoriteContacts();
+    //this.props.getMyFavoriteJobs();
+    //this.props.getMyFavoriteCompanies();
+    //this.props.getMyFavoriteContacts();
   }
 
   _handleJobClick(job){
@@ -229,7 +236,7 @@ class HomePage extends React.Component {
 
   render () {
 
-    let { contacts, companies, jobs } = this.props;
+    let { contacts, companies, jobs, favoriteContacts } = this.props;
 
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
@@ -264,7 +271,7 @@ class HomePage extends React.Component {
           </div>
           <div style={style.slide}>
             <ContactsList
-                contacts={contacts.myFavoriteContactIds}
+                contacts={favoriteContacts}
                 favoriteContact={this.favoriteContact.bind(this)}
                 unfavoriteContact={this.unfavoriteContact.bind(this)}
             />

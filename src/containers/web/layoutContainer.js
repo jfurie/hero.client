@@ -46,7 +46,7 @@ class Layout extends React.Component {
     if (nextProps.user && !this.props.user)
       this.props.getUserContact(nextProps.user.id);
 
-    if (nextProps.authToken && !this.props.authToken)
+    if (nextProps.authToken && !this.props.authToken && nextProps.user)
       this.props.getUserStats(nextProps.authToken.accountInfo.account.id, nextProps.user.id);
   }
 

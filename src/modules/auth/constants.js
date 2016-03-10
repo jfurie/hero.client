@@ -21,3 +21,4 @@ export const AUTHCHECK = 'hero.client/auth/AUTHCHECK';
 export const AUTHCHECK_SUCCESS = 'hero.client/auth/AUTHCHECK_SUCCESS';
 export const AUTHCHECK_FAIL = 'hero.client/auth/AUTHCHECK_FAIL';
 export const RESET_LOGOUT_READY = 'hero.client/auth/RESET_LOGOUT_READY';
+export const SET_AUTH = 'hero.client/auth/SET_AUTH';

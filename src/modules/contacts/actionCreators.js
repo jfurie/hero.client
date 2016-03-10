@@ -1,6 +1,6 @@
 import { createCandidateFavorite, deleteCandidateFavorite, saveCandidateByContactResult } from '../candidates';
 import { saveJobsByContactResult } from '../jobs';
-		 +import { saveCompaniesResult } from '../companies';
+import { saveCompaniesResult } from '../companies';
 import * as constants from './constants';
 
 export function getAllContacts() {
@@ -9,6 +9,33 @@ export function getAllContacts() {
     promise: (client, auth) => client.api.get('/contacts', {
       authToken: auth.authToken,
     }),
+  };
+}
+
+export function getContactsByIds(contactIds){
+  return (dispatch) => {
+    return dispatch({
+      types:[constants.GET_CONTACTS_BY_IDS, constants.GET_CONTACTS_BY_IDS_SUCCESS, constants.GET_CONTACTS_BY_IDS_FAIL],
+      promise:(client,auth) => {
+        let filter= {where:{id:{inq:contactIds}}};
+        let filterString = encodeURIComponent(JSON.stringify(filter));
+        return client.api.get(`/contacts?filter=${filterString}`,{
+          authToken: auth.authToken,
+        });
+      }
+    });
+  }
+}
+
+export function getContactByIdsIfNeeded(contactIds){
+  return (dispatch, getState) => {
+    var newContactIds =[];
+    contactIds.map((contactId => {
+      if(!getState().contacts.list.get(contactId)){
+        newContactIds.push(contactId);
+      }
+    }));
+    return dispatch(getContactsByIds(newContactIds));
   };
 }
 

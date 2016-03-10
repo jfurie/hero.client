@@ -53,6 +53,12 @@ export default function reducer(state = initialState, action = {}) {
       user: action.result.user,
       authToken: action.result.authToken,
     };
+  case constants.SET_AUTH:{
+    return {
+      ...state,
+      authToken: action.result.authToken,
+    }
+  }
   case constants.LOGIN_FAIL:
     return {
       ...state,

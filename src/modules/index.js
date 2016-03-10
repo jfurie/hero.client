@@ -14,7 +14,7 @@ import candidates from './candidates';
 import categories from './categories';
 import search from './search';
 import myProfile from './myProfile';
-
+import favorites from './favorites';
 
 export default combineReducers({
   router: routerStateReducer,
@@ -31,5 +31,6 @@ export default combineReducers({
   candidates,
   categories,
   search,
-  myProfile
+  myProfile,
+  favorites
 });

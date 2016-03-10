@@ -76,6 +76,7 @@
     "redux-devtools-log-monitor": "^1.0.1",
     "redux-localstorage": "herojobs/redux-localstorage#1.0-breaking-changes",
     "redux-localstorage-filter": "^0.1.1",
+    "redux-localstorage-immutable": "^1.0.4",
     "redux-logger": "^2.6.1",
     "redux-router": "^1.0.0-beta3",
     "redux-thunk": "^1.0.0",
