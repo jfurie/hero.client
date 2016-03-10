@@ -16,7 +16,7 @@ const storage = compose(
 )(adapter(window.localStorage));
 
 export default function createStore(reduxReactRouter, getRoutes, createHistory, client, data, isDev) {
-  const middleware = [thunk, clientMiddleware(client),createLogger()];
+  const middleware = [thunk, clientMiddleware(client),createLogger({stateTransformer:state=>state.toJS()})];
   let finalCreateStore;
   if (isDev) {
 

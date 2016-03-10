@@ -63,10 +63,11 @@ export default(store) => {
   const requireLogin = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const { auth } = ((store) ? (store.getState()) : (null));
+      const auth = store.getState().get('auth');
+      let authToken = auth.get('authToken');
       console.log('checkAuth');
-      if (auth.authToken) {
-        store.dispatch(authActions.checkAuthServer(auth.authToken.id));
+      if (authToken) {
+        store.dispatch(authActions.checkAuthServer(authToken.get('id')));
         store.dispatch(authActions.logginWithAuthLocalStorage());
         cb();
       } else {
@@ -81,7 +82,8 @@ export default(store) => {
   const requireAccount = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const { auth: { authToken } } = ((store) ? (store.getState()) : (null));
+      const auth = store.getState().get('auth');
+      let authToken = auth.get('authToken');
 
       if (!authToken || !authToken.accountInfo || !authToken.accountInfo.account || !authToken.accountInfo.account.id) {
         replaceState(null, '/error?type=access');
@@ -97,10 +99,10 @@ export default(store) => {
   const loadUser = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const { auth } = ((store) ? (store.getState()) : (null));
+      const auth = store.getState().get('auth');
       let tokenParam = getParameterByName('accessToken');
 
-      if (auth.authToken) {
+      if (auth.get('authToken')) {
         store.dispatch(authActions.logginWithAuthLocalStorage());
         cb();
       } else if (tokenParam) {
@@ -122,8 +124,8 @@ export default(store) => {
   };
 
   const checkLogin = (nextState, replaceState, cb) => {
-    const { auth } = ((store) ? (store.getState()) : (null));
-    if (auth.authToken) { /* already logged */
+    const auth = store.getState().get('auth');
+    if (auth.get('authToken')) { /* already logged */
       replaceState(null, '/');
     }
     cb();

@@ -26,8 +26,8 @@ const style = {
 };
 
 @connect(state => ({
-  user: state.auth.user,
-  auth: state.auth,
+  user: state.getIn(['auth','user']),
+  auth: state.get('auth'),
 }), {login, resetLoginError, pushState})
 class LogoutPage extends React.Component {
 

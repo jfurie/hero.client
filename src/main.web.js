@@ -1,7 +1,8 @@
 let React = require('react');
 let ReactDOM = require('react-dom');
 import {Provider} from 'react-redux';
-import {reduxReactRouter, ReduxRouter} from 'redux-router';
+import {reduxReactRouter} from 'redux-router';
+import { Router, browserHistory } from 'react-router';
 import createStore from './stores/main';
 import ApiClient from './utils/apiClient';
 import FakeApiClient from './utils/fakeApiClient';
@@ -43,7 +44,7 @@ class Root extends React.Component {
       <div style={{}}>
         <Provider store={store}>
           <div>
-            <ReduxRouter routes={getRoutes(store)} />
+            <Router history={browserHistory} routes={getRoutes(store)} />
             {/*<DevTools />*/}
           </div>
         </Provider>

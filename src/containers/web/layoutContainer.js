@@ -10,11 +10,11 @@ import { LeftNavTop } from '../../components/web';
 import { logout, resetLogoutReady } from '../../modules/auth';
 
 @connect(state => ({
-  auth: state.auth,
-  authToken: state.auth.authToken,
-  user: state.auth.user,
-  leftNav: state.leftNav,
-  users: state.users,
+  auth: state.get('auth'),
+  authToken: state.getIn(['auth','authToken']),
+  user: state.getIn(['auth','user']),
+  leftNav: state.get('leftNav'),
+  users: state.get('users'),
 }),{pushState, onNavOpen, onNavClose, toggleNav, logout,getUserContact, getUserStats, replaceState, resetLogoutReady})
 
 class Layout extends React.Component {
