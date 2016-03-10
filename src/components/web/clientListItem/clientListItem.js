@@ -163,7 +163,7 @@ export default class ClientListItem extends React.Component {
           subtitle2={location}
           onTouchTap={this.clickClient.bind(this)}
           rightContent={
-            company.get('clientAdvocate')?(<div onClick={this.clickClientAdvocate.bind(this)}>
+            !this.props.hideRecruiter && company.get('clientAdvocate')?(<div onClick={this.clickClientAdvocate.bind(this)}>
               <Gravatar url={company.get('clientAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{company.get('clientAdvocate').get('displayName')}</div>
             </div>):(<div></div>)
           }
