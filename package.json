@@ -74,6 +74,7 @@
     "redux": "^3.0.4",
     "redux-devtools-dock-monitor": "^1.0.1",
     "redux-devtools-log-monitor": "^1.0.1",
+    "redux-immutable": "^3.0.6",
     "redux-localstorage": "herojobs/redux-localstorage#1.0-breaking-changes",
     "redux-localstorage-filter": "^0.1.1",
     "redux-localstorage-immutable": "^1.0.4",

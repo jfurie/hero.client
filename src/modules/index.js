@@ -1,5 +1,7 @@
-import { combineReducers } from 'redux';
 import { routerStateReducer } from 'redux-router';
+import {
+    combineReducers
+} from 'redux-immutable';
 import auth from './auth';
 import users from './users';
 import contacts from './contacts';

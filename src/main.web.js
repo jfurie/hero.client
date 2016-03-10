@@ -10,7 +10,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import getRoutes from './routes.web';
 import createHistory from 'history/lib/createBrowserHistory';
 import useScroll from 'scroll-behavior/lib/useStandardScroll';
-
+import Immutable from 'immutable';
 const history = useScroll(createHistory);
 //import DevTools from './utils/devTools';
 import Config from './utils/config';
@@ -34,7 +34,7 @@ client.api = new ApiClient({
 client.localStorage = new LocalStorageClient('auth');
 client.fakeApi = new FakeApiClient(); // fake api
 
-const store = createStore(reduxReactRouter, getRoutes, history, client, {},true);
+const store = createStore(reduxReactRouter, getRoutes, history, client,Immutable.Map(),true);
 
 class Root extends React.Component {
 
