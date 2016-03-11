@@ -6,7 +6,7 @@ import { ContactEditCategories } from '../../../components/web';
 function getData(state, props) {
   return {
     categories: state.categories.list,
-    contact: state.contacts.list.get(props.params.contactId),
+    contact: state.contacts.get('list').get(props.params.contactId),
     contactCategories: state.contactCategories.byContactId.get(props.params.contactId),
   };
 }

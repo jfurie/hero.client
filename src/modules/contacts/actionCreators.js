@@ -309,7 +309,7 @@ export function setExperience(contactId,contactCategory, category){
         contactCategory = contactCategory.toJSON();
       }
     }
-    let currentContact = getState().contacts.list.get(contactId);
+    let currentContact = getState().contacts.get('list').get(contactId);
     let _contactCategories = currentContact.get('_contactCategories');
     let currentContactCategory = _contactCategories.find(x=>x.get('categoryId') == contactCategory.categoryId );
     if(currentContactCategory){

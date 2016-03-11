@@ -28,14 +28,14 @@ export default function getCompanyDataFromState(state, companyId) {
     }
 
     // clientAdvocateId
-    let clientAdvocate = state.contacts.list.get(company.get('clientAdvocateId'));
+    let clientAdvocate = state.contacts.getIn(['list',company.get('clientAdvocateId')]);
     company = company.set('clientAdvocate', clientAdvocate);
 
     // hero contacts
     // let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
     // let heroContacts = null;
     // if(heroContactIds){
-    //   heroContacts = state.contacts.list.filter(x =>{
+    //   heroContacts = state.contacts.get('list').filter(x =>{
     //     return heroContactIds.indexOf(x.get('id')) > -1;
     //   });
     // }
@@ -67,7 +67,7 @@ export default function getCompanyDataFromState(state, companyId) {
       let companyContacts = new Immutable.List();
 
       if (companyContactIds) {
-        companyContacts = state.contacts.list.filter(contact => {
+        companyContacts = state.contacts.get('list').filter(contact => {
           return companyContactIds.indexOf(contact.get('id')) > -1;
         }).toList();
       }

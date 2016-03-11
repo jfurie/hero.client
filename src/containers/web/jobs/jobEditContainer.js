@@ -16,7 +16,7 @@ let getData = (state, props) => {
   let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
   let heroContacts = null;
   if(heroContactIds){
-    heroContacts = state.contacts.list.filter(x =>{
+    heroContacts = state.contacts.get('list').filter(x =>{
       return heroContactIds.indexOf(x.get('id')) > -1;
     });
   }
@@ -24,7 +24,7 @@ let getData = (state, props) => {
   let contactIds = state.contacts.byCompanyId.get(props.params.companyId);
   let contacts = null;
   if(contactIds){
-    contacts = state.contacts.list.filter(x =>{
+    contacts = state.contacts.get('list').filter(x =>{
       return contactIds.indexOf(x.get('id')) > -1;
     });
   }

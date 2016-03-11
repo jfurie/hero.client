@@ -22,7 +22,7 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
   let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
   let heroContacts = null;
   if(heroContactIds){
-    heroContacts = state.contacts.list.filter(x =>{
+    heroContacts = state.contacts.get('list').filter(x =>{
       return heroContactIds.indexOf(x.get('id')) > -1;
     });
   }

@@ -25,10 +25,10 @@ function getData(state, props) {
   let localJobResource = null;
 
 
-  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+  let heroContactIds = state.contacts.get('byCompanyId').get(HEROCOMPANYID);
   let heroContacts = null;
   if(heroContactIds){
-    heroContacts = state.contacts.list.filter(x =>{
+    heroContacts = state.contacts.get('list').filter(x =>{
       return heroContactIds.indexOf(x.get('id')) > -1;
     });
   }
