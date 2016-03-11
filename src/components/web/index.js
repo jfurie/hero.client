@@ -56,6 +56,7 @@ export SelectToggle from './selectToggle/selectToggle';
 export GlobalSearch from './globalSearch/globalSearch';
 export ContactEditCategories from './contactEditCategories/contactEditCategories';
 export JSONTree from './jsontree/jsontree';
+export ClientCardContainer from '../../containers/web/clients/ClientCardContainer';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';

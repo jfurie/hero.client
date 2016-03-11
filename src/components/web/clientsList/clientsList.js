@@ -1,7 +1,7 @@
 import React from 'react';
 import { List } from 'material-ui';
 import Infinite from 'react-infinite';
-import { ClientListItem } from '../../../components/web';
+import { ClientCardContainer } from '../../../components/web';
 import { pushState } from 'redux-router';
 import { connect } from 'react-redux';
 //import { ContactDetailsModal } from '../../../components/web';
@@ -117,25 +117,7 @@ class ClientsList extends React.Component {
           <Infinite containerHeight={clientHeight - (56+64)} elementHeight={heights} useWindowAsScrollContainer>
             {clients.map((company) => {
               return (
-                <div>
-
-                  <ClientListItem
-                      onClientClick={this._showClientDetails.bind(this)}
-                      company={company}
-                      favoriteCompany={this.favoriteCompany.bind(this)}
-                      unfavoriteCompany={this.unfavoriteCompany.bind(this)}
-                  />
-                {/*
-                  <ListItem
-                      leftAvatar={<CompanyAvatar url={company.get('website')} />}
-                      primaryText={company.get('name')}
-                      secondaryText={<p>{company.get('jobs').size} Job{company.get('jobs').size == 1 ? '' : 's'} | {company.get('candidates').size} Candidate{company.get('candidates').size == 1 ? '' : 's'}</p>}
-                      secondaryTextLines={2}
-                      onTouchTap={this._showClientDetails.bind(this, company.get('id'))}
-                  />
-                  */}
-
-                </div>
+                <ClientCardContainer companyId={company.get('id')} />
               );
             })}
           </Infinite>

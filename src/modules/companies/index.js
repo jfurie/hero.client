@@ -6,9 +6,9 @@ import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 
 import { saveJobsByCompanyResult } from '../jobs';
-import { saveContactsByCompanyResult } from '../contacts';
+import { getContactsByIdsIfNeeded } from '../contacts';
 import { saveNotesByCompanyResult } from '../notes';
-import { saveLocationByCompanyResult } from '../locations';
+import { getLocationsByIdsIfNeeded } from '../locations';
 
 import superagent from 'superagent';
 import {actionTypes} from 'redux-localstorage';
@@ -57,7 +57,8 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_COMPANY: {
     return state;
   }
-  case constants.GET_COMPANY_SUCCESS: {
+  case constants.GET_COMPANY_SUCCESS:
+  case constants.GET_COMPANY_DETAIL_SUCCESS: {
     let company = {};
     let id = action.result.id;
     company[id] = action.result;
@@ -388,6 +389,42 @@ export function saveCompaniesResult(companies){
   };
 }
 
+// export function getCompanyDetail(id) {
+//
+//   return (dispatch) => {
+//     dispatch({
+//       types: [constants.GET_COMPANY_DETAIL, constants.GET_COMPANY_DETAIL_SUCCESS, constants.GET_COMPANY_DETAIL_FAIL],
+//       promise: (client, auth) => client.api.get(`/companies/detail?id=${id}`, {
+//         authToken: auth.authToken,
+//       }).then((company)=> {
+//
+//         dispatch(saveCompanyResult(company));
+//
+//         if (company.location) {
+//           dispatch(saveLocationByCompanyResult(company.location));
+//         }
+//
+//         if (company.jobs && company.jobs.length > 0) {
+//           dispatch(saveJobsByCompanyResult(company.jobs));
+//         }
+//
+//         if (company.contacts && company.contacts.length > 0) {
+//           dispatch(saveContactsByCompanyResult({
+//             companyId: company.id,
+//             result: company.contacts,
+//           }));
+//         }
+//
+//         if (company.notes && company.notes.length > 0) {
+//           dispatch(saveNotesByCompanyResult(company.notes));
+//         }
+//
+//         return company;
+//       }),
+//     });
+//   };
+// }
+
 export function getCompanyDetail(id) {
 
   return (dispatch) => {
@@ -396,27 +433,38 @@ export function getCompanyDetail(id) {
       promise: (client, auth) => client.api.get(`/companies/detail?id=${id}`, {
         authToken: auth.authToken,
       }).then((company)=> {
-
-        dispatch(saveCompanyResult(company));
-
-        if (company.location) {
-          dispatch(saveLocationByCompanyResult(company.location));
+        if (company.locationId) {
+          dispatch(getLocationsByIdsIfNeeded([company.locationId]));
         }
 
-        if (company.jobs && company.jobs.length > 0) {
-          dispatch(saveJobsByCompanyResult(company.jobs));
+        if (company.talentAdvocateId) {
+          dispatch(getContactsByIdsIfNeeded([company.talentAdvocateId]));
         }
 
-        if (company.contacts && company.contacts.length > 0) {
-          dispatch(saveContactsByCompanyResult({
-            companyId: company.id,
-            result: company.contacts,
+        let contactIds = [];
+
+        if (company.talentAdvocateId) {
+          contactIds.push(company.talentAdvocateId);
+        }
+
+        if (company.contacts) {
+          company.contacts.map((contact => {
+              contactIds.push(contact.id);
           }));
         }
 
-        if (company.notes && company.notes.length > 0) {
-          dispatch(saveNotesByCompanyResult(company.notes));
+        if (contactIds) {
+          dispatch(getContactsByIdsIfNeeded(contactIds));
         }
+
+        // if (company.jobs && company.jobs.length > 0) {
+        //   dispatch(saveJobsByCompanyResult(company.jobs));
+        // }
+
+        //
+        // if (company.notes && company.notes.length > 0) {
+        //   dispatch(saveNotesByCompanyResult(company.notes));
+        // }
 
         return company;
       }),
@@ -484,7 +532,7 @@ export function getCompaniesByIds(companyIds){
   };
 }
 
-export function getCompanyByIdsIfNeeded(companyIds){
+export function getCompaniesByIdsIfNeeded(companyIds){
   return (dispatch, getState) => {
     var newCompanyIds =[];
     companyIds.map((companyId => {

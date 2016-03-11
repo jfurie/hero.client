@@ -54,16 +54,31 @@ export default function getCompanyDataFromState(state, companyId) {
 
     //filter down company contacts
 
-    let contactsByCompanyListIds = state.contacts.byCompanyId.get(companyId);
-    let companyContacts = new Immutable.Map();
+    // let contactsByCompanyListIds = state.contacts.byCompanyId.get(companyId);
+    // let companyContacts = new Immutable.Map();
+    //
+    // if (contactsByCompanyListIds) {
+    //   companyContacts = state.contacts.list.filter(x => {
+    //     return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
+    //   });
+    // }
 
-    if (contactsByCompanyListIds) {
-      companyContacts = state.contacts.list.filter(x => {
-        return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
-      });
+    if (company.has('contacts')) {
+      let companyContactIds = [];
+      company.get('contacts').map((contact => {
+          companyContactIds.push(contact.get('id'));
+      }));
+
+      let companyContacts = new Immutable.List();
+
+      if (companyContactIds) {
+        companyContacts = state.contacts.list.filter(contact => {
+          return companyContactIds.indexOf(contact.get('id')) > -1;
+        }).toList();
+      }
+
+      company = company.set('contacts', companyContacts);
     }
-
-    company = company.set('contacts', companyContacts);
 
     // company location
 

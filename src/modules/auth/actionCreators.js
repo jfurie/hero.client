@@ -1,7 +1,7 @@
 import * as constants from './constants';
 import { getFavoritesByUserId } from '../favorites';
-import { getContactByIdsIfNeeded } from '../contacts';
-import { getCompanyByIdsIfNeeded } from '../companies';
+import { getContactsByIdsIfNeeded } from '../contacts';
+import { getCompaniesByIdsIfNeeded } from '../companies';
 export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;
 }
@@ -90,8 +90,8 @@ function postLogin(auth, client, state, dispatch){
         }
       })
     }
-    dispatch(getContactByIdsIfNeeded(contactIds));
-    dispatch(getCompanyByIdsIfNeeded(companyIds));
+    dispatch(getContactsByIdsIfNeeded(contactIds));
+    dispatch(getCompaniesByIdsIfNeeded(companyIds));
   });
   return getDataBasedOnUserId(context).then((context)=>{
     return context.response;

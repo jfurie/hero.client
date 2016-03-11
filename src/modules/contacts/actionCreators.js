@@ -29,7 +29,7 @@ export function getContactsByIds(contactIds){
   }
 }
 
-export function getContactByIdsIfNeeded(contactIds){
+export function getContactsByIdsIfNeeded(contactIds){
   return (dispatch, getState) => {
     var newContactIds =[];
     contactIds.map((contactId => {
