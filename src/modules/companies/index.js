@@ -158,7 +158,7 @@ export default function reducer(state = initialState, action = {}) {
     });
 
     return state.withMutations((state) => {
-      state.set('myCompanyIds', state.myCompanyIds.mergeDeep(companiesMap)).set('list', state.get('list').mergeDeep(companiesMap));
+      state.set('myCompanyIds', state.get('myCompanyIds').mergeDeep(companiesMap)).set('list', state.get('list').mergeDeep(companiesMap));
     });
   }
   case constants.GET_MY_COMPANIES_FAIL: {
@@ -182,7 +182,7 @@ export default function reducer(state = initialState, action = {}) {
     companyMap[company.get('id')] = company;
 
     return state.withMutations((state) => {
-      state.set('list', state.get('list').mergeDeep(companyMap)).set('myCompanyIds', state.myCompanyIds.mergeDeep(companyMap)).set('myFavoriteCompanyIds', state.myFavoriteCompanyIds.mergeDeep(companyMap));
+      state.set('list', state.get('list').mergeDeep(companyMap)).set('myCompanyIds', state.get('myCompanyIds').mergeDeep(companyMap)).set('myFavoriteCompanyIds', state.myFavoriteCompanyIds.mergeDeep(companyMap));
     });
   }
   case constants.DELETE_COMPANY_FAVORITE_SUCCESS: {
@@ -193,7 +193,7 @@ export default function reducer(state = initialState, action = {}) {
     companyMap[company.get('id')] = company;
 
     return state.withMutations((state) => {
-      state.set('list', state.get('list').mergeDeep(companyMap)).set('myCompanyIds', state.myCompanyIds.mergeDeep(companyMap)).set('myFavoriteCompanyIds', state.myFavoriteCompanyIds.delete(action.result.favorableId));
+      state.set('list', state.get('list').mergeDeep(companyMap)).set('myCompanyIds', state.get('myCompanyIds').mergeDeep(companyMap)).set('myFavoriteCompanyIds', state.myFavoriteCompanyIds.delete(action.result.favorableId));
     });
   }
   case constants.CREATE_TEMP_COMPANY: {
