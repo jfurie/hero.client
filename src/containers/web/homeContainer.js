@@ -34,7 +34,8 @@ let getData = (state, props) => {
     favoriteMap[favorites.get('favorableId')] = 1;
   })
   let favoriteContacts = state.contacts.list.filter(x=>favoriteMap[x.get('id')]);
-  let favoriteCompanies = state.companies.list.filter(x=>favoriteMap[x.get('id')]);
+  let favoriteCompanies = state.companies.get('list').filter(x=>favoriteMap[x.get('id')]);
+
   return {
     tab,
     user: state.auth.user,

@@ -3,7 +3,7 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 export default function getCompanyDataFromState(state, companyId) {
 
-  let company = ((state.companies.list.size > 0) ? (state.companies.list.get(companyId)) : (null));
+  let company = ((state.companies.get('list').size > 0) ? (state.companies.get('list').get(companyId)) : (null));
 
   if (company) {
     let companyImage = company ? state.resources.list.get(company.get('imageId')) : new Immutable.Map();
