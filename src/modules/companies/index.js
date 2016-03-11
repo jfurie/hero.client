@@ -11,6 +11,7 @@ import { saveNotesByCompanyResult } from '../notes';
 import { saveLocationByCompanyResult } from '../locations';
 
 import superagent from 'superagent';
+import {actionTypes} from 'redux-localstorage';
 
 const initialState = {
   list: new Immutable.Map(),
@@ -23,10 +24,29 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case constants.GET_COMPANIES: {
+  case actionTypes.INIT:{
+    const persistedState = action.payload && action.payload['companies'];
+    if(persistedState){
+      return {
+        ...state,
+        list: Immutable.fromJS(persistedState.list),
+      };
+    } else{
+      return state;
+    }
+  }
+  case constants.GET_COMPANIES_BY_IDS_SUCCESS:{
+    let companiesMap = {};
+    action.result.map((c) => {
+      companiesMap[c.id] = c;
+    });
     return {
       ...state,
-    };
+      list: state.list.merge(companiesMap),
+    }
+  }
+  case constants.GET_COMPANIES: {
+    return state;
   }
   case constants.GET_COMPANIES_SUCCESS: {
     let companiesMap = {};
@@ -34,49 +54,33 @@ export default function reducer(state = initialState, action = {}) {
       companiesMap[c.id] = c;
     });
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(companiesMap),
-    };
+    return state.set('list', state.list.mergeDeep(companiesMap));
   }
   case constants.GET_COMPANIES_FAIL: {
-    return {
-      ...state,
-      err: action.err,
-    };
+    return state.set('err', action.err);
   }
   case constants.GET_COMPANY: {
-    return {
-      ...state,
-    };
+    return state;
   }
   case constants.GET_COMPANY_SUCCESS: {
     let company = {};
     let id = action.result.id;
     company[id] = action.result;
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(company),
-    };
+    return state.set('list', state.list.mergeDeep(company));
   }
   case constants.GET_COMPANY_FAIL: {
-    return {
-      ...state,
-      err: action.err,
-    };
+    return state.set('err', action.err);
   }
   case constants.EDIT_COMPANY: {
     let company = {};
     action.company = action.company.set('saving',true);
     action.company = action.company.set('savingError',null);
     company[action.id] = action.company;
-    return {
-      ...state,
-      saving:true,
-      savingError: '',
-      list: state.list.mergeDeep(company),
-    };
+
+    return state.withMutations((state) => {
+      state.set('saving', true).set('savingError', '').set('list', state.list.mergeDeep(company));
+    });
   }
   case constants.EDIT_COMPANY_SUCCESS: {
     let company = {};
@@ -84,89 +88,73 @@ export default function reducer(state = initialState, action = {}) {
     company[id] = action.result;
     company[id].saving = false;
     company[id].savingError = '';
-    return {
-      ...state,
-      saving:false,
-      list: state.list.mergeDeep(company),
-    };
+
+    return state.withMutations((state) => {
+      state.set('saving', false).set('list', state.list.mergeDeep(company));
+    });
   }
   case constants.EDIT_COMPANY_FAIL: {
     let company = {};
     let id = action.result.id;
     company[id].saving = false;
     company[id].savingError = action.err;
-    return {
-      ...state,
-      saving:false,
-      savingError: action.err,
-      list: state.list.mergeDeep(company),
-    };
+
+    return state.withMutations((state) => {
+      state.set('saving', false).set('savingError', action.err).set('list', state.list.mergeDeep(company));
+    });
   }
   case constants.CREATE_COMPANY:{
     let company = {};
     action.company = action.company.set('saving',true);
     action.company = action.company.set('savingError',null);
     company[action.id] = action.company;
-    return {
-      ...state,
-      saving:true,
-      savingError:'',
-      list: state.list.mergeDeep(company),
-    };
+
+    return state.withMutations((state) => {
+      state.set('saving', true).set('savingError', '').set('list', state.list.mergeDeep(company));
+    });
   }
-  case constants.CREATE_COMPANY_SUCCESS:
+  case constants.CREATE_COMPANY_SUCCESS: {
     let newItem = {};
     newItem[action.result.id] = action.result;
     newItem[action.result.id].saving = false;
     newItem[action.result.id].savingError = null;
     newItem[action.id] = newItem[action.result.id];
-    return {
-      ...state,
-      saving:false,
-      savingError:'',
-      list:state.list.mergeDeep(newItem),
-    };
-  case constants.CREATE_COMPANY_FAIL:
-    {
-      let company = {};
-      company[action.id] = {};
-      company[action.id].saving = false;
-      company[action.id].savingError = (action.error && action.error.error && action.error.error.message) || 'Failed to create company';
-      return {
-        ...state,
-        saving:false,
-        savingError:'Failed to create company',
-        list:state.list.mergeDeep(company),
-      };
-    }
-  case constants.SEARCH_COMPANIES:
-    return {
-      ...state,
-      searches: state.searches.mergeDeep(action.result),
-      currentSearch: action.query,
-    };
-  case jobConstants.GET_MY_JOBS_SUCCESS:
-    {
-      let companyList =  {};
-      action.result.map(job =>{
-        if(job.company){
-          companyList[job.company.id] = job.company;
-        }
-      });
-      return {
-        ...state,
-        list:state.list.mergeDeep(companyList),
-      };
-    }
-  case jobConstants.GET_JOB_SUCCESS:
-    {
-      let companyList =  {};
-      companyList[action.result.company.id] = action.result;
-      return {
-        ...state,
-        list:state.list.mergeDeep(companyList),
-      };
-    }
+
+    return state.withMutations((state) => {
+      state.set('saving', false).set('savingError', '').set('list', state.list.mergeDeep(newItem));
+    });
+  }
+  case constants.CREATE_COMPANY_FAIL: {
+    let company = {};
+    company[action.id] = {};
+    company[action.id].saving = false;
+    company[action.id].savingError = (action.error && action.error.error && action.error.error.message) || 'Failed to create company';
+
+    return state.withMutations((state) => {
+      state.set('saving', false).set('savingError', 'Failed to create company').set('list', state.list.mergeDeep(company));
+    });
+  }
+  case constants.SEARCH_COMPANIES: {
+    return state.withMutations((state) => {
+      state.set('searches', state.searches.mergeDeep(action.result)).set('currentSearch', action.query);
+    });
+  }
+  case jobConstants.GET_MY_JOBS_SUCCESS: {
+    let companyList =  {};
+    action.result.map(job =>{
+      if(job.company){
+        companyList[job.company.id] = job.company;
+      }
+    });
+
+    return state.set('list', state.list.mergeDeep(companyList));
+  }
+  case jobConstants.GET_JOB_SUCCESS: {
+    let companyList =  {};
+    companyList[action.result.company.id] = action.result;
+
+    return state.set('list', state.list.mergeDeep(companyList));
+  }
   case constants.GET_MY_COMPANIES_SUCCESS: {
 
     let companiesMap = {};
@@ -174,30 +162,22 @@ export default function reducer(state = initialState, action = {}) {
       companiesMap[c.id] = c;
     });
 
-    return{
-      ...state,
-      myCompanyIds: state.myCompanyIds.mergeDeep(companiesMap),
-      list: state.list.mergeDeep(companiesMap),
-    };
+    return state.withMutations((state) => {
+      state.set('myCompanyIds', state.myCompanyIds.mergeDeep(companiesMap)).set('list', state.list.mergeDeep(companiesMap));
+    });
   }
   case constants.GET_MY_COMPANIES_FAIL: {
-    return {
-      ...state,
-      err: action.err,
-    };
+    return state.set('err', action.err);
   }
   case constants.GET_MY_FAVORITE_COMPANIES_SUCCESS: {
-
     let companiesMap = {};
     action.result.map((c) => {
       companiesMap[c.id] = c;
     });
 
-    return{
-      ...state,
-      myFavoriteCompanyIds: state.myFavoriteCompanyIds.mergeDeep(companiesMap),
-      list: state.list.mergeDeep(companiesMap),
-    };
+    return state.withMutations((state) => {
+      state.set('myFavoriteCompanyIds', state.myFavoriteCompanyIds.mergeDeep(companiesMap)).set('list', state.list.mergeDeep(companiesMap));
+    });
   }
   case constants.CREATE_COMPANY_FAVORITE_SUCCESS: {
     let company = state.list.get(action.result.favorableId);
@@ -206,12 +186,9 @@ export default function reducer(state = initialState, action = {}) {
     let companyMap = {};
     companyMap[company.get('id')] = company;
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(companyMap),
-      myCompanyIds: state.myCompanyIds.mergeDeep(companyMap),
-      myFavoriteCompanyIds: state.myFavoriteCompanyIds.mergeDeep(companyMap),
-    };
+    return state.withMutations((state) => {
+      state.set('list', state.list.mergeDeep(companyMap)).set('myCompanyIds', state.myCompanyIds.mergeDeep(companyMap)).set('myFavoriteCompanyIds', state.myFavoriteCompanyIds.mergeDeep(companyMap));
+    });
   }
   case constants.DELETE_COMPANY_FAVORITE_SUCCESS: {
     let company = state.list.get(action.result.favorableId);
@@ -220,20 +197,15 @@ export default function reducer(state = initialState, action = {}) {
     let companyMap = {};
     companyMap[company.get('id')] = company;
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(companyMap),
-      myCompanyIds: state.myCompanyIds.mergeDeep(companyMap),
-      myFavoriteCompanyIds: state.myFavoriteCompanyIds.delete(action.result.favorableId),
-    };
+    return state.withMutations((state) => {
+      state.set('list', state.list.mergeDeep(companyMap)).set('myCompanyIds', state.myCompanyIds.mergeDeep(companyMap)).set('myFavoriteCompanyIds', state.myFavoriteCompanyIds.delete(action.result.favorableId));
+    });
   }
-  case constants.CREATE_TEMP_COMPANY:{
+  case constants.CREATE_TEMP_COMPANY: {
     let companiesMap = {};
     companiesMap[action.result.id] = action.result;
-    return {
-      ...state,
-      list: state.list.mergeDeep(companiesMap),
-    };
+
+    return state.set('list', state.list.mergeDeep(companiesMap));
   }
   case constants.SEARCH_COMPANIES_SUCCESS: {
     let query = action.result.query;
@@ -241,26 +213,19 @@ export default function reducer(state = initialState, action = {}) {
     let queriesMap = {};
     queriesMap[query] = action.result.results;
 
-    return {
-      ...state,
-      queries: state.queries.mergeDeep(queriesMap),
-    };
+    return state.set('queries', state.queries.mergeDeep(queriesMap));
   }
-  case constants.SEARCH_COMPANIES_FAIL:
-    return {
-      ...state,
-      err: action.err,
-    };
+  case constants.SEARCH_COMPANIES_FAIL: {
+    return state.set('err', action.err);
+  }
   case constants.UPDATE_COMPANY_IMAGE:{
     let company = {};
     company[action.id] = {
       isUploading:true,
       percentUploaded:0
     };
-    return{
-      ...state,
-      list: state.list.mergeDeep(company),
-    };
+
+    return state.set('list', state.list.mergeDeep(company));
   }
   case constants.UPDATE_COMPANY_IMAGE_SUCCESS:{
     let company = {};
@@ -270,10 +235,8 @@ export default function reducer(state = initialState, action = {}) {
       percentUploaded:100
     };
     company[action.id] = image;
-    return{
-      ...state,
-      list: state.list.mergeDeep(company),
-    };
+
+    return state.set('list', state.list.mergeDeep(company));
   }
   case constants.UPDATE_COMPANY_IMAGE_PROGRESS:{
     let company = {};
@@ -283,10 +246,8 @@ export default function reducer(state = initialState, action = {}) {
       percentUploaded:action.result
     };
     company[action.id] = image;
-    return{
-      ...state,
-      list: state.list.mergeDeep(company),
-    };
+
+    return state.set('list', state.list.mergeDeep(company));
   }
   default:
     return state;
@@ -510,5 +471,32 @@ export function updateCompanyImage(id,file) {
         });
       }),
     });
+  };
+}
+
+export function getCompaniesByIds(companyIds){
+  return (dispatch) => {
+    return dispatch({
+      types:[constants.GET_COMPANIES_BY_IDS, constants.GET_COMPANIES_BY_IDS_SUCCESS, constants.GET_COMPANIES_BY_IDS_FAIL],
+      promise:(client,auth) => {
+        let filter= {where:{id:{inq:companyIds}}};
+        let filterString = encodeURIComponent(JSON.stringify(filter));
+        return client.api.get(`/companies?filter=${filterString}`,{
+          authToken: auth.authToken,
+        });
+      }
+    });
+  }
+}
+
+export function getCompanyByIdsIfNeeded(companyIds){
+  return (dispatch, getState) => {
+    var newCompanyIds =[];
+    companyIds.map((companyId => {
+      if(!getState().companies.list.get(companyId)){
+        newCompanyIds.push(companyId);
+      }
+    }));
+    return dispatch(getCompaniesByIds(newCompanyIds));
   };
 }
