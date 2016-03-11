@@ -82,10 +82,10 @@ function postLogin(auth, client, state, dispatch){
     if(response.result){
       response.result.map(function(favorite){
         switch(favorite.favorableType){
-          case 'contact':
+        case 'contact':
           contactIds.push(favorite.favorableId);
           break;
-          case 'company':
+        case 'company':
           companyIds.push(favorite.favorableId);
         }
       })
@@ -146,7 +146,7 @@ export function logginWithAuthLocalStorage() {
       types: [constants.AUTHLOCALSTORAGE, constants.AUTHLOCALSTORAGE_SUCCESS, constants.AUTHLOCALSTORAGE_FAIL],
       promise: (client) => {
         return new Promise((resolve, reject) => {
-          let auth =  getState().auth && getState().auth.authToken;
+          let auth = getState().auth && getState().auth.get('authToken').toJS();
           if (auth) {
             return postLogin(auth,client,getState(),dispatch).then((response)=>{
               resolve(response);
