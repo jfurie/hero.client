@@ -12,6 +12,17 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case constants.GET_JOBS_BY_IDS_SUCCESS: {
+    let jobsMap = {};
+    action.result.map((c) => {
+      jobsMap[c.id] = c;
+    });
+
+    return {
+      ...state,
+      list: state.list.merge(jobsMap),
+    }
+  }
   case constants.GET_JOBS: {
     return {
       ...state,

@@ -42,3 +42,6 @@ export const DELETE_JOB_FAVORITE = 'hero.client/jobs/DELETE_JOB_FAVORITE';
 export const DELETE_JOB_FAVORITE_SUCCESS = 'hero.client/jobs/DELETE_JOB_FAVORITE_SUCCESS';
 export const DELETE_JOB_FAVORITE_FAIL = 'hero.client/jobs/DELETE_JOB_FAVORITE_FAIL';
 export const GET_JOBS_BY_CONTACT_SUCCESS = 'hero.client/jobs/GET_JOBS_BY_CONTACT_SUCCESS';
+export const GET_JOBS_BY_IDS = 'hero.client/jobs/GET_JOBS_BY_IDS';
+export const GET_JOBS_BY_IDS_SUCCESS = 'hero.client/jobs/GET_JOBS_BY_IDS_SUCCESS';
+export const GET_JOBS_BY_IDS_FAIL = 'hero.client/jobs/GET_JOBS_BY_IDS_FAIL';

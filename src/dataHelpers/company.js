@@ -9,60 +9,55 @@ export default function getCompanyDataFromState(state, companyId) {
     let companyImage = company ? state.resources.list.get(company.get('imageId')) : new Immutable.Map();
     company = company.set('image', companyImage);
 
-    // filter down company jobs
+    // company jobs
+    if (company.has('jobs')) {
+      let companyJobIds = [];
+      company.get('jobs').map((job => {
+          companyJobIds.push(job.get('id'));
+      }));
 
-    let jobsByCompanyListIds = state.jobs.byCompanyId.get(companyId);
-    let companyJobs = new Immutable.Map();
-    let talentAdvocate = null;
-    if (jobsByCompanyListIds) {
-      companyJobs = state.jobs.list.filter(x => {
-        return jobsByCompanyListIds.indexOf(x.get('id')) > -1;
-      });
+      let companyJobs = new Immutable.List();
+
+      if (companyJobIds) {
+        companyJobs = state.jobs.list.filter(job => {
+          return companyJobIds.indexOf(job.get('id')) > -1;
+        }).toList();
+      }
+
+      company = company.set('jobs', companyJobs);
     }
 
-    company = company.set('jobs', companyJobs);
-    //filter clientAdvocate
-    if(company){
-      talentAdvocate = state.contacts.list.get(company.get('clientAdvocateId'));
-      company = company.set('clientAdvocate',talentAdvocate);
-    }
-    //filter hero contacts
-    let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
-    let heroContacts = null;
-    if(heroContactIds){
-      heroContacts = state.contacts.list.filter(x =>{
-        return heroContactIds.indexOf(x.get('id')) > -1;
-      });
-    }
-    company = company.set('heroContacts',heroContacts);
+    // clientAdvocateId
+    let clientAdvocate = state.contacts.list.get(company.get('clientAdvocateId'));
+    company = company.set('clientAdvocate', clientAdvocate);
 
-    // filter down company notes
-    let notesByCompanyListIds = state.notes.byCompanyId.get(companyId);
-    let companyNotes = new Immutable.Map();
+    // hero contacts
+    // let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+    // let heroContacts = null;
+    // if(heroContactIds){
+    //   heroContacts = state.contacts.list.filter(x =>{
+    //     return heroContactIds.indexOf(x.get('id')) > -1;
+    //   });
+    // }
+    // company = company.set('heroContacts',heroContacts);
 
-    if (notesByCompanyListIds) {
-      companyNotes = state.notes.list.filter(x => {
-        return notesByCompanyListIds.indexOf(x.get('id')) > -1;
-      });
-    }
-
-    companyNotes = companyNotes.sort((a, b) => {
-      return new Date(b.get('created')) - new Date(a.get('created'));
-    });
-
-    company = company.set('notes', companyNotes);
-
-    //filter down company contacts
-
-    // let contactsByCompanyListIds = state.contacts.byCompanyId.get(companyId);
-    // let companyContacts = new Immutable.Map();
+    // company notes
+    // let notesByCompanyListIds = state.notes.byCompanyId.get(companyId);
+    // let companyNotes = new Immutable.Map();
     //
-    // if (contactsByCompanyListIds) {
-    //   companyContacts = state.contacts.list.filter(x => {
-    //     return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
+    // if (notesByCompanyListIds) {
+    //   companyNotes = state.notes.list.filter(x => {
+    //     return notesByCompanyListIds.indexOf(x.get('id')) > -1;
     //   });
     // }
 
+    // companyNotes = companyNotes.sort((a, b) => {
+    //   return new Date(b.get('created')) - new Date(a.get('created'));
+    // });
+
+    //company = company.set('notes', companyNotes);
+
+    // company contacts
     if (company.has('contacts')) {
       let companyContactIds = [];
       company.get('contacts').map((contact => {
@@ -81,7 +76,6 @@ export default function getCompanyDataFromState(state, companyId) {
     }
 
     // company location
-
     let location = null;
     if (company.get('locationId')) {
       location = ((state.locations.list.size > 0) ? (state.locations.list.get(company.get('locationId'))) : (null));

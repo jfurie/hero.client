@@ -261,3 +261,30 @@ export function getJobDetail(id) {
     });
   };
 }
+
+export function getJobsByIds(jobIds){
+  return (dispatch) => {
+    return dispatch({
+      types:[constants.GET_JOBS_BY_IDS, constants.GET_JOBS_BY_IDS_SUCCESS, constants.GET_JOBS_BY_IDS_FAIL],
+      promise:(client,auth) => {
+        let filter= {where:{id:{inq:jobIds}}};
+        let filterString = encodeURIComponent(JSON.stringify(filter));
+        return client.api.get(`/jobs?filter=${filterString}`,{
+          authToken: auth.authToken,
+        });
+      }
+    });
+  };
+}
+
+export function getJobsByIdsIfNeeded(jobIds){
+  return (dispatch, getState) => {
+    var newJobIds =[];
+    jobIds.map((jobId => {
+      if(!getState().companies.get('list').get(jobId)){
+        newJobIds.push(jobId);
+      }
+    }));
+    return dispatch(getJobsByIds(newJobIds));
+  };
+}

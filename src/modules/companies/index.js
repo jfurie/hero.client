@@ -5,7 +5,7 @@ import { getOneLocation } from '../locations';
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 
-import { saveJobsByCompanyResult } from '../jobs';
+import { getJobsByIdsIfNeeded } from '../jobs';
 import { getContactsByIdsIfNeeded } from '../contacts';
 import { saveNotesByCompanyResult } from '../notes';
 import { getLocationsByIdsIfNeeded } from '../locations';
@@ -443,8 +443,8 @@ export function getCompanyDetail(id) {
 
         let contactIds = [];
 
-        if (company.talentAdvocateId) {
-          contactIds.push(company.talentAdvocateId);
+        if (company.clientAdvocateId) {
+          contactIds.push(company.clientAdvocateId);
         }
 
         if (company.contacts) {
@@ -457,9 +457,15 @@ export function getCompanyDetail(id) {
           dispatch(getContactsByIdsIfNeeded(contactIds));
         }
 
-        // if (company.jobs && company.jobs.length > 0) {
-        //   dispatch(saveJobsByCompanyResult(company.jobs));
-        // }
+        if (company.jobs) {
+          let jobIds = [];
+
+          company.jobs.map((job => {
+              jobIds.push(job.id);
+          }));
+
+          dispatch(getJobsByIdsIfNeeded(jobIds));
+        }
 
         //
         // if (company.notes && company.notes.length > 0) {
