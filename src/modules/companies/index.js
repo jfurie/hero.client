@@ -13,37 +13,32 @@ import { saveLocationByCompanyResult } from '../locations';
 import superagent from 'superagent';
 import {actionTypes} from 'redux-localstorage';
 
-const initialState = {
+const initialState = new Immutable.Map({
   list: new Immutable.Map(),
   myCompanyIds: new Immutable.Map(),
   myFavoriteCompanyIds: new Immutable.Map(),
   searches: new Immutable.Map(),
   currentSearch: '',
   queries: new Immutable.Map(),
-};
+});
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case actionTypes.INIT:{
     const persistedState = action.payload && action.payload['companies'];
     if(persistedState){
-      return {
-        ...state,
-        list: Immutable.fromJS(persistedState.list),
-      };
+      return state.set('list', Immutable.fromJS(persistedState.list));
     } else{
       return state;
     }
   }
-  case constants.GET_COMPANIES_BY_IDS_SUCCESS:{
+  case constants.GET_COMPANIES_BY_IDS_SUCCESS: {
     let companiesMap = {};
     action.result.map((c) => {
       companiesMap[c.id] = c;
     });
-    return {
-      ...state,
-      list: state.list.merge(companiesMap),
-    }
+
+    return state.set('list', state.get('list').merge(companiesMap));
   }
   case constants.GET_COMPANIES: {
     return state;
@@ -493,7 +488,7 @@ export function getCompanyByIdsIfNeeded(companyIds){
   return (dispatch, getState) => {
     var newCompanyIds =[];
     companyIds.map((companyId => {
-      if(!getState().companies.list.get(companyId)){
+      if(!getState().companies.get('list').get(companyId)){
         newCompanyIds.push(companyId);
       }
     }));
