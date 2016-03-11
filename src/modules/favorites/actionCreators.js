@@ -1,5 +1,5 @@
 import * as constants from './constants';
-
+import {actionTypes} from 'redux-localstorage';
 // function getFavorites(context){
 
 

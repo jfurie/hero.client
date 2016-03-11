@@ -35,8 +35,8 @@ function convertToJS(paths) {
   });
 }
 const storage = compose(
-  convertToJS(['auth','myProfile']),
-  filter(['auth','myProfile']),
+  convertToJS(['auth','myProfile','favorites','companies']),
+  filter(['auth','myProfile','favorites','companies']),
 )(adapter(window.localStorage));
 
 export default function createStore(reduxReactRouter, getRoutes, createHistory, client, data, isDev) {

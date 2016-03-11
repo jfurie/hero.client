@@ -17,11 +17,13 @@ export function getContactsByIds(contactIds){
     return dispatch({
       types:[constants.GET_CONTACTS_BY_IDS, constants.GET_CONTACTS_BY_IDS_SUCCESS, constants.GET_CONTACTS_BY_IDS_FAIL],
       promise:(client,auth) => {
-        let filter= {where:{id:{inq:contactIds}}};
-        let filterString = encodeURIComponent(JSON.stringify(filter));
-        return client.api.get(`/contacts?filter=${filterString}`,{
-          authToken: auth.authToken,
-        });
+        if(contactIds && contactIds.length >0){
+          let filter= {where:{id:{inq:contactIds}}};
+          let filterString = encodeURIComponent(JSON.stringify(filter));
+          return client.api.get(`/contacts?filter=${filterString}`,{
+            authToken: auth.authToken,
+          });
+        }
       }
     });
   }
