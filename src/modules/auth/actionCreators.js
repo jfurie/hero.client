@@ -1,7 +1,6 @@
 import * as constants from './constants';
 import { getFavoritesByUserId } from '../favorites';
 import { getContactByIdsIfNeeded } from '../contacts';
-import { getCompanyByIdsIfNeeded } from '../companies';
 export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;
 }
@@ -78,20 +77,14 @@ function postLogin(auth, client, state, dispatch){
   });
   dispatch(getFavoritesByUserId(auth.userId)).then((response)=>{
     let contactIds = [];
-    let companyIds = [];
     if(response.result){
       response.result.map(function(favorite){
-        switch(favorite.favorableType){
-          case 'contact':
+        if(favorite.favorableType == 'contact'){
           contactIds.push(favorite.favorableId);
-          break;
-          case 'company':
-          companyIds.push(favorite.favorableId);
         }
-      })
+      });
     }
-    dispatch(getContactByIdsIfNeeded(contactIds));
-    dispatch(getCompanyByIdsIfNeeded(companyIds));
+    return dispatch(getContactByIdsIfNeeded(contactIds));
   });
   return getDataBasedOnUserId(context).then((context)=>{
     return context.response;
@@ -146,11 +139,12 @@ export function logginWithAuthLocalStorage() {
       types: [constants.AUTHLOCALSTORAGE, constants.AUTHLOCALSTORAGE_SUCCESS, constants.AUTHLOCALSTORAGE_FAIL],
       promise: (client) => {
         return new Promise((resolve, reject) => {
-          let auth =  getState().auth && getState().auth.authToken;
+          let auth =  getState().auth && getState().auth.get('authToken').toJS();
           if (auth) {
             return postLogin(auth,client,getState(),dispatch).then((response)=>{
               resolve(response);
-            }).catch(()=>{
+            }).catch((err)=>{
+              console.error(err);
               reject();
             });
           } else {

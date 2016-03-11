@@ -63,7 +63,7 @@ export default(store) => {
   const requireLogin = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const auth = store.getState().get('auth');
+      const auth = store.getState().auth;
       let authToken = auth.get('authToken');
       console.log('checkAuth');
       if (authToken) {
@@ -82,7 +82,7 @@ export default(store) => {
   const requireAccount = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const auth = store.getState().get('auth');
+      const auth = store.getState().auth;
       let authToken = auth.get('authToken');
 
       if (!authToken || !authToken.accountInfo || !authToken.accountInfo.account || !authToken.accountInfo.account.id) {
@@ -99,7 +99,7 @@ export default(store) => {
   const loadUser = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const auth = store.getState().get('auth');
+      const auth = store.getState().auth;
       let tokenParam = getParameterByName('accessToken');
 
       if (auth.get('authToken')) {
@@ -124,7 +124,7 @@ export default(store) => {
   };
 
   const checkLogin = (nextState, replaceState, cb) => {
-    const auth = store.getState().get('auth');
+    const auth = store.getState().auth;
     if (auth.get('authToken')) { /* already logged */
       replaceState(null, '/');
     }

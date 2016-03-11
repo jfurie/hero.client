@@ -31,7 +31,7 @@ export function getContactByIdsIfNeeded(contactIds){
   return (dispatch, getState) => {
     var newContactIds =[];
     contactIds.map((contactId => {
-      if(!getState().contacts.list.get(contactId)){
+      if(!getState().contacts.list[contactId]){
         newContactIds.push(contactId);
       }
     }));

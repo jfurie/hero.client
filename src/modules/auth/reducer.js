@@ -39,19 +39,19 @@ export default function reducer(state = initialState, action = {}) {
     return state.withMutations(ctx=> {
       ctx
       .set('loggingIn',false)
-      .set('contact',action.result.contact)
-      .set('user', action.result.user)
-      .set('authToken', action.result.authToken);
+      .set('contact',Immutable.fromJS(action.result.contact))
+      .set('user', Immutable.fromJS(action.result.user))
+      .set('authToken', Immutable.fromJS(action.result.authToken));
     });
   case constants.SET_AUTH:{
-    return state.set('authToken',action.result.authToken);
+    return state.set('authToken',Immutable.fromJS(action.result.authToken));
   }
   case constants.LOGIN_FAIL:
     return state.withMutations(ctx=>{
       ctx
       .set('loggingIn',false)
       .set('user',null)
-      .set('loginError',action.error);
+      .set('loginError',Immutable.fromJS(action.error));
     });
   case constants.RESET_LOGIN_ERROR:
     return state.set('loginError', null);
@@ -61,9 +61,9 @@ export default function reducer(state = initialState, action = {}) {
   case constants.AUTHLOCALSTORAGE_SUCCESS:
     return state.withMutations(ctx => {
       ctx.set('loggingIn',false)
-      .set('contact',action.result.contact)
-      .set('user',action.result.user)
-      .set('authToken',action.result.authToken);
+      .set('contact',Immutable.fromJS(action.result.contact))
+      .set('user',Immutable.fromJS(action.result.user))
+      .set('authToken',Immutable.fromJS(action.result.authToken));
     });
   case constants.AUTHLOCALSTORAGE_FAIL:
     return state.withMutations(ctx => {
@@ -71,7 +71,7 @@ export default function reducer(state = initialState, action = {}) {
       .set('user',null)
       .set('authToken',null)
       .set('contact',null)
-      .set('loginError',action.error);
+      .set('loginError',Immutable.fromJS(action.error));
     });
   case constants.LOGOUT:
     return state.set('loggingOut',true);
@@ -86,7 +86,7 @@ export default function reducer(state = initialState, action = {}) {
   case constants.LOGOUT_FAIL:
     return state.withMutations(ctx => {
       ctx.set('loggingOut',false)
-      .set('logoutError',action.error);
+      .set('logoutError',Immutable.fromJS(action.error));
     });
   case constants.CHANGEPASSWORD:
     return state.withMutations(ctx => {
@@ -100,7 +100,7 @@ export default function reducer(state = initialState, action = {}) {
     });
   case constants.CHANGEPASSWORD_FAIL:
     return state.withMutations(ctx =>{
-      ctx.set('changingPasswordError',action.error)
+      ctx.set('changingPasswordError',Immutable.fromJS(action.error))
       .set('changingPassword',false);
     });
   default:

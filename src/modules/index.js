@@ -1,7 +1,5 @@
+import { combineReducers } from 'redux';
 import { routerStateReducer } from 'redux-router';
-import {
-    combineReducers
-} from 'redux-immutable';
 import auth from './auth';
 import users from './users';
 import contacts from './contacts';
@@ -17,7 +15,6 @@ import categories from './categories';
 import search from './search';
 import myProfile from './myProfile';
 import favorites from './favorites';
-
 export default combineReducers({
   router: routerStateReducer,
   auth,
@@ -34,5 +31,5 @@ export default combineReducers({
   categories,
   search,
   myProfile,
-  favorites
+  favorites,
 });

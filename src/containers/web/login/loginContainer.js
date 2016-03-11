@@ -26,8 +26,8 @@ const style = {
 };
 
 @connect(state => ({
-  user: state.getIn(['auth','user']),
-  auth: state.get('auth'),
+  user: state.auth.get('user'),
+  auth: state.auth,
 }), {login, resetLoginError, pushState})
 class LogoutPage extends React.Component {
 
@@ -40,7 +40,7 @@ class LogoutPage extends React.Component {
     };
   }
   componentDidMount(){
-    if(this.props.auth.authToken){
+    if(this.props.auth.get('authToken')){
       let param = this.getParameterByName('redirect');
       if (param) {
         param = param.replace('//', '/');
@@ -52,7 +52,7 @@ class LogoutPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.auth.authToken){
+    if(nextProps.auth.get('authToken')){
       //User is logged in
       let param = this.getParameterByName('redirect');
 
@@ -64,7 +64,7 @@ class LogoutPage extends React.Component {
         this.props.pushState(null, '/');
       }
     }
-    if (nextProps.auth && nextProps.auth.loginError) { // fail to log
+    if (nextProps.auth && nextProps.auth.get('loginError')) { // fail to log
       this.setState({
         loginError: true,
       });

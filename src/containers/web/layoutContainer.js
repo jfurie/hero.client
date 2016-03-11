@@ -10,11 +10,11 @@ import { LeftNavTop } from '../../components/web';
 import { logout, resetLogoutReady } from '../../modules/auth';
 
 @connect(state => ({
-  auth: state.get('auth'),
-  authToken: state.getIn(['auth','authToken']),
-  user: state.getIn(['auth','user']),
-  leftNav: state.get('leftNav'),
-  users: state.get('users'),
+  auth: state.auth,
+  authToken: state.auth.get('authToken'),
+  user: state.auth.get('user'),
+  leftNav: state.leftNav,
+  users: state.users,
 }),{pushState, onNavOpen, onNavClose, toggleNav, logout,getUserContact, getUserStats, replaceState, resetLogoutReady})
 
 class Layout extends React.Component {
@@ -27,9 +27,9 @@ class Layout extends React.Component {
   }
   componentDidMount(){
     if (this.props.user)
-      this.props.getUserContact(this.props.user.id);
-    if (this.props.authToken)
-      this.props.getUserStats(this.props.authToken.accountInfo.account.id, this.props.user.id);
+      this.props.getUserContact(this.props.user.get('id'));
+    if (this.props.authToken && this.props.user)
+      this.props.getUserStats(this.props.authToken.getIn(['accountInfo','account','id']), this.props.user.get('id'));
   }
 
   componentWillReceiveProps(nextProps){
@@ -44,10 +44,10 @@ class Layout extends React.Component {
       });
     }
     if (nextProps.user && !this.props.user)
-      this.props.getUserContact(nextProps.user.id);
+      this.props.getUserContact(nextProps.user.get('id'));
 
     if (nextProps.authToken && !this.props.authToken && nextProps.user)
-      this.props.getUserStats(nextProps.authToken.accountInfo.account.id, nextProps.user.id);
+      this.props.getUserStats(nextProps.authToken.getIn(['accountInfo','account','id']), nextProps.user.get('id'));
   }
 
   handleTouchTap (e) {

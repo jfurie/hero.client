@@ -493,7 +493,7 @@ export function getCompanyByIdsIfNeeded(companyIds){
   return (dispatch, getState) => {
     var newCompanyIds =[];
     companyIds.map((companyId => {
-      if(!getState().companies.list.get(companyId)){
+      if(!getState().companies.list.getIn([companyId])){
         newCompanyIds.push(companyId);
       }
     }));
