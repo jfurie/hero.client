@@ -522,11 +522,15 @@ export function getCompaniesByIds(companyIds){
     return dispatch({
       types:[constants.GET_COMPANIES_BY_IDS, constants.GET_COMPANIES_BY_IDS_SUCCESS, constants.GET_COMPANIES_BY_IDS_FAIL],
       promise:(client,auth) => {
-        let filter= {where:{id:{inq:companyIds}}};
-        let filterString = encodeURIComponent(JSON.stringify(filter));
-        return client.api.get(`/companies?filter=${filterString}`,{
-          authToken: auth.authToken,
-        });
+        if(companyIds && companyIds.length >0){
+          let filter= {where:{id:{inq:companyIds}}};
+          let filterString = encodeURIComponent(JSON.stringify(filter));
+          return client.api.get(`/companies?filter=${filterString}`,{
+            authToken: auth.authToken,
+          });
+        } else {
+          return Promise.resolve([]);
+        }
       }
     });
   };

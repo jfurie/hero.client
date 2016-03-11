@@ -33,7 +33,7 @@ let getData = (state, props) => {
   currentFavorites.map(function(favorites){
     favoriteMap[favorites.get('favorableId')] = 1;
   })
-  let favoriteContacts = state.contacts.list.filter(x=>favoriteMap[x.get('id')]);
+  let favoriteContacts = state.contacts.get('list').filter(x=>favoriteMap[x.get('id')]);
   let favoriteCompanies = state.companies.get('list').filter(x=>favoriteMap[x.get('id')]);
 
   return {

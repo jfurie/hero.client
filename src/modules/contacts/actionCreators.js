@@ -24,6 +24,9 @@ export function getContactsByIds(contactIds){
             authToken: auth.authToken,
           });
         }
+        else{
+          return Promise.resolve([]);
+        }
       }
     });
   }
@@ -33,7 +36,7 @@ export function getContactsByIdsIfNeeded(contactIds){
   return (dispatch, getState) => {
     var newContactIds =[];
     contactIds.map((contactId => {
-      if(!getState().contacts.list[contactId]){
+      if(!getState().contacts.getIn(['list',contactId])){
         newContactIds.push(contactId);
       }
     }));

@@ -46,7 +46,7 @@ function getUser(context){
 
 function getContact(context){
   let currentProfileContactId =context.state.myProfile.get('contactId');
-  if(currentProfileContactId && context.state.contacts.list.get(currentProfileContactId)){
+  if(currentProfileContactId && context.state.contacts.getIn(['list',currentProfileContactId])){
     return Promise.resolve(context);
   }
   return context.client.api.get(`/contacts/findOne?filter[where][and][0][userId]=${context.auth.userId}&filter[where][and][1][isMaster]=true`, {

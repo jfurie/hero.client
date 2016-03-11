@@ -4,13 +4,13 @@ import * as jobConstants from '../jobs/constants';
 import Immutable from 'immutable';
 import {actionTypes} from 'redux-localstorage';
 
-const initialState = {
+const initialState = new Immutable.Map({
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
   queries: new Immutable.Map(),
   myContactIds: new Immutable.Map(),
   myFavoriteContactIds: new Immutable.Map(),
-};
+});
 
 let ContactCategory = new Immutable.Record({
   id:null,
@@ -26,10 +26,7 @@ export default function reducer(state = initialState, action = {}) {
   case actionTypes.INIT:{
     const persistedState = action.payload && action.payload['contacts'];
     if(persistedState){
-      return {
-        ...state,
-        list: Immutable.fromJS(persistedState.list),
-      };
+      return state.set('list',Immutable.fromJS(persistedState.list));
     } else{
       return state;
     }
@@ -39,45 +36,28 @@ export default function reducer(state = initialState, action = {}) {
     action.result.map((c) => {
       contactsMap[c.id] = c;
     });
-    return {
-      ...state,
-      list: state.list.merge(contactsMap),
-    }
+    return state.set('list',state.get('list').merge(contactsMap));
   }
   case constants.GET_CONTACTS:
-    return {
-      ...state,
-    };
+    return state;
   case constants.GET_CONTACTS_SUCCESS: {
     let contactsMap = {};
     action.result.map((c) => {
       contactsMap[c.id] = c;
     });
-
-    return {
-      ...state,
-      list: state.list.mergeDeep(contactsMap),
-    };
+    return state.set('list',state.get('list').mergeDeep(contactsMap));
   }
   case constants.GET_CONTACTS_FAIL:
-    return {
-      ...state,
-      err: action.err,
-    };
+    return state.set('err',action.err);
   case constants.GET_ONE_CONTACT: {
-    return {
-      ...state,
-    };
+    return state;
   }
   case constants.GET_ONE_CONTACT_SUCCESS: {
     let contactsMap = {};
     let id = action.result.id;
     contactsMap[id] = action.result;
 
-    return {
-      ...state,
-      list: state.list.merge(contactsMap),
-    };
+    return state.set('list',state.get('list').merge(contactsMap));
   }
   case constants.GET_ONE_CONTACT_FAIL: {
     return state;
@@ -89,12 +69,12 @@ export default function reducer(state = initialState, action = {}) {
     contact.saving = true;
     contact.savingError = null;
     contactList[action.id] = contact;
-    return {
-      ...state,
-      saving:true,
-      savingError:'',
-      list: state.list.mergeDeep(contactList),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('saving',true)
+      .set('savingError','')
+      .set('list', state.get('list').mergeDeep(contactList));
+    });
   }
   case constants.GET_CONTACT_CREATED_SUCCESS: {
     let contactsMap = {};
@@ -103,31 +83,31 @@ export default function reducer(state = initialState, action = {}) {
       saving: false,
       savingError: '',
     };
-    return {
-      ...state,
-      saving:false,
-      savingError:'',
-      list:state.list.mergeDeep(contactsMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('saving',false)
+      .set('savingError','')
+      .set('list', state.get('list').mergeDeep(contactsMap));
+    });
   }
   case constants.GET_CONTACT_CREATED_FAIL: {
-    return {
-      ...state,
-      creating: false,
-      error: 'Error Creating Contact',
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('creating',false)
+      .set('error','Error Creating Contact');
+    });
   }
   case constants.CREATE_CONTACT: {
     let contact = {};
     action.contact = action.contact.set('saving',true);
     action.contact = action.contact.set('savingError',null);
     contact[action.id] = action.contact;
-    return {
-      ...state,
-      saving:true,
-      savingError:'',
-      list: state.list.mergeDeep(contact),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('saving',true)
+      .set('savingError','')
+      .set('list', state.get('list').mergeDeep(contact));
+    });
   }
   case constants.CREATE_CONTACT_SUCCESS: {
     let contactsMap = {};
@@ -138,25 +118,24 @@ export default function reducer(state = initialState, action = {}) {
       savingError: '',
       newId: action.result.id,
     };
-
-    return {
-      ...state,
-      saving:false,
-      savingError:'',
-      list:state.list.mergeDeep(contactsMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('saving',false)
+      .set('savingError','')
+      .set('list', state.get('list').mergeDeep(contactsMap));
+    });
   }
   case constants.CREATE_CONTACT_FAIL: {
     let contact = {};
     contact[action.id] = {};
     contact[action.id].saving = false;
     contact[action.id].savingError = (action.error && action.error.error && action.error.error.message) || 'Failed to create contact';
-    return {
-      ...state,
-      saving:false,
-      savingError:'Failed to create contact',
-      list:state.list.mergeDeep(contact),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('saving',false)
+      .set('savingError','Failed to create contact')
+      .set('list', state.get('list').mergeDeep(contact));
+    });
   }
   case constants.EDIT_CONTACT:
     {
@@ -166,12 +145,12 @@ export default function reducer(state = initialState, action = {}) {
       contact.saving = true;
       contact.savingError = null;
       contactList[action.id] = contact;
-      return {
-        ...state,
-        saving:true,
-        savingError:'',
-        list: state.list.mergeDeep(contactList),
-      };
+      return state.withMutations(ctx=> {
+        ctx
+        .set('saving',true)
+        .set('savingError','')
+        .set('list', state.get('list').mergeDeep(contactList));
+      });
     }
   case constants.EDIT_CONTACT_SUCCESS:
     {
@@ -183,20 +162,19 @@ export default function reducer(state = initialState, action = {}) {
         savingError: '',
         newId: action.result.id,
       };
-
-      return {
-        ...state,
-        saving:false,
-        savingError:'',
-        list:state.list.mergeDeep(contactsMap),
-      };
+      return state.withMutations(ctx=> {
+        ctx
+        .set('saving',false)
+        .set('savingError','')
+        .set('list', state.get('list').mergeDeep(contactsMap));
+      });
     }
   case constants.EDIT_CONTACT_FAIL:
-    return {
-      ...state,
-      creating: false,
-      error: 'Error Creating Contact',
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('creating',false)
+      .set('error','Error Creating Contact');
+    });
   case constants.GET_CONTACTS_BY_COMPANY_SUCCESS: {
     let byCompanyMap = {};
     byCompanyMap[action.result.companyId] = action.result.result.map((contact)=>contact.id);
@@ -204,11 +182,11 @@ export default function reducer(state = initialState, action = {}) {
     action.result.result.map((c) => {
       contactsMap[c.id] = c;
     });
-    return {
-      ...state,
-      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
-      list: state.list.mergeDeep(contactsMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('byCompanyId', state.get('byCompanyId').mergeDeep(byCompanyMap))
+      .set('list', state.get('list').mergeDeep(contactsMap));
+    });
   }
   case constants.CREATE_COMPANY_CONTACT: {
     let contact = {};
@@ -217,12 +195,12 @@ export default function reducer(state = initialState, action = {}) {
       action.contact = action.contact.set('savingError',null);
       contact[action.id] = action.contact;
     }
-    return {
-      ...state,
-      saving:true,
-      savingError:'',
-      list: state.list.mergeDeep(contact),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('saving', true)
+      .set('savingError', '')
+      .set('list', state.get('list').mergeDeep(contact));
+    });
   }
   case constants.CREATE_COMPANY_CONTACT_SUCCESS: {
     let contactMap = {};
@@ -239,34 +217,32 @@ export default function reducer(state = initialState, action = {}) {
 
     byCompanyMapNew[companyId] = state.byCompanyId.get(companyId) || new Immutable.List();
     byCompanyMapNew[companyId] = byCompanyMapNew[companyId].push(action.result.id);
-
-    return {
-      ...state,
-      saving:false,
-      savingError:'',
-      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMapNew),
-      list:state.list.mergeDeep(contactMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('saving', false)
+      .set('savingError', '')
+      .set('byCompanyId', state.get('byCompanyId').mergeDeep(byCompanyMapNew))
+      .set('list', state.get('list').mergeDeep(contactMap));
+    });
   }
   case constants.CREATE_COMPANY_CONTACT_FAIL: {
     let contact = {};
     contact[action.id] = {};
     contact[action.id].saving = false;
     contact[action.id].savingError = (action.error && action.error.error && action.error.error.message) || 'Failed to create contact';
-    return {
-      ...state,
-      saving:false,
-      savingError:'Failed to create contact',
-      list:state.list.mergeDeep(contact),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('saving', false)
+      .set('savingError', 'Failed to create contact')
+    });
   }
   case constants.CREATE_TEMP_CONTACT:{
     let contactsMap = {};
     contactsMap[action.result.id] = action.result;
-    return {
-      ...state,
-      list: state.list.mergeDeep(contactsMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('list', state.get('list').mergeDeep(contactsMap));
+    });
   }
   case companyConstants.GET_COMPANY_SUCCESS:{
     let contactsMap = {};
@@ -274,10 +250,10 @@ export default function reducer(state = initialState, action = {}) {
       let id = action.result.clientAdvocate.id;
       contactsMap[id] = action.result.clientAdvocate;
     }
-    return {
-      ...state,
-      list: state.list.merge(contactsMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('list', state.get('list').merge(contactsMap));
+    });
 
   }
   case jobConstants.GET_JOB_SUCCESS:{
@@ -290,10 +266,10 @@ export default function reducer(state = initialState, action = {}) {
       let id = action.result.contact.id;
       contactsMap[id] = action.result.contact;
     }
-    return {
-      ...state,
-      list: state.list.merge(contactsMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('list', state.get('list').merge(contactsMap));
+    });
   }
   case jobConstants.GET_MY_JOBS_SUCCESS:
     {
@@ -303,10 +279,10 @@ export default function reducer(state = initialState, action = {}) {
           contactList[candidate.contact.id] = candidate.contact;
         });
       });
-      return {
-        ...state,
-        list:state.list.mergeDeep(contactList),
-      };
+      return state.withMutations(ctx=> {
+        ctx
+        .set('list', state.get('list').mergeDeep(contactList));
+      });
     }
   case constants.SEARCH_CONTACTS_SUCCESS: {
     let query = action.result.query;
@@ -314,59 +290,50 @@ export default function reducer(state = initialState, action = {}) {
     let queriesMap = {};
     queriesMap[query] = action.result.results;
 
-    return {
-      ...state,
-      queries: state.queries.mergeDeep(queriesMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('queries', state.get('queries').mergeDeep(queriesMap));
+    });
   }
   case constants.SEARCH_CONTACTS_FAIL:
-    return {
-      ...state,
-      err: action.err,
-    };
+    return state.set('err', Immutable.fromJS(action.err));
   case constants.GET_CONTACT_DETAIL: {
-    return {
-      ...state,
-    };
+    return state;
   }
   case constants.GET_CONTACT_DETAIL_SUCCESS: {
     let contactsMap = {};
     let id = action.result.id;
     contactsMap[id] = action.result;
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(contactsMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('list', state.get('list').mergeDeep(contactsMap));
+    });
   }
   case constants.GET_CONTACT_DETAIL_FAIL: {
-    return {
-      ...state,
-    };
+    return state;
   }
   case constants.GET_MY_CONTACTS_SUCCESS: {
     let contactsMap = {};
     action.result.map((c) => {
       contactsMap[c.id] = c;
     });
-
-    return{
-      ...state,
-      myContactIds: state.myContactIds.mergeDeep(contactsMap),
-      list: state.list.mergeDeep(contactsMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('byCompanyId', state.get('byCompanyId').mergeDeep(contactsMap))
+      .set('list', state.get('list').mergeDeep(contactsMap));
+    });
   }
   case constants.GET_MY_FAVORITE_CONTACTS_SUCCESS: {
     let contactsMap = {};
     action.result.map((c) => {
       contactsMap[c.id] = c;
     });
-
-    return{
-      ...state,
-      myFavoriteContactIds: state.myFavoriteContactIds.mergeDeep(contactsMap),
-      list: state.list.mergeDeep(contactsMap),
-    };
+    return state.withMutations(ctx=> {
+      ctx
+      .set('myFavoriteContactIds', state.get('myFavoriteContactIds').mergeDeep(contactsMap))
+      .set('list', state.get('list').mergeDeep(contactsMap));
+    });
   }
   case constants.CREATE_CONTACT_FAVORITE_SUCCESS: {
     let contact = state.list.get(action.result.favorableId);
@@ -376,13 +343,11 @@ export default function reducer(state = initialState, action = {}) {
 
       let contactMap = {};
       contactMap[contact.get('id')] = contact;
-
-      return {
-        ...state,
-        list: state.list.mergeDeep(contactMap),
-        myContactIds: state.myContactIds.mergeDeep(contactMap),
-        myFavoriteContactIds: state.myFavoriteContactIds.mergeDeep(contactMap),
-      };
+      return state.withMutations(ctx=> {
+        ctx
+        .set('myFavoriteContactIds', state.get('myFavoriteContactIds').mergeDeep(contactMap))
+        .set('myContactIds', state.get('myContactIds').mergeDeep(contactMap));
+      });
     }
     else {
       return state;
@@ -396,13 +361,12 @@ export default function reducer(state = initialState, action = {}) {
 
       let contactMap = {};
       contactMap[contact.get('id')] = contact;
-
-      return {
-        ...state,
-        list: state.list.mergeDeep(contactMap),
-        myContactIds: state.myContactIds.mergeDeep(contactMap),
-        myFavoriteContactIds: state.myFavoriteContactIds.delete(action.result.favorableId),
-      };
+      return state.withMutations(ctx=> {
+        ctx
+        .set('list', state.get('list').mergeDeep(contactMap))
+        .set('myFavoriteContactIds', state.get('myFavoriteContactIds').delete(action.result.favorableId))
+        .set('myContactIds', state.get('myContactIds').mergeDeep(contactMap));
+      });
     }
     else {
       return state;
@@ -410,7 +374,7 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.SET_EXPERIENCE:{
     let contactCategory = action.result;
-    let list = state.list.updateIn([action.contactId,'_contactCategories'],arr =>{
+    state = state.updateIn(['list',action.contactId,'_contactCategories'],arr =>{
       let returnArr = null;
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){
@@ -421,15 +385,13 @@ export default function reducer(state = initialState, action = {}) {
       }
       return returnArr;
     });
-    return {
-      ...state,
-      list,
-    };
+
+    return state;
   }
   case constants.SET_CONTACT_CATEGORIES_LOCAL:{
     //find current contact
     let contactCategory = action.result;
-    let list = state.list.updateIn([action.contactId,'_contactCategories'],arr =>{
+    state = state.updateIn(['list',action.contactId,'_contactCategories'],arr =>{
       let returnArr = null;
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(!row){
@@ -439,14 +401,11 @@ export default function reducer(state = initialState, action = {}) {
       }
       return returnArr;
     });
-    return {
-      ...state,
-      list,
-    };
+    return state;
   }
   case constants.SET_PRIMARY:{
     let contactCategory = action.result;
-    let list = state.list.updateIn([action.contactId,'_contactCategories'],arr =>{
+    state= state.updateIn(['list',action.contactId,'_contactCategories'],arr =>{
       let returnArr = null;
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){
@@ -457,15 +416,12 @@ export default function reducer(state = initialState, action = {}) {
       }
       return returnArr;
     });
-    return {
-      ...state,
-      list,
-    };
+    return state;
   }
   case constants.CREATE_CONTACT_CATEGORY_SUCCESS:{
     let contactCategory = action.result.response;
     let contactId = action.result.contactId;
-    let list = state.list.updateIn([contactId,'_contactCategories'],arr =>{
+    state = state.updateIn(['list',contactId,'_contactCategories'],arr =>{
       let returnArr = null;
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){
@@ -475,15 +431,12 @@ export default function reducer(state = initialState, action = {}) {
       }
       return returnArr;
     });
-    return {
-      ...state,
-      list,
-    };
+    return state;
   }
   case constants.EDIT_CONTACT_CATEGORY_SUCCESS:{
     let contactCategory = action.result.response;
     let contactId = action.result.contactId;
-    let list = state.list.updateIn([contactId,'_contactCategories'],arr =>{
+    let state = state.updateIn(['list',contactId,'_contactCategories'],arr =>{
       let returnArr = null;
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){
@@ -493,10 +446,7 @@ export default function reducer(state = initialState, action = {}) {
       }
       return returnArr;
     });
-    return {
-      ...state,
-      list,
-    };
+    return state;
   }
   default:
     return state;

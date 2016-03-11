@@ -2,7 +2,7 @@ import Immutable from 'immutable';
 
 export default function getContactDataFromState(state, contactId) {
 
-  let contact = ((state.contacts.list.size > 0) ? (state.contacts.list.get(contactId)) : (null));
+  let contact = ((state.contacts.get('list').size > 0) ? (state.contacts.getIn(['list',contactId])) : (null));
 
   if (contact) {
     let jobsByContactIds = state.jobs.byContactId.get(contactId);
