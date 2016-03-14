@@ -17,71 +17,20 @@ let style = {
     padding: '11px 16px 11px 16px',
     position: 'relative',
     minHeight: '50px',
-    backgroundColor: Styles.Colors.grey800,
   },
-  topTitle: {
+  title: {
     color: Styles.Colors.white,
-    fontSize: '18px',
+    fontSize: '19px',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     fontWeight: 500,
   },
-  topSubtitle: {
+  subtitle: {
     color: Styles.Colors.white,
-    opacity: 0.7,
-    fontSize: '13px',
-    margin: '2px 0',
-  },
-  bottomLeft: {
-    textAlign: 'left',
-    paddingLeft: '10px',
-    alignSelf: 'flex-end',
-  },
-  bottomRight: {
-    textAlign: 'right',
-    paddingRight: '10px',
-  },
-  bottomLabel: {
-    color: Styles.Colors.white,
-    opacity: 0.7,
-    fontSize: '13px',
-    marginBottom: '2px',
-    marginTop: '10px',
-  },
-  bottomTitle: {
-    color: Styles.Colors.white,
-    fontSize: '21px',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
     fontWeight: 500,
-  },
-  rightLabel: {
-    color: Styles.Colors.white,
-    opacity: 0.7,
+    opacity: 0.5,
     fontSize: '13px',
-    marginBottom: '2px',
-    marginTop: '10px',
-  },
-  rightTitle: {
-    color: Styles.Colors.white,
-    fontSize: '18px',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    fontWeight: 500,
-  },
-  rightSubtitle: {
-    color: Styles.Colors.white,
-    opacity: 0.7,
-    fontSize: '16px',
-    margin: '2px 0',
-  },
-  locationIcon: {
-    color: Styles.Colors.white,
-    fontSize: '13px',
-    bottom: '-2px',
   },
   extraLine: {
     marginTop: '8px',
@@ -178,10 +127,9 @@ let style = {
     position: 'absolute',
     top: '37px',
     right: '9px',
-    fontSize: '13px',
+    fontSize: '11px',
     fontWeight: '100',
     color: Styles.Colors.white,
-    opacity: 0.7,
     textAlign: 'center',
     width: '70px',
   },
@@ -241,17 +189,16 @@ class DetailsCard extends React.Component {
   }
   render() {
     let styleNew = _.merge({},style,this.props.style);
-    let { actions, topTags, stats, location } = this.props;
+    let { actions, topTags, stats } = this.props;
     topTags = topTags || [];
 
-    // location stuff
-    let locationElm = location && location.get('city') ? (
-      <span>
-        <FontIcon style={style.locationIcon} className="material-icons">location_on</FontIcon>
-        <span style={styleNew.topSubtitle}>{location.get('city')}
-        , {location.get('countrySubDivisionCode')}</span>
-      </span>
-    ) : (<span></span>);
+    if (this.props.mainColor) {
+      styleNew.cardTitleComponent.backgroundColor = this.props.mainColor;
+      styleNew.floatActionButton.color = this.props.mainColor;
+    } else {
+      styleNew.cardTitleComponent.backgroundColor = Styles.Colors.indigo500; // default
+      styleNew.floatActionButton.color = Styles.Colors.indigo500; // default
+    }
 
     return (
       <Card>
@@ -260,7 +207,7 @@ class DetailsCard extends React.Component {
         </CardMedia>
         <div style={styleNew.cardTitleComponent}>
 
-          <FloatingActionButton onTouchTap={this._onTouchTapFloatAction.bind(this)} style={styleNew.floatActionButton} iconStyle={{color: Styles.Colors.blue500}} backgroundColor={Styles.Colors.white}>
+          <FloatingActionButton onTouchTap={this._onTouchTapFloatAction.bind(this)} style={styleNew.floatActionButton} backgroundColor={Styles.Colors.white}>
             {this.props.floatActionContent}
           </FloatingActionButton>
 
@@ -290,53 +237,18 @@ class DetailsCard extends React.Component {
             </div>
           ) : (null)}
 
-          {/* top content */}
+          {/* title and subtitle */}
           <div style={{marginLeft:'0px', marginright:'0px'}} className="row">
             <div className="col-xs-9" style={styleNew.titlesub}>
               <div className="box">
-                <h2 style={styleNew.topTitle}>{this.props.topTitle}</h2>
-                <div>
-                  <p style={styleNew.topSubtitle}>{this.props.topSubtitle}</p>
-                  <p>{locationElm}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-          <div className="row between-xs">
-            {/* bottom content */}
-            <div style={styleNew.bottomLeft}>
-              <div className="box">
-                {
-                  this.props.bottomTitle ?
-                  <div>
-                    <p style={styleNew.bottomLabel}>{this.props.bottomLabel}</p>
-                    <h2 style={styleNew.bottomTitle}>{this.props.bottomTitle}</h2>
-                  </div>
-                  : <div></div>
-                }
-              </div>
-            </div>
-            {/* bottom content */}
-            <div style={styleNew.bottomRight}>
-              <div className="box">
-                {
-                  this.props.rightTitle ?
-                  <div>
-                    <p style={styleNew.rightLabel}>{this.props.rightLabel}</p>
-                    <h2 style={styleNew.rightTitle}>{this.props.rightTitle}</h2>
-                  </div>
-                  : <div></div>
-                }
-                <p style={styleNew.rightSubtitle}>{this.props.rightSubtitle}</p>
+                <h2 style={styleNew.title}>{this.props.title}</h2>
+                {this.renderSubtitles(this.props.subtitle,this.props.subtitle2,this.props.subtitleAvatar,styleNew)}
               </div>
             </div>
           </div>
 
           {/* extra line (if any) */}
-          {/*(this.props.extraLeftLine || this.props.extraCenterLine || this.props.extraRightLine) ? (
+          {(this.props.extraLeftLine || this.props.extraCenterLine || this.props.extraRightLine) ? (
             <div className="row" style={styleNew.extraLine}>
               {(this.props.extraLeftLine) ? (
                 <div className="col-xs" style={styleNew.extraLineLeftCol}>
@@ -362,7 +274,7 @@ class DetailsCard extends React.Component {
                 </div>
               ) : (null)}
             </div>
-          ) : (<div></div>)*/}
+          ) : (<div></div>)}
 
         </div>
         {this.props.showStats?(
@@ -429,10 +341,10 @@ DetailsCard.propTypes = {
   mainColor: React.PropTypes.string,
   showStats: React.PropTypes.boolean,
   stats: React.PropTypes.array,
-  topSubtitle: React.PropTypes.string.isRequired,
+  subtitle: React.PropTypes.string.isRequired,
   subtitle2: React.PropTypes.string,
   subtitleAvatar: React.PropTypes.object,
-  topTitle: React.PropTypes.string.isRequired,
+  title: React.PropTypes.string.isRequired,
   topTags: React.PropTypes.object,
 };
 
