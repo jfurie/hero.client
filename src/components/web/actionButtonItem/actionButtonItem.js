@@ -37,13 +37,13 @@ class ActionButtonItem extends React.Component {
     let style = {
       actionButtonItem: {
         position: 'fixed',
-        right: '23px',
+        transform: 'translate(-48px,0)',
         zIndex: '1405',
       },
       paper: {
         padding: '6px 10px',
         position: 'fixed',
-        right: '80px',
+        transform: 'translate(-148px,0)',
         zIndex: '1405',
         width: 'auto',
         marginBottom: '4px',

@@ -1,7 +1,7 @@
 import React from 'react';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
-
+import './actionButton.scss';
 //import { ActionButtonItem } from '../';
 
 class ActionButton extends React.Component {
@@ -46,21 +46,18 @@ class ActionButton extends React.Component {
     let style = {
       actionButton: {
         position: 'fixed',
-        bottom: '15px',
-        right: '15px',
         zIndex: '1405',
+        bottom:'16px',
+        transform:'translate(-100%,0)'
       },
       overlay: {
         position: 'fixed',
         height: '100%',
-        width: '100%',
         backgroundColor: '#FFFFFF',
         opacity: '0.85',
         zIndex: '1400',
         top: '0',
         bottom: '0',
-        left: '0',
-        rigth: '0',
       },
       actions: {
 
@@ -84,16 +81,20 @@ class ActionButton extends React.Component {
   // );
 
     return (
-      <div>
+      <div className="actionButtonWrap">
         <div style={margedStyle.overlay} className="overlay" onTouchTap={this._closeActions.bind(this)}></div>
-        <div className="actions" style={margedStyle.actions}>
+          <div className='floatingActionButtonWrap'>
+            <div className="actions" style={margedStyle.actions}>
 
-          {this.renderActions()}
+              {this.renderActions()}
 
+            </div>
+
+          <FloatingActionButton style={style.actionButton} onTouchTap={this._openActions.bind(this)}>
+            <ContentAdd />
+          </FloatingActionButton>
         </div>
-        <FloatingActionButton style={style.actionButton} onTouchTap={this._openActions.bind(this)}>
-          <ContentAdd />
-        </FloatingActionButton>
+
       </div>
     );
   }

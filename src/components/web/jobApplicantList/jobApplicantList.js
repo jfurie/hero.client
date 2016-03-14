@@ -11,8 +11,7 @@ const style = {
   sticky: {
     position: 'fixed',
     top: 0,
-    left: 0,
-    right: 0,
+    width:'100%',
     zIndex: 1200,
   },
   multiSelectBar: {
@@ -34,8 +33,7 @@ const style = {
   },
   filterBar: {
     position: 'fixed',
-    left: 0,
-    right: 0,
+    width:'100%',
     bottom: 0,
     zIndex: 1200,
     padding: '5px 0 5px 0px',
@@ -54,6 +52,7 @@ class JobApplicantList extends React.Component {
 
   constructor(props) {
     super(props);
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     this.state = {
       selectedContacts: new Immutable.Map(),
       selecting: false,
@@ -65,7 +64,21 @@ class JobApplicantList extends React.Component {
       selectedFilter: 'Any',
       includeUnvetted: true,
       isStuck: false,
+      windowWidth:clientWidth,
     };
+    this.handleResize = this.handleResize.bind(this);
+  }
+
+  handleResize(){
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.setState({'windowWidth':clientWidth});
+  }
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   }
 
   select(contact) {
@@ -457,6 +470,14 @@ class JobApplicantList extends React.Component {
     }];
 
     let filterLabel = `${(this.state.selectedFilter == 'Any' ? 'Any Rating - Any Status' : this.state.selectedFilter)} ${(!this.state.includeUnvetted ? ' - Vetted Only' : '')}`;
+
+    if(this.state.windowWidth > 768){
+      style.sticky.width = '375px';
+      style.filterBar.width = '375px';
+    } else {
+      style.sticky.width = this.state.windowWidth;
+      style.filterBar.width = this.state.windowWidth;
+    }
 
     return (
       <div>
