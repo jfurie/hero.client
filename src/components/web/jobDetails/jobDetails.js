@@ -157,11 +157,11 @@ export default class JobDetails extends React.Component {
       }
 
       // fee
-      let fee = 'Fee: [?]%';
-
-      if (job.get('fee')) {
-        fee = `Fee: ${job.get('fee')}%`;
-      }
+      // let fee = 'Fee: [?]%';
+      //
+      // if (job.get('fee')) {
+      //   fee = `Fee: ${job.get('fee')}%`;
+      // }
 
       let isHot = false;
 
@@ -246,17 +246,19 @@ export default class JobDetails extends React.Component {
 
         <div>
           <DetailsCard
-              title={job.get('title')}
-              subtitle={`${companyName} - ${job.get('department')}`}
-              extraLeftLine={`${salaryMin} - ${salaryMax}`}
-              extraCenterLine={fee}
-              extraRightLine={job.get('jobType') || 'Permanent'}
+              topTitle={job.get('company').get('name')}
+              topSubtitle={`${companyName} - ${job.get('department')}`}
+              location={job.get('location')}
+              bottomLabel="Job Title"
+              bottomTitle={job.get('title')}
+              rightLabel="Wage"
+              rightTitle={`${salaryMin} - ${salaryMax}`}
+              rightSubtitle={job.get('jobType') || 'Permanent'}
               cover={cover}
-              mainColor={Styles.Colors.amber700}
               actions={actions}
               avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '95px'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
-              floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
+              floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
               floatActionLabel={'Share'}
               topTags={job.get('tags') || []}
               stats={stats}
