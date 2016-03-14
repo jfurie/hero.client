@@ -6,7 +6,6 @@ import {
 } from 'material-ui';
 import Card from 'material-ui/lib/card/card';
 
-import MapsDirections from 'material-ui/lib/svg-icons/maps/directions';
 import Avatar from 'material-ui/lib/avatar';
 
 import {
@@ -253,59 +252,37 @@ export default class ClientDetails extends React.Component {
       //let colors = Styles.Colors;
 
       // build extra line
-      let recruiterDataArray = [];
-
-      if (company.get('feeAgreement')) {
-        recruiterDataArray.push(`${company.get('feeAgreement')}%`);
-      }
-
-      if (company.get('payableTerms')) {
-        recruiterDataArray.push(`net ${company.get('payableTerms')}`);
-      }
-
-      if (company.get('guarantee')) {
-        recruiterDataArray.push(`${company.get('guarantee')} days`);
-      }
-
-      let recruiterData = null;
-      if (recruiterDataArray.length) {
-        recruiterData = recruiterDataArray.join(' | ');
-      }
-
-      // location stuff
-      let location = company.get('location');
-
-      if (location) {
-        let address = location.get('addressLine') || '';
-        let city = location.get('city') || null;
-        let countrySubDivisionCode = location.get('countrySubDivisionCode') || null;
-
-        if (city && countrySubDivisionCode) {
-          city += `, ${countrySubDivisionCode}`;
-        }
-
-        addressLine = address;
-        if (addressLine.length && city) {
-          addressLine += `. ${city}`;
-        } else if (!addressLine.length && city) {
-          addressLine = city;
-        }
-      }
+      // let recruiterDataArray = [];
+      //
+      // if (company.get('feeAgreement')) {
+      //   recruiterDataArray.push(`${company.get('feeAgreement')}%`);
+      // }
+      //
+      // if (company.get('payableTerms')) {
+      //   recruiterDataArray.push(`net ${company.get('payableTerms')}`);
+      // }
+      //
+      // if (company.get('guarantee')) {
+      //   recruiterDataArray.push(`${company.get('guarantee')} days`);
+      // }
+      //
+      // let recruiterData = null;
+      // if (recruiterDataArray.length) {
+      //   recruiterData = recruiterDataArray.join(' | ');
+      // }
 
       return (
         <div className="viewContent" style={style.viewContent}>
           <DetailsCard
-              title={company.get('name')}
-              subtitle={company.get('businessType') || 'Software Company'}
+              topTitle={company.get('name')}
+              topSubtitle={company.get('businessType') || 'Software Company'}
+              location={company.get('location')}
               cover={cover}
-              mainColor={Styles.Colors.deepPurple500}
               actions={actions}
               avatar={<CompanyAvatar style={{width: '95px'}} url={company.get('website')}/>}
               floatActionOnTap={this._handleDirections.bind(this)}
-              floatActionContent={<MapsDirections color={Styles.Colors.deepPurple500}/>}
+              floatActionContent={<FontIcon className="material-icons">directions</FontIcon>}
               floatActionLabel={'Directions'}
-              extraLeftLine={recruiterData}
-              topTags={company.get('tags') || []}
               stats={stats}
           />
 
@@ -523,7 +500,7 @@ export default class ClientDetails extends React.Component {
       return (
         <div>
           <Header showHome={true} goBack={this.goBack.bind(this)} iconRight={
-            <IconMenu iconButtonElement={<IconButton  iconClassName="material-icons">more_vert</IconButton>}>
+            <IconMenu iconButtonElement={<IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>}>
               <MenuItem index={0} onTouchTap={this.editClientModalOpen.bind(this)} primaryText="Edit Client" />
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
               <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
@@ -553,7 +530,7 @@ export default class ClientDetails extends React.Component {
           >
             <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
               <Header goBack={this.goBack.bind(this)} iconRight={
-                <IconMenu iconButtonElement={<IconButton  iconClassName="material-icons">more_vert</IconButton>}>
+                <IconMenu iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}>
                   <MenuItem index={0} onTouchTap={this.editClientModalOpen.bind(this)} primaryText="Edit Client" />
                   <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
                   <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
