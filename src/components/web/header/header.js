@@ -57,7 +57,7 @@ class Header extends React.Component {
       width:'100%',
     };
     if(this.state.windowWidth > 768){
-      style.width ='375px'
+      style.width ='375px';
     }
     let iconStyle = {};
     iconStyle.color= '#ffffff';

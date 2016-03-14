@@ -121,7 +121,7 @@ class Layout extends React.Component {
     let {leftNav, user} = this.props;
     let height = this.state.windowHeight;
     let geoField = {          lat: 34.0219,
-              lng: -118.4814,}
+              lng: -118.4814,};
     return (
       <div>
         <div style={{

@@ -151,7 +151,7 @@ class CustomTabsSwipe extends React.Component {
 
     }
     if(this.state.windowWidth > 768){
-      tabsStyle.width = '375px'
+      tabsStyle.width = '375px';
     } else {
       tabsStyle.width = this.state.windowWidth;
     }

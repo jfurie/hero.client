@@ -30,7 +30,7 @@ class Dialog extends React.Component {
     }
     let width = '100%';
     if(this.state.windowWidth > 768){
-      width = '375px'
+      width = '375px';
     } else {
       width = this.state.windowWidth;
     }
