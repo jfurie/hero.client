@@ -4,6 +4,12 @@ import config from './config/config';
 import compression from 'compression';
 let app = null;
 
+process.on('uncaughtException', function (err) {
+  console.error('Uncaught Exception');
+  console.error(err.stack);
+  process.exit(1);
+});
+
 function startApp() {
   var app = express();
   app.use(compression());
