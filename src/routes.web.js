@@ -67,7 +67,7 @@ export default(store) => {
       let authToken = auth.get('authToken');
       console.log('checkAuth');
       if (authToken) {
-        store.dispatch(authActions.checkAuthServer(authToken.get('id')));
+        //store.dispatch(authActions.checkAuthServer(authToken.get('id')));
         store.dispatch(authActions.logginWithAuthLocalStorage());
         cb();
       } else {
