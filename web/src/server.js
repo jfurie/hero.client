@@ -11,6 +11,7 @@ process.on('uncaughtException', function (err) {
 });
 
 function startApp() {
+  console.log('Starting Server');
   var app = express();
   app.use(compression());
   app.engine('html', swig.renderFile);
@@ -24,7 +25,9 @@ function startApp() {
   app.get('*', function(req, res) {
     res.render('main', {});
   });
-  app.listen(config.port, function() {});
+  app.listen(config.port, function() {
+    console.log('Browse your REST API at %s', config.port);
+  });
 }
 
 app = startApp();
