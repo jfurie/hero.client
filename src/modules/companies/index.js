@@ -437,10 +437,6 @@ export function getCompanyDetail(id) {
           dispatch(getLocationsByIdsIfNeeded([company.locationId]));
         }
 
-        if (company.talentAdvocateId) {
-          dispatch(getContactsByIdsIfNeeded([company.talentAdvocateId]));
-        }
-
         let contactIds = [];
 
         if (company.clientAdvocateId) {
