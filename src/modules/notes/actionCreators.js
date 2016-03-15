@@ -168,3 +168,30 @@ export function saveNotesByJobResult(notes){
     result: notes,
   };
 }
+
+export function getNotesByIds(noteIds){
+  return (dispatch) => {
+    return dispatch({
+      types:[constants.GET_NOTES_BY_IDS, constants.GET_NOTES_BY_IDS_SUCCESS, constants.GET_NOTES_BY_IDS_FAIL],
+      promise:(client,auth) => {
+        let filter= {where:{id:{inq:noteIds}}};
+        let filterString = encodeURIComponent(JSON.stringify(filter));
+        return client.api.get(`/notes?filter=${filterString}`,{
+          authToken: auth.authToken,
+        });
+      }
+    });
+  };
+}
+
+export function getNotesByIdsIfNeeded(noteIds){
+  return (dispatch, getState) => {
+    var newNoteIds =[];
+    noteIds.map((noteId => {
+      if(!getState().companies.get('list').get(noteId)){
+        newNoteIds.push(noteId);
+      }
+    }));
+    return dispatch(getNotesByIds(newNoteIds));
+  };
+}

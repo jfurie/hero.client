@@ -5,10 +5,10 @@ export default function getContactDataFromState(state, contactId) {
   let contact = ((state.contacts.get('list').size > 0) ? (state.contacts.getIn(['list',contactId])) : (null));
 
   if (contact) {
-    let jobsByContactIds = state.jobs.byContactId.get(contactId);
+    let jobsByContactIds = state.jobs.get('byContactId').get(contactId);
     let contactJobs = new Immutable.Map();
     if (jobsByContactIds) {
-      contactJobs = state.jobs.list.filter(x => {
+      contactJobs = state.jobs.get('list').filter(x => {
         return jobsByContactIds.indexOf(x.get('id')) > -1;
       });
     }

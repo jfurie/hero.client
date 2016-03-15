@@ -25,7 +25,7 @@ let getData = (state, props) => {
   return {
     contact,
     company,
-    companies: state.companies.myCompanyIds,
+    companies: state.companies.get('myCompanyIds'),
     categories,
   };
 };

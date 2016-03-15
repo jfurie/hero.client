@@ -34,6 +34,7 @@ let getData = (state, props) => {
     favoriteMap[favorites.get('favorableId')] = 1;
   })
   let favoriteContacts = state.contacts.get('list').filter(x=>favoriteMap[x.get('id')]);
+  let favoriteJobs = state.jobs.get('list').filter(x=>favoriteMap[x.get('id')]);
   let favoriteCompanies = state.companies.get('list').filter(x=>favoriteMap[x.get('id')]);
 
   return {
@@ -45,6 +46,7 @@ let getData = (state, props) => {
     companies: state.companies,
     favoriteContacts,
     favoriteCompanies,
+    favoriteJobs,
   };
 };
 
@@ -239,7 +241,7 @@ class HomePage extends React.Component {
 
   render () {
 
-    let { contacts, companies, jobs, favoriteContacts, favoriteCompanies } = this.props;
+    let { contacts, companies, jobs, favoriteContacts, favoriteCompanies, favoriteJobs } = this.props;
 
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
@@ -267,7 +269,7 @@ class HomePage extends React.Component {
           <div>
             <JobsList
                 onJobClick={this._handleJobClick.bind(this)}
-                jobs={jobs.myFavoriteJobIds}
+                jobs={favoriteJobs}
                 favoriteJob={this.favoriteJob.bind(this)}
                 unfavoriteJob={this.unfavoriteJob.bind(this)}
             />

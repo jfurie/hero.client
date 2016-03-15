@@ -34,9 +34,9 @@ function filterMyCandidates(candidates, auth) {
 }
 
 function filterMyJobs(state){
-  let ids = state.jobs.myJobIds;
+  let ids = state.jobs.get('myJobIds');
   return ids.map(id =>{
-    return state.jobs.list.get(id);
+    return state.jobs.get('list').get(id);
   });
 }
 

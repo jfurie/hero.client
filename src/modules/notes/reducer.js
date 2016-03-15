@@ -9,6 +9,17 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case constants.GET_NOTES_BY_IDS_SUCCESS: {
+    let notesMap = {};
+    action.result.map((c) => {
+      notesMap[c.id] = c;
+    });
+
+    return {
+      ...state,
+      list: state.list.merge(notesMap),
+    }
+  }
   case constants.GET_NOTES: {
     return {
       ...state,
@@ -95,7 +106,7 @@ export default function reducer(state = initialState, action = {}) {
       loading:true,
     };
   }
-  case constants.GET_NOTES_BY_JOB_SUCCESS:{
+  case constants.GET_NOTES_BY_NOTE_SUCCESS:{
 
     let jobId = null;
 
@@ -125,7 +136,7 @@ export default function reducer(state = initialState, action = {}) {
       loading:false,
     };
   }
-  case constants.GET_NOTES_BY_JOB_FAIL:{
+  case constants.GET_NOTES_BY_NOTE_FAIL:{
     return {
       ...state,
       loading:false,

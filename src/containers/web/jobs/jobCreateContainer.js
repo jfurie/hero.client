@@ -13,7 +13,7 @@ import getCompanyDataFromState from '../../../dataHelpers/company';
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 let getData = (state, props) => {
-  let job = state.jobs.list.get(props.params.jobId);
+  let job = state.jobs.get('list').get(props.params.jobId);
   let categories = state.categories.list;
   let company = null;
 
@@ -34,7 +34,7 @@ let getData = (state, props) => {
     job,
     company,
     categories,
-    companies: state.companies.myCompanyIds,
+    companies: state.companies.get('myCompanyIds'),
     jobImage,
     //heroContacts: heroContacts ? heroContacts : new Immutable.Map(),
     //contacts: company ? company.get('contacts') : new Immutable.Map(),
