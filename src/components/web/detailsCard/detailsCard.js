@@ -14,10 +14,10 @@ let style = {
     position: 'relative',
   },
   cardTitleComponent: {
-    padding: '11px 16px 11px 16px',
+    padding: '24px',
     position: 'relative',
     minHeight: '50px',
-    backgroundColor: Styles.Colors.grey800,
+    backgroundColor: '#333',
   },
   topTitle: {
     color: Styles.Colors.white,
@@ -56,6 +56,7 @@ let style = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     fontWeight: 500,
+    maxWidth: '200px',
   },
   rightLabel: {
     color: Styles.Colors.white,
@@ -76,7 +77,7 @@ let style = {
     color: Styles.Colors.white,
     opacity: 0.7,
     fontSize: '16px',
-    margin: '2px 0',
+    marginTop: '2px',
   },
   locationIcon: {
     color: Styles.Colors.white,
@@ -126,7 +127,7 @@ let style = {
   avatar: {
     position: 'absolute',
     top: '-97px',
-    left: '16px',
+    left: '24px',
     maxHeight: '95px',
     border: '2px solid white',
     borderBottom: '0px',
