@@ -114,13 +114,26 @@ const style = {
 export default class JobCreate extends React.Component {
   constructor(props){
     super(props);
-
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.handleResize = this.handleResize.bind(this);
     this.state = {
       isSalary: false,
       isHourly: false,
       salary: [90000, 120000],
       hourlySalary: [20, 50],
+      windowWidth:clientWidth,
     };
+  }
+  handleResize(){
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.setState({'windowWidth':clientWidth});
+  }
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   }
 
   _handleClose(){
@@ -353,6 +366,11 @@ export default class JobCreate extends React.Component {
   }
 
   render() {
+    if(this.state.windowWidth > 768){
+      style.toolbarInline.width ='375px';
+    } else {
+      style.toolbarInline.width = '100%';
+    }
     return (
       <div>
         <Toolbar style={style.toolbarInline}>

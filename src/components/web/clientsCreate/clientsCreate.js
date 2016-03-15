@@ -88,7 +88,11 @@ const style = {
 export default class ClientsCreateModal extends React.Component {
   constructor(props){
     super(props);
-    this.state = {windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight};
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.state = {
+      'windowWidth':clientWidth,
+      windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight};
+    this.handleResize = this.handleResize.bind(this);
   }
 
   componentDidMount() {
@@ -107,9 +111,11 @@ export default class ClientsCreateModal extends React.Component {
   }
 
   handleResize() {
-    this.setState({windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight});
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.setState({
+      'windowWidth':clientWidth,
+      windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight});
   }
-
   _handleTagsChange(tags){
     let newCompany = this.props.company;
 
@@ -204,8 +210,8 @@ export default class ClientsCreateModal extends React.Component {
     }
 
     return (
-      <div style={{backgroundColor:'#ffffff'}} className="row center-xs">
-          <div className="col-xs-12 col-md-8">
+      <div style={{backgroundColor:'#ffffff',margin:0}} className="row center-xs">
+          <div className="col-xs-12">
               <div className="box">
                 <form onSubmit={this._handleSubmit.bind(this)}>
                   <div className="row center-xs" >
@@ -542,6 +548,11 @@ export default class ClientsCreateModal extends React.Component {
     );
   }
   render(){
+    if(this.state.windowWidth > 768){
+      style.toolbarInline.width ='375px';
+    } else {
+      style.toolbarInline.width = '100%';
+    }
     let clientHeight = this.state.windowHeight;
     let contentHeight = clientHeight - 64;
     if(this.props.inline){

@@ -1,0 +1,24 @@
+
+.overlay{
+  width: 100%;
+}
+.actionButtonWrap {
+  .floatingActionButtonWrap{
+    position: absolute;
+    bottom:16px;
+    right:16px;
+    z-index: '1405';
+  }
+}
+
+@media (min-width:48em){
+  .actionButtonWrap {
+    width: 375px;
+    position: relative;
+
+    .overlay{
+      width: 375px;
+    }
+  }
+
+}

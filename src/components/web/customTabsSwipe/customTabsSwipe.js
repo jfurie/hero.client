@@ -52,6 +52,9 @@ class CustomTabsSwipe extends React.Component {
     this.state = {
       slideIndex,
     };
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.state= {'windowWidth':clientWidth};
+    this.handleResize = this.handleResize.bind(this);
   }
 
   // componentWillMount() {
@@ -67,9 +70,16 @@ class CustomTabsSwipe extends React.Component {
       });
     }
   }
+  handleResize(){
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.setState({'windowWidth':clientWidth});
+  }
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
 
   componentWillUnmount() {
-    //this.props.enableSwipeToOpen();
+    window.removeEventListener('resize', this.handleResize);
   }
 
   // _handleChangeIndex() {
@@ -135,10 +145,18 @@ class CustomTabsSwipe extends React.Component {
       tabsStyle.position = 'relative';
       tabsStyle.top = '4px';
     } else {
-      inkBarStyle.display = 'block';
+      inkBarStyle.display = 'none';
       tabsStyle.position = 'fixed';
       tabStyle.top = '0px';
+
     }
+    if(this.state.windowWidth > 768){
+      tabsStyle.width = '375px';
+    } else {
+      tabsStyle.width = this.state.windowWidth;
+    }
+
+
     //console.log('slideIndex ',this.state.slideIndex);
     return (
       <div>

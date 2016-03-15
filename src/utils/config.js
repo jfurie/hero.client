@@ -1,9 +1,8 @@
+import config from 'config';
 class _Config {
 
   constructor() {
-    this.constants = {};
-    //this.constants['apiBaseUrl'] = 'http://localhost:3003';
-    this.constants['apiBaseUrl'] = 'https://core-api-loopback.herokuapp.com';
+    this.constants = config;
   }
 
   get(key) {
