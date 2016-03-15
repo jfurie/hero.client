@@ -1,13 +1,11 @@
 import Immutable from 'immutable';
 
-import { getOneLocation } from '../locations';
-
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 
 import { getJobsByIdsIfNeeded } from '../jobs';
 import { getContactsByIdsIfNeeded } from '../contacts';
-import { saveNotesByCompanyResult } from '../notes';
+import { getNotesByIdsIfNeeded } from '../notes';
 import { getLocationsByIdsIfNeeded } from '../locations';
 
 import superagent from 'superagent';
@@ -132,7 +130,7 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.SEARCH_COMPANIES: {
     return state.withMutations((state) => {
-      state.set('searches', state.searches.mergeDeep(action.result)).set('currentSearch', action.query);
+      state.set('searches', state.get('searches').mergeDeep(action.result)).set('currentSearch', action.query);
     });
   }
   case jobConstants.GET_MY_JOBS_SUCCESS: {
@@ -172,7 +170,7 @@ export default function reducer(state = initialState, action = {}) {
     });
 
     return state.withMutations((state) => {
-      state.set('myFavoriteCompanyIds', state.myFavoriteCompanyIds.mergeDeep(companiesMap)).set('list', state.get('list').mergeDeep(companiesMap));
+      state.set('myFavoriteCompanyIds', state.get('myFavoriteCompanyIds').mergeDeep(companiesMap)).set('list', state.get('list').mergeDeep(companiesMap));
     });
   }
   case constants.CREATE_COMPANY_FAVORITE_SUCCESS: {
@@ -183,7 +181,7 @@ export default function reducer(state = initialState, action = {}) {
     companyMap[company.get('id')] = company;
 
     return state.withMutations((state) => {
-      state.set('list', state.get('list').mergeDeep(companyMap)).set('myCompanyIds', state.get('myCompanyIds').mergeDeep(companyMap)).set('myFavoriteCompanyIds', state.myFavoriteCompanyIds.mergeDeep(companyMap));
+      state.set('list', state.get('list').mergeDeep(companyMap)).set('myCompanyIds', state.get('myCompanyIds').mergeDeep(companyMap)).set('myFavoriteCompanyIds', state.get('myFavoriteCompanyIds').mergeDeep(companyMap));
     });
   }
   case constants.DELETE_COMPANY_FAVORITE_SUCCESS: {
@@ -194,7 +192,7 @@ export default function reducer(state = initialState, action = {}) {
     companyMap[company.get('id')] = company;
 
     return state.withMutations((state) => {
-      state.set('list', state.get('list').mergeDeep(companyMap)).set('myCompanyIds', state.get('myCompanyIds').mergeDeep(companyMap)).set('myFavoriteCompanyIds', state.myFavoriteCompanyIds.delete(action.result.favorableId));
+      state.set('list', state.get('list').mergeDeep(companyMap)).set('myCompanyIds', state.get('myCompanyIds').mergeDeep(companyMap)).set('myFavoriteCompanyIds', state.get('myFavoriteCompanyIds').delete(action.result.favorableId));
     });
   }
   case constants.CREATE_TEMP_COMPANY: {
@@ -209,7 +207,7 @@ export default function reducer(state = initialState, action = {}) {
     let queriesMap = {};
     queriesMap[query] = action.result.results;
 
-    return state.set('queries', state.queries.mergeDeep(queriesMap));
+    return state.set('queries', state.get('queries').mergeDeep(queriesMap));
   }
   case constants.SEARCH_COMPANIES_FAIL: {
     return state.set('err', action.err);
@@ -463,10 +461,15 @@ export function getCompanyDetail(id) {
           dispatch(getJobsByIdsIfNeeded(jobIds));
         }
 
-        //
-        // if (company.notes && company.notes.length > 0) {
-        //   dispatch(saveNotesByCompanyResult(company.notes));
-        // }
+        if (company.notes) {
+          let noteIds = [];
+
+          company.notes.map((note => {
+              noteIds.push(note.id);
+          }));
+
+          dispatch(getNotesByIdsIfNeeded(noteIds));
+        }
 
         return company;
       }),

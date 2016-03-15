@@ -2,6 +2,8 @@ import * as constants from './constants';
 import { getFavoritesByUserId } from '../favorites';
 import { getContactsByIdsIfNeeded } from '../contacts';
 import { getCompaniesByIdsIfNeeded } from '../companies';
+import { getJobsByIdsIfNeeded } from '../jobs';
+
 export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;
 }
@@ -79,18 +81,24 @@ function postLogin(auth, client, state, dispatch){
   dispatch(getFavoritesByUserId(auth.userId)).then((response)=>{
     let contactIds = [];
     let companyIds = [];
+    let jobIds = [];
     if(response.result){
       response.result.map(function(favorite){
         switch(favorite.favorableType){
         case 'contact':
           contactIds.push(favorite.favorableId);
           break;
+        case 'job':
+          jobIds.push(favorite.favorableId);
+          break;
         case 'company':
           companyIds.push(favorite.favorableId);
+          break;
         }
-      })
+      });
     }
     dispatch(getContactsByIdsIfNeeded(contactIds));
+    dispatch(getJobsByIdsIfNeeded(jobIds));
     dispatch(getCompaniesByIdsIfNeeded(companyIds));
   });
   return getDataBasedOnUserId(context).then((context)=>{
@@ -130,7 +138,7 @@ export function login(email, password) {
           authToken,
         }).then((auth)=>postLogin(auth,client,getState(),dispatch));
       }
-    })
+    });
   };
 }
 
@@ -187,7 +195,7 @@ export function checkAuthServer(accessToken){
 
       },
     });
-  }
+  };
 }
 
 export function logginWithAccessToken(accessToken,cb) {

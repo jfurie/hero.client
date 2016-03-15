@@ -22,3 +22,6 @@ export const DELETE_NOTE_FAIL = 'hero.client/notes/DELETE_NOTE_FAIL';
 export const CREATE_NOTE_LOCAL = 'hero.client/notes/CREATE_NOTE_LOCAL';
 export const UPDATE_NOTE_LOCAL = 'hero.client/notes/UPDATE_NOTE_LOCAL';
 export const REPLACE_NOTE_LOCAL = 'hero.client/notes/REPLACE_NOTE_LOCAL';
+export const GET_NOTES_BY_IDS = 'hero.client/notes/GET_NOTES_BY_IDS';
+export const GET_NOTES_BY_IDS_SUCCESS = 'hero.client/notes/GET_NOTES_BY_IDS_SUCCESS';
+export const GET_NOTES_BY_IDS_FAIL = 'hero.client/notes/GET_NOTES_BY_IDS_FAIL';

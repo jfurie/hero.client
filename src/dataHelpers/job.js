@@ -1,7 +1,7 @@
 import Immutable from 'immutable';
 
 export default function getJobDataFromState(state, jobId) {
-  let job = state.jobs.list.get(jobId) || null;
+  let job = state.jobs.get('list').get(jobId) || null;
   let candidates = state.candidates || null;
 
   if (job) {

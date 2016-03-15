@@ -19,7 +19,7 @@ export default function getCompanyDataFromState(state, companyId) {
       let companyJobs = new Immutable.List();
 
       if (companyJobIds) {
-        companyJobs = state.jobs.list.filter(job => {
+        companyJobs = state.jobs.get('list').filter(job => {
           return companyJobIds.indexOf(job.get('id')) > -1;
         }).toList();
       }

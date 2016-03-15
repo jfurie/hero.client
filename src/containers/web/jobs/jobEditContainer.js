@@ -11,7 +11,7 @@ import { JobEdit } from '../../../components/web';
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 let getData = (state, props) => {
-  let job = state.jobs.list.get(props.params.jobId);
+  let job = state.jobs.get('list').get(props.params.jobId);
 
   let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
   let heroContacts = null;
@@ -36,7 +36,7 @@ let getData = (state, props) => {
       jobImage = state.resources.list.get(imageId);
     }
   }
-  
+
   return {
     job,
     jobImage,

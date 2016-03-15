@@ -53,7 +53,7 @@ class ClientSearchContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let results = nextProps.companies.queries.get(this.state.query);
+    let results = nextProps.companies.get('queries').get(this.state.query);
 
     this.setState({
       searchResults: results ? results.toArray() : [],

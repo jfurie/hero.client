@@ -1,6 +1,9 @@
 import Immutable from 'immutable';
 import * as constants from './constants';
-const initialState = {
+
+import {actionTypes} from 'redux-localstorage';
+
+const initialState = new Immutable.Map({
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
   byContactId: new Immutable.Map(),
@@ -8,64 +11,49 @@ const initialState = {
   myJobIds: new Immutable.Map(),
   myFavoriteJobIds: new Immutable.Map(),
   queries: new Immutable.Map(),
-};
+});
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case actionTypes.INIT:{
+    const persistedState = action.payload && action.payload['jobs'];
+    if(persistedState){
+      return state.set('list', Immutable.fromJS(persistedState.list));
+    } else{
+      return state;
+    }
+  }
   case constants.GET_JOBS_BY_IDS_SUCCESS: {
     let jobsMap = {};
     action.result.map((c) => {
       jobsMap[c.id] = c;
     });
 
-    return {
-      ...state,
-      list: state.list.merge(jobsMap),
-    }
+    return state.set('list', state.get('list').merge(jobsMap));
   }
   case constants.GET_JOBS: {
-    return {
-      ...state,
-    };
+    return state;
   }
   case constants.GET_JOBS_SUCCESS: {
     return state;
-    // return {
-    //   ...state,
-    //   list: state.list.mergeDeep(FAKEJOBS),
-    // };
   }
   case constants.GET_JOBS_FAIL: {
-    return {
-      ...state,
-      err: action.err,
-    };
+    return state.set('err', action.err);
   }
   case constants.GET_JOB: {
-    return {
-      ...state,
-    };
+    return state;
   }
   case constants.GET_JOB_SUCCESS: {
     let jobMap = {};
     jobMap[action.result.id] = action.result;
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(jobMap),
-    };
+    return state.set('list', state.get('list').mergeDeep(jobMap));
   }
   case constants.GET_JOB_FAIL: {
-    return {
-      ...state,
-      err: action.err,
-    };
+    return state.set('err', action.err);
   }
   case constants.GET_JOBS_BY_COMPANY:{
-    return {
-      ...state,
-      loading:true,
-    };
+    return state.set('loading', true);
   }
   case constants.GET_JOBS_BY_COMPANY_SUCCESS:{
 
@@ -83,25 +71,17 @@ export default function reducer(state = initialState, action = {}) {
         companyMap[c.id] = c;
       });
 
-      return {
-        ...state,
-        byCompanyId: state.byCompanyId.mergeDeep(byCompanyMap),
-        list: state.list.mergeDeep(companyMap),
-        loading:false,
-      };
-
+      return state.withMutations((state) => {
+        state.set('byCompanyId', state.get('byCompanyId').mergeDeep(byCompanyMap))
+        .set('list', state.get('list').mergeDeep(companyMap))
+        .set('loading', false);
+      });
     }
 
-    return {
-      ...state,
-      loading:false,
-    };
+    return state.set('loading', false);
   }
   case constants.GET_JOBS_BY_COMPANY_FAIL:{
-    return {
-      ...state,
-      loading:false,
-    };
+    return state.set('loading', false);
   }
   case constants.GET_JOBS_BY_CONTACT_SUCCESS:{
 
@@ -114,24 +94,23 @@ export default function reducer(state = initialState, action = {}) {
       contactMap[c.id] = c;
     });
 
-    return {
-      ...state,
-      byContactId: state.byContactId.mergeDeep(byContactMap),
-      list: state.list.mergeDeep(contactMap),
-    };
+    return state.withMutations((state) => {
+      state.set('byContactId', state.get('byContactId').mergeDeep(byContactMap))
+      .set('list', state.get('list').mergeDeep(contactMap));
+    });
   }
   case constants.CREATE_JOB:{
     let job = {};
     action.job = action.job.set('saving',true);
     action.job = action.job.set('savingError',null);
     job[action.id] = action.job;
-    return {
-      ...state,
-      saving:true,
-      savingError:'',
-      list: state.list.mergeDeep(job),
-      localJob: action.job,
-    };
+
+    return state.withMutations((state) => {
+      state.set('saving', true)
+      .set('savingError', '')
+      .set('list', state.get('list').mergeDeep(job))
+      .set('localJob', action.job);
+    });
   }
   case constants.CREATE_JOB_SUCCESS:{
     let jobMap = {};
@@ -149,15 +128,14 @@ export default function reducer(state = initialState, action = {}) {
     byCompanyMapNew[companyId] = state.byCompanyId.get(companyId) || new Immutable.List();
     byCompanyMapNew[companyId] = byCompanyMapNew[companyId].push(action.result.id);
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(jobMap),
-      byCompanyId: state.byCompanyId.mergeDeep(byCompanyMapNew),
-      loading:false,
-      localJob: new Immutable.Map(action.result),
-      saving:false,
-      savingError:'',
-    };
+    return state.withMutations((state) => {
+      state.set('saving', false)
+      .set('savingError', '')
+      .set('loading', false)
+      .set('list', state.get('list').mergeDeep(jobMap))
+      .set('byCompanyId', state.get('byCompanyId').mergeDeep(byCompanyMapNew))
+      .set('localJob', new Immutable.Map(action.result));
+    });
   }
   case constants.CREATE_JOB_FAIL:{
     let job = {};
@@ -165,26 +143,26 @@ export default function reducer(state = initialState, action = {}) {
     action.job = action.job.set('savingError', (action.error && action.error.error && action.error.error.message) || 'Failed to create job');
 
     job[action.id] = action.job;
-    return {
-      ...state,
-      saving:false,
-      savingError:'Failed to create job',
-      list:state.list.mergeDeep(job),
-      localJob: action.job,
-    };
+
+    return state.withMutations((state) => {
+      state.set('saving', false)
+      .set('savingError', 'Failed to create job')
+      .set('list', state.get('list').mergeDeep(job))
+      .set('localJob', action.job);
+    });
   }
   case constants.EDIT_JOB:{
     let job = {};
     action.job = action.job.set('saving',true);
     action.job = action.job.set('savingError',null);
     job[action.id] = action.job;
-    return {
-      ...state,
-      saving:true,
-      savingError:'',
-      list: state.list.mergeDeep(job),
-      localJob: action.job,
-    };
+
+    return state.withMutations((state) => {
+      state.set('saving', true)
+      .set('savingError', '')
+      .set('list', state.get('list').mergeDeep(job))
+      .set('localJob', action.job);
+    });
   }
   case constants.EDIT_JOB_SUCCESS:{
     let jobMap = {};
@@ -196,14 +174,13 @@ export default function reducer(state = initialState, action = {}) {
       newId: action.result.id,
     };
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(jobMap),
-      loading:false,
-      localJob: state.localJob.mergeDeep(action.result),
-      saving:false,
-      savingError:'',
-    };
+    return state.withMutations((state) => {
+      state.set('saving', false)
+      .set('loading', false)
+      .set('savingError', '')
+      .set('list', state.get('list').mergeDeep(jobMap))
+      .set('localJob', state.localJob.mergeDeep(action.result));
+    });
   }
   case constants.EDIT_JOB_FAIL:{
     let job = {};
@@ -211,40 +188,27 @@ export default function reducer(state = initialState, action = {}) {
     action.job = action.job.set('savingError', (action.error && action.error.error && action.error.error.message) || 'Failed to edit job');
 
     job[action.id] = action.job;
-    return {
-      ...state,
-      saving:false,
-      savingError:'Failed to edit job',
-      list:state.list.mergeDeep(job),
-    };
+
+    return state.withMutations((state) => {
+      state.set('saving', false)
+      .set('savingError', 'Failed to edit job')
+      .set('list', state.get('list').mergeDeep(job));
+    });
   }
   case constants.CREATE_JOB_LOCAL: {
-
-    return {
-      ...state,
-      localJob: state.localJob.mergeDeep(action.result),
-    };
+    return state.set('localJob', state.get('localJob').mergeDeep(action.result));
   }
   case constants.UPDATE_JOB:{
     let job ={};
     job[action.id] = action.result;
     if(action.dontMergeDeep){
-      return {
-        ...state,
-        list: state.list.merge(job),
-      };
+      return state.set('list', state.get('list').merge(job));
     } else {
-      return {
-        ...state,
-        list: state.list.mergeDeep(job),
-      };
+      return state.set('list', state.get('list').mergeDeep(job));
     }
   }
   case constants.REPLACE_JOB_LOCAL:{
-    return {
-      ...state,
-      localJob: new Immutable.Map(action.result),
-    };
+    return state.set('localJob', new Immutable.Map(action.result));
   }
   case constants.UPDATE_JOB_IMAGE:{
     let job = {};
@@ -252,10 +216,8 @@ export default function reducer(state = initialState, action = {}) {
       isUploading:true,
       percentUploaded:0
     };
-    return{
-      ...state,
-      list: state.list.mergeDeep(job),
-    };
+
+    return state.set('list', state.get('list').mergeDeep(job));
   }
   case constants.UPDATE_JOB_IMAGE_SUCCESS:{
     let job = {};
@@ -265,10 +227,8 @@ export default function reducer(state = initialState, action = {}) {
       percentUploaded:100
     };
     job[action.id] = image;
-    return{
-      ...state,
-      list: state.list.mergeDeep(job),
-    };
+
+    return state.set('list', state.get('list').mergeDeep(job));
   }
   case constants.UPDATE_JOB_IMAGE_PROGRESS:{
     let job = {};
@@ -278,21 +238,19 @@ export default function reducer(state = initialState, action = {}) {
       percentUploaded:action.result
     };
     job[action.id] = image;
-    return{
-      ...state,
-      list: state.list.mergeDeep(job),
-    };
+
+    return state.set('list', state.get('list').mergeDeep(job));
   }
   case constants.GET_MY_JOBS_SUCCESS:{
     let jobsMap = {};
     action.result.map((job) => {
       jobsMap[job.id] = job;
     });
-    return{
-      ...state,
-      myJobIds: state.myJobIds.mergeDeep(jobsMap),
-      list: state.list.mergeDeep(jobsMap),
-    };
+
+    return state.withMutations((state) => {
+      state.set('myJobIds', state.get('myJobIds').mergeDeep(jobsMap))
+      .set('list', state.get('list').mergeDeep(jobsMap));
+    });
   }
   case constants.GET_MY_FAVORITE_JOBS_SUCCESS: {
 
@@ -301,11 +259,10 @@ export default function reducer(state = initialState, action = {}) {
       jobsMap[c.id] = c;
     });
 
-    return{
-      ...state,
-      myFavoriteJobIds: state.myFavoriteJobIds.mergeDeep(jobsMap),
-      list: state.list.mergeDeep(jobsMap),
-    };
+    return state.withMutations((state) => {
+      state.set('myFavoriteJobIds', state.get('myFavoriteJobIds').mergeDeep(jobsMap))
+      .set('list', state.get('list').mergeDeep(jobsMap));
+    });
   }
   case constants.CREATE_JOB_FAVORITE_SUCCESS: {
     let job = state.list.get(action.result.favorableId);
@@ -314,12 +271,11 @@ export default function reducer(state = initialState, action = {}) {
     let jobMap = {};
     jobMap[job.get('id')] = job;
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(jobMap),
-      myJobIds: state.myJobIds.mergeDeep(jobMap),
-      myFavoriteJobIds: state.myFavoriteJobIds.mergeDeep(jobMap),
-    };
+    return state.withMutations((state) => {
+      state.set('myFavoriteJobIds', state.get('myFavoriteJobIds').mergeDeep(jobsMap))
+      .set('list', state.get('list').mergeDeep(jobsMap))
+      .set('myJobIds', state.get('myJobIds').mergeDeep(jobsMap));
+    });
   }
   case constants.DELETE_JOB_FAVORITE_SUCCESS: {
     let job = state.list.get(action.result.favorableId);
@@ -328,17 +284,14 @@ export default function reducer(state = initialState, action = {}) {
     let jobMap = {};
     jobMap[job.get('id')] = job;
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(jobMap),
-      myJobIds: state.myJobIds.mergeDeep(jobMap),
-      myFavoriteJobIds: state.myFavoriteJobIds.delete(action.result.favorableId),
-    };
+    return state.withMutations((state) => {
+      state.set('myFavoriteJobIds', state.get('myFavoriteJobIds').delete(action.result.favorableId))
+      .set('list', state.get('list').mergeDeep(jobsMap))
+      .set('myJobIds', state.get('myJobIds').mergeDeep(jobsMap));
+    });
   }
   case constants.UPDATE_JOB_IMAGE_FAIL:{
-    return{
-      ...state
-    };
+    return state;
   }
   case constants.SEARCH_JOBS_SUCCESS: {
     let query = action.result.query;
@@ -346,38 +299,25 @@ export default function reducer(state = initialState, action = {}) {
     let queriesMap = {};
     queriesMap[query] = action.result.results;
 
-    return {
-      ...state,
-      queries: state.queries.mergeDeep(queriesMap),
-    };
+    return state.set('queries', state.get('queries').mergeDeep(queriesMap));
   }
   case constants.CREATE_TEMP_JOB:{
     let contactsMap = {};
     contactsMap[action.result.id] = action.result;
-    return {
-      ...state,
-      list: state.list.mergeDeep(contactsMap),
-    };
+
+    return state.set('list', state.get('list').mergeDeep(contactsMap));
   }
   case constants.GET_JOB_DETAIL: {
-    return {
-      ...state,
-    };
+    return state;
   }
   case constants.GET_JOB_DETAIL_SUCCESS: {
     let jobMap = {};
     jobMap[action.result.id] = action.result;
 
-    return {
-      ...state,
-      list: state.list.mergeDeep(jobMap),
-    };
+    return state.set('list', state.get('list').mergeDeep(jobMap));
   }
   case constants.GET_JOB_DETAIL_FAIL: {
-    return {
-      ...state,
-      err: action.err,
-    };
+    return state.set('err', action.err);
   }
   default:
     return state;

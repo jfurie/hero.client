@@ -35,7 +35,7 @@ function getData(state, props) {
 
   let tab = props.location.query.tab || 'Details';
 
-  let imageId = state.jobs.localJob.get('imageId');
+  let imageId = state.jobs.get('localJob').get('imageId');
   if (imageId) {
     localJobResource = state.resources.list.get(imageId);
   }
@@ -46,7 +46,7 @@ function getData(state, props) {
     //job: getJobDataFromState(state, jobId),
     notes: state.notes,
     localNote: state.notes.localNote,
-    localJob: state.jobs.localJob,
+    localJob: state.jobs.get('localJob'),
     localJobResource,
     heroContacts,
     defaultContact: state.auth.contact,
