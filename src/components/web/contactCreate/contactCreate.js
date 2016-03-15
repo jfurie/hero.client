@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import {
-  Dialog, IconButton, ToolbarGroup, Toolbar, Toggle, SelectField, MenuItem,
+   IconButton, ToolbarGroup, Toolbar, Toggle, SelectField, MenuItem,
   FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles, Snackbar,
 } from 'material-ui';
 import { Location, TagsInput } from '../';
