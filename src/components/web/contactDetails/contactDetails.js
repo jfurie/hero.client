@@ -515,7 +515,7 @@ export default class ContactDetails extends React.Component {
           <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes','Data']}>
             <div style={{minHeight:'800px'}}>
 
-              <List style={{position: 'relative', top: '3px'}}>
+              <List style={{position: 'relative', top: '3px', padding: '0 8px'}}>
                 <div>
 
                   <ListItem

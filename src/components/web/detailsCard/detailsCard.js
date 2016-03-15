@@ -117,7 +117,7 @@ let style = {
   },
   floatActionButton: {
     position: 'absolute',
-    right: '16px',
+    right: '24px',
     top: '-28px',
     zIndex: '50',
   },
@@ -178,7 +178,7 @@ let style = {
   floatActionLabel: {
     position: 'absolute',
     top: '37px',
-    right: '9px',
+    right: '16px',
     fontSize: '13px',
     fontWeight: '100',
     color: Styles.Colors.white,

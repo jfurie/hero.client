@@ -289,7 +289,7 @@ export default class ClientDetails extends React.Component {
         <CustomTabsSwipe isLight isInline={inline} startingTab={this.props.tab} onChange={this.tabChange.bind(this)} tabs={['Details', 'Jobs', 'Contacts', 'Notes','Data']}>
             <div>
 
-              <List>
+              <List style={{padding: '0 8px'}}>
 
                 {(addressLine) ? (
                   <div>
@@ -329,7 +329,6 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Company Mission',company.get('productSolution'),
                   <Avatar
-                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">store</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -338,7 +337,6 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Culture',company.get('culture'),
                   <Avatar
-                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">face</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -347,7 +345,6 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Benefits',company.get('benefits'),
                   <Avatar
-                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">redeem</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -356,7 +353,6 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Tech Stack',company.get('techstack'),
                   <Avatar
-                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">storage</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -365,7 +361,6 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Leadership',company.get('leadership'),
                   <Avatar
-                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">stars</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
