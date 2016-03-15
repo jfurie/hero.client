@@ -60,16 +60,24 @@ export default class JobDetails extends React.Component {
     };
   }
 
-  renderBigListItem(title, content, avatar){
+  renderBigListItem(title,content,avatar){
     return (
       <div style={{display:'flex'}}>
         <div style={{flex:'0 0 56px'}}>
           {avatar}
         </div>
-        <div style={{display:'inline-block'}}>
-          <div style={style.title}>{title}</div>
-          <div style={style.content}>{content}</div>
-        </div>
+        {
+          content ?
+          <div style={{display: 'inline-block'}}>
+            <div style={style.title}>{title}</div>
+            <div style={style.content}>{content}</div>
+          </div>
+          :
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <div style={style.title}>{title}</div>
+          </div>
+        }
+
       </div>
     );
   }
