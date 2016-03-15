@@ -20,6 +20,7 @@ const style = {
     fontWeight:'500',
   },
   content:{
+    display: 'block',
     color:'rgba(0, 0, 0, 0.54)',
     fontSize:'14px',
     fontWeight:'500',
@@ -60,6 +61,10 @@ const style = {
   toolbarTitle: {
     lineHeight:'64px',
     float:'left',
+  },
+  smallListItem: {
+    padding: 0,
+    margin: '16px',
   },
 };
 
@@ -173,9 +178,30 @@ export default class ClientDetails extends React.Component {
         <div style={{flex:'0 0 56px'}}>
           {avatar}
         </div>
-        <div style={{display:'inline-block'}}>
-          <div style={style.title}>{title}</div>
-          <div style={style.content}>{content}</div>
+        {
+          content ?
+          <div style={{display: 'inline-block'}}>
+            <div style={style.title}>{title}</div>
+            <div style={style.content}>{content}</div>
+          </div>
+          :
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <div style={style.title}>{title}</div>
+          </div>
+        }
+
+      </div>
+    );
+  }
+
+  renderSmallListItem(content,avatar){
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
         </div>
       </div>
     );
@@ -288,46 +314,43 @@ export default class ClientDetails extends React.Component {
 
         <CustomTabsSwipe isLight isInline={inline} startingTab={this.props.tab} onChange={this.tabChange.bind(this)} tabs={['Details', 'Jobs', 'Contacts', 'Notes','Data']}>
             <div>
-
-              <List style={{padding: '0 8px'}}>
-
+              <Card>
                 {(addressLine) ? (
-                  <div>
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                        primaryText={addressLine}
-                        // secondaryText={<p>address</p>}
-                        // secondaryTextLines={0}
-                    />
-                  </div>
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(addressLine,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">place</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
                 ) : (null)}
 
                 {(website) ? (
-                  <div>
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={website}
-                        // secondaryText={<p>website</p>}
-                        // secondaryTextLines={0}
-                    />
-                  </div>
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(website,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
                 ) : (null)}
 
                 {(phone) ? (
-                  <div>
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                        primaryText={phone}
-                        // secondaryText={<p>phone</p>}
-                        // secondaryTextLines={0}
-                    />
-                  </div>
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(phone,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">phone</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
                 ) : (null)}
-              </List>
-
+              </Card>
               <Card>
                 <CardText>
-                  {this.renderBigListItem('Company Mission',company.get('productSolution'),
+                  {this.renderBigListItem('Company Mission','kaka',
                   <Avatar
                       icon={<FontIcon className="material-icons">store</FontIcon>}
                       color={Styles.Colors.grey600}
