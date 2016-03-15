@@ -3,6 +3,12 @@ import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
 import { saveCandidatesByJobResult } from '../candidates';
 
+import { getCompaniesByIdsIfNeeded } from '../companies';
+import { getContactsByIdsIfNeeded } from '../contacts';
+import { getNotesByIdsIfNeeded } from '../notes';
+import { getLocationsByIdsIfNeeded } from '../locations';
+
+
 export function getJobsByCompany(companyId){
 
   let include = [
@@ -249,14 +255,27 @@ export function getJobDetail(id) {
       promise: (client, auth) => client.api.get(`/jobs/detail?id=${id}`, {
         authToken: auth.authToken,
       }).then((job)=> {
-        if (job.notes && job.notes.length > 0) {
-          dispatch(saveNotesByJobResult(job.notes));
+        if (job.companyId) {
+          dispatch(getCompaniesByIdsIfNeeded([job.companyId]));
         }
 
-        if (job.candidates && job.candidates.length > 0) {
-          dispatch(saveCandidatesByJobResult(job.candidates));
+        if (job.locationId) {
+          dispatch(getLocationsByIdsIfNeeded([job.locationId]));
         }
-        return job;
+
+        if (company.talentAdvocateId) {
+          dispatch(getContactsByIdsIfNeeded([company.talentAdvocateId]));
+        }
+
+        if (job.notes) {
+          let noteIds = [];
+
+          job.notes.map((note => {
+              noteIds.push(note.id);
+          }));
+
+          dispatch(getNotesByIdsIfNeeded(noteIds));
+        }
       }),
     });
   };

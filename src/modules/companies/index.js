@@ -387,42 +387,6 @@ export function saveCompaniesResult(companies){
   };
 }
 
-// export function getCompanyDetail(id) {
-//
-//   return (dispatch) => {
-//     dispatch({
-//       types: [constants.GET_COMPANY_DETAIL, constants.GET_COMPANY_DETAIL_SUCCESS, constants.GET_COMPANY_DETAIL_FAIL],
-//       promise: (client, auth) => client.api.get(`/companies/detail?id=${id}`, {
-//         authToken: auth.authToken,
-//       }).then((company)=> {
-//
-//         dispatch(saveCompanyResult(company));
-//
-//         if (company.location) {
-//           dispatch(saveLocationByCompanyResult(company.location));
-//         }
-//
-//         if (company.jobs && company.jobs.length > 0) {
-//           dispatch(saveJobsByCompanyResult(company.jobs));
-//         }
-//
-//         if (company.contacts && company.contacts.length > 0) {
-//           dispatch(saveContactsByCompanyResult({
-//             companyId: company.id,
-//             result: company.contacts,
-//           }));
-//         }
-//
-//         if (company.notes && company.notes.length > 0) {
-//           dispatch(saveNotesByCompanyResult(company.notes));
-//         }
-//
-//         return company;
-//       }),
-//     });
-//   };
-// }
-
 export function getCompanyDetail(id) {
 
   return (dispatch) => {

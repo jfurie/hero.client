@@ -10,7 +10,6 @@ import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
 } from 'material-ui';
-
 import './jobDetails.scss';
 
 const style = {
@@ -147,7 +146,7 @@ export default class JobDetails extends React.Component {
     if (job) {
 
       // get cover
-      let cover = ((job.get('image')) ? (job.get('image').get('item')) : (defaultImage));
+      let cover = ((job.get('image') && job.get('image').get('item')) ? (job.get('image').get('item')) : (defaultImage));
 
       // markdown to html
       let description = job.get('description') ? marked(job.get('description')) : '';
@@ -227,6 +226,9 @@ export default class JobDetails extends React.Component {
         companyWebsite = company.get('website');
         companyName = company.get('name');
       }
+      else {
+        companyName = 'XYZ Company';
+      }
 
       // location stuff
       let location = job.get('location');
@@ -254,8 +256,8 @@ export default class JobDetails extends React.Component {
 
         <div>
           <DetailsCard
-              topTitle={job.get('company') ? job.get('company').get('name') : 'XYZ Company'}
-              topSubtitle={`${companyName} - ${job.get('department')}`}
+              topTitle={companyName}
+              topSubtitle={`${job.get('department')}`}
               location={job.get('location')}
               bottomLabel="Job Title"
               bottomTitle={job.get('title')}

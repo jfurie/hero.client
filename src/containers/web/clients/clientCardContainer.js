@@ -41,8 +41,10 @@ class ClientCardContainer extends React.Component {
     }, 500);
   }
 
-  openDetails(id) {
-    this.props.pushState(null, `/clients/${id}`);
+  openDetails() {
+    let {company} = this.props;
+
+    this.props.pushState(null, `/clients/${company.get('id')}`);
   }
 
   favoriteCompany() {
