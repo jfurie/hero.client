@@ -436,7 +436,7 @@ export default function reducer(state = initialState, action = {}) {
   case constants.EDIT_CONTACT_CATEGORY_SUCCESS:{
     let contactCategory = action.result.response;
     let contactId = action.result.contactId;
-    let state = state.updateIn(['list',contactId,'_contactCategories'],arr =>{
+    state = state.updateIn(['list',contactId,'_contactCategories'],arr =>{
       let returnArr = null;
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){

@@ -1,13 +1,19 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { getCategoriesIfNeeded } from '../../../modules/categories';
 import { getOneContact, setCategoryLocal, setExperience, setPrimary } from '../../../modules/contacts';
 import { ContactEditCategories } from '../../../components/web';
 function getData(state, props) {
+  let contact = state.contacts.get('list').get(props.params.contactId);
+  let contactCategories = Immutable.List();
+  if(contact && contact.get('_contactCategories')){
+    contactCategories = contact.get('_contactCategories');
+  }
   return {
     categories: state.categories.list,
     contact: state.contacts.get('list').get(props.params.contactId),
-    contactCategories: state.contactCategories.byContactId.get(props.params.contactId),
+    contactCategories,
   };
 }
 @connect(getData, {getCategoriesIfNeeded, getOneContact,setCategoryLocal, setExperience, setPrimary})
