@@ -204,7 +204,7 @@ export default class ContactCreate extends React.Component {
     let statuses = ['New','Active','Prospect','Took a Job','Placed','Blacklisted'];
     return (
       <div className="row center-xs">
-          <div className="col-xs-12 col-md-8">
+          <div className="col-xs-12">
               <div className="box">
                 <form onSubmit={this._handleSubmit.bind(this)}>
                   <div className="row center-xs" >
@@ -553,17 +553,7 @@ export default class ContactCreate extends React.Component {
     } else {
       return (
       <div>
-          <Dialog
-              open={this.props.open}
-              autoDetectWindowHeight={false}
-              autoScrollBodyContent={false}
-              repositionOnUpdate={false}
-              defaultOpen={false}
-              style={style.dialog}
-              bodyStyle={style.bodyStyle}
-              contentStyle={style.contentStyle}
-          >
-            <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
+            <div style={{}}>
               <Toolbar style={style.toolbar}>
                 <ToolbarGroup key={0} float="left">
                   <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName="material-icons">close</IconButton>
@@ -577,7 +567,6 @@ export default class ContactCreate extends React.Component {
                 {this._renderContents()}
               </div>
             </div>
-          </Dialog>
       </div>);
     }
   }
