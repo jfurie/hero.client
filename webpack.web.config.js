@@ -62,6 +62,11 @@ var original = {
       allChunks: true,
     }),
   ] : [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': '"production"'
+      }
+    }),
     new webpack.optimize.UglifyJsPlugin({minimize: true}),
     new ExtractTextPlugin('../css/components.css', {
       allChunks: true,
