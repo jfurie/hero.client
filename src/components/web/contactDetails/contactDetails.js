@@ -8,7 +8,7 @@ import Immutable from 'immutable';
 
 import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, JSONTree } from '../../../components/web';
 import {
-  IconButton, List, ListItem, FontIcon, Avatar,
+  IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
 } from 'material-ui';
 import image from './image';
