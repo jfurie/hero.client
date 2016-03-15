@@ -131,10 +131,10 @@ class LogoutPage extends React.Component {
       <div>
         <div id="login-box" className="row center-xs center-md row-top">
 
-          <form className="col-xs-10 col-md-4" onSubmit={this.onSubmit.bind(this)}>
+          <form className="col-xs-10" onSubmit={this.onSubmit.bind(this)}>
 
             <img
-                className="col-xs-4 col-md-3 loginLogo"
+                className="col-xs-4 loginLogo"
                 src="/img/login-logo.png"
             />
 

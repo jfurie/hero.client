@@ -8,6 +8,12 @@ import {toggleNav} from '../../../modules/leftNav';
   user: state.auth.user,
 }), { toggleNav, pushState })
 class Header extends React.Component {
+  constructor(props){
+    super(props);
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.state= {'windowWidth':clientWidth};
+    this.handleResize = this.handleResize.bind(this);
+  }
 
   menuClicked() {
 
@@ -23,6 +29,17 @@ class Header extends React.Component {
   searchClicked() {
     this.props.pushState(null,'/search');
   }
+  handleResize(){
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.setState({'windowWidth':clientWidth});
+  }
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
 
   render() {
 
@@ -37,7 +54,11 @@ class Header extends React.Component {
     let style = {
       position: 'fixed',
       backgroundColor: Styles.Colors.grey900,
+      width:'100%',
     };
+    if(this.state.windowWidth > 768){
+      style.width ='375px';
+    }
     let iconStyle = {};
     iconStyle.color= '#ffffff';
     if (transparent) {

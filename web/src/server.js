@@ -4,7 +4,14 @@ import config from './config/config';
 import compression from 'compression';
 let app = null;
 
+process.on('uncaughtException', function (err) {
+  console.error('Uncaught Exception');
+  console.error(err.stack);
+  process.exit(1);
+});
+
 function startApp() {
+  console.log('Starting Server');
   var app = express();
   app.use(compression());
   app.engine('html', swig.renderFile);
@@ -18,7 +25,9 @@ function startApp() {
   app.get('*', function(req, res) {
     res.render('main', {});
   });
-  app.listen(config.port, function() {});
+  app.listen(config.port, function() {
+    console.log('Browse your REST API at %s', config.port);
+  });
 }
 
 app = startApp();

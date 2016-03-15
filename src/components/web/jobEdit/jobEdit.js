@@ -87,6 +87,23 @@ const style = {
 export default class JobEdit extends React.Component {
   constructor(props){
     super(props);
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.handleResize = this.handleResize.bind(this);
+    this.state = {
+      windowWidth:clientWidth,
+    };
+  }
+
+  handleResize(){
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.setState({'windowWidth':clientWidth});
+  }
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   }
 
   _handleClose(){
@@ -214,8 +231,8 @@ export default class JobEdit extends React.Component {
     if (isCandidate === undefined) isCandidate = false;
 
     return (
-      <div style={{backgroundColor:'#ffffff'}} className="row center-xs">
-          <div className="col-xs-12 col-md-8">
+      <div style={{backgroundColor:'#ffffff', margin:'0'}} className="row center-xs">
+          <div className="col-xs-12">
               <div className="box">
                 <form onSubmit={this._handleSubmit.bind(this)}>
                   <div className="row center-xs" >
@@ -431,7 +448,11 @@ export default class JobEdit extends React.Component {
 
   render() {
     //let {job} = this.props;
-
+    if(this.state.windowWidth > 768){
+      style.toolbarInline.width ='375px';
+    } else {
+      style.toolbarInline.width = '100%';
+    }
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     let contentHeight = clientHeight - 64;
     if(this.props.inline){

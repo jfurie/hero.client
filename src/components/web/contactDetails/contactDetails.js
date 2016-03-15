@@ -5,7 +5,6 @@ import { replaceNoteLocal } from '../../../modules/notes/index';
 import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
-import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
 import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, JSONTree } from '../../../components/web';
 import {
@@ -264,6 +263,14 @@ export default class ContactDetails extends React.Component {
     // displayName
     let displayName = contact.get('displayName') || null;
 
+    let location = contact.get('location') || null;
+
+    let desiredSalary;
+
+    if (contact.get('desiredSalary')) {
+      desiredSalary = `$${~~(contact.get('desiredSalary')) / 1000}k`;
+    }
+
     return {
       cover: image, //`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       city,
@@ -271,7 +278,9 @@ export default class ContactDetails extends React.Component {
       avatarUrl: `https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       companyName,
       title,
-      subtitleAvatar
+      subtitleAvatar,
+      location,
+      desiredSalary,
     };
   }
 
@@ -308,68 +317,48 @@ export default class ContactDetails extends React.Component {
       onTouchTap: this._onTouchTapShare.bind(this),
     }];
 
-    let stats = [{
-      title: 'Applied',
-      value: 0,
-    }, {
-      title: 'Submitted',
-      value: 0,
-    }, {
-      title: 'Accepted',
-      value: 0,
-    }, {
-      title: 'Interviews',
-      value: 0,
-    }, {
-      title: 'Offers',
-      value: 0,
-    }, {
-      title: 'Jobs',
-      value: 0,
-    }];
+    // let stats = [{
+    //   title: 'Applied',
+    //   value: 0,
+    // }, {
+    //   title: 'Submitted',
+    //   value: 0,
+    // }, {
+    //   title: 'Accepted',
+    //   value: 0,
+    // }, {
+    //   title: 'Interviews',
+    //   value: 0,
+    // }, {
+    //   title: 'Offers',
+    //   value: 0,
+    // }, {
+    //   title: 'Jobs',
+    //   value: 0,
+    // }];
 
     // salary
-    let salaryMin = null;
-    let salaryMax = null;
-    let extraLeftLine = null;
-
-    if (contact.get('currentSalary')) {
-      let currentSalary = parseInt(contact.get('currentSalary'));
-      salaryMin = `$${~~(currentSalary) / 1000}k`;
-    }
-
-    if (contact.get('desiredSalary')) {
-      let desiredSalary = parseInt(contact.get('desiredSalary'));
-      salaryMax = `$${~~(desiredSalary) / 1000}k`;
-    }
-
-    if (salaryMin && salaryMax) {
-      extraLeftLine = `${salaryMin} - ${salaryMax}`;
-    } else if (salaryMin && !salaryMax) {
-      extraLeftLine = `- ${salaryMax}`;
-    } else if (!salaryMin && salaryMax) {
-      extraLeftLine = `${salaryMin} -`;
-    }
-    let style ={
-      title:{
-        color:Styles.Colors.black,
-      },
-      subtitle:{
-        color:Styles.Colors.black,
-      },
-      extraLeftLine:{
-        color:Styles.Colors.black,
-      },
-      extraRightLine:{
-        color:Styles.Colors.black,
-      },
-      extraCenterLine:{
-        color:Styles.Colors.black,
-      },
-      floatActionLabel:{
-        color:Styles.Colors.black,
-      },
-    };
+    // let salaryMin = null;
+    // let salaryMax = null;
+    // let extraLeftLine = null;
+    //
+    // if (contact.get('currentSalary')) {
+    //   let currentSalary = parseInt(contact.get('currentSalary'));
+    //   salaryMin = `$${~~(currentSalary) / 1000}k`;
+    // }
+    //
+    // if (contact.get('desiredSalary')) {
+    //   let desiredSalary = parseInt(contact.get('desiredSalary'));
+    //   salaryMax = `$${~~(desiredSalary) / 1000}k`;
+    // }
+    //
+    // if (salaryMin && salaryMax) {
+    //   extraLeftLine = `${salaryMin} - ${salaryMax}`;
+    // } else if (salaryMin && !salaryMax) {
+    //   extraLeftLine = `- ${salaryMax}`;
+    // } else if (!salaryMin && salaryMax) {
+    //   extraLeftLine = `${salaryMin} -`;
+    // }
     // workAuthorization
     let workAuthorization = contact.get('workAuthorization') || null;
 
@@ -383,26 +372,41 @@ export default class ContactDetails extends React.Component {
       tags.push(contact.get('status'));
     }
 
+    let avatar = (
+      <div style={{position: 'relative'}}>
+        <img style={{width: '95px', height:'95px', borderRadius:'0px'}} src={common.avatarUrl}/>
+        <img
+          style={{
+            width: '35px',
+            height:'35px',
+            borderRadius:'0px',
+            position: 'absolute',
+            bottom: '4px',
+            right: 0,
+            border: '2px solid white',
+            borderBottom: 'none',
+            borderRight: 'none',
+          }}
+          src="http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png"/>
+      </div>
+    );
 
     return (
       <DetailsCard
-          title={common.displayName}
-          style={style}
-          subtitle={common.companyName}
-          subtitle2={common.title}
+          topTitle={common.displayName}
+          topSubtitle={common.companyName}
+          location={common.location}
+          bottomLabel="Current Title"
+          bottomTitle={common.title}
+          rightLabel="Desired Wage"
+          rightTitle={common.desiredSalary}
+          rightSubtitle={workAuthorization}
           cover={common.cover}
-          mainColor={Styles.Colors.white}
           actions={actions}
-          stats={stats}
-          showStats={false}
-          avatar={<img style={{width: '95px', height:'95px', borderRadius:'0px'}} src={common.avatarUrl}/>}
+          avatar={avatar}
           floatActionOnTap={this._handleTapOnChat.bind(this)}
-          floatActionContent={<CommunicationChat color={Styles.Colors.black}/>}
-          topTags={tags || []}
-          extraLeftLine={extraLeftLine}
-          extraRightLine={workAuthorization}
-          floatActionLabel={'Message'}
-          subtitleAvatar={common.subtitleAvatar}
+          floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
+          floatActionLabel={'Share'}
       />
     );
   }
@@ -511,7 +515,7 @@ export default class ContactDetails extends React.Component {
           <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes','Data']}>
             <div style={{minHeight:'800px'}}>
 
-              <List style={{position: 'relative', top: '3px'}}>
+              <List style={{position: 'relative', top: '3px', padding: '0 8px'}}>
                 <div>
 
                   <ListItem
@@ -668,7 +672,7 @@ export default class ContactDetails extends React.Component {
     return (
       <div>
         <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
-          <IconMenu iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}>
+          <IconMenu iconButtonElement={<IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>}>
             <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (
               <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />
