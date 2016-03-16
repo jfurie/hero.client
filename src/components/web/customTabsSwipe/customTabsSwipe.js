@@ -129,7 +129,9 @@ class CustomTabsSwipe extends React.Component {
     isLight = isLight || false;
 
     let tabsStyle = style.tabs;
-    let tabStyle = {};
+    let tabStyle = {
+      textTransform: 'none',
+    };
 
     if (isLight) {
       tabsStyle = style.tabsLight;
