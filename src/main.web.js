@@ -15,16 +15,8 @@ const history = useScroll(createHistory);
 //import DevTools from './utils/devTools';
 import Config from './utils/config';
 
-function is_touch_device() {
-  return 'ontouchstart' in window        // works on most browsers
-      || navigator.maxTouchPoints;       // works on IE10/11 and Surface
-}
 
-injectTapEventPlugin({
-  shouldRejectClick() {
-    return is_touch_device();
-  }
-});
+injectTapEventPlugin();
 
 let client = {};
 client.api = new ApiClient({
