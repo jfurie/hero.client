@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
 import {
-  List, ListItem, Divider, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog, CardText,
+  List, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog, CardText,
 } from 'material-ui';
 import Card from 'material-ui/lib/card/card';
 
@@ -350,7 +350,7 @@ export default class ClientDetails extends React.Component {
               </Card>
               <Card>
                 <CardText>
-                  {this.renderBigListItem('Company Mission','kaka',
+                  {this.renderBigListItem('Company Mission',company.get('productSolution'),
                   <Avatar
                       icon={<FontIcon className="material-icons">store</FontIcon>}
                       color={Styles.Colors.grey600}
@@ -389,94 +389,81 @@ export default class ClientDetails extends React.Component {
                       backgroundColor={Styles.Colors.white}
                   />)}
                 </CardText>
-                <Divider />
-                <div style={{padding:'8px'}}>
-                  <List subheader={'Social'}>
-                      {(twitter) ? (
-                        <div>
-                          <ListItem
-                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                              primaryText={`@${twitter}`}
-                              secondaryText={<p>twitter</p>}
-                              secondaryTextLines={1}
-                          />
-                        </div>
-                      ) : (null)}
+              </Card>
+              <Card>
+                {(twitter) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('twitter', `@${twitter}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(facebook) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('facebook', `facebook.com/${facebook}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(angelList) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Angel List', `@${angelList}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(crunchbase) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Crunchbase', `@${crunchbase}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+              </Card>
+              <Card>
+                {(jobboard) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Job Board', `@${jobboard}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
 
-                      {(facebook) ? (
-                        <div>
-                          <ListItem
-                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                              primaryText={`facebook.com/${facebook}`}
-                              secondaryText={<p>facebook</p>}
-                              secondaryTextLines={1}
-                          />
-                        </div>
-                      ) : (null)}
-                      {(angelList) ? (
-                        <div>
-                          <ListItem
-                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                              primaryText={`${angelList}`}
-                              secondaryText={<p>angel list</p>}
-                              secondaryTextLines={1}
-                          />
-                        </div>
-                      ) : (null)}
-                      {(crunchbase) ? (
-                        <div>
-                          <ListItem
-                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                              primaryText={`${crunchbase}`}
-                              secondaryText={<p>Crunchbase</p>}
-                              secondaryTextLines={1}
-                          />
-                        </div>
-                      ) : (null)}
-
-                  </List>
-                </div>
-                <Divider />
-                <div style={{padding:'8px'}}>
-                  <List subheader={'Job Boards'}>
-                    <div>
-
-                      {(jobboard) ? (
-                        <div>
-                          <ListItem
-                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                              primaryText={`${jobboard}`}
-                              secondaryText={<p>Jobboard</p>}
-                              secondaryTextLines={1}
-                          />
-                        </div>
-                      ) : (null)}
-
-                      {(ziprecruiter) ? (
-                        <div>
-                          <ListItem
-                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                              primaryText={`${ziprecruiter}`}
-                              secondaryText={<p>ziprecruiter</p>}
-                              secondaryTextLines={1}
-                          />
-                        </div>
-                      ) : (null)}
-                      {(indeed) ? (
-                        <div>
-                          <ListItem
-                              leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                              primaryText={`${indeed}`}
-                              secondaryText={<p>indeed</p>}
-                              secondaryTextLines={1}
-                          />
-                        </div>
-                      ) : (null)}
-                    </div>
-                  </List>
-                </div>
-
-
+                {(ziprecruiter) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Zip Recruiter', `@${ziprecruiter}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(indeed) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('indeed', `@${indeed}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
               </Card>
             </div>
             <CompanyJobsList
@@ -497,7 +484,7 @@ export default class ClientDetails extends React.Component {
               <CompanyNotesList company={company} editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={company.get('notes')}/>
             </List>
             <div>
-              <JSONTree data={this.props}></JSONTree>
+              <JSONTree data={this.props} />
             </div>
           </CustomTabsSwipe>
 
@@ -517,7 +504,7 @@ export default class ClientDetails extends React.Component {
     if(this.props.inline){
       return (
         <div>
-          <Header showHome={true} goBack={this.goBack.bind(this)} iconRight={
+          <Header showHome goBack={this.goBack.bind(this)} iconRight={
             <IconMenu iconButtonElement={<IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>}>
               <MenuItem index={0} onTouchTap={this.editClientModalOpen.bind(this)} primaryText="Edit Client" />
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
