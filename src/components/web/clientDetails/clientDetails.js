@@ -6,7 +6,6 @@ import {
 } from 'material-ui';
 import Card from 'material-ui/lib/card/card';
 
-import MapsDirections from 'material-ui/lib/svg-icons/maps/directions';
 import Avatar from 'material-ui/lib/avatar';
 
 import {
@@ -21,6 +20,7 @@ const style = {
     fontWeight:'500',
   },
   content:{
+    display: 'block',
     color:'rgba(0, 0, 0, 0.54)',
     fontSize:'14px',
     fontWeight:'500',
@@ -61,6 +61,10 @@ const style = {
   toolbarTitle: {
     lineHeight:'64px',
     float:'left',
+  },
+  smallListItem: {
+    padding: 0,
+    margin: '16px',
   },
 };
 
@@ -174,9 +178,30 @@ export default class ClientDetails extends React.Component {
         <div style={{flex:'0 0 56px'}}>
           {avatar}
         </div>
-        <div style={{display:'inline-block'}}>
-          <div style={style.title}>{title}</div>
-          <div style={style.content}>{content}</div>
+        {
+          content ?
+          <div style={{display: 'inline-block'}}>
+            <div style={style.title}>{title}</div>
+            <div style={style.content}>{content}</div>
+          </div>
+          :
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <div style={style.title}>{title}</div>
+          </div>
+        }
+
+      </div>
+    );
+  }
+
+  renderSmallListItem(content,avatar){
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
         </div>
       </div>
     );
@@ -253,106 +278,80 @@ export default class ClientDetails extends React.Component {
       //let colors = Styles.Colors;
 
       // build extra line
-      let recruiterDataArray = [];
-
-      if (company.get('feeAgreement')) {
-        recruiterDataArray.push(`${company.get('feeAgreement')}%`);
-      }
-
-      if (company.get('payableTerms')) {
-        recruiterDataArray.push(`net ${company.get('payableTerms')}`);
-      }
-
-      if (company.get('guarantee')) {
-        recruiterDataArray.push(`${company.get('guarantee')} days`);
-      }
-
-      let recruiterData = null;
-      if (recruiterDataArray.length) {
-        recruiterData = recruiterDataArray.join(' | ');
-      }
-
-      // location stuff
-      let location = company.get('location');
-
-      if (location) {
-        let address = location.get('addressLine') || '';
-        let city = location.get('city') || null;
-        let countrySubDivisionCode = location.get('countrySubDivisionCode') || null;
-
-        if (city && countrySubDivisionCode) {
-          city += `, ${countrySubDivisionCode}`;
-        }
-
-        addressLine = address;
-        if (addressLine.length && city) {
-          addressLine += `. ${city}`;
-        } else if (!addressLine.length && city) {
-          addressLine = city;
-        }
-      }
+      // let recruiterDataArray = [];
+      //
+      // if (company.get('feeAgreement')) {
+      //   recruiterDataArray.push(`${company.get('feeAgreement')}%`);
+      // }
+      //
+      // if (company.get('payableTerms')) {
+      //   recruiterDataArray.push(`net ${company.get('payableTerms')}`);
+      // }
+      //
+      // if (company.get('guarantee')) {
+      //   recruiterDataArray.push(`${company.get('guarantee')} days`);
+      // }
+      //
+      // let recruiterData = null;
+      // if (recruiterDataArray.length) {
+      //   recruiterData = recruiterDataArray.join(' | ');
+      // }
 
       return (
         <div className="viewContent" style={style.viewContent}>
           <DetailsCard
-              title={company.get('name')}
-              subtitle={company.get('businessType') || 'Software Company'}
+              topTitle={company.get('name')}
+              topSubtitle={company.get('businessType') || 'Software Company'}
+              location={company.get('location')}
               cover={cover}
-              mainColor={Styles.Colors.deepPurple500}
               actions={actions}
               avatar={<CompanyAvatar style={{width: '95px'}} url={company.get('website')}/>}
               floatActionOnTap={this._handleDirections.bind(this)}
-              floatActionContent={<MapsDirections color={Styles.Colors.deepPurple500}/>}
+              floatActionContent={<FontIcon className="material-icons">directions</FontIcon>}
               floatActionLabel={'Directions'}
-              extraLeftLine={recruiterData}
-              topTags={company.get('tags') || []}
               stats={stats}
           />
 
         <CustomTabsSwipe isLight isInline={inline} startingTab={this.props.tab} onChange={this.tabChange.bind(this)} tabs={['Details', 'Jobs', 'Contacts', 'Notes','Data']}>
             <div>
-
-              <List>
-
+              <Card>
                 {(addressLine) ? (
-                  <div>
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                        primaryText={addressLine}
-                        // secondaryText={<p>address</p>}
-                        // secondaryTextLines={0}
-                    />
-                  </div>
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(addressLine,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">place</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
                 ) : (null)}
 
                 {(website) ? (
-                  <div>
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">public</FontIcon>}
-                        primaryText={website}
-                        // secondaryText={<p>website</p>}
-                        // secondaryTextLines={0}
-                    />
-                  </div>
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(website,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
                 ) : (null)}
 
                 {(phone) ? (
-                  <div>
-                    <ListItem
-                        leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                        primaryText={phone}
-                        // secondaryText={<p>phone</p>}
-                        // secondaryTextLines={0}
-                    />
-                  </div>
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(phone,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">phone</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
                 ) : (null)}
-              </List>
-
+              </Card>
               <Card>
                 <CardText>
-                  {this.renderBigListItem('Company Mission',company.get('productSolution'),
+                  {this.renderBigListItem('Company Mission','kaka',
                   <Avatar
-                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">store</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -361,7 +360,6 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Culture',company.get('culture'),
                   <Avatar
-                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">face</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -370,7 +368,6 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Benefits',company.get('benefits'),
                   <Avatar
-                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">redeem</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -379,7 +376,6 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Tech Stack',company.get('techstack'),
                   <Avatar
-                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">storage</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -388,7 +384,6 @@ export default class ClientDetails extends React.Component {
                 <CardText>
                   {this.renderBigListItem('Leadership',company.get('leadership'),
                   <Avatar
-                      style={{marginLeft:'-6px'}}
                       icon={<FontIcon className="material-icons">stars</FontIcon>}
                       color={Styles.Colors.grey600}
                       backgroundColor={Styles.Colors.white}
@@ -523,7 +518,7 @@ export default class ClientDetails extends React.Component {
       return (
         <div>
           <Header showHome={true} goBack={this.goBack.bind(this)} iconRight={
-            <IconMenu iconButtonElement={<IconButton  iconClassName="material-icons">more_vert</IconButton>}>
+            <IconMenu iconButtonElement={<IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>}>
               <MenuItem index={0} onTouchTap={this.editClientModalOpen.bind(this)} primaryText="Edit Client" />
               <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
               <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />
@@ -553,7 +548,7 @@ export default class ClientDetails extends React.Component {
           >
             <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
               <Header goBack={this.goBack.bind(this)} iconRight={
-                <IconMenu iconButtonElement={<IconButton  iconClassName="material-icons">more_vert</IconButton>}>
+                <IconMenu iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}>
                   <MenuItem index={0} onTouchTap={this.editClientModalOpen.bind(this)} primaryText="Edit Client" />
                   <MenuItem index={0} onTouchTap={this.createContactModalOpen.bind(this)} primaryText="Add Contact" />
                   <MenuItem index={0} onTouchTap={this.createJobModalOpen.bind(this)} primaryText="Add Job" />

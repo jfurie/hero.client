@@ -5,11 +5,10 @@ import { replaceNoteLocal } from '../../../modules/notes/index';
 import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
-import CommunicationChat from 'material-ui/lib/svg-icons/communication/chat';
 
 import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, JSONTree } from '../../../components/web';
 import {
-  IconButton, List, ListItem, FontIcon, Avatar,
+  IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
 } from 'material-ui';
 import image from './image';
@@ -45,6 +44,10 @@ const style = {
   avatar: {
     margin: '8px 17px 8px 0px',
     marginLeft:'-6px',
+  },
+  smallListItem: {
+    padding: 0,
+    margin: '16px',
   },
 };
 
@@ -264,6 +267,14 @@ export default class ContactDetails extends React.Component {
     // displayName
     let displayName = contact.get('displayName') || null;
 
+    let location = contact.get('location') || null;
+
+    let desiredSalary;
+
+    if (contact.get('desiredSalary')) {
+      desiredSalary = `$${~~(contact.get('desiredSalary')) / 1000}k`;
+    }
+
     return {
       cover: image, //`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       city,
@@ -271,7 +282,9 @@ export default class ContactDetails extends React.Component {
       avatarUrl: `https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       companyName,
       title,
-      subtitleAvatar
+      subtitleAvatar,
+      location,
+      desiredSalary,
     };
   }
 
@@ -308,68 +321,48 @@ export default class ContactDetails extends React.Component {
       onTouchTap: this._onTouchTapShare.bind(this),
     }];
 
-    let stats = [{
-      title: 'Applied',
-      value: 0,
-    }, {
-      title: 'Submitted',
-      value: 0,
-    }, {
-      title: 'Accepted',
-      value: 0,
-    }, {
-      title: 'Interviews',
-      value: 0,
-    }, {
-      title: 'Offers',
-      value: 0,
-    }, {
-      title: 'Jobs',
-      value: 0,
-    }];
+    // let stats = [{
+    //   title: 'Applied',
+    //   value: 0,
+    // }, {
+    //   title: 'Submitted',
+    //   value: 0,
+    // }, {
+    //   title: 'Accepted',
+    //   value: 0,
+    // }, {
+    //   title: 'Interviews',
+    //   value: 0,
+    // }, {
+    //   title: 'Offers',
+    //   value: 0,
+    // }, {
+    //   title: 'Jobs',
+    //   value: 0,
+    // }];
 
     // salary
-    let salaryMin = null;
-    let salaryMax = null;
-    let extraLeftLine = null;
-
-    if (contact.get('currentSalary')) {
-      let currentSalary = parseInt(contact.get('currentSalary'));
-      salaryMin = `$${~~(currentSalary) / 1000}k`;
-    }
-
-    if (contact.get('desiredSalary')) {
-      let desiredSalary = parseInt(contact.get('desiredSalary'));
-      salaryMax = `$${~~(desiredSalary) / 1000}k`;
-    }
-
-    if (salaryMin && salaryMax) {
-      extraLeftLine = `${salaryMin} - ${salaryMax}`;
-    } else if (salaryMin && !salaryMax) {
-      extraLeftLine = `- ${salaryMax}`;
-    } else if (!salaryMin && salaryMax) {
-      extraLeftLine = `${salaryMin} -`;
-    }
-    let style ={
-      title:{
-        color:Styles.Colors.black,
-      },
-      subtitle:{
-        color:Styles.Colors.black,
-      },
-      extraLeftLine:{
-        color:Styles.Colors.black,
-      },
-      extraRightLine:{
-        color:Styles.Colors.black,
-      },
-      extraCenterLine:{
-        color:Styles.Colors.black,
-      },
-      floatActionLabel:{
-        color:Styles.Colors.black,
-      },
-    };
+    // let salaryMin = null;
+    // let salaryMax = null;
+    // let extraLeftLine = null;
+    //
+    // if (contact.get('currentSalary')) {
+    //   let currentSalary = parseInt(contact.get('currentSalary'));
+    //   salaryMin = `$${~~(currentSalary) / 1000}k`;
+    // }
+    //
+    // if (contact.get('desiredSalary')) {
+    //   let desiredSalary = parseInt(contact.get('desiredSalary'));
+    //   salaryMax = `$${~~(desiredSalary) / 1000}k`;
+    // }
+    //
+    // if (salaryMin && salaryMax) {
+    //   extraLeftLine = `${salaryMin} - ${salaryMax}`;
+    // } else if (salaryMin && !salaryMax) {
+    //   extraLeftLine = `- ${salaryMax}`;
+    // } else if (!salaryMin && salaryMax) {
+    //   extraLeftLine = `${salaryMin} -`;
+    // }
     // workAuthorization
     let workAuthorization = contact.get('workAuthorization') || null;
 
@@ -383,48 +376,77 @@ export default class ContactDetails extends React.Component {
       tags.push(contact.get('status'));
     }
 
+    let avatar = (
+      <div style={{position: 'relative'}}>
+        <img style={{width: '95px', height:'95px', borderRadius:'0px'}} src={common.avatarUrl}/>
+        <img
+          style={{
+            width: '35px',
+            height:'35px',
+            borderRadius:'0px',
+            position: 'absolute',
+            bottom: '4px',
+            right: 0,
+            border: '2px solid white',
+            borderBottom: 'none',
+            borderRight: 'none',
+          }}
+          src="http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png"/>
+      </div>
+    );
 
     return (
       <DetailsCard
-          title={common.displayName}
-          style={style}
-          subtitle={common.companyName}
-          subtitle2={common.title}
+          topTitle={common.displayName}
+          topSubtitle={common.companyName}
+          location={common.location}
+          bottomLabel="Current Title"
+          bottomTitle={common.title}
+          rightLabel="Desired Wage"
+          rightTitle={common.desiredSalary}
+          rightSubtitle={workAuthorization}
           cover={common.cover}
-          mainColor={Styles.Colors.white}
           actions={actions}
-          stats={stats}
-          showStats={false}
-          avatar={<img style={{width: '95px', height:'95px', borderRadius:'0px'}} src={common.avatarUrl}/>}
+          avatar={avatar}
           floatActionOnTap={this._handleTapOnChat.bind(this)}
-          floatActionContent={<CommunicationChat color={Styles.Colors.black}/>}
-          topTags={tags || []}
-          extraLeftLine={extraLeftLine}
-          extraRightLine={workAuthorization}
-          floatActionLabel={'Message'}
-          subtitleAvatar={common.subtitleAvatar}
+          floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
+          floatActionLabel={'Share'}
       />
     );
   }
 
-  renderBigListItem(title, content, iconName){
+  renderBigListItem(title,content,avatar){
     return (
-      <CardText>
-        <div style={{display:'flex'}}>
-          <div style={{flex:'0 0 56px'}}>
-            <Avatar
-                icon={<FontIcon className="material-icons">{iconName}</FontIcon>}
-                color={Styles.Colors.grey600}
-                style={style.avatar}
-                backgroundColor={Styles.Colors.white}
-            />
-          </div>
-          <div style={{display:'inline-block'}}>
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        {
+          content ?
+          <div style={{display: 'inline-block'}}>
             <div style={style.title}>{title}</div>
             <div style={style.content}>{content}</div>
           </div>
+          :
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <div style={style.title}>{title}</div>
+          </div>
+        }
+
+      </div>
+    );
+  }
+
+  renderSmallListItem(content,avatar){
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
         </div>
-      </CardText>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
+        </div>
+      </div>
     );
   }
 
@@ -510,61 +532,76 @@ export default class ContactDetails extends React.Component {
           {this.renderCandidateDetailsCard(contact)}
           <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes','Data']}>
             <div style={{minHeight:'800px'}}>
+              <Card>
+                {(addressLine) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(addressLine,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">place</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
 
-              <List style={{position: 'relative', top: '3px'}}>
-                <div>
+                {(resume) ? (
+                  <CardText
+                    style={style.smallListItem}
+                    onTouchTap={this.clickResume.bind(this)}>
+                    {this.renderSmallListItem('Resume',
+                    <Avatar
+                        icon={<FontIcon className="material-icons">description</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
 
-                  <ListItem
-                      leftIcon={<FontIcon className="material-icons">place</FontIcon>}
-                      primaryText={addressLine || 'Somewhere, USA'}
-                  />
-                  {(resume) ? (
-                    <div>
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">description</FontIcon>}
-                          primaryText={'Resume'}
-                          onTouchTap={this.clickResume.bind(this)}
-                      />
-                    </div>
-                  ) : (null)}
+                {(email) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(email,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">mail</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
 
-                  {(email) ? (
-                    <div>
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">mail</FontIcon>}
-                          primaryText={email}
-                      />
-                    </div>
-                  ) : (null)}
+                {(phone) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(phone,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">phone</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
 
-                  {(phone) ? (
-                    <div>
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">phone</FontIcon>}
-                          primaryText={phone}
-                      />
-                    </div>
-                  ) : (null)}
+                {(source) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(source,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">redo</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
 
-                  {(source) ? (
-                    <div>
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
-                          primaryText={source}
-                      />
-                    </div>
-                  ) : (null)}
-                  {(website) ? (
-                    <div>
-                      <ListItem
-                          leftIcon={<FontIcon className="material-icons">redo</FontIcon>}
-                          primaryText={website}
-                      />
-                    </div>
-                  ) : (null)}
+                {(website) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderSmallListItem(website,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+              </Card>
 
-                </div>
-              </List>
               <Card style={style.card}>
 
                 {(description.length > 0) ? (
@@ -668,7 +705,7 @@ export default class ContactDetails extends React.Component {
     return (
       <div>
         <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
-          <IconMenu iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}>
+          <IconMenu iconButtonElement={<IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>}>
             <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (
               <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />

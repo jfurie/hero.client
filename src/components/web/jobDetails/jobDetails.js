@@ -60,16 +60,24 @@ export default class JobDetails extends React.Component {
     };
   }
 
-  renderBigListItem(title, content, avatar){
+  renderBigListItem(title,content,avatar){
     return (
       <div style={{display:'flex'}}>
         <div style={{flex:'0 0 56px'}}>
           {avatar}
         </div>
-        <div style={{display:'inline-block'}}>
-          <div style={style.title}>{title}</div>
-          <div style={style.content}>{content}</div>
-        </div>
+        {
+          content ?
+          <div style={{display: 'inline-block'}}>
+            <div style={style.title}>{title}</div>
+            <div style={style.content}>{content}</div>
+          </div>
+          :
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <div style={style.title}>{title}</div>
+          </div>
+        }
+
       </div>
     );
   }
@@ -157,11 +165,11 @@ export default class JobDetails extends React.Component {
       }
 
       // fee
-      let fee = 'Fee: [?]%';
-
-      if (job.get('fee')) {
-        fee = `Fee: ${job.get('fee')}%`;
-      }
+      // let fee = 'Fee: [?]%';
+      //
+      // if (job.get('fee')) {
+      //   fee = `Fee: ${job.get('fee')}%`;
+      // }
 
       let isHot = false;
 
@@ -246,17 +254,19 @@ export default class JobDetails extends React.Component {
 
         <div>
           <DetailsCard
-              title={job.get('title')}
-              subtitle={`${companyName} - ${job.get('department')}`}
-              extraLeftLine={`${salaryMin} - ${salaryMax}`}
-              extraCenterLine={fee}
-              extraRightLine={job.get('jobType') || 'Permanent'}
+              topTitle={job.get('company').get('name')}
+              topSubtitle={`${companyName} - ${job.get('department')}`}
+              location={job.get('location')}
+              bottomLabel="Job Title"
+              bottomTitle={job.get('title')}
+              rightLabel="Wage"
+              rightTitle={`${salaryMin} - ${salaryMax}`}
+              rightSubtitle={job.get('jobType') || 'Permanent'}
               cover={cover}
-              mainColor={Styles.Colors.amber700}
               actions={actions}
               avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '95px'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
-              floatActionContent={<div><p style={{color: `${Styles.Colors.amber700}`, fontSize: '20px', fontWeight: '500'}}>{job.get('candidates').length}</p></div>}
+              floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
               floatActionLabel={'Share'}
               topTags={job.get('tags') || []}
               stats={stats}
@@ -332,7 +342,7 @@ export default class JobDetails extends React.Component {
       <div>
         <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
           <IconMenu iconButtonElement={
-            <IconButton iconClassName="material-icons">more_vert</IconButton>
+            <IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>
           }>
             <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />

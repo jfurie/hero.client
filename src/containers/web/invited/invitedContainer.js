@@ -69,7 +69,7 @@ class InvitedPage extends React.Component {
     return (
       <div>
         <div id="invited-box" className="row center-xs center-md">
-          <div className="col-xs-10 col-md-4">
+          <div className="col-xs-10">
             <h1>Welcome!</h1>
             <p>Please choose a password for your account.</p>
             <ChangePasswordForm onPassword={this.changePassword.bind(this)} onError={this.showError.bind(this)}/>

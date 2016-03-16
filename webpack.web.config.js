@@ -4,13 +4,13 @@ var path = require('path');
 var webpack = require('webpack');
 var _ = require('lodash');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var env = process.env.NODE_ENV || 'development';
-var isDEV =  env = 'development';
-
+var env = process.env.NODE_ENV || 'local';
+var isDEV =  env == 'local';
+console.log('process.env.NODE_ENV',process.env.NODE_ENV);
 var original = {
-  debug: true,
-  //watch:true,
-  devtool: 'source-map',
+  debug: isDEV,
+  watch:isDEV,
+  devtool: isDEV?'source-map':'',
   entry: {
     //'index.ios': ['./src/main.ios.js'],
     //'index.android': ['./src/main.android.js'],
@@ -52,11 +52,21 @@ var original = {
       },
     ],
   },
+  resolve: {
+    alias: {
+      config: path.join(__dirname, 'config', env)
+    }
+  },
   plugins:isDEV? [
     new ExtractTextPlugin('../css/components.css', {
       allChunks: true,
     }),
   ] : [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': '"production"'
+      }
+    }),
     new webpack.optimize.UglifyJsPlugin({minimize: true}),
     new ExtractTextPlugin('../css/components.css', {
       allChunks: true,

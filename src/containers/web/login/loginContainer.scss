@@ -5,22 +5,22 @@
         margin-bottom: 50px;
     }
 
-    @media (min-width: 64em) { /* desktop */
-
-        padding-top: 10%;
-
-        form {
-            background-color: #FFF;
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 1px 2px 9px rgba(0, 0, 0, 0.17);
-        }
-
-        .loginLogo {
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
-    }
+    // @media (min-width: 64em) { /* desktop */
+    //
+    //     padding-top: 10%;
+    // 
+    //     form {
+    //         background-color: #FFF;
+    //         padding: 20px;
+    //         border-radius: 4px;
+    //         box-shadow: 1px 2px 9px rgba(0, 0, 0, 0.17);
+    //     }
+    //
+    //     .loginLogo {
+    //         margin-top: 0px;
+    //         margin-bottom: 0px;
+    //     }
+    // }
 }
 
 .row-top {
