@@ -248,7 +248,7 @@ export function saveJobsByContactResult(jobs, contactId){
   };
 }
 
-export function getJobDetail(id) {
+export function getJobDetail(id, include) {
   return (dispatch) => {
     dispatch({
       types: [constants.GET_JOB_DETAIL, constants.GET_JOB_DETAIL_SUCCESS, constants.GET_JOB_DETAIL_FAIL],
@@ -263,11 +263,11 @@ export function getJobDetail(id) {
           dispatch(getLocationsByIdsIfNeeded([job.locationId]));
         }
 
-        if (company.talentAdvocateId) {
-          dispatch(getContactsByIdsIfNeeded([company.talentAdvocateId]));
+        if (job.talentAdvocateId) {
+          dispatch(getContactsByIdsIfNeeded([job.talentAdvocateId]));
         }
 
-        if (job.notes) {
+        if (include && include.indexOf('notes') > -1 && job.notes) {
           let noteIds = [];
 
           job.notes.map((note => {
@@ -276,6 +276,8 @@ export function getJobDetail(id) {
 
           dispatch(getNotesByIdsIfNeeded(noteIds));
         }
+
+        return job;
       }),
     });
   };

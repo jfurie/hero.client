@@ -5,7 +5,7 @@ import Immutable from 'immutable';
 
 import { ClientDetails } from '../../../components/web';
 
-import { getOneCompany, getCompanyDetail, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
+import { getOneCompany, getCompanyDetails, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByCompanyId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
@@ -56,7 +56,7 @@ function getData(state, props) {
 
 @connect((state, props) => (
 getData(state, props)), {
-  getOneCompany, getCompanyDetail, getOneLocation,
+  getOneCompany, getCompanyDetails, getOneLocation,
   getAllContacts, getContactsByCompany, getJobsByCompany,
   pushState, updateJobLocal, updateJobImageLocal, saveLocalJob,
   replaceJobLocal, getOneJob, getImageByCompanyId, getAllJobCandidates,
@@ -83,7 +83,7 @@ class ClientDetailsPage extends React.Component {
 
     setTimeout(() => {
       if(self.props.params.companyId){
-        self.props.getCompanyDetail(self.props.params.companyId);
+        self.props.getCompanyDetails(self.props.params.companyId);
         self.props.getImageByCompanyId(self.props.params.companyId);
       }
 

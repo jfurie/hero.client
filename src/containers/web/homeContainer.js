@@ -5,7 +5,7 @@ import { Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionBut
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs, createJobFavorite, deleteJobFavorite } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
-import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
+import { getCompanyDetails, getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
 import { createTempContact, getMyFavoriteContacts, createContactFavorite, deleteContactFavorite } from '../../modules/contacts';
 
 import { Styles } from 'material-ui';
@@ -30,12 +30,18 @@ let getData = (state, props) => {
 
   let currentFavorites = state.favorites.get('list');
   let favoriteMap = {};
-  currentFavorites.map(function(favorites){
-    favoriteMap[favorites.get('favorableId')] = 1;
-  })
+
+  let favoriteCompanyIds = [];
+  currentFavorites.map(function(favorite){
+    favoriteMap[favorite.get('favorableId')] = 1;
+    if (favorite.get('favorableType') == 'company') {
+      favoriteCompanyIds.push(favorite.get('favorableId'));
+    }
+  });
   let favoriteContacts = state.contacts.get('list').filter(x=>favoriteMap[x.get('id')]);
   let favoriteJobs = state.jobs.get('list').filter(x=>favoriteMap[x.get('id')]);
   let favoriteCompanies = state.companies.get('list').filter(x=>favoriteMap[x.get('id')]);
+
 
   return {
     tab,
@@ -47,10 +53,11 @@ let getData = (state, props) => {
     favoriteContacts,
     favoriteCompanies,
     favoriteJobs,
+    favoriteCompanyIds,
   };
 };
 
-@connect(getData, {pushState, replaceState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs, createContactFavorite, deleteContactFavorite})
+@connect(getData, {pushState, getCompanyDetails, replaceState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs, createContactFavorite, deleteContactFavorite})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -68,6 +75,14 @@ class HomePage extends React.Component {
     //this.props.getMyFavoriteJobs();
     //this.props.getMyFavoriteCompanies();
     //this.props.getMyFavoriteContacts();
+    // let self = this;
+    //
+    // setTimeout(() => {
+    //   if(self.props.favoriteCompanyIds){
+    //
+    //     self.props.getCompanyDetails(self.props.favoriteCompanyIds, ['contacts']);
+    //   }
+    // }, 500);
   }
 
   _handleJobClick(job){

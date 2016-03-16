@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import Immutable from 'immutable';
 
-import { getCompanyDetail, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
+import { getCompanyDetails, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
 
 import { ClientListItem } from '../../../components/web';
 
@@ -20,7 +20,7 @@ function getData(state, props) {
 
 @connect((state, props) => (
 getData(state, props)), {
-  getCompanyDetail, pushState,
+  getCompanyDetails, pushState,
 })
 class ClientCardContainer extends React.Component {
 
@@ -32,13 +32,13 @@ class ClientCardContainer extends React.Component {
   }
 
   componentDidMount() {
-    let self = this;
-
-    setTimeout(() => {
-      if(self.props.companyId){
-        self.props.getCompanyDetail(self.props.companyId);
-      }
-    }, 500);
+    // let self = this;
+    //
+    // setTimeout(() => {
+    //   if(self.props.companyId){
+    //     self.props.getCompanyDetails([self.props.companyId], ['contacts']);
+    //   }
+    // }, 500);
   }
 
   openDetails() {
