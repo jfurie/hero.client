@@ -49,11 +49,11 @@ class CustomTabsSwipe extends React.Component {
 
     if (slideIndex < 0) slideIndex = 0;
 
-    this.state = {
+    let clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.state= {
       slideIndex,
+      'windowWidth':clientWidth,
     };
-    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    this.state= {'windowWidth':clientWidth};
     this.handleResize = this.handleResize.bind(this);
   }
 
@@ -129,9 +129,7 @@ class CustomTabsSwipe extends React.Component {
     isLight = isLight || false;
 
     let tabsStyle = style.tabs;
-    let tabStyle = {
-      textTransform: 'capitalize',
-    };
+    let tabStyle = {};
 
     if (isLight) {
       tabsStyle = style.tabsLight;
@@ -204,7 +202,7 @@ class CustomTabsSwipe extends React.Component {
 CustomTabsSwipe.propTypes = {
   isLight: React.PropTypes.bool,
   onSwipeEnd: React.PropTypes.func,
-  startingTab: React.PropTypes.number,
+  startingTab: React.PropTypes.string,
   tabs: React.PropTypes.array.isRequired,
 };
 
