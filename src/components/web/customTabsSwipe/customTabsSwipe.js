@@ -29,6 +29,7 @@ const style = {
     fontWeight:'800',
     borderBottom:'2px solid #505050',
     color: Styles.Colors.grey900,
+    textTransform: 'none',
   },
   inkBar: {
     marginTop: '0px',
