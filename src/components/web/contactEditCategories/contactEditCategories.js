@@ -86,10 +86,10 @@ export default class ContactEditCategoriesContainer extends React.Component {
     this._handleSubmit = this._handleSubmit.bind(this);
   }
   _handleClose(){
-
+    this.props.history.goBack();
   }
   _handleSubmit(){
-
+    this.props.history.goBack();
   }
   _handleChange(categoryItem, currentContactCategory, value){
     console.log(value);

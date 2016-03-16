@@ -57,11 +57,15 @@ export default function reducer(state = initialState, action = {}) {
     return state.set('loginError', null);
   case constants.AUTHLOCALSTORAGE:
     return state;
+  case constants.AUTHACCCESSTOKEN:{
+    return state.set('checking', true);
+  }
   case constants.AUTHACCCESSTOKEN_SUCCESS:
   case constants.AUTHLOCALSTORAGE_SUCCESS:
     return state.withMutations(ctx => {
       ctx.set('loggingIn',false)
       .set('contact',Immutable.fromJS(action.result.contact))
+      .set('checking', false)
       .set('user',Immutable.fromJS(action.result.user))
       .set('authToken',Immutable.fromJS(action.result.authToken));
     });
@@ -70,6 +74,7 @@ export default function reducer(state = initialState, action = {}) {
       ctx.set('loggingIn',false)
       .set('user',null)
       .set('authToken',null)
+      .set('checking', false)
       .set('contact',null)
       .set('loginError',Immutable.fromJS(action.error));
     });

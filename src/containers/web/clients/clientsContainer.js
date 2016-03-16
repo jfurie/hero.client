@@ -19,7 +19,7 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
     visibleCompanies = state.companies.get('myCompanyIds');
   }
   //filter hero contacts
-  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+  let heroContactIds = state.contacts.get('byCompanyId').get(HEROCOMPANYID);
   let heroContacts = null;
   if(heroContactIds){
     heroContacts = state.contacts.get('list').filter(x =>{
