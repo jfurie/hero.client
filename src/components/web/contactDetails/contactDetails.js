@@ -6,7 +6,7 @@ import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
 
-import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, JSONTree } from '../../../components/web';
+import { LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, JSONTree } from '../../../components/web';
 import {
   IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
@@ -536,6 +536,7 @@ export default class ContactDetails extends React.Component {
           <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes','Data']}>
             <div style={{minHeight:'800px'}}>
               <Card>
+                <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(addressLine) ? (
                   <CardText style={style.smallListItem}>
                     {this.renderSmallListItem(addressLine,
@@ -604,6 +605,8 @@ export default class ContactDetails extends React.Component {
                   </CardText>
                 ) : (null)}
               </Card>
+
+              <LocationCard location={contact.get('location')} />
 
               <Card style={style.card}>
                 <CardText>
