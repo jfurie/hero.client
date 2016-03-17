@@ -19,10 +19,22 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_FAVORITES_SUCCESS:{
     let favoriteMap = {};
 
-    action.result.map(result =>{
+    action.result.map(result => {
       favoriteMap[result.id] = result;
-    })
+    });
+
     return state.set('list',Immutable.fromJS(favoriteMap));
+  }
+  case constants.CREATE_COMPANY_FAVORITE_SUCCESS: {
+    let favoriteMap = {};
+
+    favoriteMap[action.result.id] = action.result;
+
+    return state.set('list', state.get('list').mergeDeep(favoriteMap));
+  }
+  case constants.DELETE_COMPANY_FAVORITE_SUCCESS: {
+
+    return state.set('list', state.get('list').delete(action.result.id));
   }
   case authConstants.LOGIN_SUCCESS:
   case authConstants.AUTHLOCALSTORAGE_SUCCESS:{

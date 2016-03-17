@@ -249,7 +249,7 @@ class HomePage extends React.Component {
 
   render () {
 
-    let { contacts, companies, jobs, favoriteContacts, favoriteCompanies, favoriteJobs } = this.props;
+    let { favoriteContacts, favoriteCompanies, favoriteJobs } = this.props;
 
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>

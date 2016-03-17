@@ -1,11 +1,20 @@
 import Immutable from 'immutable';
-const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 export default function getCompanyDataFromState(state, companyId) {
 
   let company = ((state.companies.get('list').size > 0) ? (state.companies.get('list').get(companyId)) : (null));
 
   if (company) {
+    let isFavorited = false;
+
+    if (state.favorites.get('list').filter(x => {
+      return x.get('favorableId') == company.get('id');
+    }).size > 0) {
+      isFavorited = true;
+    }
+
+    company = company.set('isFavorited', isFavorited);
+
     let companyImage = company ? state.resources.list.get(company.get('imageId')) : new Immutable.Map();
     company = company.set('image', companyImage);
 
@@ -15,7 +24,7 @@ export default function getCompanyDataFromState(state, companyId) {
     if (company.has('jobs')) {
       let companyJobIds = [];
       company.get('jobs').map((job => {
-          companyJobIds.push(job.get('id'));
+        companyJobIds.push(job.get('id'));
       }));
 
       if (companyJobIds) {
@@ -33,7 +42,7 @@ export default function getCompanyDataFromState(state, companyId) {
     if (company.has('notes')) {
       let companyNoteIds = [];
       company.get('notes').map((note => {
-          companyNoteIds.push(note.get('id'));
+        companyNoteIds.push(note.get('id'));
       }));
 
       if (companyNoteIds) {
@@ -55,7 +64,7 @@ export default function getCompanyDataFromState(state, companyId) {
     if (company.has('contacts')) {
       let companyContactIds = [];
       company.get('contacts').map((contact => {
-          companyContactIds.push(contact.get('id'));
+        companyContactIds.push(contact.get('id'));
       }));
 
       if (companyContactIds) {

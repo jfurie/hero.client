@@ -5,7 +5,8 @@ import Immutable from 'immutable';
 
 import { ClientDetails } from '../../../components/web';
 
-import { getOneCompany, getCompanyDetails, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
+import { getOneCompany, getCompanyDetails } from '../../../modules/companies/index';
+import { createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/favorites';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByCompanyId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
@@ -152,8 +153,8 @@ class ClientDetailsPage extends React.Component {
     });
   }
   _inviteHandler(){
-    var email = this.state.detailsContact.get('email');
-    this.props.invite(email, window.location.origin + '/invited');
+    let email = this.state.detailsContact.get('email');
+    this.props.invite(email, `${window.location.origin}/invited`);
   }
 
   createNoteModalOpen() {
@@ -198,10 +199,10 @@ class ClientDetailsPage extends React.Component {
     }
   }
   editClientModalOpen(){
-    this.props.pushState({}, `/clients/${this.props.params.companyId}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/create?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
   }
   addContactModalOpen(){
-    this.props.pushState({}, `/clients/${this.props.params.companyId}/contacts/search?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/contacts/search?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
   }
 
   addJobModalOpen(){
@@ -217,13 +218,13 @@ class ClientDetailsPage extends React.Component {
   addNoteModalOpen(note){
     if (!note) {
       note = new Immutable.Map({
-        id: 'tmp_' + this._guid(),
+        id: `tmp_${this._guid()}`,
         privacyValue: 0,
       });
     }
 
     this.props.replaceNoteLocal(note);
-    this.props.pushState({}, `/clients/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
   }
 
   favoriteCompany() {

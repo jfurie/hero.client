@@ -233,7 +233,7 @@ export default function reducer(state = initialState, action = {}) {
     let image = {
       imageId:action.result.id,
       isUploading:false,
-      percentUploaded:100
+      percentUploaded:100,
     };
     company[action.id] = image;
 
@@ -244,7 +244,7 @@ export default function reducer(state = initialState, action = {}) {
 
     let image = {
       isUploading:true,
-      percentUploaded:action.result
+      percentUploaded:action.result,
     };
     company[action.id] = image;
 
@@ -304,7 +304,7 @@ export function createTempCompany(company){
 }
 
 export function createCompany(company) {
-  var id = company.get('id');
+  let id = company.get('id');
   if(id && id.indexOf('tmp') > -1){
     company = company.remove('id');
   }
@@ -320,7 +320,7 @@ export function createCompany(company) {
 }
 
 export function editCompany(company) {
-  var id = company.id;
+  let id = company.id;
   if(!company.id){
     id = company.get('id');
   }
@@ -350,8 +350,8 @@ export function getMyCompanies() {
       {
         relation:'contacts',
         scope:{
-          fields: ['id']
-        }
+          fields: ['id'],
+        },
       },
     ],
   };
@@ -445,20 +445,20 @@ export function saveCompaniesResult(companies){
 export function getCompanyDetails(companyIds, include) {
   let filter = {
     where: {
-      id: {inq:companyIds}
+      id: {inq:companyIds},
     },
     include:[
       {
         relation:'jobs',
         scope:{
-          fields: ['id']
-        }
+          fields: ['id'],
+        },
       },
       {
         relation:'contacts',
         scope:{
-          fields: ['id']
-        }
+          fields: ['id'],
+        },
       },
       {
         relation:'notes',
@@ -466,12 +466,12 @@ export function getCompanyDetails(companyIds, include) {
           order: 'updated DESC',
           where: { or: [
             {and: [{privacyValue: 0}, {userId: '123'}]},
-            {privacyValue: 1}
+            {privacyValue: 1},
           ]},
-          fields: ['id']
-        }
-      }
-    ]
+          fields: ['id'],
+        },
+      },
+    ],
   };
 
   let filterString = encodeURIComponent(JSON.stringify(filter));
@@ -585,14 +585,14 @@ export function getCompaniesByIds(companyIds){
         } else {
           return Promise.resolve([]);
         }
-      }
+      },
     });
   };
 }
 
 export function getCompaniesByIdsIfNeeded(companyIds){
   return (dispatch, getState) => {
-    var newCompanyIds =[];
+    let newCompanyIds =[];
     companyIds.map((companyId => {
       if(!getState().companies.get('list').get(companyId)){
         newCompanyIds.push(companyId);

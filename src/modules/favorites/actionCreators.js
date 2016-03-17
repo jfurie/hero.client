@@ -1,7 +1,4 @@
 import * as constants from './constants';
-import {actionTypes} from 'redux-localstorage';
-// function getFavorites(context){
-
 
 export function getFavoritesByUserId(userId){
   return (dispatch) => {
@@ -16,7 +13,25 @@ export function getFavoritesByUserId(userId){
           ).then(response => {
             return response;
           });
-      }
+      },
     });
+  };
+}
+
+export function createCompanyFavorite(companyId){
+  return {
+    types: [constants.CREATE_COMPANY_FAVORITE, constants.CREATE_COMPANY_FAVORITE_SUCCESS, constants.CREATE_COMPANY_FAVORITE_FAIL],
+    promise: (client, auth) => client.api.post(`/companies/${companyId}/favorites`, {
+      authToken: auth.authToken,
+    }),
+  };
+}
+
+export function deleteCompanyFavorite(companyId){
+  return {
+    types: [constants.DELETE_COMPANY_FAVORITE, constants.DELETE_COMPANY_FAVORITE_SUCCESS, constants.DELETE_COMPANY_FAVORITE_FAIL],
+    promise: (client, auth) => client.api.del(`/companies/unfavorite?id=${companyId}`, {
+      authToken: auth.authToken,
+    }),
   };
 }
