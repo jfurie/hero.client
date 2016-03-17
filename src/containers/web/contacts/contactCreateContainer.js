@@ -19,7 +19,7 @@ let getData = (state, props) => {
   }
 
   if (props.params.companyId) {
-    company = state.companies.list.get(props.params.companyId);
+    company = state.companies.get('list').get(props.params.companyId);
   }
 
   return {

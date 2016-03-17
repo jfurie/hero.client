@@ -1,7 +1,7 @@
 import * as constants from './constants';
 import { getFavoritesByUserId } from '../favorites';
 import { getContactsByIdsIfNeeded } from '../contacts';
-import { getCompaniesByIdsIfNeeded } from '../companies';
+import { getCompanyDetails } from '../companies';
 import { getJobsByIdsIfNeeded } from '../jobs';
 
 export function isLoaded(globalState) {
@@ -99,7 +99,7 @@ function postLogin(auth, client, state, dispatch){
     }
     dispatch(getContactsByIdsIfNeeded(contactIds));
     dispatch(getJobsByIdsIfNeeded(jobIds));
-    dispatch(getCompaniesByIdsIfNeeded(companyIds));
+    dispatch(getCompanyDetails(companyIds, ['contact']));
   });
   return getDataBasedOnUserId(context).then((context)=>{
     return context.response;

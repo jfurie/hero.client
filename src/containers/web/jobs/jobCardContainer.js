@@ -36,7 +36,7 @@ class JobCardContainer extends React.Component {
 
     setTimeout(() => {
       if(self.props.jobId){
-        self.props.getJobDetail(self.props.jobId);
+        self.props.getJobDetail(self.props.jobId, ['candidates']);
       }
     }, 500);
   }

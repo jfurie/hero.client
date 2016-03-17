@@ -10,13 +10,13 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 let getData = (state, props) => {
   let company = null;
   if(props.params.companyId){
-    company = state.companies.list.get(props.params.companyId);
+    company = state.companies.get('list').get(props.params.companyId);
   }
   //filter hero contacts
-  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+  let heroContactIds = state.contacts.get('byCompanyId').get(HEROCOMPANYID);
   let heroContacts = null;
   if(heroContactIds){
-    heroContacts = state.contacts.list.filter(x =>{
+    heroContacts = state.contacts.get('list').filter(x =>{
       return heroContactIds.indexOf(x.get('id')) > -1;
     });
   }

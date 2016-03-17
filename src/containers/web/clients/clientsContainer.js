@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, ClientsCreateModal, ClientsList } from '../../../components/web';
-import { getAllCompanies, getMyCompanies, createCompany, searchCompany, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies';
+import { getCompanyDetails, getAllCompanies, getMyCompanies, createCompany, searchCompany, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies';
 import { getCurrentAccount } from '../../../modules/currentAccount';
 import { getContactsByCompany } from '../../../modules/contacts';
 
@@ -18,6 +18,13 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
   } else {
     visibleCompanies = state.companies.get('myCompanyIds');
   }
+
+  let myCompanyIds = [];
+
+  visibleCompanies.map(x => {
+    myCompanyIds.push(x.get('id'));
+  });
+
   //filter hero contacts
   let heroContactIds = state.contacts.get('byCompanyId').get(HEROCOMPANYID);
   let heroContacts = null;
@@ -30,11 +37,12 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
   return({
     type: state.router.location.query.type,
     companies: state.companies,
+    myCompanyIds,
     visibleCompanies,
     currentAccount: state.currentAccount,
     heroContacts,
   });
-}, { getAllCompanies, getMyCompanies, createCompany, searchCompany, pushState, getCurrentAccount, getContactsByCompany, createCompanyFavorite, deleteCompanyFavorite })
+}, { getCompanyDetails, getAllCompanies, getMyCompanies, createCompany, searchCompany, pushState, getCurrentAccount, getContactsByCompany, createCompanyFavorite, deleteCompanyFavorite })
 class ClientPage extends React.Component {
 
   constructor(props) {
