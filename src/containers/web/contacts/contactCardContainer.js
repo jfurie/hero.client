@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ContactListItem } from '../../../components/web';
 @connect((state, props) => {
   return {
     contact: state.contacts.getIn('list',props.contactId)
@@ -19,8 +18,6 @@ export default class ContactCardContainer extends React.Component {
 
   }
   render(){
-    <ContactListItem
-        {...this.props}
-    />
+
   }
 }
