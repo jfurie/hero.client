@@ -29,6 +29,7 @@ const style = {
     fontWeight:'800',
     borderBottom:'2px solid #505050',
     color: Styles.Colors.grey900,
+    textTransform: 'none',
   },
   inkBar: {
     marginTop: '0px',
@@ -49,11 +50,11 @@ class CustomTabsSwipe extends React.Component {
 
     if (slideIndex < 0) slideIndex = 0;
 
-    this.state = {
+    let clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.state= {
       slideIndex,
+      'windowWidth':clientWidth,
     };
-    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    this.state= {'windowWidth':clientWidth};
     this.handleResize = this.handleResize.bind(this);
   }
 
@@ -130,7 +131,7 @@ class CustomTabsSwipe extends React.Component {
 
     let tabsStyle = style.tabs;
     let tabStyle = {
-      textTransform: 'capitalize',
+      textTransform: 'none',
     };
 
     if (isLight) {
@@ -204,7 +205,7 @@ class CustomTabsSwipe extends React.Component {
 CustomTabsSwipe.propTypes = {
   isLight: React.PropTypes.bool,
   onSwipeEnd: React.PropTypes.func,
-  startingTab: React.PropTypes.number,
+  startingTab: React.PropTypes.string,
   tabs: React.PropTypes.array.isRequired,
 };
 

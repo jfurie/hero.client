@@ -15,17 +15,17 @@ let getData = (state, props) => {
   let categories = state.categories.list;
 
   if (props.params.contactId) {
-    contact = state.contacts.list.get(props.params.contactId);
+    contact = state.contacts.get('list').get(props.params.contactId);
   }
 
   if (props.params.companyId) {
-    company = state.companies.list.get(props.params.companyId);
+    company = state.companies.get('list').get(props.params.companyId);
   }
 
   return {
     contact,
     company,
-    companies: state.companies.myCompanyIds,
+    companies: state.companies.get('myCompanyIds'),
     categories,
   };
 };

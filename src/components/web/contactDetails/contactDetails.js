@@ -6,7 +6,7 @@ import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
 
-import { Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, JSONTree } from '../../../components/web';
+import { LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, JSONTree } from '../../../components/web';
 import {
   IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
@@ -220,6 +220,9 @@ export default class ContactDetails extends React.Component {
   // }
   clickCompany(companyId){
     this.props.pushState(null, `/clients/${companyId}`);
+  }
+  editSkills(){
+    this.props.pushState(null, `/contacts/${this.props.contact.get('id')}/categories/edit`);
   }
   getCommonDetailsCard(contact) {
 
@@ -533,6 +536,7 @@ export default class ContactDetails extends React.Component {
           <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes','Data']}>
             <div style={{minHeight:'800px'}}>
               <Card>
+                <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(addressLine) ? (
                   <CardText style={style.smallListItem}>
                     {this.renderSmallListItem(addressLine,
@@ -602,41 +606,73 @@ export default class ContactDetails extends React.Component {
                 ) : (null)}
               </Card>
 
+              <LocationCard location={contact.get('location')} />
+
               <Card style={style.card}>
-
-                {(description.length > 0) ? (
-                  this.renderBigListItem('Quick pitch', description, 'info_outline')
-                ) : (null)}
-
-                {(contact.get('bonusNotes')) ? (
-                  this.renderBigListItem('Bonus note', contact.get('bonusNotes'), 'redeem')
-                ) : (null)}
-
-                {(contact.get('rfl')) ? (
-                  this.renderBigListItem('Reason for leaving', contact.get('rfl'), 'swap_horiz')
-                ) : (null)}
-
-                {(contact.get('jobsAppliedFor')) ? (
-                  this.renderBigListItem('Job(s) applied for', contact.get('jobsAppliedFor'), 'system_update_alt')
-                ) : (null)}
-
-                {(contact.get('availability')) ? (
-                  this.renderBigListItem('Availability', contact.get('availability'), 'insert_invitation')
-                ) : (null)}
-
-                {(startingDate) ? (
-                  this.renderBigListItem('Starting date', startingDate, 'insert_invitation')
-                ) : (null)}
-
-                {(contact.get('targetLocations')) ? (
-                  this.renderBigListItem('Target location(s)', contact.get('targetLocations'), 'place')
-                ) : (null)}
-
-                {(contact.get('xfactors')) ? (
-                  this.renderBigListItem('X Factors', contact.get('xfactors'), 'trending_up')
-                ) : (null)}
-
-
+                <CardText>
+                  {this.renderBigListItem('Quick pitch',description,
+                  <Avatar
+                      icon={<FontIcon className="material-icons">info_outline</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Bonus note',contact.get('bonusNotes'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">redeem</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Reason for leaving', contact.get('rfl'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">swap_horiz</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Job(s) applied for', contact.get('jobsAppliedFor'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">system_update_alt</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Availability', contact.get('availability'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">insert_invitation</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Starting date', startingDate,
+                  <Avatar
+                      icon={<FontIcon className="material-icons">insert_invitation</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Target location(s)', contact.get('targetLocations'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">place</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('X Factors', contact.get('xfactors'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">trending_up</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
               </Card>
             </div>
             <div style={{minHeight:'800px'}}>
@@ -711,6 +747,7 @@ export default class ContactDetails extends React.Component {
               <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />
             ) : (null)}
             <MenuItem index={0} onTouchTap={this.addNoteModalOpen.bind(this)} primaryText={`Create Note`} />
+            <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
           </IconMenu>
         }
         />

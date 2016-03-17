@@ -100735,7 +100735,7 @@
 	
 	function getData(state, props) {
 	  return {
-	    contact: state.contacts.list.get(props.params.contactId) || null
+	    contact: state.contacts.get('list').get(props.params.contactId) || null
 	  };
 	}
 	
@@ -101081,7 +101081,7 @@
 	    var heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
 	    var heroContacts = null;
 	    if (heroContactIds) {
-	      heroContacts = state.contacts.list.filter(function (x) {
+	      heroContacts = state.contacts.get('list').filter(function (x) {
 	        return heroContactIds.indexOf(x.get('id')) > -1;
 	      });
 	    }
@@ -101163,7 +101163,7 @@
 	  var heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
 	  var heroContacts = null;
 	  if (heroContactIds) {
-	    heroContacts = state.contacts.list.filter(function (x) {
+	    heroContacts = state.contacts.get('list').filter(function (x) {
 	      return heroContactIds.indexOf(x.get('id')) > -1;
 	    });
 	  }
@@ -101445,14 +101445,14 @@
 	      company = company.set('jobs', companyJobs);
 	      //filter clientAdvocate
 	      if (company) {
-	        talentAdvocate = state.contacts.list.get(company.get('clientAdvocateId'));
+	        talentAdvocate = state.contacts.get('list').get(company.get('clientAdvocateId'));
 	        company = company.set('clientAdvocate', talentAdvocate);
 	      }
 	      //filter hero contacts
 	      var heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
 	      var heroContacts = null;
 	      if (heroContactIds) {
-	        heroContacts = state.contacts.list.filter(function (x) {
+	        heroContacts = state.contacts.get('list').filter(function (x) {
 	          return heroContactIds.indexOf(x.get('id')) > -1;
 	        });
 	      }
@@ -101480,7 +101480,7 @@
 	      var companyContacts = new _immutable2['default'].Map();
 	
 	      if (contactsByCompanyListIds) {
-	        companyContacts = state.contacts.list.filter(function (x) {
+	        companyContacts = state.contacts.get('list').filter(function (x) {
 	          return contactsByCompanyListIds.indexOf(x.get('id')) > -1;
 	        });
 	      }
@@ -101921,7 +101921,7 @@
 	  var heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
 	  var heroContacts = null;
 	  if (heroContactIds) {
-	    heroContacts = state.contacts.list.filter(function (x) {
+	    heroContacts = state.contacts.get('list').filter(function (x) {
 	      return heroContactIds.indexOf(x.get('id')) > -1;
 	    });
 	  }
@@ -114887,7 +114887,7 @@
 	  var company = null;
 	
 	  if (props.params.contactId) {
-	    contact = state.contacts.list.get(props.params.contactId);
+	    contact = state.contacts.get('list').get(props.params.contactId);
 	  }
 	
 	  if (props.params.companyId) {
@@ -116228,7 +116228,7 @@
 	  var heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
 	  var heroContacts = null;
 	  if (heroContactIds) {
-	    heroContacts = state.contacts.list.filter(function (x) {
+	    heroContacts = state.contacts.get('list').filter(function (x) {
 	      return heroContactIds.indexOf(x.get('id')) > -1;
 	    });
 	  }

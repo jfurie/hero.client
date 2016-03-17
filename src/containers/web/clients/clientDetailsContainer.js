@@ -5,7 +5,8 @@ import Immutable from 'immutable';
 
 import { ClientDetails } from '../../../components/web';
 
-import { getOneCompany, getCompanyDetail, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies/index';
+import { getOneCompany, getCompanyDetails } from '../../../modules/companies/index';
+import { createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/favorites';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByCompanyId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
@@ -25,17 +26,17 @@ function getData(state, props) {
   let localJobResource = null;
 
 
-  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+  let heroContactIds = state.contacts.get('byCompanyId').get(HEROCOMPANYID);
   let heroContacts = null;
   if(heroContactIds){
-    heroContacts = state.contacts.list.filter(x =>{
+    heroContacts = state.contacts.get('list').filter(x =>{
       return heroContactIds.indexOf(x.get('id')) > -1;
     });
   }
 
   let tab = props.location.query.tab || 'Details';
 
-  let imageId = state.jobs.localJob.get('imageId');
+  let imageId = state.jobs.get('localJob').get('imageId');
   if (imageId) {
     localJobResource = state.resources.list.get(imageId);
   }
@@ -46,7 +47,7 @@ function getData(state, props) {
     //job: getJobDataFromState(state, jobId),
     notes: state.notes,
     localNote: state.notes.localNote,
-    localJob: state.jobs.localJob,
+    localJob: state.jobs.get('localJob'),
     localJobResource,
     heroContacts,
     defaultContact: state.auth.contact,
@@ -56,7 +57,7 @@ function getData(state, props) {
 
 @connect((state, props) => (
 getData(state, props)), {
-  getOneCompany, getCompanyDetail, getOneLocation,
+  getOneCompany, getCompanyDetails, getOneLocation,
   getAllContacts, getContactsByCompany, getJobsByCompany,
   pushState, updateJobLocal, updateJobImageLocal, saveLocalJob,
   replaceJobLocal, getOneJob, getImageByCompanyId, getAllJobCandidates,
@@ -83,7 +84,7 @@ class ClientDetailsPage extends React.Component {
 
     setTimeout(() => {
       if(self.props.params.companyId){
-        self.props.getCompanyDetail(self.props.params.companyId);
+        self.props.getCompanyDetails(self.props.params.companyId);
         self.props.getImageByCompanyId(self.props.params.companyId);
       }
 
@@ -152,8 +153,8 @@ class ClientDetailsPage extends React.Component {
     });
   }
   _inviteHandler(){
-    var email = this.state.detailsContact.get('email');
-    this.props.invite(email, window.location.origin + '/invited');
+    let email = this.state.detailsContact.get('email');
+    this.props.invite(email, `${window.location.origin}/invited`);
   }
 
   createNoteModalOpen() {
@@ -198,10 +199,10 @@ class ClientDetailsPage extends React.Component {
     }
   }
   editClientModalOpen(){
-    this.props.pushState({}, `/clients/${this.props.params.companyId}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/create?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
   }
   addContactModalOpen(){
-    this.props.pushState({}, `/clients/${this.props.params.companyId}/contacts/search?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/contacts/search?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
   }
 
   addJobModalOpen(){
@@ -217,13 +218,13 @@ class ClientDetailsPage extends React.Component {
   addNoteModalOpen(note){
     if (!note) {
       note = new Immutable.Map({
-        id: 'tmp_' + this._guid(),
+        id: `tmp_${this._guid()}`,
         privacyValue: 0,
       });
     }
 
     this.props.replaceNoteLocal(note);
-    this.props.pushState({}, `/clients/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+    this.props.pushState({}, `/clients/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
   }
 
   favoriteCompany() {

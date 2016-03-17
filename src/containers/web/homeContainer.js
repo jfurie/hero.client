@@ -5,7 +5,7 @@ import { Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionBut
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs, createJobFavorite, deleteJobFavorite } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
-import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
+import { getCompanyDetails, getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
 import { createTempContact, getMyFavoriteContacts, createContactFavorite, deleteContactFavorite } from '../../modules/contacts';
 
 import { Styles } from 'material-ui';
@@ -28,6 +28,21 @@ const style = {
 let getData = (state, props) => {
   let tab = props.location.query.tab || 'Active Jobs';
 
+  let currentFavorites = state.favorites.get('list');
+  let favoriteMap = {};
+
+  let favoriteCompanyIds = [];
+  currentFavorites.map(function(favorite){
+    favoriteMap[favorite.get('favorableId')] = 1;
+    if (favorite.get('favorableType') == 'company') {
+      favoriteCompanyIds.push(favorite.get('favorableId'));
+    }
+  });
+  let favoriteContacts = state.contacts.get('list').filter(x=>favoriteMap[x.get('id')]);
+  let favoriteJobs = state.jobs.get('list').filter(x=>favoriteMap[x.get('id')]);
+  let favoriteCompanies = state.companies.get('list').filter(x=>favoriteMap[x.get('id')]);
+
+
   return {
     tab,
     user: state.auth.user,
@@ -35,10 +50,14 @@ let getData = (state, props) => {
     contacts: state.contacts,
     auth: state.auth,
     companies: state.companies,
+    favoriteContacts,
+    favoriteCompanies,
+    favoriteJobs,
+    favoriteCompanyIds,
   };
 };
 
-@connect(getData, {pushState, replaceState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs, createContactFavorite, deleteContactFavorite})
+@connect(getData, {pushState, getCompanyDetails, replaceState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs, createContactFavorite, deleteContactFavorite})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -53,9 +72,17 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getMyFavoriteJobs();
-    this.props.getMyFavoriteCompanies();
-    this.props.getMyFavoriteContacts();
+    //this.props.getMyFavoriteJobs();
+    //this.props.getMyFavoriteCompanies();
+    //this.props.getMyFavoriteContacts();
+    // let self = this;
+    //
+    // setTimeout(() => {
+    //   if(self.props.favoriteCompanyIds){
+    //
+    //     self.props.getCompanyDetails(self.props.favoriteCompanyIds, ['contacts']);
+    //   }
+    // }, 500);
   }
 
   _handleJobClick(job){
@@ -165,13 +192,6 @@ class HomePage extends React.Component {
   onJobCreateOpen() {
     this.refs.actionButtons.close();
 
-    //console.log(this.props.companies && this.props.companies.list);
-
-    // let companyId = null;
-    // if (this.props.companies && this.props.companies.list && this.props.companies.list.size) {
-    //   companyId = this.props.companies.list.first().get('id');
-    // }
-
     // create tpm job
     let job = {
       id: `tmp_${this._guid()}`,
@@ -229,7 +249,7 @@ class HomePage extends React.Component {
 
   render () {
 
-    let { contacts, companies, jobs } = this.props;
+    let { favoriteContacts, favoriteCompanies, favoriteJobs } = this.props;
 
     let actions = [
       <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
@@ -249,7 +269,7 @@ class HomePage extends React.Component {
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={this.props.tab} onChange={this.tabChange.bind(this)}>
           <div style={style.slide}>
             <ClientsList
-                clients={companies.myFavoriteCompanyIds}
+                clients={favoriteCompanies}
                 favoriteCompany={this.favoriteCompany.bind(this)}
                 unfavoriteCompany={this.unfavoriteCompany.bind(this)}
             />
@@ -257,14 +277,14 @@ class HomePage extends React.Component {
           <div>
             <JobsList
                 onJobClick={this._handleJobClick.bind(this)}
-                jobs={jobs.myFavoriteJobIds}
+                jobs={favoriteJobs}
                 favoriteJob={this.favoriteJob.bind(this)}
                 unfavoriteJob={this.unfavoriteJob.bind(this)}
             />
           </div>
           <div style={style.slide}>
             <ContactsList
-                contacts={contacts.myFavoriteContactIds}
+                contacts={favoriteContacts}
                 favoriteContact={this.favoriteContact.bind(this)}
                 unfavoriteContact={this.unfavoriteContact.bind(this)}
             />

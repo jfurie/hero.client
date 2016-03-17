@@ -3,14 +3,13 @@ import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
 import marked from 'marked';
 
-import { List } from 'material-ui';
+import { List, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import { Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, JSONTree } from '../../../components/web';
+import { LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, JSONTree } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
 } from 'material-ui';
-
 import './jobDetails.scss';
 
 const style = {
@@ -147,7 +146,7 @@ export default class JobDetails extends React.Component {
     if (job) {
 
       // get cover
-      let cover = ((job.get('image')) ? (job.get('image').get('item')) : (defaultImage));
+      let cover = ((job.get('image') && job.get('image').get('item')) ? (job.get('image').get('item')) : (defaultImage));
 
       // markdown to html
       let description = job.get('description') ? marked(job.get('description')) : '';
@@ -227,6 +226,9 @@ export default class JobDetails extends React.Component {
         companyWebsite = company.get('website');
         companyName = company.get('name');
       }
+      else {
+        companyName = 'XYZ Company';
+      }
 
       // location stuff
       let location = job.get('location');
@@ -254,7 +256,7 @@ export default class JobDetails extends React.Component {
 
         <div>
           <DetailsCard
-              topTitle={job.get('company').get('name')}
+              topTitle={companyName}
               topSubtitle={`${companyName} - ${job.get('department')}`}
               location={job.get('location')}
               bottomLabel="Job Title"
@@ -272,32 +274,29 @@ export default class JobDetails extends React.Component {
               stats={stats}
           />
         <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes','Data']}>
-            <Card style={style.card}>
-              <CardText>
-                {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
-                <Avatar
-                    icon={<FontIcon className="material-icons">info_outline</FontIcon>}
-                    color={Styles.Colors.grey600}
-                    backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-              <CardText>
-                {this.renderBigListItem('Bonus & perks', job.get('bonusPerks'),
-                <Avatar
-                    icon={<FontIcon className="material-icons">redeem</FontIcon>}
-                    color={Styles.Colors.grey600}
-                    backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-              <CardText>
-                {this.renderBigListItem('Location', addressLine,
-                <Avatar
-                    icon={<FontIcon className="material-icons">place</FontIcon>}
-                    color={Styles.Colors.grey600}
-                    backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-            </Card>
+            <div>
+              <Card style={style.card}>
+                <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                <CardText>
+                  {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">info_outline</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                <CardText>
+                  {this.renderBigListItem('Bonus & perks', job.get('bonusPerks'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">redeem</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+              </Card>
+
+              <LocationCard location={job.get('location')} />
+            </div>
             <div style={{minHeight:'800px'}}>
               <Card>
                 <CardText >
