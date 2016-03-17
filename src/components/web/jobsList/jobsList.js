@@ -1,7 +1,7 @@
 import React from 'react';
 import { List } from 'material-ui';
 import Infinite from 'react-infinite';
-import { JobListItem } from '../../../components/web';
+import { JobCardContainer } from '../../../components/web';
 import { pushState } from 'redux-router';
 import { connect } from 'react-redux';
 
@@ -105,15 +105,9 @@ class JobsList extends React.Component {
       </List>*/
       <List style={style.list} subheader={`${count} ${ressourceName}`}>
         <Infinite containerHeight={clientHeight - (56+64)} elementHeight={heights} useWindowAsScrollContainer>
-          {jobs.map((job, key) => {
+          {jobs.map((job) => {
             return (
-              <JobListItem
-                key={key}
-                onJobClick={this._showJobDetails.bind(this)}
-                job={job}
-                favoriteJob={this.favoriteJob.bind(this)}
-                unfavoriteJob={this.unfavoriteJob.bind(this)}
-              />
+              <JobCardContainer jobId={job.get('id')} />
             );
           })}
         </Infinite>

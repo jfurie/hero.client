@@ -6,6 +6,15 @@ const GET_CATEGORIES_FAIL= 'hero.client/categories/GET_CATEGORIES_FAIL';
 const initialState = {
   list: new Immutable.Map(),
 };
+function sortOrder(a,b){
+  if(a.get('order') < b.get('order')){
+    return -1;
+  } else if(a.get('order') > b.get('order')) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
   case GET_CATEGORIES_SUCCESS:{
@@ -15,7 +24,7 @@ export default function reducer(state = initialState, action = {}) {
     });
     return {
       ...state,
-      list:state.list.mergeDeep(categoriesMap),
+      list:state.list.mergeDeep(categoriesMap).sort(sortOrder),
     };
   }
   default:{

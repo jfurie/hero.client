@@ -92,18 +92,6 @@ class CandidateDetailsModal extends React.Component {
 
   render() {
 
-    // let jobs = {};
-    // jobs.list = new Immutable.Map();
-    //
-    // let job = {};
-    // job['1a'] = {
-    //   title: 'Android Mobile Engineer',
-    //   location: 'Santa Monica, CA',
-    //   id: '1a',
-    // };
-    //
-    // jobs.list = jobs.list.mergeDeep(job);
-
     let email = null;
     let phone = null;
     let address = null;

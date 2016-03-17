@@ -11,20 +11,20 @@ import { JobEdit } from '../../../components/web';
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 let getData = (state, props) => {
-  let job = state.jobs.list.get(props.params.jobId);
+  let job = state.jobs.get('list').get(props.params.jobId);
 
-  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+  let heroContactIds = state.contacts.get('byCompanyId').get(HEROCOMPANYID);
   let heroContacts = null;
   if(heroContactIds){
-    heroContacts = state.contacts.list.filter(x =>{
+    heroContacts = state.contacts.get('list').filter(x =>{
       return heroContactIds.indexOf(x.get('id')) > -1;
     });
   }
 
-  let contactIds = state.contacts.byCompanyId.get(props.params.companyId);
+  let contactIds = state.contacts.get('byCompanyId').get(props.params.companyId);
   let contacts = null;
   if(contactIds){
-    contacts = state.contacts.list.filter(x =>{
+    contacts = state.contacts.get('list').filter(x =>{
       return contactIds.indexOf(x.get('id')) > -1;
     });
   }
@@ -36,7 +36,7 @@ let getData = (state, props) => {
       jobImage = state.resources.list.get(imageId);
     }
   }
-  
+
   return {
     job,
     jobImage,

@@ -1,7 +1,6 @@
 import {IndexRoute, Route} from 'react-router';
 import React from 'react';
 import * as authActions from './modules/auth';
-import LocalStorageClient from './utils/localStorageClient';
 
 // general containers
 import Home from './containers/web/homeContainer';
@@ -51,7 +50,6 @@ import NoteCreatePage from './containers/web/notes/noteCreateContainer';
 
 import TestPage from './containers/web/testContainer';
 
-const localStorage = new LocalStorageClient('Auth');
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -66,21 +64,15 @@ export default(store) => {
   const requireLogin = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const { auth: { user } } = ((store) ? (store.getState()) : (null));
-
-      if (!user) {
-        let auth = localStorage.get('Auth');
-
-        if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
-          store.dispatch(authActions.checkAuthServer(auth.id));
-          store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
-            cb();
-          });
-        } else {
-          replaceState(null, `/login?redirect=${nextState.location.pathname}`);
-          cb();
-        }
+      const auth = store.getState().auth;
+      let authToken = auth.get('authToken');
+      console.log('checkAuth');
+      if (authToken) {
+        //store.dispatch(authActions.checkAuthServer(authToken.get('id')));
+        store.dispatch(authActions.logginWithAuthLocalStorage());
+        cb();
       } else {
+        replaceState(null, `/login?redirect=${nextState.location.pathname}`);
         cb();
       }
     }
@@ -91,7 +83,8 @@ export default(store) => {
   const requireAccount = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const { auth: { authToken } } = ((store) ? (store.getState()) : (null));
+      const auth = store.getState().auth;
+      let authToken = auth.get('authToken');
 
       if (!authToken || !authToken.accountInfo || !authToken.accountInfo.account || !authToken.accountInfo.account.id) {
         replaceState(null, '/error?type=access');
@@ -107,22 +100,14 @@ export default(store) => {
   const loadUser = (nextState, replaceState, cb) => {
 
     function checkAuth() {
-      const { auth: { user } } = ((store) ? (store.getState()) : (null));
-      if (!user) {
-        let auth = localStorage.get('Auth');
-        let tokenParam = getParameterByName('accessToken');
+      const auth = store.getState().auth;
+      let tokenParam = getParameterByName('accessToken');
 
-        if (auth && auth.id && auth.ttl && auth.created && auth.userId) {
-          store.dispatch(authActions.logginWithAuthLocalStorage()).then(() => {
-            cb();
-          });
-        } else if (tokenParam) {
-          store.dispatch(authActions.logginWithAccessToken(tokenParam)).then(() => {
-            cb();
-          });
-        } else {
-          cb();
-        }
+      if (auth.get('authToken')) {
+        store.dispatch(authActions.logginWithAuthLocalStorage());
+        cb();
+      } else if (tokenParam) {
+        store.dispatch(authActions.logginWithAccessToken(tokenParam,cb));
       } else {
         cb();
       }
@@ -130,7 +115,7 @@ export default(store) => {
       // hide splash if here
       setTimeout(() => {
         document.getElementById('splash').style.display = 'none';
-      }, 1250);
+      }, 0);
 
     }
 
@@ -140,8 +125,8 @@ export default(store) => {
   };
 
   const checkLogin = (nextState, replaceState, cb) => {
-    const { auth: { user } } = ((store) ? (store.getState()) : (null));
-    if (user) { /* already logged */
+    const auth = store.getState().auth;
+    if (auth.get('authToken')) { /* already logged */
       replaceState(null, '/');
     }
     cb();
