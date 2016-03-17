@@ -2,14 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
 import {
-  List, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog, CardText,
+  List, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog, Card, CardTitle, CardText,
 } from 'material-ui';
-import Card from 'material-ui/lib/card/card';
 
 import Avatar from 'material-ui/lib/avatar';
 
 import {
-  Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
+  LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
   CompanyNotesList, DetailsCard, CompanyAvatar, JSONTree,
 } from '../../../components/web';
 import defaultImage from './default-company.jpg';
@@ -315,6 +314,7 @@ export default class ClientDetails extends React.Component {
         <CustomTabsSwipe isLight isInline={inline} startingTab={this.props.tab} onChange={this.tabChange.bind(this)} tabs={['Details', 'Jobs', 'Contacts', 'Notes','Data']}>
             <div>
               <Card>
+                <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(addressLine) ? (
                   <CardText style={style.smallListItem}>
                     {this.renderSmallListItem(addressLine,
@@ -348,7 +348,11 @@ export default class ClientDetails extends React.Component {
                   </CardText>
                 ) : (null)}
               </Card>
+
+              <LocationCard location={company.get('location')} />
+
               <Card>
+                <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 <CardText>
                   {this.renderBigListItem('Company Mission',company.get('productSolution'),
                   <Avatar
@@ -391,6 +395,7 @@ export default class ClientDetails extends React.Component {
                 </CardText>
               </Card>
               <Card>
+                <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(twitter) ? (
                   <CardText style={style.smallListItem}>
                     {this.renderBigListItem('twitter', `@${twitter}`,
@@ -433,6 +438,7 @@ export default class ClientDetails extends React.Component {
                 ) : (null)}
               </Card>
               <Card>
+                <CardTitle title="Job Boards" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(jobboard) ? (
                   <CardText style={style.smallListItem}>
                     {this.renderBigListItem('Job Board', `@${jobboard}`,
