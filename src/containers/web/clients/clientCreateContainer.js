@@ -63,11 +63,11 @@ export default class ClientCreateContainer extends React.Component {
         this.props.onSave(newProps.company.get('id'));
       } else {
         let self = this;
-        let id =newProps.company.get('id');
         setTimeout(function () {
           if(self.props.location.query.returnUrl){
             self.props.history.replaceState(null, self.props.location.query.returnUrl);
           } else{
+            let id =newProps.company.get('newId');
             self.props.history.replaceState(null, `/clients/${id}`);
           }
         }, 500);

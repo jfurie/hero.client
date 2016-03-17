@@ -7,6 +7,7 @@ import { getJobsByIdsIfNeeded } from '../jobs';
 import { getContactsByIdsIfNeeded } from '../contacts';
 import { getNotesByIdsIfNeeded } from '../notes';
 import { getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
+import { getFavoriteByType } from '../favorites';
 
 import superagent from 'superagent';
 import {actionTypes} from 'redux-localstorage';
@@ -119,7 +120,11 @@ export default function reducer(state = initialState, action = {}) {
     newItem[action.result.id] = action.result;
     newItem[action.result.id].saving = false;
     newItem[action.result.id].savingError = null;
-    newItem[action.id] = newItem[action.result.id];
+    newItem[action.id] = {
+      saving: false,
+      savingError: null,
+      newId: action.result.id,
+    };
 
     return state.withMutations((state) => {
       state.set('saving', false).set('savingError', '').set('list', state.get('list').mergeDeep(newItem));
@@ -308,14 +313,19 @@ export function createCompany(company) {
   if(id && id.indexOf('tmp') > -1){
     company = company.remove('id');
   }
-  return {
-    id,
-    company,
-    types: [constants.CREATE_COMPANY, constants.CREATE_COMPANY_SUCCESS, constants.CREATE_COMPANY_FAIL],
-    promise: (client, auth) => client.api.post('/companies', {
-      authToken: auth.authToken,
-      data: company,
-    }),
+  return (dispatch) => {
+    dispatch({
+      id,
+      company,
+      types: [constants.CREATE_COMPANY, constants.CREATE_COMPANY_SUCCESS, constants.CREATE_COMPANY_FAIL],
+      promise: (client, auth) => client.api.post('/companies', {
+        authToken: auth.authToken,
+        data: company,
+      }).then(function (result) {
+        dispatch(getFavoriteByType('company', result.id));
+        return result;
+      }),
+    });
   };
 }
 
