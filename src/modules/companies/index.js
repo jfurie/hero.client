@@ -256,7 +256,7 @@ export default function reducer(state = initialState, action = {}) {
 }
 export function searchCompany(query){
   return (dispatch, getState) => {
-    let current = getState().companies.list;
+    let current = getState().companies.get('list');
     let results = current.filter(y=>{
       return y.get('name').toLowerCase().indexOf(query.toLowerCase()) > -1;
     });

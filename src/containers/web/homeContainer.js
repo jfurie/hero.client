@@ -192,13 +192,6 @@ class HomePage extends React.Component {
   onJobCreateOpen() {
     this.refs.actionButtons.close();
 
-    //console.log(this.props.companies && this.props.companies.list);
-
-    // let companyId = null;
-    // if (this.props.companies && this.props.companies.list && this.props.companies.list.size) {
-    //   companyId = this.props.companies.list.first().get('id');
-    // }
-
     // create tpm job
     let job = {
       id: `tmp_${this._guid()}`,
