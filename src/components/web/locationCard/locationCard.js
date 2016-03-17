@@ -1,6 +1,14 @@
 import React from 'react';
-import { Card, CardMedia, CardTitle } from 'material-ui';
-import GoogleMap from 'google-map-react';
+import { Avatar, FontIcon, Card, CardTitle, CardMedia, CardText, Styles } from 'material-ui';
+import { GoogleMapLoader, GoogleMap, Marker } from 'react-google-maps';
+
+const style = {
+  smallListItem: {
+    padding: 0,
+    margin: '16px',
+    marginBottom: '0',
+  },
+};
 
 class LocationCard extends React.Component {
 
@@ -8,81 +16,127 @@ class LocationCard extends React.Component {
     super(props);
   }
 
-  createMapOptions() {
-    return {
-      mapTypeControl: false,
-      disableDefaultUI: true,
-      draggable: false,
-    };
+  renderSmallListItem(content,avatar){
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
+        </div>
+      </div>
+    );
   }
 
   render() {
 
-    let {location, marker} = this.props;
+    let {location} = this.props;
 
-    if (location) {
+    let options = {
+      mapTypeControl: false,
+      disableDefaultUI: true,
+      draggable: false,
+      scrollwheel: false,
+      navigationControl: false,
+      scaleControl: false,
+      disableDoubleClickZoom: true,
+      styles: [{'featureType':'administrative','elementType':'labels.text.fill','stylers':[{'color':'#444444'}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#f2f2f2'}]},{'featureType':'poi','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'road','elementType':'all','stylers':[{'saturation':-100},{'lightness':45}]},{'featureType':'road.highway','elementType':'all','stylers':[{'visibility':'simplified'}]},{'featureType':'road.arterial','elementType':'labels.icon','stylers':[{'visibility':'off'}]},{'featureType':'transit','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#46bcec'},{'visibility':'on'}]}],
+    };
 
+    let address;
+    let geoField;
+    let defaultZoom;
+
+    if (location && location.get('geoField')) {
       // location fields
-      let name = location.get('name') || 'Location';
-      let addressLine = location.get('addressLine');
+      let line1 = location.get('addressLine');
       let city = location.get('city');
       let postalCode = location.get('postalCode');
       let countrySubDivisionCode = location.get('countrySubDivisionCode');
-      let geoField = location.get('geoField').toJSON();
+      let countryCode = location.get('countryCode');
+      geoField = location.get('geoField').toJSON();
 
-      let subtitle = `${addressLine}` || '';
+      address = line1 || '';
 
       if (city) {
-
-        subtitle += ', ';
-
-        if (postalCode) {
-          subtitle += `${postalCode} `;
-        }
-        subtitle += city;
+        address += address ? ', ' : '';
+        address += `${city}`;
       }
 
-      if (subtitle.length && countrySubDivisionCode) {
-        subtitle += `, ${countrySubDivisionCode}`;
+      if (countrySubDivisionCode) {
+        address += address ? ', ' : '';
+        address += `${countrySubDivisionCode}`;
       }
 
-      // update the marker with the geoField lat lng
-      if (marker) {
-        let markersProps = marker.props;
-        marker = React.cloneElement(marker, {
-          ...markersProps,
-          lat: geoField.lat,
-          lng: geoField.lng,
-        });
+      if (postalCode) {
+        address += address ? ' ' : '';
+        address += `${postalCode}`;
       }
 
-      return (
-        <Card>
-          <CardMedia>
-            <div style={{height: '200px', width: '100%'}}>
-              <GoogleMap
-                center={geoField}
-                defaultZoom={13}
-                options={this.createMapOptions}
-              >
-              {(marker) ? (
-                marker
-              ) : (null)}
-              </GoogleMap>
-            </div>
-          </CardMedia>
-          <CardTitle title={name} subtitle={subtitle}/>
-        </Card>
-      );
-    } else {
-      return (null);
+      if (!address) {
+        address += `${countryCode}`;
+      }
+
+      defaultZoom = 13;
     }
+    else {
+      address = 'United States';
+      geoField = {
+        lat: 37.09024,
+        lng: -95.712891,
+      };
+
+      defaultZoom = 3;
+    }
+
+    let marker = {
+      position: geoField,
+      defaultAnimation: 2,
+    };
+
+    return (
+      <Card>
+        <CardTitle title="Location" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+        <CardText style={style.smallListItem}>
+          {this.renderSmallListItem(address,
+          <Avatar
+              icon={<FontIcon className="material-icons">place</FontIcon>}
+              color={Styles.Colors.grey600}
+              backgroundColor={Styles.Colors.white}
+          />)}
+        </CardText>
+        <CardMedia style={{padding: '8px'}}>
+          <GoogleMapLoader
+              containerElement={
+                <div
+                    {...this.props}
+                    style={{
+                      height: '200px',
+                      width: '100%',
+                    }}
+                />
+              }
+              googleMapElement={
+                <GoogleMap
+                    options={options}
+                    zoom={defaultZoom}
+                    center={geoField}
+                >
+                  <Marker
+                      {...marker}
+                  />
+                </GoogleMap>
+              }
+          />
+        </CardMedia>
+      </Card>
+    );
   }
 }
 
 LocationCard.propTypes = {
   location: React.PropTypes.object,
-  marker: React.PropTypes.element,
 };
 
 export default LocationCard;
