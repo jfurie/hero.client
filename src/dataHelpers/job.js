@@ -1,57 +1,53 @@
 import Immutable from 'immutable';
 
 export default function getJobDataFromState(state, jobId) {
-  let job = state.jobs.list.get(jobId) || null;
-  let candidates = state.candidates || null;
+  let job = ((state.jobs.get('list').size > 0) ? (state.jobs.get('list').get(jobId)) : (null));
 
   if (job) {
-    let jobImage = job ? state.resources.list.get(job.get('imageId')) : new Immutable.Map();
-    job = job.set('image', jobImage);
 
-    // grab the candidates for this job
-    let jobCandidates = [];
-    if (candidates && candidates.byJobId && candidates.list) {
-      if (candidates.byJobId.size > 0) {
-        let jobCandidateIds = candidates.byJobId.get(jobId);
-        if(jobCandidateIds){
-          jobCandidateIds.forEach(function(candidateId) {
-            let c = state.candidates.list.get(candidateId);
-            if (c) {
-              jobCandidates.push(c);
-            }
-          });
-        }
-      }
-    }
+    // candidates
+    let jobCandidates = new Immutable.List();
+
+    jobCandidates = state.candidates.list.filter(candidate =>{
+      return candidate.get('jobId') == job.get('id');
+    }).toList();
 
     job = job.set('candidates', jobCandidates);
-    let contactId = job.get('contactId');
-    if (contactId) {
-      let contact = state.contacts.list.get(contactId);
-      job.set('contact',contact);
-    }
 
-    let talentAdvocateId = job.get('talentAdvocateId');
-    if (talentAdvocateId) {
-      let contact = state.contacts.list.get(talentAdvocateId);
-      job.set('talentAdvocate',contact);
+    //company
+    if(job.has('companyId')){
+      let company = state.companies.get('list').find(x=> x.get('id') == job.get('companyId'));
+      if(company){
+        job = job.set('company',company);
+      }
     }
-
-    // filter down company notes
-    let notesByJobListIds = state.notes.byJobId.get(jobId);
-    let jobNotes = new Immutable.Map();
-
-    if (notesByJobListIds) {
-      jobNotes = state.notes.list.filter(x => {
-        return notesByJobListIds.indexOf(x.get('id')) > -1;
-      });
-    }
+    // notes
+    let jobNotes = new Immutable.List();
+    jobNotes = state.notes.list.filter(note => {
+      return note.get('notableId') == job.get('id');
+    }).toList();
 
     jobNotes = jobNotes.sort((a, b) => {
       return new Date(b.get('created')) - new Date(a.get('created'));
     });
 
     job = job.set('notes', jobNotes);
+
+    // image
+    let jobImage = state.resources.list.get(job.get('imageId')) || new Immutable.Map();
+    job = job.set('image', jobImage);
+
+    // contact
+    let contact = state.contacts.get('list').get(job.get('contactId'));
+    job = job.set('contact', contact);
+
+    // talentAdvocate
+    let talentAdvocate = state.contacts.get('list').get(job.get('talentAdvocateId'));
+    job = job.set('talentAdvocate', talentAdvocate);
+
+    // location
+    let location = state.locations.list.get(job.get('locationId'));
+    job = job.set('location', location);
   }
 
   return job;

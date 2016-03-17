@@ -3,7 +3,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var _ = require('lodash');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var env = process.env.NODE_ENV || 'local';
 var isDEV =  env == 'local';
 console.log('process.env.NODE_ENV',process.env.NODE_ENV);

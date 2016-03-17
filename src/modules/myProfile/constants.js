@@ -1,0 +1,3 @@
+export const GET_MY_FAVORITE_CONTACTS = 'hero.client/myProfile/GET_MY_FAVORITE_CONTACTS';
+export const GET_MY_FAVORITE_CONTACTS_SUCCESS = 'hero.client/myProfile/GET_MY_FAVORITE_CONTACTS_SUCCESS';
+export const GET_MY_FAVORITE_CONTACTS_FAIL = 'hero.client/myProfile/GET_MY_FAVORITE_CONTACTS_FAIL';

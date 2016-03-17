@@ -40,7 +40,7 @@ class MyJobsPage extends React.Component {
         <Header title="Jobs" />
         <JobsList
             onJobClick={this._handleJobClick.bind(this)}
-            jobs={jobs.list}
+            jobs={jobs.get('list')}
             favoriteJob={this.favoriteJob.bind(this)}
             unfavoriteJob={this.unfavoriteJob.bind(this)}
         />

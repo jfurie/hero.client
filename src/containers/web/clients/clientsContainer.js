@@ -3,26 +3,33 @@ import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, ClientsCreateModal, ClientsList } from '../../../components/web';
-import { getAllCompanies, getMyCompanies, createCompany, searchCompany, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies';
+import { getCompanyDetails, getAllCompanies, getMyCompanies, createCompany, searchCompany, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies';
 import { getCurrentAccount } from '../../../modules/currentAccount';
 import { getContactsByCompany } from '../../../modules/contacts';
 
 const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 @connect((state) => {
   let visibleCompanies = new Immutable.Map();
-  if (state.companies.currentSearch != '') {
-    let current = state.companies.searches.get(state.companies.currentSearch);
-    visibleCompanies = state.companies.myCompanyIds.filter((x) => {
+  if (state.companies.get('currentSearch') != '') {
+    let current = state.companies.get('searches').get(state.companies.get('currentSearch'));
+    visibleCompanies = state.companies.get('myCompanyIds').filter((x) => {
       return current.indexOf(x.get('id')) > -1;
     });
   } else {
-    visibleCompanies = state.companies.myCompanyIds;
+    visibleCompanies = state.companies.get('myCompanyIds');
   }
+
+  let myCompanyIds = [];
+
+  visibleCompanies.map(x => {
+    myCompanyIds.push(x.get('id'));
+  });
+
   //filter hero contacts
-  let heroContactIds = state.contacts.byCompanyId.get(HEROCOMPANYID);
+  let heroContactIds = state.contacts.get('byCompanyId').get(HEROCOMPANYID);
   let heroContacts = null;
   if(heroContactIds){
-    heroContacts = state.contacts.list.filter(x =>{
+    heroContacts = state.contacts.get('list').filter(x =>{
       return heroContactIds.indexOf(x.get('id')) > -1;
     });
   }
@@ -30,11 +37,12 @@ const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
   return({
     type: state.router.location.query.type,
     companies: state.companies,
+    myCompanyIds,
     visibleCompanies,
     currentAccount: state.currentAccount,
     heroContacts,
   });
-}, { getAllCompanies, getMyCompanies, createCompany, searchCompany, pushState, getCurrentAccount, getContactsByCompany, createCompanyFavorite, deleteCompanyFavorite })
+}, { getCompanyDetails, getAllCompanies, getMyCompanies, createCompany, searchCompany, pushState, getCurrentAccount, getContactsByCompany, createCompanyFavorite, deleteCompanyFavorite })
 class ClientPage extends React.Component {
 
   constructor(props) {

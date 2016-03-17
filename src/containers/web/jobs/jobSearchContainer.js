@@ -10,7 +10,7 @@ import _ from 'lodash';
 
 @connect(state => ({
   jobs: state.jobs,
-  companies: state.companies.myCompanyIds,
+  companies: state.companies.get('myCompanyIds'),
 }), { searchJobs, createTempJob }, null, { withRef: true })
 class JobSearchContainer extends React.Component {
 
@@ -37,7 +37,7 @@ class JobSearchContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let results = nextProps.jobs.queries.get(this.state.query);
+    let results = nextProps.jobs.get('queries').get(this.state.query);
 
     this.setState({
       searchResults: results ? results.toArray() : [],

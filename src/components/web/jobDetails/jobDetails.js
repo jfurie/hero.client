@@ -10,7 +10,6 @@ import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
 } from 'material-ui';
-
 import './jobDetails.scss';
 
 const style = {
@@ -147,7 +146,7 @@ export default class JobDetails extends React.Component {
     if (job) {
 
       // get cover
-      let cover = ((job.get('image')) ? (job.get('image').get('item')) : (defaultImage));
+      let cover = ((job.get('image') && job.get('image').get('item')) ? (job.get('image').get('item')) : (defaultImage));
 
       // markdown to html
       let description = job.get('description') ? marked(job.get('description')) : '';
@@ -226,6 +225,9 @@ export default class JobDetails extends React.Component {
       if (company) {
         companyWebsite = company.get('website');
         companyName = company.get('name');
+      }
+      else {
+        companyName = 'XYZ Company';
       }
 
       // location stuff

@@ -1,9 +1,9 @@
 import React from 'react';
 import Immutable from 'immutable';
-import {SelectToggle} from '../';
+import {ContactCategoryToggle} from '../';
 import {
    IconButton, ToolbarGroup, Toolbar, Toggle,
-  FlatButton, ToolbarTitle, Styles,
+  FlatButton, ToolbarTitle, Styles,CardText,Avatar, FontIcon,EnhancedButton,
 } from 'material-ui';
 
 const style = {
@@ -77,6 +77,67 @@ const style = {
     fontSize: '12px',
     transform: 'none',
   },
+  stacks:{
+    backgroundColor:'rgba(51,51,51,.1)',
+    paddingLeft:'8px',
+    paddingTop:'8px',
+    borderRadius:'5px',
+    marginBottom:'8px',
+    position:'relative',
+    width:'272px',
+  },
+  stackSkill:{
+    backgroundColor:'#333333',
+    borderRadius:'3px',
+    display:'inline-block',
+    width:'69px',
+    height:'33px',
+    lineHeight:'33px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    marginRight:'8px',
+    marginBottom:'8px',
+    fontSize:'12px',
+    color:'#ffffff',
+    textAlign:'center',
+    paddingLeft:'8px',
+    paddingRight:'8px',
+    position:'relative',
+  },
+  stackSkillInActive:{
+    backgroundColor:'#CCCCCC',
+    borderRadius:'3px',
+    display:'inline-block',
+    width:'69px',
+    height:'33px',
+    lineHeight:'33px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    marginRight:'8px',
+    marginBottom:'8px',
+    fontSize:'12px',
+    color:'#ffffff',
+    textAlign:'center',
+    paddingLeft:'8px',
+    paddingRight:'8px',
+    position:'relative',
+  },
+  stackTitle:{
+    fontSize:'13px',
+    color:'#000000',
+    marginBottom:'8px',
+
+  },
+  sectionTitle:{
+    color:'#747474',
+    fontSize:'16px',
+    marginTop:'16px',
+    marginBottom:'16px',
+    marginLeft:'16px',
+    textAlign:'left',
+  }
 };
 export default class ContactEditCategoriesContainer extends React.Component {
 
@@ -84,12 +145,26 @@ export default class ContactEditCategoriesContainer extends React.Component {
     super(props);
     this._handleClose = this._handleClose.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this.handleResize = this.handleResize.bind(this);
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.state ={'windowWidth':clientWidth};
   }
   _handleClose(){
-
+    this.props.history.goBack();
   }
   _handleSubmit(){
+    this.props.history.goBack();
+  }
+  handleResize(){
+    var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.setState({'windowWidth':clientWidth});
+  }
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   }
   _handleChange(categoryItem, currentContactCategory, value){
     console.log(value);
@@ -102,9 +177,9 @@ export default class ContactEditCategoriesContainer extends React.Component {
   }
   renderToggle(categoryItem,currentContactCategory){
     if(currentContactCategory.get('experience') > 0 ){
-      return (<div style={{position:'absolute', right:'16px', top:'-4px'}}>
+      return (<div style={{position:'absolute', right:'24px', top:'4px'}}>
                 <Toggle
-                  labelStyle={{color:'rgba(0, 0, 0, .56)',fontSize:'14px', fontWeight:'300'}}
+                  labelStyle={{color:'rgba(0, 0, 0, .56)',fontSize:'12px', fontWeight:'300'}}
                   label="Is primary?"
                   labelPosition="left"
                   toggled ={currentContactCategory.get('primary')}
@@ -115,38 +190,101 @@ export default class ContactEditCategoriesContainer extends React.Component {
       return (<div></div>);
     }
   }
+  toggleSkill(framework,contactCategory){
+    var indexofInclude = contactCategory.get('frameworkInclude').indexOf(framework);
+    if(indexofInclude > -1){
+      contactCategory = contactCategory.setIn(['frameworkInclude'],
+        contactCategory.get('frameworkInclude').filter(function(frameworkInc){
+          return frameworkInc !== framework;
+        })
+      );
+    } else {
+      contactCategory = contactCategory.setIn(['frameworkInclude',contactCategory.get('frameworkInclude').length],framework);
+    }
+    this.props.setFrameworks(this.props.contact.get('id'),contactCategory);
+  }
+  renderStacks(contactCategory,category){
+    var self = this;
+    // <SkillsDetails
+    //   category={category}
+    //   contactCategory={contactCategory}
+    //  />
+    return (
+
+      <div style={style.stacks}>
+
+        <div style={style.stackTitle}>{category.get('shortTitle')}</div>
+        <div>
+          {category.get('frameworkArr').map(function(framework){
+            var styleActive= style.stackSkillInActive;
+            if(contactCategory.get('frameworkInclude').indexOf(framework) > -1){
+              styleActive= style.stackSkill;
+            }
+            return (
+                <div title={framework} style={styleActive}>
+                  <EnhancedButton onTouchTap={self.toggleSkill.bind(self,framework,contactCategory)} style={{color:'#ffffff', width:'100%',    whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'}}>
+                  {framework}
+                  </EnhancedButton>
+                </div>
+              );
+          })}
+        </div>
+        {this.renderToggle.bind(this)(category,contactCategory)}
+      </div>);
+  }
   render(){
     console.log(this.props.contact);
-
+    if(this.state.windowWidth > 768){
+      style.toolbarInline.width ='375px';
+    } else {
+      style.toolbarInline.width = '100%';
+    }
     return (
       <div >
         <Toolbar style={style.toolbarInline}>
           <ToolbarGroup key={0} float="left">
             <IconButton onTouchTap={this._handleClose} style={style.toolbarIcon} iconClassName="material-icons">close</IconButton>
-            <ToolbarTitle style={style.toolbarTitle} text="Edit Categories" />
+            <ToolbarTitle style={style.toolbarTitle} text="Skills" />
           </ToolbarGroup>
           <ToolbarGroup key={1} float="right">
             <FlatButton onTouchTap={this._handleSubmit} style={style.toolbarFlat}>Save</FlatButton>
           </ToolbarGroup>
         </Toolbar>
         <div style={{height:'64px'}}></div>
-        <div style={{paddingTop:'16px', backgroundColor:'#ffffff'}}>
+
+        <div style={{paddingTop:'16px', backgroundColor:'#ffffff', borderBottom:'1px solid #ffffff'}}>
+          <div style={style.sectionTitle}>Primary/Secondary Skills</div>
           {this.props.categories.map(categoryItem =>{
-            let skillImg = <img style={{width: '33px', height: '33px'}} src={categoryItem.get('imageUrl')} />;
             let currentContactCategory =this.props.contact && this.props.contact.get('_contactCategories').find(x=>x.get('categoryId') == categoryItem.get('id'))|| new Immutable.Map();
-            return (<div>
-              <div style={{position:'relative', color:'rgba(0, 0, 0, .56)',fontSize:'14px', fontWeight:'400', paddingLeft:'16px',paddingTop:'0px', paddingBottom:'8px'}}>
-                {categoryItem.get('shortTitle')}
-                {this.renderToggle.bind(this)(categoryItem,currentContactCategory)}
-              </div>
-              <div style={{paddingLeft:'79px', position:'relative',marginBottom:'16px',paddingRight:'16px'}}>
-                <div style={{position:'absolute',left:'16px' ,top:'0px'}}>
-                  {skillImg}
+            return (<div style={{marginBottom:'24px'}}>
+            <CardText style={{padding:'24px', paddingBottom:'0px'}}>
+              <ContactCategoryToggle
+                categoryItem={categoryItem}
+                contactCategory={currentContactCategory}
+                onChange={this._handleChange.bind(this)}
+                 />
+            </CardText>
+
+              {currentContactCategory.get('experience') >0 && categoryItem.get('frameworkArr').length > 0 ?(<CardText>
+                <div style={{display:'flex'}}>
+                  <div style={{flex:'0 0 56px'}}>
+                    <Avatar
+                        icon={<FontIcon className="material-icons">layers</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />
+                  </div>
+                  <div style={{display: 'inline-block', position:'relative'}}>
+                    {this.renderStacks(currentContactCategory,categoryItem)}
+                  </div>
                 </div>
-                <SelectToggle onChange={this._handleChange.bind(this,categoryItem, currentContactCategory)} iconLeft={skillImg} value={currentContactCategory.get('experience')} options={[{value:0, title:'None'},{value:1,title:'Novice'},{value:2,title:'Experience'},{value:3,title:'Expert'}]} ></SelectToggle>
+              </CardText>):(<span></span>)}
+
+              <div>
+
               </div>
-
-
             </div>);
           })}
         </div>

@@ -202,6 +202,26 @@ export default function reducer(state = initialState, action = {}) {
         list:state.list.mergeDeep(candidateList),
       };
     }
+  case jobConstants.GET_JOB_DETAIL_SUCCESS:
+    {
+      let candidateList =  {};
+      let job= action.result;
+      if(job){
+        if(job.candidates){
+          job.candidates.map(candidate=>{
+            candidateList[candidate.id] = candidate;
+          });
+        }
+      }
+      let candidates = Immutable.fromJS(candidateList);
+      candidates = candidates.map(candidate =>{
+        return candidate.delete('contact');
+      });
+      return {
+        ...state,
+        list:state.list.mergeDeep(candidates),
+      };
+    }
   case GET_CANDIDATE_DETAIL: {
     return state;
   }

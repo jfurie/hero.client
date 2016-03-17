@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import * as constants from './constants';
+import * as jobConstants from '../jobs/constants';
 const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
@@ -9,6 +10,17 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case constants.GET_NOTES_BY_IDS_SUCCESS: {
+    let notesMap = {};
+    action.result.map((c) => {
+      notesMap[c.id] = c;
+    });
+
+    return {
+      ...state,
+      list: state.list.merge(notesMap),
+    };
+  }
   case constants.GET_NOTES: {
     return {
       ...state,
@@ -95,7 +107,7 @@ export default function reducer(state = initialState, action = {}) {
       loading:true,
     };
   }
-  case constants.GET_NOTES_BY_JOB_SUCCESS:{
+  case constants.GET_NOTES_BY_NOTE_SUCCESS:{
 
     let jobId = null;
 
@@ -125,7 +137,7 @@ export default function reducer(state = initialState, action = {}) {
       loading:false,
     };
   }
-  case constants.GET_NOTES_BY_JOB_FAIL:{
+  case constants.GET_NOTES_BY_NOTE_FAIL:{
     return {
       ...state,
       loading:false,
@@ -239,6 +251,24 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       localNote: new Immutable.Map(action.result),
+    };
+  }
+  case jobConstants.GET_JOB_DETAIL_SUCCESS:{
+    let notesMap = {};
+    let byJobId = {};
+    let job = action.result;
+    if(job && job.notes){
+      job.notes.map(note =>{
+        notesMap[note.id] = note;
+        byJobId[note.notableId] = note;
+      });
+    }
+    notesMap = Immutable.fromJS(notesMap);
+    byJobId = Immutable.fromJS(byJobId);
+    return {
+      ...state,
+      list: state.list.mergeDeep(notesMap),
+      byJobId: state.byJobId.mergeDeep(byJobId),
     };
   }
   default:
