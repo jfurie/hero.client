@@ -28,8 +28,8 @@ let styles = {
       borderRightStyle: 'solid',
     },
     selectedCell: {
-      borderColor: Styles.Colors.blue600,
-      backgroundColor: Styles.Colors.blue600,
+      borderColor: '#333333',
+      backgroundColor: '#333333',
       borderRadius: '3px',
       color: '#fff',
       borderLeftStyle: 'none',

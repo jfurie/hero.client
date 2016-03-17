@@ -2,7 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { getCategoriesIfNeeded } from '../../../modules/categories';
-import { getOneContact, setCategoryLocal, setExperience, setPrimary } from '../../../modules/contacts';
+import { getOneContact, setCategoryLocal, setExperience, setPrimary, setFrameworks } from '../../../modules/contacts';
 import { ContactEditCategories } from '../../../components/web';
 function getData(state, props) {
   let contact = state.contacts.get('list').get(props.params.contactId);
@@ -16,7 +16,7 @@ function getData(state, props) {
     contactCategories,
   };
 }
-@connect(getData, {getCategoriesIfNeeded, getOneContact,setCategoryLocal, setExperience, setPrimary})
+@connect(getData, {getCategoriesIfNeeded, getOneContact,setCategoryLocal, setExperience, setPrimary, setFrameworks})
 export default class ContactEditCategoriesContainer extends React.Component {
 
   constructor(props){

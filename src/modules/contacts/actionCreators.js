@@ -302,6 +302,22 @@ export function createContactCategory(contactId,contactCategory){
   };
 }
 
+export function setFrameworks(contactId,contactCategory){
+  return (dispatch) =>{
+    if(contactCategory){
+      if(contactCategory.toJSON){
+        contactCategory = contactCategory.toJSON();
+      }
+    }
+    dispatch({
+      type:constants.SET_FRAMEWORKS,
+      result:contactCategory,
+      contactId,
+    });
+    dispatch(saveContactCategory(contactId, contactCategory));
+  }
+}
+
 export function setExperience(contactId,contactCategory, category){
   return (dispatch, getState) => {
     if(contactCategory){

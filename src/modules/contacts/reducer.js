@@ -425,7 +425,7 @@ export default function reducer(state = initialState, action = {}) {
       let returnArr = null;
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){
-        returnArr = arr.set(row[0],new ContactCategory(contactCategory));
+        returnArr = arr.set(row[0],new ContactCategory(Immutable.fromJS(contactCategory)));
       } else {
         returnArr = arr;
       }
@@ -440,7 +440,7 @@ export default function reducer(state = initialState, action = {}) {
       let returnArr = null;
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){
-        returnArr = arr.set(row[0],new ContactCategory(contactCategory));
+        returnArr = arr.set(row[0],new ContactCategory(Immutable.fromJS(contactCategory)));
       } else {
         returnArr = arr;
       }
