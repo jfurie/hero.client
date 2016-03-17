@@ -3,10 +3,6 @@ import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
 import { saveCandidatesByJobResult } from '../candidates';
 
-import { getCompaniesByIdsIfNeeded } from '../companies';
-import { getContactsByIdsIfNeeded } from '../contacts';
-import { getNotesByIdsIfNeeded } from '../notes';
-import { getLocationsByIdsIfNeeded } from '../locations';
 
 
 export function getJobsByCompany(companyId){

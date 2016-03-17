@@ -19,7 +19,7 @@ export default function reducer(state = initialState, action = {}) {
     return {
       ...state,
       list: state.list.merge(notesMap),
-    }
+    };
   }
   case constants.GET_NOTES: {
     return {
@@ -269,7 +269,7 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       list: state.list.mergeDeep(notesMap),
       byJobId: state.byJobId.mergeDeep(byJobId),
-    }
+    };
   }
   default:
     return state;

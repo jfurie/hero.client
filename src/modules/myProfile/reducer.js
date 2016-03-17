@@ -1,4 +1,3 @@
-import * as constants from './constants';
 import * as authConstants from '../auth/constants';
 import {actionTypes} from 'redux-localstorage';
 import Immutable from 'immutable';
@@ -33,7 +32,7 @@ export default function reducer(state = initialState, action = {}) {
     if(action.result.user){
       state = state.set('userId',action.result.user.id);
     }
-    return state
+    return state;
 
 
   }

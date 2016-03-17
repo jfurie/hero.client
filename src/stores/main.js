@@ -51,7 +51,7 @@ export default function createStore(reduxReactRouter, getRoutes, createHistory, 
         }
       }
     }
-    return newState
+    return newState;
   }})];
   let finalCreateStore;
   if (isDev) {

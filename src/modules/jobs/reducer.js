@@ -272,9 +272,9 @@ export default function reducer(state = initialState, action = {}) {
     jobMap[job.get('id')] = job;
 
     return state.withMutations((state) => {
-      state.set('myFavoriteJobIds', state.get('myFavoriteJobIds').mergeDeep(jobsMap))
-      .set('list', state.get('list').mergeDeep(jobsMap))
-      .set('myJobIds', state.get('myJobIds').mergeDeep(jobsMap));
+      state.set('myFavoriteJobIds', state.get('myFavoriteJobIds').mergeDeep(jobMap))
+      .set('list', state.get('list').mergeDeep(jobMap))
+      .set('myJobIds', state.get('myJobIds').mergeDeep(jobMap));
     });
   }
   case constants.DELETE_JOB_FAVORITE_SUCCESS: {
@@ -286,8 +286,8 @@ export default function reducer(state = initialState, action = {}) {
 
     return state.withMutations((state) => {
       state.set('myFavoriteJobIds', state.get('myFavoriteJobIds').delete(action.result.favorableId))
-      .set('list', state.get('list').mergeDeep(jobsMap))
-      .set('myJobIds', state.get('myJobIds').mergeDeep(jobsMap));
+      .set('list', state.get('list').mergeDeep(jobMap))
+      .set('myJobIds', state.get('myJobIds').mergeDeep(jobMap));
     });
   }
   case constants.UPDATE_JOB_IMAGE_FAIL:{

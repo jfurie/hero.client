@@ -233,7 +233,7 @@ export default function reducer(state = initialState, action = {}) {
     return state.withMutations(ctx=> {
       ctx
       .set('saving', false)
-      .set('savingError', 'Failed to create contact')
+      .set('savingError', 'Failed to create contact');
     });
   }
   case constants.CREATE_TEMP_CONTACT:{
@@ -457,7 +457,7 @@ export default function reducer(state = initialState, action = {}) {
           if(candidate.contact){
             contacts[candidate.contact.id] = candidate.contact;
           }
-        })
+        });
       }
       if(job.company && job.company.talentAdvocate){
         contacts[job.company.talentAdvocate.id] = job.company.talentAdvocate;

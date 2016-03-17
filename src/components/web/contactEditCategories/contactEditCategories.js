@@ -1,9 +1,9 @@
 import React from 'react';
 import Immutable from 'immutable';
-import {SelectToggle, ContactCategoryToggle, SkillsDetails} from '../';
+import {ContactCategoryToggle} from '../';
 import {
    IconButton, ToolbarGroup, Toolbar, Toggle,
-  FlatButton, ToolbarTitle, Styles,CardText, Divider,Avatar, FontIcon,EnhancedButton,
+  FlatButton, ToolbarTitle, Styles,CardText,Avatar, FontIcon,EnhancedButton,
 } from 'material-ui';
 
 const style = {
@@ -195,7 +195,7 @@ export default class ContactEditCategoriesContainer extends React.Component {
     if(indexofInclude > -1){
       contactCategory = contactCategory.setIn(['frameworkInclude'],
         contactCategory.get('frameworkInclude').filter(function(frameworkInc){
-          return frameworkInc !== framework
+          return frameworkInc !== framework;
         })
       );
     } else {

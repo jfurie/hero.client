@@ -29,7 +29,7 @@ export function getContactsByIds(contactIds){
         }
       }
     });
-  }
+  };
 }
 
 export function getContactsByIdsIfNeeded(contactIds){
@@ -315,7 +315,7 @@ export function setFrameworks(contactId,contactCategory){
       contactId,
     });
     dispatch(saveContactCategory(contactId, contactCategory));
-  }
+  };
 }
 
 export function setExperience(contactId,contactCategory, category){

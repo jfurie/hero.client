@@ -1,5 +1,4 @@
 import React from 'react';
-import { Styles } from 'material-ui';
 
 let styles = {
   display: 'table',

@@ -1,7 +1,6 @@
 import {IndexRoute, Route} from 'react-router';
 import React from 'react';
 import * as authActions from './modules/auth';
-import LocalStorageClient from './utils/localStorageClient';
 
 // general containers
 import Home from './containers/web/homeContainer';

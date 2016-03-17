@@ -105,7 +105,7 @@ class JobsList extends React.Component {
       </List>*/
       <List style={style.list} subheader={`${count} ${ressourceName}`}>
         <Infinite containerHeight={clientHeight - (56+64)} elementHeight={heights} useWindowAsScrollContainer>
-          {jobs.map((job, key) => {
+          {jobs.map((job) => {
             return (
               <JobCardContainer jobId={job.get('id')} />
             );

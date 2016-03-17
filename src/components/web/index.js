@@ -58,8 +58,8 @@ export ContactEditCategories from './contactEditCategories/contactEditCategories
 export JSONTree from './jsontree/jsontree';
 export ClientCardContainer from '../../containers/web/clients/clientCardContainer';
 export JobCardContainer from '../../containers/web/jobs/jobCardContainer';
-export ContactCategoryToggle from './contactCategoryToggle/contactCategoryToggle'
-export SkillsDetails from './skillsDetails/skillsDetails'
+export ContactCategoryToggle from './contactCategoryToggle/contactCategoryToggle';
+export SkillsDetails from './skillsDetails/skillsDetails';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';

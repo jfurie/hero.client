@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import Immutable from 'immutable';
 
-import { getJobDetail, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs';
+import { getJobDetail } from '../../../modules/jobs';
 
 import { JobListItem } from '../../../components/web';
 
