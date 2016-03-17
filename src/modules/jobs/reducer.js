@@ -125,7 +125,7 @@ export default function reducer(state = initialState, action = {}) {
     let companyId = action.result.companyId;
     let byCompanyMapNew = {};
 
-    byCompanyMapNew[companyId] = state.byCompanyId.get(companyId) || new Immutable.List();
+    byCompanyMapNew[companyId] = state.get('byCompanyId').get(companyId) || new Immutable.List();
     byCompanyMapNew[companyId] = byCompanyMapNew[companyId].push(action.result.id);
 
     return state.withMutations((state) => {
@@ -179,7 +179,7 @@ export default function reducer(state = initialState, action = {}) {
       .set('loading', false)
       .set('savingError', '')
       .set('list', state.get('list').mergeDeep(jobMap))
-      .set('localJob', state.localJob.mergeDeep(action.result));
+      .set('localJob', state.get('localJob').mergeDeep(action.result));
     });
   }
   case constants.EDIT_JOB_FAIL:{

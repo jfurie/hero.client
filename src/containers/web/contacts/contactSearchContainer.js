@@ -56,7 +56,7 @@ class ContactSearchContainer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     let self = this;
-    let results = nextProps.contacts.queries.get(this.state.query);
+    let results = nextProps.contacts.get('queries').get(this.state.query);
 
     this.setState({
       searchResults: results ? results.toArray() : [],

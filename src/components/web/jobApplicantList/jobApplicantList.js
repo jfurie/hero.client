@@ -164,7 +164,7 @@ class JobApplicantList extends React.Component {
 
     let candidate = this.props.candidates.filter(x => {
       return x.get('contactId') == contact.get('id');
-    })[0];
+    }).get(0);
 
     if (this.props.editApplicantState && candidate.get('applicantState') != state) {
       this.props.editApplicantState(candidate.get('id'), state);

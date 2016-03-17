@@ -50,13 +50,13 @@ class JobCardContainer extends React.Component {
   favoriteJob() {
     let {job} = this.props;
 
-    this.props.createJobFavorite(job.get('id'));
+    this.props.favoriteJob(job);
   }
 
   unfavoriteJob() {
     let {job} = this.props;
 
-    this.props.deleteJobFavorite(job.get('id'));
+    this.props.unfavoriteJob(job);
   }
 
   render() {

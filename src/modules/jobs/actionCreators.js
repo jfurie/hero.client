@@ -255,27 +255,14 @@ export function getJobDetail(id) {
       promise: (client, auth) => client.api.get(`/jobs/detail?id=${id}`, {
         authToken: auth.authToken,
       }).then((job)=> {
-        if (job.companyId) {
-          dispatch(getCompaniesByIdsIfNeeded([job.companyId]));
+        if (job.notes && job.notes.length > 0) {
+          dispatch(saveNotesByJobResult(job.notes));
         }
 
-        if (job.locationId) {
-          dispatch(getLocationsByIdsIfNeeded([job.locationId]));
+        if (job.candidates && job.candidates.length > 0) {
+          dispatch(saveCandidatesByJobResult(job.candidates));
         }
-
-        if (company.talentAdvocateId) {
-          dispatch(getContactsByIdsIfNeeded([company.talentAdvocateId]));
-        }
-
-        if (job.notes) {
-          let noteIds = [];
-
-          job.notes.map((note => {
-              noteIds.push(note.id);
-          }));
-
-          dispatch(getNotesByIdsIfNeeded(noteIds));
-        }
+        return job;
       }),
     });
   };

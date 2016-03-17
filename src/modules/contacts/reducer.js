@@ -336,7 +336,7 @@ export default function reducer(state = initialState, action = {}) {
     });
   }
   case constants.CREATE_CONTACT_FAVORITE_SUCCESS: {
-    let contact = state.list.get(action.result.favorableId);
+    let contact = state.get('list').get(action.result.favorableId);
 
     if (contact) {
       contact = contact.set('isFavorited', true);
@@ -354,7 +354,7 @@ export default function reducer(state = initialState, action = {}) {
     }
   }
   case constants.DELETE_CONTACT_FAVORITE_SUCCESS: {
-    let contact = state.list.get(action.result.favorableId);
+    let contact = state.get('list').get(action.result.favorableId);
 
     if (contact) {
       contact = contact.set('isFavorited', false);
@@ -447,6 +447,24 @@ export default function reducer(state = initialState, action = {}) {
       return returnArr;
     });
     return state;
+  }
+  case jobConstants.GET_JOB_DETAIL_SUCCESS:{
+    let contacts = {};
+    let job = action.result;
+    if(job){
+      if(job.candidates){
+        job.candidates.map(candidate =>{
+          if(candidate.contact){
+            contacts[candidate.contact.id] = candidate.contact;
+          }
+        })
+      }
+      if(job.company && job.company.talentAdvocate){
+        contacts[job.company.talentAdvocate.id] = job.company.talentAdvocate;
+      }
+    }
+    contacts = Immutable.fromJS(contacts);
+    return state.mergeDeepIn(['list'],contacts);
   }
   default:
     return state;

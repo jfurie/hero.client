@@ -1,9 +1,9 @@
 import React from 'react';
 import Immutable from 'immutable';
-import {SelectToggle} from '../';
+import {SelectToggle, ContactCategoryToggle, SkillsDetails} from '../';
 import {
    IconButton, ToolbarGroup, Toolbar, Toggle,
-  FlatButton, ToolbarTitle, Styles,CardText, Divider,Avatar, FontIcon,EnhancedButton
+  FlatButton, ToolbarTitle, Styles,CardText, Divider,Avatar, FontIcon,EnhancedButton,
 } from 'material-ui';
 
 const style = {
@@ -205,7 +205,12 @@ export default class ContactEditCategoriesContainer extends React.Component {
   }
   renderStacks(contactCategory,category){
     var self = this;
+    // <SkillsDetails
+    //   category={category}
+    //   contactCategory={contactCategory}
+    //  />
     return (
+
       <div style={style.stacks}>
 
         <div style={style.stackTitle}>{category.get('shortTitle')}</div>
@@ -252,19 +257,16 @@ export default class ContactEditCategoriesContainer extends React.Component {
         <div style={{paddingTop:'16px', backgroundColor:'#ffffff', borderBottom:'1px solid #ffffff'}}>
           <div style={style.sectionTitle}>Primary/Secondary Skills</div>
           {this.props.categories.map(categoryItem =>{
-            let skillImg = <img style={{width: '33px', height: '33px'}} src={categoryItem.get('imageUrl')} />;
             let currentContactCategory =this.props.contact && this.props.contact.get('_contactCategories').find(x=>x.get('categoryId') == categoryItem.get('id'))|| new Immutable.Map();
             return (<div style={{marginBottom:'24px'}}>
-              <div style={{position:'relative', color:'rgba(0, 0, 0, .56)',fontSize:'14px', fontWeight:'400', paddingLeft:'24px',paddingTop:'0px', paddingBottom:'8px'}}>
-                {categoryItem.get('shortTitle')}
+            <CardText style={{padding:'24px', paddingBottom:'0px'}}>
+              <ContactCategoryToggle
+                categoryItem={categoryItem}
+                contactCategory={currentContactCategory}
+                onChange={this._handleChange.bind(this)}
+                 />
+            </CardText>
 
-              </div>
-              <div style={{paddingLeft:'72px', position:'relative',paddingRight:'24px'}}>
-                <div style={{position:'absolute',left:'24px' ,top:'0px'}}>
-                  {skillImg}
-                </div>
-                <SelectToggle onChange={this._handleChange.bind(this,categoryItem, currentContactCategory)} iconLeft={skillImg} value={currentContactCategory.get('experience')} options={[{value:0, title:'None'},{value:1,title:'Novice'},{value:2,title:'Experience'},{value:3,title:'Expert'}]} ></SelectToggle>
-              </div>
               {currentContactCategory.get('experience') >0 && categoryItem.get('frameworkArr').length > 0 ?(<CardText>
                 <div style={{display:'flex'}}>
                   <div style={{flex:'0 0 56px'}}>
