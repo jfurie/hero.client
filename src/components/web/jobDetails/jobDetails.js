@@ -257,7 +257,7 @@ export default class JobDetails extends React.Component {
         <div>
           <DetailsCard
               topTitle={companyName}
-              topSubtitle={`${job.get('department')}`}
+              topSubtitle={`${companyName} - ${job.get('department')}`}
               location={job.get('location')}
               bottomLabel="Job Title"
               bottomTitle={job.get('title')}
