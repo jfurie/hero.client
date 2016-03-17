@@ -8,40 +8,28 @@ export default function getJobDataFromState(state, jobId) {
     // candidates
     let jobCandidates = new Immutable.List();
 
-    if (job.has('candidates')) {
-      let jobCandidateIds = [];
-      job.get('candidates').map((candidate => {
-          jobCandidateIds.push(candidate.get('id'));
-      }));
-
-      if (jobCandidateIds) {
-        jobCandidates = state.candidates.list.filter(candidate => {
-          return jobCandidateIds.indexOf(candidate.get('id')) > -1;
-        }).toList();
-      }
-    }
+    jobCandidates = state.candidates.list.filter(candidate =>{
+      return candidate.get('jobId') == job.get('id');
+    }).toList();
 
     job = job.set('candidates', jobCandidates);
 
+    //company
+    if(job.has('companyId')){
+      let company = state.companies.get('list').find(x=> x.get('id') == job.get('companyId'));
+      if(company){
+        job = job.set('company',company);
+      }
+    }
     // notes
     let jobNotes = new Immutable.List();
+    jobNotes = state.notes.list.filter(note => {
+      return note.get('notableId') == job.get('id');
+    }).toList();
 
-    if (job.has('notes')) {
-      let jobNoteIds = [];
-      job.get('notes').map((note => {
-          jobNoteIds.push(note.get('id'));
-      }));
-
-      if (jobNoteIds) {
-        jobNotes = state.notes.list.filter(note => {
-          return jobNoteIds.indexOf(note.get('id')) > -1;
-        }).toList();
-      }
-
-      jobNotes = jobNotes.sort((a, b) => {
-        return new Date(b.get('created')) - new Date(a.get('created'));
-      });
-    }
+    jobNotes = jobNotes.sort((a, b) => {
+      return new Date(b.get('created')) - new Date(a.get('created'));
+    });
 
     job = job.set('notes', jobNotes);
 

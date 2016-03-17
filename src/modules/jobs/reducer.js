@@ -313,7 +313,15 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_JOB_DETAIL_SUCCESS: {
     let jobMap = {};
     jobMap[action.result.id] = action.result;
-
+    jobMap = Immutable.fromJS(jobMap);
+    jobMap.map(job =>{
+      job = job.delete('notes');
+      job = job.delete('talentAdvocate');
+      job = job.delete('company');
+      job = job.delete('candidates');
+      job = job.delete('location');
+      return job;
+    });
     return state.set('list', state.get('list').mergeDeep(jobMap));
   }
   case constants.GET_JOB_DETAIL_FAIL: {

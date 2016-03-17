@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import * as constants from './constants';
+import * as jobConstants from '../jobs/constants';
 const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
@@ -251,6 +252,24 @@ export default function reducer(state = initialState, action = {}) {
       ...state,
       localNote: new Immutable.Map(action.result),
     };
+  }
+  case jobConstants.GET_JOB_DETAIL_SUCCESS:{
+    let notesMap = {};
+    let byJobId = {};
+    let job = action.result;
+    if(job && job.notes){
+      job.notes.map(note =>{
+        notesMap[note.id] = note;
+        byJobId[note.notableId] = note;
+      });
+    }
+    notesMap = Immutable.fromJS(notesMap);
+    byJobId = Immutable.fromJS(byJobId);
+    return {
+      ...state,
+      list: state.list.mergeDeep(notesMap),
+      byJobId: state.byJobId.mergeDeep(byJobId),
+    }
   }
   default:
     return state;
