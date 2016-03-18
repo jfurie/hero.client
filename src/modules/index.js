@@ -15,6 +15,7 @@ import categories from './categories';
 import search from './search';
 import myProfile from './myProfile';
 import favorites from './favorites';
+import publik from './public';
 export default combineReducers({
   router: routerStateReducer,
   auth,
@@ -32,4 +33,5 @@ export default combineReducers({
   search,
   myProfile,
   favorites,
+  publik,
 });
