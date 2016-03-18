@@ -27,8 +27,13 @@ class PublicJobContainer extends React.Component {
   }
 
   share() {
+    let {job} = this.props;
+
     let subject = `Check out ${this.props.job.get('title')} on HERO`;
-    let body = `${encodeURIComponent(this.props.job.get('title'))}%0A${encodeURIComponent(window.location.href)}`;
+
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${job.get('company').get('name')}-${job.get('title')}`;
+
+    let body = `${encodeURIComponent(job.get('title'))}%0A${encodeURIComponent(url)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
