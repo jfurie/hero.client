@@ -48,6 +48,17 @@ export default function reducer(state = initialState, action = {}) {
 
     return state.set('list', state.get('list').delete(action.result.id));
   }
+  case constants.CREATE_JOB_FAVORITE_SUCCESS: {
+    let favoriteMap = {};
+
+    favoriteMap[action.result.id] = action.result;
+
+    return state.set('list', state.get('list').mergeDeep(favoriteMap));
+  }
+  case constants.DELETE_JOB_FAVORITE_SUCCESS: {
+
+    return state.set('list', state.get('list').delete(action.result.id));
+  }
   case authConstants.LOGIN_SUCCESS:
   case authConstants.AUTHLOCALSTORAGE_SUCCESS:{
     return state;

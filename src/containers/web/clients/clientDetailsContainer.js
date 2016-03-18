@@ -9,10 +9,10 @@ import { getOneCompany, getCompanyDetails } from '../../../modules/companies/ind
 import { createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/favorites';
 import { getOneLocation } from '../../../modules/locations';
 import { getImageByCompanyId } from '../../../modules/resources';
-import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
+import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob } from '../../../modules/jobs/index';
 import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { getAllContacts, getContactsByCompany} from '../../../modules/contacts';
-import { createContactFavorite, deleteContactFavorite } from '../../../modules/favorites';
+import { createContactFavorite, deleteContactFavorite, createJobFavorite, deleteJobFavorite } from '../../../modules/favorites';
 import { getAllJobCandidates, createCandidate } from '../../../modules/candidates';
 
 import { invite } from '../../../modules/users';

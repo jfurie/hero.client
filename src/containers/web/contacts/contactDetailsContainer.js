@@ -6,7 +6,7 @@ import { ContactDetails } from '../../../components/web';
 import { getContactDetail } from '../../../modules/contacts';
 import { createContactFavorite, deleteContactFavorite } from '../../../modules/favorites';
 import { replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
-import { createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
+import { createJobFavorite, deleteJobFavorite } from '../../../modules/favorites';
 //const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 import getContactDataFromState from '../../../dataHelpers/contact';
 
