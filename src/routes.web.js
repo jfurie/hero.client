@@ -68,7 +68,7 @@ export default(store) => {
       let authToken = auth.get('authToken');
       console.log('checkAuth');
       if (authToken) {
-        //store.dispatch(authActions.checkAuthServer(authToken.get('id')));
+        store.dispatch(authActions.checkAuthServer(authToken.get('id')));
         store.dispatch(authActions.logginWithAuthLocalStorage());
         cb();
       } else {
@@ -109,6 +109,7 @@ export default(store) => {
       } else if (tokenParam) {
         store.dispatch(authActions.logginWithAccessToken(tokenParam,cb));
       } else {
+        //replaceState(null, `/login?redirect=${nextState.location.pathname}`);
         cb();
       }
 
