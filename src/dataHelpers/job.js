@@ -48,6 +48,8 @@ export default function getJobDataFromState(state, jobId) {
     // location
     let location = state.locations.list.get(job.get('locationId'));
     job = job.set('location', location);
+
+    
   }
 
   return job;
