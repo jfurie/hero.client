@@ -14,6 +14,7 @@ export default function getContactDataFromState(state, contactId) {
     }
 
     contact = contact.set('jobs', contactJobs);
+    contact = contact.set('isFavorited',state.favorites.get('list').find(x=>x.get('favorableId') == contactId) != null);
   }
 
   return contact;

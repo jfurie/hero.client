@@ -184,24 +184,6 @@ export function getMyFavoriteJobs() {
   };
 }
 
-export function createJobFavorite(jobId){
-  return {
-    types: [constants.CREATE_JOB_FAVORITE, constants.CREATE_JOB_FAVORITE_SUCCESS, constants.CREATE_JOB_FAVORITE_FAIL],
-    promise: (client, auth) => client.api.post(`/jobs/${jobId}/favorites`, {
-      authToken: auth.authToken,
-    }),
-  };
-}
-
-export function deleteJobFavorite(jobId){
-  return {
-    types: [constants.DELETE_JOB_FAVORITE, constants.DELETE_JOB_FAVORITE_SUCCESS, constants.DELETE_JOB_FAVORITE_FAIL],
-    promise: (client, auth) => client.api.del(`/jobs/unfavorite?id=${jobId}`, {
-      authToken: auth.authToken,
-    }),
-  };
-}
-
 export function getOneJob(id) {
   return {
     types: [constants.GET_JOB, constants.GET_JOB_SUCCESS, constants.GET_JOB_FAIL],
