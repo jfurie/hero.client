@@ -45,3 +45,6 @@ export const GET_JOBS_BY_CONTACT_SUCCESS = 'hero.client/jobs/GET_JOBS_BY_CONTACT
 export const GET_JOBS_BY_IDS = 'hero.client/jobs/GET_JOBS_BY_IDS';
 export const GET_JOBS_BY_IDS_SUCCESS = 'hero.client/jobs/GET_JOBS_BY_IDS_SUCCESS';
 export const GET_JOBS_BY_IDS_FAIL = 'hero.client/jobs/GET_JOBS_BY_IDS_FAIL';
+export const GET_PUBLIC_JOB = 'hero.client/jobs/GET_PUBLIC_JOB';
+export const GET_PUBLIC_JOB_SUCCESS = 'hero.client/jobs/GET_PUBLIC_JOB_SUCCESS';
+export const GET_PUBLIC_JOB_FAIL = 'hero.client/jobs/GET_PUBLIC_JOB_FAIL';

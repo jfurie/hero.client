@@ -184,7 +184,7 @@ let style = {
     color: Styles.Colors.white,
     opacity: 0.7,
     textAlign: 'center',
-    width: '70px',
+    width: '80px',
   },
   statTitle: {
     fontSize: '11px',
@@ -261,7 +261,7 @@ class DetailsCard extends React.Component {
         </CardMedia>
         <div style={styleNew.cardTitleComponent}>
 
-          <FloatingActionButton onTouchTap={this._onTouchTapFloatAction.bind(this)} style={styleNew.floatActionButton} iconStyle={{color: Styles.Colors.blue500}} backgroundColor={Styles.Colors.white}>
+          <FloatingActionButton onTouchTap={this._onTouchTapFloatAction.bind(this)} style={styleNew.floatActionButton} iconStyle={{color: this.props.floatActionButtonColor || Styles.Colors.blue500}} backgroundColor={Styles.Colors.white}>
             {this.props.floatActionContent}
           </FloatingActionButton>
 
