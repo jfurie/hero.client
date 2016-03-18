@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import { LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, JSONTree } from '../../../components/web';
+import { LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,

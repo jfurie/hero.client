@@ -9,7 +9,7 @@ import Avatar from 'material-ui/lib/avatar';
 
 import {
   LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
-  CompanyNotesList, DetailsCard, CompanyAvatar, JSONTree,
+  CompanyNotesList, DetailsCard, CompanyAvatar,
 } from '../../../components/web';
 import defaultImage from './default-company.jpg';
 const style = {
