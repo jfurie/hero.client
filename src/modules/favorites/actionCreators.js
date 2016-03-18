@@ -53,3 +53,29 @@ export function deleteCompanyFavorite(companyId){
     }),
   };
 }
+
+export function createContactFavorite(contactId){
+  return (dispatch) => {
+    dispatch({
+      types: [constants.CREATE_CONTACT_FAVORITE, constants.CREATE_CONTACT_FAVORITE_SUCCESS, constants.CREATE_CONTACT_FAVORITE_FAIL],
+      promise: (client, auth) => client.api.post(`/contacts/${contactId}/favorites`, {
+        authToken: auth.authToken,
+      }).then(function (favorite) {
+        return favorite;
+      }),
+    });
+  };
+}
+
+export function deleteContactFavorite(contactId){
+  return (dispatch) => {
+    dispatch({
+      types: [constants.DELETE_CONTACT_FAVORITE, constants.DELETE_CONTACT_FAVORITE_SUCCESS, constants.DELETE_CONTACT_FAVORITE_FAIL],
+      promise: (client, auth) => client.api.del(`/contacts/unfavorite?id=${contactId}`, {
+        authToken: auth.authToken,
+      }).then(function (favorite) {
+        return favorite;
+      }),
+    });
+  };
+}

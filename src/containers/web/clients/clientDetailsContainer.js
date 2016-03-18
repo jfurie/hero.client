@@ -11,7 +11,8 @@ import { getOneLocation } from '../../../modules/locations';
 import { getImageByCompanyId } from '../../../modules/resources';
 import { getJobsByCompany, updateJobLocal, updateJobImageLocal, saveLocalJob, replaceJobLocal, getOneJob, createTempJob, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
 import { getNotesByCompany, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
-import { getAllContacts, getContactsByCompany, createContactFavorite, deleteContactFavorite } from '../../../modules/contacts';
+import { getAllContacts, getContactsByCompany} from '../../../modules/contacts';
+import { createContactFavorite, deleteContactFavorite } from '../../../modules/favorites';
 import { getAllJobCandidates, createCandidate } from '../../../modules/candidates';
 
 import { invite } from '../../../modules/users';

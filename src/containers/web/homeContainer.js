@@ -6,8 +6,8 @@ import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs, createJobFavorite, deleteJobFavorite } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
 import { getCompanyDetails, getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
-import { createTempContact, getMyFavoriteContacts, createContactFavorite, deleteContactFavorite } from '../../modules/contacts';
-
+import { createTempContact, getMyFavoriteContacts} from '../../modules/contacts';
+import { createContactFavorite, deleteContactFavorite } from '../../modules/favorites';
 import { Styles } from 'material-ui';
 import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 
@@ -41,7 +41,6 @@ let getData = (state, props) => {
   let favoriteContacts = state.contacts.get('list').filter(x=>favoriteMap[x.get('id')]);
   let favoriteJobs = state.jobs.get('list').filter(x=>favoriteMap[x.get('id')]);
   let favoriteCompanies = state.companies.get('list').filter(x=>favoriteMap[x.get('id')]);
-
 
   return {
     tab,
