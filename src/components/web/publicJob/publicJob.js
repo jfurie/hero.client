@@ -88,19 +88,17 @@ export default class PublicJob extends React.Component {
       }
 
       let actions = [{
-        materialIcon: 'search',
-        text: 'Find',
+        materialIcon: 'phone',
+        text: 'Call',
         onTouchTap: this.props.apply.bind(this),
       }, {
         materialIcon: 'star_rate',
-        text: job.get('isFavorited') ? 'Saved' : 'Save',
-        active: job.get('isFavorited'),
+        text: 'Save',
         onTouchTap: this.props.apply.bind(this),
       }, {
-        materialIcon: 'favorite',
-        text: 'HOT!',
+        materialIcon: 'email',
+        text: 'Apply',
         active: isHot,
-        activeColor: Styles.Colors.pink500,
         onTouchTap: this.props.apply.bind(this),
       }, {
         materialIcon: 'share',
