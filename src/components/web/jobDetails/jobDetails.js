@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import { LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, JSONTree } from '../../../components/web';
+import { LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -103,8 +103,13 @@ export default class JobDetails extends React.Component {
   }
 
   _onTouchTapShare() {
+    let {job} = this.props;
+
     let subject = `Check out ${this.props.job.get('title')} on HERO`;
-    let body = `${encodeURIComponent(this.props.job.get('title'))}%0A${encodeURIComponent(window.location.href)}`;
+
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${job.get('company').get('name')}-${job.get('title')}`;
+
+    let body = `${encodeURIComponent(job.get('title'))}%0A${encodeURIComponent(url)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
@@ -273,7 +278,7 @@ export default class JobDetails extends React.Component {
               topTags={job.get('tags') || []}
               stats={stats}
           />
-        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes','Data']}>
+        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
             <div>
               <Card style={style.card}>
                 <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
@@ -320,9 +325,6 @@ export default class JobDetails extends React.Component {
             <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
               <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
             </List>
-            <div>
-              <JSONTree data={this.props}></JSONTree>
-            </div>
           </CustomTabsSwipe>
 
         </div>

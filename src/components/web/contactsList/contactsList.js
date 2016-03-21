@@ -1,9 +1,8 @@
 import React from 'react';
 import { List } from 'material-ui';
-import { ContactListItem } from '../../../components/web';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-
+import ContactCardContainer from '../../../containers/web/contacts/contactCardContainer';
 @connect(() => (
 {}), {pushState})
 class ContactsList extends React.Component {
@@ -52,9 +51,9 @@ class ContactsList extends React.Component {
         {contacts.map((contact) => {
           return (
             <div>
-              <ContactListItem
+              <ContactCardContainer
                   onContactClick={this._showContactDetails.bind(this)}
-                  contact={contact}
+                  contactId={contact.get('id')}
                   company={company}
                   type={type}
                   favoriteContact={this.favoriteContact.bind(this)}

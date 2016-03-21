@@ -50,6 +50,9 @@ import NoteCreatePage from './containers/web/notes/noteCreateContainer';
 
 import TestPage from './containers/web/testContainer';
 
+//public views
+import PublicJobContainer from './containers/web/public/jobContainer';
+
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -68,7 +71,7 @@ export default(store) => {
       let authToken = auth.get('authToken');
       console.log('checkAuth');
       if (authToken) {
-        //store.dispatch(authActions.checkAuthServer(authToken.get('id')));
+        store.dispatch(authActions.checkAuthServer(authToken.get('id')));
         store.dispatch(authActions.logginWithAuthLocalStorage());
         cb();
       } else {
@@ -109,6 +112,7 @@ export default(store) => {
       } else if (tokenParam) {
         store.dispatch(authActions.logginWithAccessToken(tokenParam,cb));
       } else {
+        //replaceState(null, `/login?redirect=${nextState.location.pathname}`);
         cb();
       }
 
@@ -134,8 +138,10 @@ export default(store) => {
 
   return (
     <Route path="/" onUpdate={() => window.scrollTo(0, 0)} onEnter={loadUser}>
+
     <Route path="test" component={TestPage}/>
       <Route component={Layout}>
+        <Route path="j/:shortId/:title" component={PublicJobContainer}/>
         <Route path="login" onEnter={checkLogin} component={LoginPage}/>
         <Route path="error" component={ErrorPage}/>
 

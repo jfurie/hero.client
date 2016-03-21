@@ -78,3 +78,6 @@ export ContactSearchModal from './contactSearch/contactSearchModal';
 export ContactSearch from './contactSearch/contactSearch';
 export JobSearchModal from './jobSearch/jobSearchModal';
 export JobSearch from './jobSearch/jobSearch';
+
+export PublicHeader from './publicHeader/publicHeader';
+export PublicJob from './publicJob/publicJob';

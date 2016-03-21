@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, JobsList } from '../../../components/web';
 import { toggleNav } from '../../../modules/leftNav';
-import { getMyJobs, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs/index';
-
+import { getMyJobs} from '../../../modules/jobs/index';
+import { createJobFavorite, deleteJobFavorite } from '../../../modules/favorites';
 @connect(state => ({
   user: state.auth.user,
   jobs: state.jobs,
