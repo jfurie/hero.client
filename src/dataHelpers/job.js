@@ -48,6 +48,9 @@ export default function getJobDataFromState(state, jobId) {
     // location
     let location = state.locations.list.get(job.get('locationId'));
     job = job.set('location', location);
+
+    job = job.set('isFavorited',state.favorites.get('list').find(x=>x.get('favorableId') == jobId) != null);
+
   }
 
   return job;

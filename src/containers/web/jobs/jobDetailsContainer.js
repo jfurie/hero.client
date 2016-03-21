@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import Immutable from 'immutable';
 import { JobDetails } from '../../../components/web';
-import { getJobDetail, createJobFavorite, deleteJobFavorite } from '../../../modules/jobs';
+import { getJobDetail} from '../../../modules/jobs';
 import { getAllJobCandidates, deleteCandidate, editApplicantState } from '../../../modules/candidates';
-import { createContactFavorite, deleteContactFavorite, editContact } from '../../../modules/contacts';
+import { editContact } from '../../../modules/contacts';
+import { createContactFavorite, deleteContactFavorite ,createJobFavorite, deleteJobFavorite} from '../../../modules/favorites';
 import { getImageByJobId } from '../../../modules/resources';
 import { getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 

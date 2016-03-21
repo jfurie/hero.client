@@ -265,7 +265,7 @@ export default function reducer(state = initialState, action = {}) {
     });
   }
   case constants.CREATE_JOB_FAVORITE_SUCCESS: {
-    let job = state.list.get(action.result.favorableId);
+    let job = state.get('list').get(action.result.favorableId);
     job = job.set('isFavorited', true);
 
     let jobMap = {};
@@ -278,7 +278,7 @@ export default function reducer(state = initialState, action = {}) {
     });
   }
   case constants.DELETE_JOB_FAVORITE_SUCCESS: {
-    let job = state.list.get(action.result.favorableId);
+    let job = state.get('list').get(action.result.favorableId);
     job = job.set('isFavorited', false);
 
     let jobMap = {};

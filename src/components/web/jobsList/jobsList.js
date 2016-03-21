@@ -71,6 +71,7 @@ class JobsList extends React.Component {
     // let subheader = `${jobs.count()} ${(jobs.count() !== 1) ? (ressourceNamePlurial) : (ressourceName)}`;
     //
     // let self = this;
+    let self =this;
     let { jobs } = this.props;
 
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -107,7 +108,7 @@ class JobsList extends React.Component {
         <Infinite containerHeight={clientHeight - (56+64)} elementHeight={heights} useWindowAsScrollContainer>
           {jobs.map((job) => {
             return (
-              <JobCardContainer jobId={job.get('id')} />
+              <JobCardContainer {...self.props} jobId={job.get('id')} />
             );
           })}
         </Infinite>

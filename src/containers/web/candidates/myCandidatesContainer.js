@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Header, CandidatesList } from '../../../components/web';
 import { getMyCandidates } from '../../../modules/candidates';
-import { createContactFavorite, deleteContactFavorite } from '../../../modules/contacts';
+import { createContactFavorite, deleteContactFavorite } from '../../../modules/favorites';
 
 @connect(state => ({
   candidates: state.candidates,

@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { ContactListItem } from '../../../components/web';
+import getContactDataFromState from '../../../dataHelpers/contact';
 @connect((state, props) => {
   return {
-    contact: state.contacts.getIn('list',props.contactId)
+    contact: getContactDataFromState(state,props.contactId)
   };
 },{
 
@@ -17,7 +19,10 @@ export default class ContactCardContainer extends React.Component {
   componentWillReceiveProps(){
 
   }
-  render(){
 
+  render(){
+    return (<ContactListItem
+        {...this.props}
+    />);
   }
 }
