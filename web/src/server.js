@@ -22,8 +22,40 @@ function startApp() {
     cache: false
   });
   app.use(express.static(config.root + '/public'));
+  app.get('/j/:shortId/:title', function(req, res) {
+    let request = require('request');
+
+    request(`${config.apiBaseUrl}/api/jobs/meta?shortId=${req.params.shortId}`, function (error, response, body) {
+      let meta = {};
+
+      if (!error && response.statusCode == 200) {
+        let data = JSON.parse(body);
+        meta.title = data.title;
+        meta.description = data.description.replace('### Job Description ', '').substring(0, 170);
+        meta.url = `http://www.hero.jobs${req.url}`;
+        meta.type = 'jobie_hero_jobs:jobie';
+
+        if (data.location) {
+          meta.location = data.location;
+        }
+
+        if (data.image) {
+          meta.image = data.image;
+        }
+      }
+
+      res.render('main', {meta});
+    });
+  });
   app.get('*', function(req, res) {
-    res.render('main', {});
+    let meta = {};
+
+    meta.title = 'Hero.jobs';
+    meta.url = 'http://www.hero.jobs';
+    meta.image = 'http://www.hero.jobs/img/hero_logo.png';
+    meta.type = 'website';
+
+    res.render('main', {meta});
   });
   app.listen(config.port, function() {
     console.log('Browse your REST API at %s', config.port);
