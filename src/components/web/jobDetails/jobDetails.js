@@ -127,6 +127,9 @@ export default class JobDetails extends React.Component {
   _onTouchCompanyIcon(){
     this.props.pushState(null,`/clients/${this.props.job.get('companyId')}`);
   }
+  editSkills(){
+    this.props.pushState(null, `/jobs/${this.props.job.get('id')}/categories/edit`);
+  }
   createNoteModalOpen(){
     if(this.props.addNoteModalOpen){
       this.props.addNoteModalOpen();
@@ -348,6 +351,7 @@ export default class JobDetails extends React.Component {
             <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
             <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
+            <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
           </IconMenu>
         }
         />

@@ -482,7 +482,7 @@ export default class ClientDetails extends React.Component {
             <ContactsList
                 contacts={company.get('contacts')}
                 company={company}
-                type="mini"
+                type="full"
                 favoriteContact={this.props.favoriteContact.bind(this)}
                 unfavoriteContact={this.props.unfavoriteContact.bind(this)}
             />

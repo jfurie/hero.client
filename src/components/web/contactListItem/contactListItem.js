@@ -1,7 +1,9 @@
 import React from 'react';
 import Immutable from 'immutable';
+import { connect } from 'react-redux';
 import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar } from 'material-ui';
 import { Gravatar, Tag, FavoriteButton, CardBasic, PhoneButton, SmsButton, EmailButton} from '../../../components/web';
+import categoryLinkSort from '../../../utils/categoryLinkSort';
 let style = {
   layout:{
     display:'flex',
@@ -101,6 +103,10 @@ let style = {
   },
 };
 
+@connect((state) =>
+{
+  return {categories: state.categories.list}
+}, {})
 export default class ContactListItem extends React.Component {
   constructor(props){
     super(props);
@@ -181,6 +187,7 @@ export default class ContactListItem extends React.Component {
   }
 
   render(){
+    let self = this;
     let {contact,type} = this.props;
 
     let candidates = contact.get('candidates');
@@ -232,8 +239,19 @@ export default class ContactListItem extends React.Component {
       salary = (<span>No Salary Info</span>);
     }
 
-    let skillImg = <img style={{width: '40px', height: '40px'}} src='http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png' />;
+    let categoryLinks = contact.get('_categoryLinks');
+    let skillImg = <span></span>;
+    if(categoryLinks && categoryLinks.size > 0){
+      let sorted = categoryLinks.sort(categoryLinkSort);
 
+      let currentCategory = sorted.get(0);
+      if(currentCategory.get('experience') > 0){
+        let found = self.props.categories.find(x=>x.get('id') == currentCategory.get('categoryId'));
+        if(found){
+          skillImg = <img style={{width: '40px', height: '40px'}} src={found.get('imageUrl')} />;
+        }
+      }
+    }
     let companies = '';
 
     if (contact.get('companies')) {

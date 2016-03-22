@@ -2,28 +2,28 @@ import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { getCategoriesIfNeeded } from '../../../modules/categories';
-import { getOneContact, setCategoryLocal, setExperience, setPrimary, setFrameworks } from '../../../modules/contacts';
+import { getOneJob, setCategoryLocal, setExperience, setPrimary, setFrameworks } from '../../../modules/jobs';
 import { ContactEditCategories } from '../../../components/web';
 function getData(state, props) {
-  let contact = state.contacts.get('list').get(props.params.contactId);
+  let job = state.jobs.get('list').get(props.params.jobId);
   let skills = Immutable.List();
-  if(contact && contact.get('_categoryLinks')){
-    skills = contact.get('_categoryLinks');
+  if(job && job.get('_categoryLinks')){
+    skills = job.get('_categoryLinks');
   }
   return {
     categories: state.categories.list,
-    item: state.contacts.get('list').get(props.params.contactId),
+    item: state.jobs.get('list').get(props.params.jobId),
     skills,
   };
 }
-@connect(getData, {getCategoriesIfNeeded, getOneContact,setCategoryLocal, setExperience, setPrimary, setFrameworks})
+@connect(getData, {getCategoriesIfNeeded, getOneJob,setCategoryLocal, setExperience, setPrimary, setFrameworks})
 export default class ContactEditCategoriesContainer extends React.Component {
 
   constructor(props){
     super(props);
   }
 
-  setContactCategories(contactId, props){
+  setContactCategories(jobId, props){
     if(props.categories && props.item){
       props.categories.map(function(category){
         let currentContactCategory = null;
@@ -36,10 +36,10 @@ export default class ContactEditCategoriesContainer extends React.Component {
         }
         if(!currentContactCategory){
           props.setCategoryLocal(
-            contactId,
+            jobId,
             {
               categoryId:category.get('id'),
-              contactId,
+              jobId,
               experience:0,
               primary:true,
               frameworkInclude: category.get('frameworkArr') && category.get('frameworkArr').toArray()
@@ -51,18 +51,18 @@ export default class ContactEditCategoriesContainer extends React.Component {
 
   componentDidMount(){
     this.props.getCategoriesIfNeeded();
-    this.props.getOneContact(this.props.params.contactId);
-    //this.props.getContactCategoriesByContact(this.props.params.contactId);
-    this.setContactCategories(this.props.params.contactId,this.props);
+    this.props.getOneJob(this.props.params.jobId);
+    //this.props.getContactCategoriesByContact(this.props.params.jobId);
+    this.setContactCategories(this.props.params.jobId,this.props);
 
   }
   componentWillReceiveProps(newProps){
-    if(newProps.params.contactId != this.props.params.contactId){
-      this.props.getOneContact(newProps.params.contactId);
-      //this.props.getContactCategoriesByContact(newProps.params.contactId);
+    if(newProps.params.jobId != this.props.params.jobId){
+      this.props.getOneJob(newProps.params.jobId);
+      //this.props.getContactCategoriesByContact(newProps.params.jobId);
 
     }
-    this.setContactCategories(newProps.params.contactId,newProps);
+    this.setContactCategories(newProps.params.jobId,newProps);
   }
   render(){
     return (

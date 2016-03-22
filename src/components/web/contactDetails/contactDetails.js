@@ -5,6 +5,7 @@ import { replaceNoteLocal } from '../../../modules/notes/index';
 import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
+import categoryLinkSort from '../../../utils/categoryLinkSort';
 
 import { LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal } from '../../../components/web';
 import {
@@ -50,9 +51,10 @@ const style = {
     margin: '16px',
   },
 };
-
-@connect(() => (
-{}), {pushState, replaceNoteLocal,replaceState, invite})
+@connect((state) =>
+{
+  return {categories: state.categories.list}
+}, {pushState, replaceNoteLocal,replaceState, invite})
 export default class ContactDetails extends React.Component {
 
   constructor(props){
@@ -296,7 +298,7 @@ export default class ContactDetails extends React.Component {
   }
 
   renderCandidateDetailsCard(contact, candidate) {
-
+    let self = this;
     if (candidate) {
       console.log(candidate.toJS());
     }
@@ -378,23 +380,34 @@ export default class ContactDetails extends React.Component {
     if(tags.indexOf(contact.get('status') <=-1)){
       tags.push(contact.get('status'));
     }
+    let categoryLinks = contact.get('_categoryLinks');
+    let skillImg = <span></span>;
+    if(categoryLinks && categoryLinks.size > 0){
+      let sorted = categoryLinks.sort(categoryLinkSort);
 
-    let avatar = (
-      <div style={{position: 'relative'}}>
-        <img style={{width: '95px', height:'95px', borderRadius:'0px'}} src={common.avatarUrl}/>
-        <img
-          style={{
+      let currentCategory = sorted.get(0);
+      if(currentCategory.get('experience') > 0){
+        let found = self.props.categories.find(x=>x.get('id') == currentCategory.get('categoryId'));
+        if(found){
+          skillImg = <img style={{
             width: '35px',
             height:'35px',
             borderRadius:'0px',
             position: 'absolute',
+            backgroundColor:'#ffffff',
             bottom: '4px',
             right: 0,
             border: '2px solid white',
             borderBottom: 'none',
             borderRight: 'none',
-          }}
-          src="http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png"/>
+          }} src={found.get('imageUrl')} />;
+        }
+      }
+    }
+    let avatar = (
+      <div style={{position: 'relative'}}>
+        <img style={{width: '95px', height:'95px', backgroundColor:'#ffffff', borderRadius:'0px'}} src={common.avatarUrl}/>
+        {skillImg}
       </div>
     );
 

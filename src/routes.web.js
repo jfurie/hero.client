@@ -1,7 +1,7 @@
 import {IndexRoute, Route} from 'react-router';
 import React from 'react';
 import * as authActions from './modules/auth';
-
+import * as categoryActions from './modules/categories';
 // general containers
 import Home from './containers/web/homeContainer';
 import LoginPage from './containers/web/login/loginContainer';
@@ -42,7 +42,7 @@ import JobSearchContainer from './containers/web/jobs/jobSearchContainer';
 import MyJobsPage from './containers/web/jobs/myJobsContainer';
 import JobCreatePage from './containers/web/jobs/jobCreateContainer';
 import JobEditPage from './containers/web/jobs/jobEditContainer';
-
+import JobEditCategoriesContainer from './containers/web/jobs/jobEditCategoriesContainer';
 //search
 import SearchContainer from './containers/web/search/searchContainer';
 //notes
@@ -115,7 +115,7 @@ export default(store) => {
         //replaceState(null, `/login?redirect=${nextState.location.pathname}`);
         cb();
       }
-
+      store.dispatch(categoryActions.getCategoriesIfNeeded());
       // hide splash if here
       setTimeout(() => {
         document.getElementById('splash').style.display = 'none';
@@ -212,6 +212,7 @@ export default(store) => {
 
               <Route path=":jobId/create" component={JobCreatePage}/>
               <Route path=":jobId/edit" component={JobEditPage}/>
+              <Route path=":jobId/categories/edit" component={JobEditCategoriesContainer}/>
           </Route>
 
           {/*<Route path="/myjobs" component={MyJobsPage}/>*/}

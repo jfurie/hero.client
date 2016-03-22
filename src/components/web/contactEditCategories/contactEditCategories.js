@@ -169,11 +169,11 @@ export default class ContactEditCategoriesContainer extends React.Component {
   _handleChange(categoryItem, currentContactCategory, value){
     console.log(value);
     currentContactCategory = currentContactCategory.set('experience',value);
-    this.props.setExperience(this.props.contact.get('id'),currentContactCategory, categoryItem);
+    this.props.setExperience(this.props.item.get('id'),currentContactCategory, categoryItem);
   }
   _handleToggle(categoryItem, currentContactCategory,e, value){
     currentContactCategory = currentContactCategory.set('primary',value);
-    this.props.setPrimary(this.props.contact.get('id'),currentContactCategory, categoryItem);
+    this.props.setPrimary(this.props.item.get('id'),currentContactCategory, categoryItem);
   }
   renderToggle(categoryItem,currentContactCategory){
     if(currentContactCategory.get('experience') > 0 ){
@@ -201,7 +201,7 @@ export default class ContactEditCategoriesContainer extends React.Component {
     } else {
       contactCategory = contactCategory.setIn(['frameworkInclude',contactCategory.get('frameworkInclude').length],framework);
     }
-    this.props.setFrameworks(this.props.contact.get('id'),contactCategory);
+    this.props.setFrameworks(this.props.item.get('id'),contactCategory);
   }
   renderStacks(contactCategory,category){
     var self = this;
@@ -235,7 +235,7 @@ export default class ContactEditCategoriesContainer extends React.Component {
       </div>);
   }
   render(){
-    console.log(this.props.contact);
+    console.log(this.props.item);
     if(this.state.windowWidth > 768){
       style.toolbarInline.width ='375px';
     } else {
@@ -257,7 +257,7 @@ export default class ContactEditCategoriesContainer extends React.Component {
         <div style={{paddingTop:'16px', backgroundColor:'#ffffff', borderBottom:'1px solid #ffffff'}}>
           <div style={style.sectionTitle}>Primary/Secondary Skills</div>
           {this.props.categories.map(categoryItem =>{
-            let currentContactCategory =this.props.contact && this.props.contact.get('_contactCategories').find(x=>x.get('categoryId') == categoryItem.get('id'))|| new Immutable.Map();
+            let currentContactCategory =this.props.skills && this.props.skills.find(x=>x.get('categoryId') == categoryItem.get('id'))|| new Immutable.Map();
             return (<div style={{marginBottom:'24px'}}>
             <CardText style={{padding:'24px', paddingBottom:'0px'}}>
               <ContactCategoryToggle
