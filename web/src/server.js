@@ -32,7 +32,7 @@ function startApp() {
         let data = JSON.parse(body);
         meta.title = data.title;
         meta.description = data.description.replace('### Job Description ', '').substring(0, 170);
-        meta.url = `http://www.hero.jobs${req.url}`;
+        meta.url = `${config.webBaseUrl}${req.url}`;
         meta.type = 'jobie_hero_jobs:jobie';
 
         if (data.location) {
@@ -51,8 +51,8 @@ function startApp() {
     let meta = {};
 
     meta.title = 'Hero.jobs';
-    meta.url = 'http://www.hero.jobs';
-    meta.image = 'http://www.hero.jobs/img/hero_logo.png';
+    meta.url = config.webBaseUrl;
+    meta.image = `${config.webBaseUrl}/img/hero_logo.png`;
     meta.type = 'website';
 
     res.render('main', {meta});
