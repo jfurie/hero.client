@@ -1,6 +1,5 @@
 import React from 'react';
 import {} from '../';
-import Immutable from 'immutable';
 import {
 EnhancedButton, Toggle
 } from 'material-ui';
@@ -135,7 +134,7 @@ export default class ContactCategoryToggle extends React.Component {
           {isEdit ?this.renderToggle.bind(this)(category,contactCategory): <span></span>}
         </div>);
     } else {
-      return (<span></span>)
+      return (<span></span>);
     }
 
   }
