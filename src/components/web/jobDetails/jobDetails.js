@@ -149,6 +149,10 @@ export default class JobDetails extends React.Component {
     }
   }
 
+  viewPublic(){
+    this.props.pushState(null, `/j/${this.props.job.get('shortId')}/${this.props.job.get('company').get('name')}-${this.props.job.get('title')}`);
+  }
+
   renderContent(job) {
 
     if (job) {
@@ -354,6 +358,7 @@ export default class JobDetails extends React.Component {
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
             <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
+            <MenuItem index={0} onTouchTap={this.viewPublic.bind(this)} primaryText={`View Public Job`} />
           </IconMenu>
         }
         />

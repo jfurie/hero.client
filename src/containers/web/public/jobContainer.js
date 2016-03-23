@@ -5,9 +5,10 @@ import { PublicJob, PublicSignUp } from '../../../components/web';
 import { getCategoriesIfNeeded } from '../../../modules/categories';
 function getData(state, props) {
   let job = state.publik.get('jobs').get(props.params.shortId);
-
+  console.log(state.auth);
   return {
     job,
+    authToken:state.auth.get('authToken'),
   };
 }
 
@@ -60,6 +61,7 @@ class PublicJobContainer extends React.Component {
       <div>
         <PublicJob
             open
+            authToken={this.props.authToken}
             job={job}
             apply={this.openSignUpModal.bind(this)}
             share={this.share.bind(this)}
