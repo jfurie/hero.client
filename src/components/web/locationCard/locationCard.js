@@ -107,28 +107,47 @@ class LocationCard extends React.Component {
           />)}
         </CardText>
         <CardMedia style={{padding: '8px'}}>
-          <GoogleMapLoader
-              containerElement={
-                <div
-                    {...this.props}
-                    style={{
-                      height: '200px',
-                      width: '100%',
-                    }}
-                />
-              }
-              googleMapElement={
-                <GoogleMap
-                    options={options}
-                    zoom={defaultZoom}
-                    center={geoField}
-                >
-                  <Marker
-                      {...marker}
+          <div
+              style={{
+                height: '225px',
+                width: '100%',
+                position: 'relative',
+              }}
+          >
+            <a
+                style={{position: 'absolute', left: -1, right: -1, bottom: -1, top: -1, zIndex: 2000, cursor: 'pointer'}}
+                href={defaultZoom > 3 ? `http://maps.google.com/maps?q=${geoField.lat},${geoField.lng}&z=${defaultZoom}` : 'http://maps.google.com'}
+                target="_blank"
+            />
+            <div style={{position: 'absolute', left: -1, right: -1, bottom: -1, height: '25px', backgroundColor: '#fff', zIndex: 1000}} />
+            <GoogleMapLoader
+                containerElement={
+                  <div
+                      {...this.props}
+                      style={{
+                        height: '225px',
+                        width: '100%',
+                      }}
                   />
-                </GoogleMap>
-              }
-          />
+                }
+                googleMapElement={
+                  <GoogleMap
+                      options={options}
+                      zoom={defaultZoom}
+                      center={geoField}
+                  >
+                    {
+                      defaultZoom > 3 ?
+                      <Marker
+                          {...marker}
+                      />
+                      : (null)
+                    }
+                  </GoogleMap>
+                }
+            />
+          </div>
+
         </CardMedia>
       </Card>
     );
