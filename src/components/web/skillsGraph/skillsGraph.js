@@ -29,14 +29,12 @@ export default class SkillsGraph extends React.Component {
     };
   }
   componentDidMount(){
-    console.log('this.refs.widthCheck',this.refs.widthCheck.clientWidth);
-    if(this.state.graphWidth !== this.refs.widthCheck.clientWidth){
+    if(this.refs.widthCheck && this.state.graphWidth !== this.refs.widthCheck.clientWidth){
       this.setState({'graphWidth':this.refs.widthCheck.clientWidth});
     }
   }
   componentDidUpdate(){
-    console.log('this.refs.widthCheck.clientWidth',this.refs.widthCheck.clientWidth);
-    if(this.state.graphWidth !== this.refs.widthCheck.clientWidth){
+    if(this.refs.widthCheck && this.state.graphWidth !== this.refs.widthCheck.clientWidth){
       this.setState({'graphWidth':this.refs.widthCheck.clientWidth});
     }
 
