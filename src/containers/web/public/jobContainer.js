@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getJobByShortId, applyToJob } from '../../../modules/public';
 import { PublicJob, PublicSignUp } from '../../../components/web';
-
+import { getCategoriesIfNeeded } from '../../../modules/categories';
 function getData(state, props) {
   let job = state.publik.get('jobs').get(props.params.shortId);
 
@@ -11,7 +11,7 @@ function getData(state, props) {
   };
 }
 
-@connect((state, props) => (getData(state, props)), {getJobByShortId, applyToJob})
+@connect((state, props) => (getData(state, props)), {getJobByShortId, applyToJob,getCategoriesIfNeeded})
 class PublicJobContainer extends React.Component {
 
   constructor(props) {
@@ -23,6 +23,7 @@ class PublicJobContainer extends React.Component {
 
   componentDidMount() {
     this.props.getJobByShortId(this.props.params.shortId);
+    this.props.getCategoriesIfNeeded();
   }
 
   openSignUpModal() {

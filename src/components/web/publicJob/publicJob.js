@@ -5,7 +5,7 @@ import { pushState, replaceState } from 'redux-router';
 
 import { CardTitle } from 'material-ui';
 import defaultImage from './publicJob.jpg';
-import { LocationCard, PublicHeader, DetailsCard, CustomTabsSwipe, CompanyAvatar } from '../../../components/web';
+import {SkillsCard, LocationCard, PublicHeader, DetailsCard, CustomTabsSwipe, CompanyAvatar } from '../../../components/web';
 import { RaisedButton, FontIcon, Styles, Card, CardText, Avatar } from 'material-ui';
 import './publicJob.scss';
 
@@ -119,7 +119,7 @@ export default class PublicJob extends React.Component {
       else {
         companyName = 'XYZ Company';
       }
-
+      let categoryLinks =job.get('_categoryLinks');
       return (
         <div>
           <DetailsCard
@@ -162,6 +162,7 @@ export default class PublicJob extends React.Component {
             </Card>
 
             <LocationCard location={job.get('location')} />
+            <SkillsCard skills={categoryLinks} />
           </div>
           <div></div>
           <div></div>

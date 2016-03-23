@@ -42,3 +42,14 @@ export const GET_JOBS_BY_IDS_FAIL = 'hero.client/jobs/GET_JOBS_BY_IDS_FAIL';
 export const GET_PUBLIC_JOB = 'hero.client/jobs/GET_PUBLIC_JOB';
 export const GET_PUBLIC_JOB_SUCCESS = 'hero.client/jobs/GET_PUBLIC_JOB_SUCCESS';
 export const GET_PUBLIC_JOB_FAIL = 'hero.client/jobs/GET_PUBLIC_JOB_FAIL';
+
+export const SET_JOB_CATEGORIES_LOCAL = 'hero.client/jobs/SET_JOB_CATEGORIES_LOCAL';
+export const SET_EXPERIENCE = 'hero.client/jobs/SET_EXPERIENCE';
+export const SET_PRIMARY = 'hero.client/jobs/SET_PRIMARY';
+export const CREATE_JOB_CATEGORY = 'hero.client/jobs/CREATE_JOB_CATEGORY';
+export const CREATE_JOB_CATEGORY_SUCCESS = 'hero.client/jobs/CREATE_JOB_CATEGORY_SUCCESS';
+export const CREATE_JOB_CATEGORY_FAIL = 'hero.client/jobs/CREATE_JOB_CATEGORY_FAIL';
+export const EDIT_JOB_CATEGORY = 'hero.client/jobs/EDIT_JOB_CATEGORY';
+export const EDIT_JOB_CATEGORY_SUCCESS = 'hero.client/jobs/EDIT_JOB_CATEGORY_SUCCESS';
+export const EDIT_JOB_CATEGORY_FAIL = 'hero.client/jobs/EDIT_JOB_CATEGORY_FAIL';
+export const SET_FRAMEWORKS = 'hero.client/jobs/SET_FRAMEWORKS';

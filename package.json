@@ -63,6 +63,7 @@
     "react-motion": "^0.4.2",
     "react-native": "0.13 - 0.14",
     "react-pdf": "0.0.9",
+    "react-plotlyjs": "^0.3.0",
     "react-redux": "^4.0.0",
     "react-router": "^1.0.0",
     "react-slider": "^0.6.1",
