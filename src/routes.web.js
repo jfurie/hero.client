@@ -10,7 +10,7 @@ import InvitedPage from './containers/web/invited/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
 import EmptyPage from './containers/web/emptyContainer';
 import Layout from './containers/web/layoutContainer';
-
+import PublicLayout from './containers/web/publicLayoutContainer';
 
 
 // settings containers
@@ -128,6 +128,12 @@ export default(store) => {
     }, 0);
   };
 
+  const loadAnonymous = () => {
+    setTimeout(() => { // TMP
+      document.getElementById('splash').style.display = 'none';
+    }, 0);
+  };
+
   const checkLogin = (nextState, replaceState, cb) => {
     const auth = store.getState().auth;
     if (auth.get('authToken')) { /* already logged */
@@ -137,11 +143,12 @@ export default(store) => {
   };
 
   return (
-    <Route path="/" onUpdate={() => window.scrollTo(0, 0)} onEnter={loadUser}>
-
-    <Route path="test" component={TestPage}/>
-      <Route component={Layout}>
+    <Route path="/" onUpdate={() => window.scrollTo(0, 0)}>
+      <Route path="test" component={TestPage}/>
+      <Route component={PublicLayout} onEnter={loadAnonymous}>
         <Route path="j/:shortId/:title" component={PublicJobContainer}/>
+      </Route>
+      <Route component={Layout} onEnter={loadUser}>
         <Route path="login" onEnter={checkLogin} component={LoginPage}/>
         <Route path="error" component={ErrorPage}/>
 

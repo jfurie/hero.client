@@ -12,7 +12,14 @@ let config = {
   },
   development: {
     db: 'mongodb://localhost:27017',
-  }
+    apiBaseUrl: 'https://core-api-loopback-dev.herokuapp.com',
+  },
+  production: {
+    apiBaseUrl: 'https://core-api-loopback.herokuapp.com',
+  },
+  local: {
+    apiBaseUrl: 'http://localhost:3003',
+  },
 };
 
 export default _.extend(

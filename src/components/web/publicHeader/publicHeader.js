@@ -43,13 +43,13 @@ class PublicHeader extends React.Component {
     };
 
     let iconLeft = (
-      <img src="/img/hero-logo.png" style={{position: 'absolute', height: '30px', marginTop: '7px', marginLeft: '16px'}} />
+      <img onClick={this.props.onTouchTap.bind(this)} src="/img/hero-logo.png" style={{position: 'absolute', height: '30px', marginTop: '7px', marginLeft: '16px'}} />
     );
 
     let iconRight = (
       <span>
-        <IconButton iconStyle={iconStyle} onTouchTap={this.apply.bind(this)} iconClassName="material-icons">search</IconButton>
-        <IconButton iconStyle={iconStyle} onTouchTap={this.apply.bind(this)} iconClassName="material-icons">menu</IconButton>
+        <IconButton iconStyle={iconStyle} onTouchTap={this.props.onTouchTap.bind(this)} iconClassName="material-icons">search</IconButton>
+        <IconButton iconStyle={iconStyle} onTouchTap={this.props.onTouchTap.bind(this)} iconClassName="material-icons">menu</IconButton>
       </span>
     );
 
