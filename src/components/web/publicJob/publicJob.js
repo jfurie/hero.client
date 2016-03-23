@@ -185,7 +185,7 @@ export default class PublicJob extends React.Component {
     let { job } = this.props;
     return (
       <div>
-        <PublicHeader />
+        <PublicHeader onTouchTap={this.props.apply.bind(this)} />
         {this.renderContent(job)}
       </div>
     );

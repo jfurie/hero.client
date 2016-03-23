@@ -16,13 +16,14 @@ var original = {
     //'index.android': ['./src/main.android.js'],
     'index.web': ['./src/main.web.js'],
   },
-  output:
-    {
-      path: path.resolve(__dirname, 'web/dist/public/js'),
-      filename: '[name].js',
-    },
+  output: {
+    path: path.resolve(__dirname, 'web/dist/public/js'),
+    filename: '[name].js',
+  },
   externals:{
-    google:'google'
+    google:'google',
+    linkedin:'var IN',
+    'window': 'window',
   },
   module: {
     preLoaders: [

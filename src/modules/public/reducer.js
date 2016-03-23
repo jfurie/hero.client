@@ -32,6 +32,9 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_JOB_BY_SHORT_ID_FAIL: {
     return state.set('err', action.err);
   }
+  case constants.APPLY_TO_JOB_SUCCESS: {
+    return state;
+  }
   default:
     return state;
   }
