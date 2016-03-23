@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+import Immutable from 'immutable';
 @connect((state) =>
 {
   return {categories: state.categories.list};
@@ -62,6 +62,7 @@ export default class SkillsGraph extends React.Component {
               <tbody>
                 {skills.map(skill=>{
                   let category = this.props.categories.find(x=>x.get('id') == skill.get('categoryId'));
+                  if(!category) category = Immutable.fromJS({});
                   let percent = skill.get('experience') * 1.0 / 3.0 * 100.0;
                   return (
                     <tr style={{width:'100%'}}>

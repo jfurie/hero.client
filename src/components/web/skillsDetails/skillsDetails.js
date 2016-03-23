@@ -1,5 +1,6 @@
 import React from 'react';
 import {} from '../';
+import Immutable from 'immutable';
 import {
 EnhancedButton, Toggle
 } from 'material-ui';
@@ -99,38 +100,43 @@ export default class ContactCategoryToggle extends React.Component {
   render(){
     let self = this;
     let {category, contactCategory, isEdit} = this.props;
-    return (
-      <div style={style.stacks}>
+    if(category && contactCategory){
+      return (
+        <div style={style.stacks}>
 
-        <div style={style.stackTitle}>{category.get('shortTitle')}</div>
-        <div>
-          {category.get('frameworkArr').map(function(framework){
-            let styleActive= style.stackSkillInActive;
-            let isActive = false;
-            if(contactCategory.get('frameworkInclude').indexOf(framework) > -1){
-              styleActive= style.stackSkill;
-              isActive = true;
-            }
-            if(!isActive && !isEdit){
-              return (<span></span>);
-            } else {
-              return (
-                  <div title={framework} style={styleActive}>
-                    {isEdit?(<EnhancedButton onTouchTap={self.toggleSkill.bind(self,framework,contactCategory)} style={{color:'#ffffff', width:'100%',    whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'}}>
-                    {framework}
-                    </EnhancedButton>):(
-                      <span>{framework}</span>
+          <div style={style.stackTitle}>{category.get('shortTitle')}</div>
+          <div>
+            {category.get('frameworkArr').map(function(framework){
+              let styleActive= style.stackSkillInActive;
+              let isActive = false;
+              if(contactCategory.get('frameworkInclude').indexOf(framework) > -1){
+                styleActive= style.stackSkill;
+                isActive = true;
+              }
+              if(!isActive && !isEdit){
+                return (<span></span>);
+              } else {
+                return (
+                    <div title={framework} style={styleActive}>
+                      {isEdit?(<EnhancedButton onTouchTap={self.toggleSkill.bind(self,framework,contactCategory)} style={{color:'#ffffff', width:'100%',    whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'}}>
+                      {framework}
+                      </EnhancedButton>):(
+                        <span>{framework}</span>
 
-                    )}
-                  </div>
-                );
-            }
+                      )}
+                    </div>
+                  );
+              }
 
-          })}
-        </div>
-        {isEdit ?this.renderToggle.bind(this)(category,contactCategory): <span></span>}
-      </div>);
+            })}
+          </div>
+          {isEdit ?this.renderToggle.bind(this)(category,contactCategory): <span></span>}
+        </div>);
+    } else {
+      return (<span></span>)
+    }
+
   }
 }
