@@ -19,13 +19,19 @@ function setGiffers(skills, categories){
   if(gifferItems){
     gifferList = new Immutable.List(gifferItems.map(skill=>{
       let category = categories.find(x=>x.get('id') == skill.get('categoryId'));
-      return new Immutable.fromJS({
-        key:category.get('imageUrl'),
-        url:category.get('imageUrl'),
-        width:'80px',
-        height:'80px',
-        title:category.get('title')
-      });
+      if(category){
+        return new Immutable.fromJS({
+          key:category.get('imageUrl'),
+          url:category.get('imageUrl'),
+          width:'80px',
+          height:'80px',
+          title:category.get('title')
+        });
+      } else {
+        return new Immutable.fromJS({
+        });
+      }
+
     }));
   }
   return gifferList;
