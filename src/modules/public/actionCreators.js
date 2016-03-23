@@ -12,3 +12,20 @@ export function getJobByShortId(shortId) {
     });
   };
 }
+
+export function applyToJob(contact, jobId) {
+  return (dispatch) => {
+    dispatch({
+      types: [constants.APPLY_TO_JOB, constants.APPLY_TO_JOB_SUCCESS, constants.APPLY_TO_JOB_FAIL],
+      promise: (client, auth) => client.api.post(`/candidates/applyToJob`, {
+        authToken: auth.authToken,
+        data: {
+          contact,
+          jobId,
+        },
+      }).then((candidate) => {
+        return candidate;
+      }),
+    });
+  };
+}

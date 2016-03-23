@@ -13,15 +13,12 @@ let config = {
   development: {
     db: 'mongodb://localhost:27017',
     apiBaseUrl: 'https://core-api-loopback-dev.herokuapp.com',
-    webBaseUrl: 'https://hero-client-dev.herokuapp.com',
   },
   production: {
     apiBaseUrl: 'https://core-api-loopback.herokuapp.com',
-    webBaseUrl: 'https://hero-client.herokuapp.com',
   },
   local: {
     apiBaseUrl: 'http://localhost:3003',
-    webBaseUrl: 'http://localhost:5455',
   },
 };
 
