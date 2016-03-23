@@ -26,6 +26,11 @@ class PublicJobContainer extends React.Component {
     this.props.getJobByShortId(this.props.params.shortId);
     this.props.getCategoriesIfNeeded();
   }
+  componentWillReceiveProps(nextProps){
+    if(this.props.params.shortId !== nextProps.params.shortId){
+      this.props.getJobByShortId(nextProps.params.shortId);
+    }
+  }
 
   openSignUpModal() {
     this.setState({
