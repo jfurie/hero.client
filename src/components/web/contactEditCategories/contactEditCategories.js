@@ -1,6 +1,6 @@
 import React from 'react';
 import Immutable from 'immutable';
-import {ContactCategoryToggle} from '../';
+import {ContactCategoryToggle, SkillsDetails} from '../';
 import {
    IconButton, ToolbarGroup, Toolbar, Toggle,
   FlatButton, ToolbarTitle, Styles,CardText,Avatar, FontIcon,EnhancedButton,
@@ -205,34 +205,38 @@ export default class ContactEditCategoriesContainer extends React.Component {
   }
   renderStacks(contactCategory,category){
     var self = this;
-    // <SkillsDetails
-    //   category={category}
-    //   contactCategory={contactCategory}
-    //  />
-    return (
-
-      <div style={style.stacks}>
-
-        <div style={style.stackTitle}>{category.get('shortTitle')}</div>
-        <div>
-          {category.get('frameworkArr').map(function(framework){
-            var styleActive= style.stackSkillInActive;
-            if(contactCategory.get('frameworkInclude').indexOf(framework) > -1){
-              styleActive= style.stackSkill;
-            }
-            return (
-                <div title={framework} style={styleActive}>
-                  <EnhancedButton onTouchTap={self.toggleSkill.bind(self,framework,contactCategory)} style={{color:'#ffffff', width:'100%',    whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'}}>
-                  {framework}
-                  </EnhancedButton>
-                </div>
-              );
-          })}
-        </div>
-        {this.renderToggle.bind(this)(category,contactCategory)}
-      </div>);
+    return (<SkillsDetails
+      isEdit={true}
+      category={category}
+      item={this.props.item}
+      setPrimary={this.props.setPrimary.bind(this)}
+      setFrameworks={this.props.setFrameworks.bind(this)}
+      contactCategory={contactCategory}
+     />)
+    // return (
+    //
+    //   <div style={style.stacks}>
+    //
+    //     <div style={style.stackTitle}>{category.get('shortTitle')}</div>
+    //     <div>
+    //       {category.get('frameworkArr').map(function(framework){
+    //         var styleActive= style.stackSkillInActive;
+    //         if(contactCategory.get('frameworkInclude').indexOf(framework) > -1){
+    //           styleActive= style.stackSkill;
+    //         }
+    //         return (
+    //             <div title={framework} style={styleActive}>
+    //               <EnhancedButton onTouchTap={self.toggleSkill.bind(self,framework,contactCategory)} style={{color:'#ffffff', width:'100%',    whiteSpace: 'nowrap',
+    //                   overflow: 'hidden',
+    //                   textOverflow: 'ellipsis'}}>
+    //               {framework}
+    //               </EnhancedButton>
+    //             </div>
+    //           );
+    //       })}
+    //     </div>
+    //     {this.renderToggle.bind(this)(category,contactCategory)}
+    //   </div>);
   }
   render(){
     console.log(this.props.item);
@@ -269,7 +273,7 @@ export default class ContactEditCategoriesContainer extends React.Component {
 
               {currentContactCategory.get('experience') >0 && categoryItem.get('frameworkArr').length > 0 ?(<CardText>
                 <div style={{display:'flex'}}>
-                  <div style={{flex:'0 0 56px'}}>
+                  <div style={{flex:'0 0 65px'}}>
                     <Avatar
                         icon={<FontIcon className="material-icons">layers</FontIcon>}
                         color={Styles.Colors.grey600}
