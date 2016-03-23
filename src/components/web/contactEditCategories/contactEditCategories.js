@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import {ContactCategoryToggle, SkillsDetails} from '../';
 import {
    IconButton, ToolbarGroup, Toolbar, Toggle,
-  FlatButton, ToolbarTitle, Styles,CardText,Avatar, FontIcon,EnhancedButton,
+  FlatButton, ToolbarTitle, Styles,CardText,Avatar, FontIcon,
 } from 'material-ui';
 
 const style = {
@@ -204,7 +204,6 @@ export default class ContactEditCategoriesContainer extends React.Component {
     this.props.setFrameworks(this.props.item.get('id'),contactCategory);
   }
   renderStacks(contactCategory,category){
-    var self = this;
     return (<SkillsDetails
       isEdit={true}
       category={category}
@@ -212,7 +211,7 @@ export default class ContactEditCategoriesContainer extends React.Component {
       setPrimary={this.props.setPrimary.bind(this)}
       setFrameworks={this.props.setFrameworks.bind(this)}
       contactCategory={contactCategory}
-     />)
+     />);
     // return (
     //
     //   <div style={style.stacks}>

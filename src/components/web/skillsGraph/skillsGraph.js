@@ -1,33 +1,9 @@
 import React from 'react';
-import {Styles} from 'material-ui';
 import { connect } from 'react-redux';
 
-let style={
-  container:{
-    display: 'flex'
-  },
-  label:{
-    flex:'0 0 150px'
-  },
-  graph:{
-    flex: '1 0 0'
-  },
-  labelContainer:{
-    textAlign:'right',
-    paddingRight:'16px'
-  },
-  labelContainerLabel:{
-    lineHeight:'20px',
-    height:'20px',
-    verticalAlign:'middle'
-  },
-  labelContainerIcon:{
-    flex:'0 0 40px'
-  }
-};
 @connect((state) =>
 {
-  return {categories: state.categories.list}
+  return {categories: state.categories.list};
 })
 export default class SkillsGraph extends React.Component {
   //
@@ -50,7 +26,7 @@ export default class SkillsGraph extends React.Component {
     super(props);
     this.state = {
       graphWidth:200
-    }
+    };
   }
   componentDidMount(){
     console.log('this.refs.widthCheck',this.refs.widthCheck.clientWidth);
@@ -94,7 +70,7 @@ export default class SkillsGraph extends React.Component {
                          <div style={{borderRadius:'4px',width: percent+'%', height:'20px', backgroundColor: '#333333' }}></div>
                       </td>
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>
@@ -102,7 +78,7 @@ export default class SkillsGraph extends React.Component {
         </div>
       );
     } else {
-      return (<span></span>)
+      return (<span></span>);
     }
 
   }

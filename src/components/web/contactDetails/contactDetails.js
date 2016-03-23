@@ -6,7 +6,7 @@ import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
 import categoryLinkSort from '../../../utils/categoryLinkSort';
-import {SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, ContactCategoryToggle } from '../../../components/web';
+import {SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal } from '../../../components/web';
 import {
   CardTitle, IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
@@ -52,7 +52,7 @@ const style = {
 };
 @connect((state) =>
 {
-  return {categories: state.categories.list}
+  return {categories: state.categories.list};
 }, {pushState, replaceNoteLocal,replaceState, invite})
 export default class ContactDetails extends React.Component {
 
@@ -540,31 +540,7 @@ export default class ContactDetails extends React.Component {
       if (summary) {
         description += summary;
       }
-
-      let primarySkills = new Immutable.List();
       let categoryLinks = contact.get('_categoryLinks');
-      if(categoryLinks && categoryLinks.size >0){
-        primarySkills = categoryLinks.filter(x=> x.experience >0 && x.primary);
-      }
-//Plotly
-      let data = [{
-        type: 'bar',
-        x: [20, 14, 23],
-        y: [('<img src="https://dhirajkumarsingh.files.wordpress.com/2012/05/css3-html5-logo.png"></img>'), 'orangutans', 'monkeys'],
-        orientation: 'h'
-      }];
-      let config = {
-        showLink: false,
-        displayModeBar: false,
-        showLegend:false,
-      };
-      var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      let layout = {
-        autoSize:false,
-        width:375-48
-      };
-      console.log('clientWidth',clientWidth);
-
       return (
 
         <div>

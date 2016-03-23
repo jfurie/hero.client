@@ -105,7 +105,7 @@ let style = {
 
 @connect((state) =>
 {
-  return {categories: state.categories.list}
+  return {categories: state.categories.list};
 }, {})
 export default class ContactListItem extends React.Component {
   constructor(props){

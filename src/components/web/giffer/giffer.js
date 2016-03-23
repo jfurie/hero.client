@@ -39,9 +39,9 @@ export default class Giffer extends React.Component {
             {renderItem}
           </ReactCSSTransitionGroup>
         </div>
-      )
+      );
     } else {
-      return (<span></span>)
+      return (<span></span>);
     }
 
   }

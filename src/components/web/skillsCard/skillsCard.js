@@ -91,7 +91,7 @@ export default class ContactDetails extends React.Component {
                     category={category}
                     contactCategory={skill}
                      />
-                )
+                 );
               })}
             </div>
           </div>
