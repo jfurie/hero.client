@@ -2,6 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
+import categoryLinkSort from '../../../utils/categoryLinkSort';
 import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar } from 'material-ui';
 import { CompanyAvatar, Gravatar, Tag, FindButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
 let style = {
@@ -107,8 +108,10 @@ let style = {
   },
 };
 
-@connect(() => (
-{}), {pushState})
+@connect((state) =>
+{
+  return {categories: state.categories.list};
+}, {pushState})
 export default class JobListItem extends React.Component {
   constructor(props){
     super(props);
@@ -151,6 +154,7 @@ export default class JobListItem extends React.Component {
   }
 
   render(){
+    let self = this;
     let {job,type} = this.props;
 
     let candidates = job.get('candidates');
@@ -209,8 +213,21 @@ export default class JobListItem extends React.Component {
     else {
       salary = (<span>No Salary Info</span>);
     }
+    let categoryLinks = job.get('_categoryLinks');
+    let jobImg = <span></span>;
+    if(categoryLinks && categoryLinks.size > 0){
+      let sorted = categoryLinks.sort(categoryLinkSort);
 
-    let jobImg = <img style={{width: '40px', height: '40px'}} src="http://www.w3devcampus.com/wp-content/uploads/logoAndOther/logo_JavaScript.png" />;
+      let currentCategory = sorted.get(0);
+      if(currentCategory.get('experience') > 0){
+        let found = self.props.categories.find(x=>x.get('id') == currentCategory.get('categoryId'));
+        if(found){
+          jobImg = <img style={{width: '40px', height: '40px'}} src={found.get('imageUrl')} />;
+        }
+      }
+    }
+
+
 
     let isHot = false;
     let isInterviewing = false;
@@ -272,7 +289,7 @@ export default class JobListItem extends React.Component {
                   <div style={{flex:'0 0 50px'}}>
                     {jobImg}
                   </div>
-                  <div>
+                  <div style={{minHeight:'43px'}}>
                     <div style={{fontWeight: 'bold'}}>
                       {salary}
                     </div>

@@ -374,8 +374,11 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.SET_EXPERIENCE:{
     let contactCategory = action.result;
-    state = state.updateIn(['list',action.contactId,'_contactCategories'],arr =>{
+    state = state.updateIn(['list',action.contactId,'_categoryLinks'],arr =>{
       let returnArr = null;
+      if(!arr){
+        arr = new Immutable.List();
+      }
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){
         let newItem = row[1].set('experience',contactCategory.experience);
@@ -391,8 +394,11 @@ export default function reducer(state = initialState, action = {}) {
   case constants.SET_CONTACT_CATEGORIES_LOCAL:{
     //find current contact
     let contactCategory = action.result;
-    state = state.updateIn(['list',action.contactId,'_contactCategories'],arr =>{
+    state = state.updateIn(['list',action.contactId,'_categoryLinks'],arr =>{
       let returnArr = null;
+      if(!arr){
+        arr = new Immutable.List();
+      }
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(!row){
         returnArr = arr.push( new ContactCategory(contactCategory));
@@ -405,8 +411,11 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.SET_PRIMARY:{
     let contactCategory = action.result;
-    state= state.updateIn(['list',action.contactId,'_contactCategories'],arr =>{
+    state= state.updateIn(['list',action.contactId,'_categoryLinks'],arr =>{
       let returnArr = null;
+      if(!arr){
+        arr = new Immutable.List();
+      }
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){
         let newItem = row[1].set('primary',contactCategory.primary);
@@ -421,8 +430,11 @@ export default function reducer(state = initialState, action = {}) {
   case constants.CREATE_CONTACT_CATEGORY_SUCCESS:{
     let contactCategory = action.result.response;
     let contactId = action.result.contactId;
-    state = state.updateIn(['list',contactId,'_contactCategories'],arr =>{
+    state = state.updateIn(['list',contactId,'_categoryLinks'],arr =>{
       let returnArr = null;
+      if(!arr){
+        arr = new Immutable.List();
+      }
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){
         returnArr = arr.set(row[0],new ContactCategory(Immutable.fromJS(contactCategory)));
@@ -436,8 +448,11 @@ export default function reducer(state = initialState, action = {}) {
   case constants.EDIT_CONTACT_CATEGORY_SUCCESS:{
     let contactCategory = action.result.response;
     let contactId = action.result.contactId;
-    state = state.updateIn(['list',contactId,'_contactCategories'],arr =>{
+    state = state.updateIn(['list',contactId,'_categoryLinks'],arr =>{
       let returnArr = null;
+      if(!arr){
+        arr = new Immutable.List();
+      }
       let row = arr.findEntry(x=> x.get('categoryId') == contactCategory.categoryId);
       if(row){
         returnArr = arr.set(row[0],new ContactCategory(Immutable.fromJS(contactCategory)));

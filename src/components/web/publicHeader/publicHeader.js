@@ -52,7 +52,7 @@ class PublicHeader extends React.Component {
         <IconButton iconStyle={iconStyle} onTouchTap={this.props.onTouchTap.bind(this)} iconClassName="material-icons">menu</IconButton>
       </span>
     );
-
+    iconRight = this.props.iconRight || iconRight;
 
     return (
       <div>

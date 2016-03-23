@@ -2,16 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getJobByShortId, applyToJob } from '../../../modules/public';
 import { PublicJob, PublicSignUp } from '../../../components/web';
-
+import { getCategoriesIfNeeded } from '../../../modules/categories';
 function getData(state, props) {
   let job = state.publik.get('jobs').get(props.params.shortId);
-
+  console.log(state.auth);
   return {
     job,
+    authToken:state.auth.get('authToken'),
   };
 }
 
-@connect((state, props) => (getData(state, props)), {getJobByShortId, applyToJob})
+@connect((state, props) => (getData(state, props)), {getJobByShortId, applyToJob,getCategoriesIfNeeded})
 class PublicJobContainer extends React.Component {
 
   constructor(props) {
@@ -23,6 +24,12 @@ class PublicJobContainer extends React.Component {
 
   componentDidMount() {
     this.props.getJobByShortId(this.props.params.shortId);
+    this.props.getCategoriesIfNeeded();
+  }
+  componentWillReceiveProps(nextProps){
+    if(this.props.params.shortId !== nextProps.params.shortId){
+      this.props.getJobByShortId(nextProps.params.shortId);
+    }
   }
 
   openSignUpModal() {
@@ -59,6 +66,7 @@ class PublicJobContainer extends React.Component {
       <div>
         <PublicJob
             open
+            authToken={this.props.authToken}
             job={job}
             apply={this.openSignUpModal.bind(this)}
             share={this.share.bind(this)}

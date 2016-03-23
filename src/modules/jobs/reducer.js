@@ -327,6 +327,97 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_JOB_DETAIL_FAIL: {
     return state.set('err', action.err);
   }
+  case constants.SET_EXPERIENCE:{
+    let jobCategory = action.result;
+    state = state.updateIn(['list',action.jobId,'_categoryLinks'],arr =>{
+      let returnArr = null;
+      if(!arr){
+        arr = new Immutable.List();
+      }
+      let row = arr.findEntry(x=> x.get('categoryId') == jobCategory.categoryId);
+      if(row){
+        let newItem = row[1].set('experience',jobCategory.experience);
+        returnArr = arr.set(row[0],newItem);
+      } else {
+        returnArr = arr;
+      }
+      return returnArr;
+    });
+
+    return state;
+  }
+  case constants.SET_JOB_CATEGORIES_LOCAL:{
+    //find current contact
+    let jobCategory = action.result;
+    state = state.updateIn(['list',action.jobId,'_categoryLinks'],arr =>{
+      let returnArr = null;
+      if(!arr){
+        arr = new Immutable.List();
+      }
+      let row = arr.findEntry(x=> x.get('categoryId') == jobCategory.categoryId);
+      if(!row){
+        returnArr = arr.push( Immutable.fromJS(jobCategory));
+      } else {
+        returnArr = arr.set(row[0],Immutable.fromJS(jobCategory));
+      }
+      return returnArr;
+    });
+    return state;
+  }
+  case constants.SET_PRIMARY:{
+    let jobCategory = action.result;
+    state= state.updateIn(['list',action.jobId,'_categoryLinks'],arr =>{
+      let returnArr = null;
+      if(!arr){
+        arr = new Immutable.List();
+      }
+      let row = arr.findEntry(x=> x.get('categoryId') == jobCategory.categoryId);
+      if(row){
+        let newItem = row[1].set('primary',jobCategory.primary);
+        returnArr = arr.set(row[0],newItem);
+      } else {
+        returnArr = arr;
+      }
+      return returnArr;
+    });
+    return state;
+  }
+  case constants.CREATE_JOB_CATEGORY_SUCCESS:{
+    let jobCategory = action.result.response;
+    let jobId = action.result.jobId;
+    state = state.updateIn(['list',jobId,'_categoryLinks'],arr =>{
+      let returnArr = null;
+      if(!arr){
+        arr = new Immutable.List();
+      }
+      let row = arr.findEntry(x=> x.get('categoryId') == jobCategory.categoryId);
+      if(row){
+        returnArr = arr.set(row[0],Immutable.fromJS(jobCategory));
+      } else {
+        returnArr = arr;
+      }
+      return returnArr;
+    });
+    return state;
+  }
+  case constants.EDIT_JOB_CATEGORY_SUCCESS:{
+    let jobCategory = action.result.response;
+    let jobId = action.result.jobId;
+    state = state.updateIn(['list',jobId,'_categoryLinks'],arr =>{
+      let returnArr = null;
+      if(!arr){
+        arr = new Immutable.List();
+      }
+      let row = arr.findEntry(x=> x.get('categoryId') == jobCategory.categoryId);
+      if(row){
+        returnArr = arr.set(row[0],Immutable.fromJS(jobCategory));
+      } else {
+        returnArr = arr;
+      }
+      return returnArr;
+    });
+    return state;
+  }
   default:
     return state;
   }
