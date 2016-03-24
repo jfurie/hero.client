@@ -60,6 +60,9 @@ export ClientCardContainer from '../../containers/web/clients/clientCardContaine
 export JobCardContainer from '../../containers/web/jobs/jobCardContainer';
 export ContactCategoryToggle from './contactCategoryToggle/contactCategoryToggle';
 export SkillsDetails from './skillsDetails/skillsDetails';
+export SkillsGraph from './skillsGraph/skillsGraph';
+export SkillsCard from './skillsCard/skillsCard';
+export Giffer from './giffer/giffer';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
@@ -80,4 +83,5 @@ export JobSearchModal from './jobSearch/jobSearchModal';
 export JobSearch from './jobSearch/jobSearch';
 
 export PublicHeader from './publicHeader/publicHeader';
+export PublicSignUp from './publicSignUp/publicSignUp';
 export PublicJob from './publicJob/publicJob';

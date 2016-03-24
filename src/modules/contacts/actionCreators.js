@@ -1,6 +1,7 @@
 import { createCandidateFavorite, deleteCandidateFavorite, saveCandidateByContactResult } from '../candidates';
 import { saveJobsByContactResult } from '../jobs';
 import { saveCompaniesResult } from '../companies';
+import { saveLocationResult } from '../locations';
 import * as constants from './constants';
 
 export function getAllContacts() {
@@ -182,6 +183,9 @@ export function getContactDetail(id) {
         if (contact.jobs && contact.jobs.length > 0) {
           dispatch(saveJobsByContactResult(contact.jobs, contact.id));
           dispatch(saveCompaniesResult(contact.companies));
+          if (contact.location) {
+            dispatch(saveLocationResult(contact.location));
+          }
         }
         return contact;
       }),
@@ -276,7 +280,7 @@ export function setPrimary(contactId,contactCategory){
 export function saveContactCategory(contactId,contactCategory){
   return {
     types: [constants.EDIT_CONTACT_CATEGORY, constants.EDIT_CONTACT_CATEGORY_SUCCESS, constants.EDIT_CONTACT_CATEGORY_FAIL],
-    promise: (client, auth) => client.api.put(`/contacts/${contactId}/contactCategories/${contactCategory.id}`, {
+    promise: (client, auth) => client.api.put(`/contacts/${contactId}/categoryLinks/${contactCategory.id}`, {
       authToken: auth.authToken,
       data: contactCategory,
     }).then((response) => {
@@ -290,7 +294,7 @@ export function saveContactCategory(contactId,contactCategory){
 export function createContactCategory(contactId,contactCategory){
   return {
     types: [constants.CREATE_CONTACT_CATEGORY, constants.CREATE_CONTACT_CATEGORY_SUCCESS, constants.CREATE_CONTACT_CATEGORY_FAIL],
-    promise: (client, auth) => client.api.post(`/contacts/${contactId}/contactCategories`, {
+    promise: (client, auth) => client.api.post(`/contacts/${contactId}/categoryLinks`, {
       authToken: auth.authToken,
       data: contactCategory,
     }).then((response) =>{
@@ -326,8 +330,8 @@ export function setExperience(contactId,contactCategory, category){
       }
     }
     let currentContact = getState().contacts.get('list').get(contactId);
-    let _contactCategories = currentContact.get('_contactCategories');
-    let currentContactCategory = _contactCategories.find(x=>x.get('categoryId') == contactCategory.categoryId );
+    let _categoryLinks = currentContact.get('_categoryLinks');
+    let currentContactCategory = _categoryLinks.find(x=>x.get('categoryId') == contactCategory.categoryId );
     if(currentContactCategory){
       if(currentContactCategory.get('experience') == 0 && contactCategory.experience > 0){
         //Setting from zero to something, set the Tags

@@ -2,7 +2,7 @@ import superagent from 'superagent';
 import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
 import { saveCandidatesByJobResult } from '../candidates';
-
+import { saveLocationResult } from '../locations';
 
 
 export function getJobsByCompany(companyId){
@@ -233,6 +233,10 @@ export function getJobDetail(id) {
       promise: (client, auth) => client.api.get(`/jobs/detail?id=${id}`, {
         authToken: auth.authToken,
       }).then((job)=> {
+        if (job.location) {
+          dispatch(saveLocationResult(job.location));
+        }
+
         if (job.notes && job.notes.length > 0) {
           dispatch(saveNotesByJobResult(job.notes));
         }
@@ -271,4 +275,132 @@ export function getJobsByIdsIfNeeded(jobIds){
     }));
     return dispatch(getJobsByIds(newJobIds));
   };
+}
+
+
+let guid = function() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+};
+
+export function setCategoryLocal(jobId, jobCategory){
+  if(jobCategory){
+    if(jobCategory.toJSON){
+      jobCategory = jobCategory.toJSON();
+    }
+    if(!jobCategory.id){
+      jobCategory.id = 'tmp_' + guid();
+    }
+  }
+  return {
+    type:constants.SET_JOB_CATEGORIES_LOCAL,
+    result:jobCategory,
+    jobId,
+  };
+}
+export function setPrimary(jobId,jobCategory){
+  return (dispatch) => {
+    if(jobCategory){
+      if(jobCategory.toJSON){
+        jobCategory = jobCategory.toJSON();
+      }
+    }
+    if((jobCategory.id && jobCategory.id.indexOf('tmp')>-1 )|| !jobCategory.id){
+      //is a temp object, delete the id and createContactCategory
+      delete jobCategory.id;
+      dispatch(createJobCategory(jobId, jobCategory));
+    } else{
+      dispatch(saveJobCategory(jobId, jobCategory));
+    }
+    dispatch({
+      type:constants.SET_PRIMARY,
+      result:jobCategory,
+      jobId,
+    });
+  };
+
+}
+
+export function saveJobCategory(jobId,jobCategory){
+  return {
+    types: [constants.EDIT_JOB_CATEGORY, constants.EDIT_JOB_CATEGORY_SUCCESS, constants.EDIT_JOB_CATEGORY_FAIL],
+    promise: (client, auth) => client.api.put(`/jobs/${jobId}/categoryLinks/${jobCategory.id}`, {
+      authToken: auth.authToken,
+      data: jobCategory,
+    }).then((response) => {
+      return {
+        response,
+        jobId,
+      };
+    }),
+  };
+}
+export function createJobCategory(jobId,jobCategory){
+  return {
+    types: [constants.CREATE_JOB_CATEGORY, constants.CREATE_JOB_CATEGORY_SUCCESS, constants.CREATE_JOB_CATEGORY_FAIL],
+    promise: (client, auth) => client.api.post(`/jobs/${jobId}/categoryLinks`, {
+      authToken: auth.authToken,
+      data: jobCategory,
+    }).then((response) =>{
+      return {
+        response,
+        jobId,
+      };
+    }),
+  };
+}
+
+export function setFrameworks(jobId,jobCategory){
+  return (dispatch) =>{
+    if(jobCategory){
+      if(jobCategory.toJSON){
+        jobCategory = jobCategory.toJSON();
+      }
+    }
+    dispatch({
+      type:constants.SET_FRAMEWORKS,
+      result:jobCategory,
+      jobId,
+    });
+    dispatch(saveJobCategory(jobId, jobCategory));
+  };
+}
+
+export function setExperience(jobId,jobCategory, category){
+  return (dispatch, getState) => {
+    if(jobCategory){
+      if(jobCategory.toJSON){
+        jobCategory = jobCategory.toJSON();
+      }
+    }
+    let currentJob = getState().jobs.get('list').get(jobId);
+    let _categoryLinks = currentJob.get('_categoryLinks');
+    let currentJobCategory = _categoryLinks.find(x=>x.get('categoryId') == jobCategory.categoryId );
+    if(currentJobCategory){
+      if(currentJobCategory.get('experience') == 0 && jobCategory.experience > 0){
+        //Setting from zero to something, set the Tags
+        jobCategory.frameworkInclude = category.get('frameworkArr').toArray();
+      } else if (currentJobCategory.get('experience') != 0 && jobCategory.experience <=0) {
+        jobCategory.frameworkInclude = [];
+      }
+    }
+    if((jobCategory.id && jobCategory.id.indexOf('tmp')>-1 )|| !jobCategory.id){
+      //is a temp object, delete the id and createJobCategory
+      delete jobCategory.id;
+      dispatch(createJobCategory(jobId, jobCategory));
+    } else{
+      dispatch(saveJobCategory(jobId, jobCategory));
+    }
+    dispatch({
+      type:constants.SET_EXPERIENCE,
+      result:jobCategory,
+      jobId,
+      category,
+    });
+  };
+
 }

@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import { LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
+import {SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -45,7 +45,9 @@ const style = {
     paddingTop: '4px',
   },
 };
-
+function cleanTitle(title){
+  return title.replace(/[^A-Za-z0-9_\.~]+/gm, '-');
+}
 @connect(() => (
 {}), {pushState, replaceState})
 export default class JobDetails extends React.Component {
@@ -106,8 +108,9 @@ export default class JobDetails extends React.Component {
     let {job} = this.props;
 
     let subject = `Check out ${this.props.job.get('title')} on HERO`;
-
-    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${job.get('company').get('name')}-${job.get('title')}`;
+    let title = this.props.job.get('company').get('name') + '-' +this.props.job.get('title');
+    title = cleanTitle(title);
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${title}`;
 
     let body = `${encodeURIComponent(job.get('title'))}%0A${encodeURIComponent(url)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
@@ -127,6 +130,9 @@ export default class JobDetails extends React.Component {
   _onTouchCompanyIcon(){
     this.props.pushState(null,`/clients/${this.props.job.get('companyId')}`);
   }
+  editSkills(){
+    this.props.pushState(null, `/jobs/${this.props.job.get('id')}/categories/edit`);
+  }
   createNoteModalOpen(){
     if(this.props.addNoteModalOpen){
       this.props.addNoteModalOpen();
@@ -144,6 +150,12 @@ export default class JobDetails extends React.Component {
     if(number){
       this.props.replaceState(null,`/jobs/${this.props.job.get('id')}?tab=${number}`);
     }
+  }
+
+  viewPublic(){
+    let title = this.props.job.get('company').get('name') + '-' +this.props.job.get('title');
+    title = cleanTitle(title);
+    this.props.pushState(null, `/j/${this.props.job.get('shortId')}/${title}`);
   }
 
   renderContent(job) {
@@ -255,6 +267,7 @@ export default class JobDetails extends React.Component {
           addressLine = city;
         }
       }
+      let categoryLinks = job.get('_categoryLinks');
 
 
       return (
@@ -301,6 +314,7 @@ export default class JobDetails extends React.Component {
               </Card>
 
               <LocationCard location={job.get('location')} />
+              <SkillsCard skills={categoryLinks} />
             </div>
             <div style={{minHeight:'800px'}}>
               <Card>
@@ -348,6 +362,8 @@ export default class JobDetails extends React.Component {
             <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
             <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
+            <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
+            <MenuItem index={0} onTouchTap={this.viewPublic.bind(this)} primaryText={`View Public Job`} />
           </IconMenu>
         }
         />

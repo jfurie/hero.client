@@ -1,7 +1,7 @@
 import React from 'react';
 import {} from '../';
 import {
-EnhancedButton
+EnhancedButton, Toggle
 } from 'material-ui';
 const style = {
   stacks:{
@@ -11,7 +11,7 @@ const style = {
     borderRadius:'5px',
     marginBottom:'8px',
     position:'relative',
-    width:'272px',
+    width:'263px',
   },
   stackSkill:{
     backgroundColor:'#333333',
@@ -63,31 +63,79 @@ export default class ContactCategoryToggle extends React.Component {
     super(props);
   }
 
+  _handleToggle(categoryItem, currentContactCategory,e, value){
+    currentContactCategory = currentContactCategory.set('primary',value);
+    this.props.setPrimary(this.props.item.get('id'),currentContactCategory, categoryItem);
+  }
+  toggleSkill(framework,contactCategory){
+    var indexofInclude = contactCategory.get('frameworkInclude').indexOf(framework);
+    if(indexofInclude > -1){
+      contactCategory = contactCategory.setIn(['frameworkInclude'],
+        contactCategory.get('frameworkInclude').filter(function(frameworkInc){
+          return frameworkInc !== framework;
+        })
+      );
+    } else {
+      contactCategory = contactCategory.setIn(['frameworkInclude',contactCategory.get('frameworkInclude').length],framework);
+    }
+    this.props.setFrameworks(this.props.item.get('id'),contactCategory);
+  }
+  renderToggle(categoryItem,currentContactCategory){
+    if(currentContactCategory.get('experience') > 0 ){
+      return (<div style={{position:'absolute', right:'24px', top:'4px'}}>
+                <Toggle
+                  labelStyle={{color:'rgba(0, 0, 0, .56)',fontSize:'12px', fontWeight:'300'}}
+                  label="Is primary?"
+                  labelPosition="left"
+                  toggled ={currentContactCategory.get('primary')}
+                  onToggle={this._handleToggle.bind(this,categoryItem, currentContactCategory)}
+                />
+            </div>);
+    } else {
+      return (<div></div>);
+    }
+  }
+
   render(){
     let self = this;
-    let {category, contactCategory} = this.props;
-    return (
-      <div style={style.stacks}>
+    let {category, contactCategory, isEdit} = this.props;
+    if(category && contactCategory){
+      return (
+        <div style={style.stacks}>
 
-        <div style={style.stackTitle}>{category.get('shortTitle')}</div>
-        <div>
-          {category.get('frameworkArr').map(function(framework){
-            let styleActive= style.stackSkillInActive;
-            if(contactCategory.get('frameworkInclude').indexOf(framework) > -1){
-              styleActive= style.stackSkill;
-            }
-            return (
-                <div title={framework} style={styleActive}>
-                  <EnhancedButton onTouchTap={self.toggleSkill.bind(self,framework,contactCategory)} style={{color:'#ffffff', width:'100%',    whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'}}>
-                  {framework}
-                  </EnhancedButton>
-                </div>
-              );
-          })}
-        </div>
-        {this.renderToggle.bind(this)(category,contactCategory)}
-      </div>);
+          <div style={style.stackTitle}>{category.get('shortTitle')}</div>
+          <div>
+            {category.get('frameworkArr').map(function(framework){
+              let styleActive= style.stackSkillInActive;
+              let isActive = false;
+              if(contactCategory.get('frameworkInclude').indexOf(framework) > -1){
+                styleActive= style.stackSkill;
+                isActive = true;
+              }
+              if(!isActive && !isEdit){
+                return (<span></span>);
+              } else {
+                return (
+                    <div title={framework} style={styleActive}>
+                      {isEdit?(<EnhancedButton onTouchTap={self.toggleSkill.bind(self,framework,contactCategory)} style={{color:'#ffffff', width:'100%',    whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'}}>
+                      {framework}
+                      </EnhancedButton>):(
+                        <span>{framework}</span>
+
+                      )}
+                    </div>
+                  );
+              }
+
+            })}
+          </div>
+          {isEdit ?this.renderToggle.bind(this)(category,contactCategory): <span></span>}
+        </div>);
+    } else {
+      return (<span></span>);
+    }
+
   }
 }

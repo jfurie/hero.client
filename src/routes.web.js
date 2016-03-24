@@ -1,7 +1,7 @@
 import {IndexRoute, Route} from 'react-router';
 import React from 'react';
 import * as authActions from './modules/auth';
-
+import * as categoryActions from './modules/categories';
 // general containers
 import Home from './containers/web/homeContainer';
 import LoginPage from './containers/web/login/loginContainer';
@@ -10,7 +10,7 @@ import InvitedPage from './containers/web/invited/invitedContainer';
 import ErrorPage from './containers/web/errorContainer';
 import EmptyPage from './containers/web/emptyContainer';
 import Layout from './containers/web/layoutContainer';
-
+import PublicLayout from './containers/web/publicLayoutContainer';
 
 
 // settings containers
@@ -42,7 +42,7 @@ import JobSearchContainer from './containers/web/jobs/jobSearchContainer';
 import MyJobsPage from './containers/web/jobs/myJobsContainer';
 import JobCreatePage from './containers/web/jobs/jobCreateContainer';
 import JobEditPage from './containers/web/jobs/jobEditContainer';
-
+import JobEditCategoriesContainer from './containers/web/jobs/jobEditCategoriesContainer';
 //search
 import SearchContainer from './containers/web/search/searchContainer';
 //notes
@@ -115,7 +115,7 @@ export default(store) => {
         //replaceState(null, `/login?redirect=${nextState.location.pathname}`);
         cb();
       }
-
+      store.dispatch(categoryActions.getCategoriesIfNeeded());
       // hide splash if here
       setTimeout(() => {
         document.getElementById('splash').style.display = 'none';
@@ -128,6 +128,12 @@ export default(store) => {
     }, 0);
   };
 
+  const loadAnonymous = () => {
+    setTimeout(() => { // TMP
+      document.getElementById('splash').style.display = 'none';
+    }, 0);
+  };
+
   const checkLogin = (nextState, replaceState, cb) => {
     const auth = store.getState().auth;
     if (auth.get('authToken')) { /* already logged */
@@ -137,11 +143,12 @@ export default(store) => {
   };
 
   return (
-    <Route path="/" onUpdate={() => window.scrollTo(0, 0)} onEnter={loadUser}>
-
-    <Route path="test" component={TestPage}/>
-      <Route component={Layout}>
+    <Route path="/" onUpdate={() => window.scrollTo(0, 0)}>
+      <Route path="test" component={TestPage}/>
+      <Route component={PublicLayout} onEnter={loadAnonymous}>
         <Route path="j/:shortId/:title" component={PublicJobContainer}/>
+      </Route>
+      <Route component={Layout} onEnter={loadUser}>
         <Route path="login" onEnter={checkLogin} component={LoginPage}/>
         <Route path="error" component={ErrorPage}/>
 
@@ -212,6 +219,7 @@ export default(store) => {
 
               <Route path=":jobId/create" component={JobCreatePage}/>
               <Route path=":jobId/edit" component={JobEditPage}/>
+              <Route path=":jobId/categories/edit" component={JobEditCategoriesContainer}/>
           </Route>
 
           {/*<Route path="/myjobs" component={MyJobsPage}/>*/}

@@ -428,7 +428,6 @@ DetailsCard.propTypes = {
   floatActionLabel: React.PropTypes.string,
   floatActionOnTap: React.PropTypes.func,
   mainColor: React.PropTypes.string,
-  showStats: React.PropTypes.boolean,
   stats: React.PropTypes.array,
   topSubtitle: React.PropTypes.string.isRequired,
   subtitle2: React.PropTypes.string,

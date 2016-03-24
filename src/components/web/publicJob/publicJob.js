@@ -5,8 +5,8 @@ import { pushState, replaceState } from 'redux-router';
 
 import { CardTitle } from 'material-ui';
 import defaultImage from './publicJob.jpg';
-import { LocationCard, PublicHeader, DetailsCard, CustomTabsSwipe, CompanyAvatar } from '../../../components/web';
-import { RaisedButton, FontIcon, Styles, Card, CardText, Avatar } from 'material-ui';
+import {SkillsCard, LocationCard, PublicHeader, DetailsCard, CustomTabsSwipe, CompanyAvatar } from '../../../components/web';
+import {IconMenu, MenuItem, RaisedButton, FontIcon, Styles, Card, CardText, Avatar, IconButton } from 'material-ui';
 import './publicJob.scss';
 
 const style = {
@@ -88,19 +88,17 @@ export default class PublicJob extends React.Component {
       }
 
       let actions = [{
-        materialIcon: 'search',
-        text: 'Find',
+        materialIcon: 'phone',
+        text: 'Call',
         onTouchTap: this.props.apply.bind(this),
       }, {
         materialIcon: 'star_rate',
-        text: job.get('isFavorited') ? 'Saved' : 'Save',
-        active: job.get('isFavorited'),
+        text: 'Save',
         onTouchTap: this.props.apply.bind(this),
       }, {
-        materialIcon: 'favorite',
-        text: 'HOT!',
+        materialIcon: 'email',
+        text: 'Apply',
         active: isHot,
-        activeColor: Styles.Colors.pink500,
         onTouchTap: this.props.apply.bind(this),
       }, {
         materialIcon: 'share',
@@ -121,7 +119,7 @@ export default class PublicJob extends React.Component {
       else {
         companyName = 'XYZ Company';
       }
-
+      let categoryLinks =job.get('_categoryLinks');
       return (
         <div>
           <DetailsCard
@@ -164,6 +162,7 @@ export default class PublicJob extends React.Component {
             </Card>
 
             <LocationCard location={job.get('location')} />
+            <SkillsCard skills={categoryLinks} />
           </div>
           <div></div>
           <div></div>
@@ -181,13 +180,48 @@ export default class PublicJob extends React.Component {
       return (<div></div>);
     }
   }
-
+  _onTouchTapEdit(){
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/edit`);
+  }
+  _onTouchAddCandidate(){
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/candidates/search`);
+  }
+  editSkills(){
+    this.props.pushState(null, `/jobs/${this.props.job.get('id')}/categories/edit`);
+  }
+  viewLoggedIn(){
+    this.props.pushState(null, `/jobs/${this.props.job.get('id')}`);
+  }
   render() {
+    let iconStyle = {
+      color: Styles.Colors.white,
+    };
+    let iconRight = (
+      <span>
+        <IconButton iconStyle={iconStyle} onTouchTap={this.props.apply.bind(this)} iconClassName="material-icons">search</IconButton>
+        <IconButton iconStyle={iconStyle} onTouchTap={this.props.apply.bind(this)} iconClassName="material-icons">menu</IconButton>
+      </span>
+    );
+    if(this.props.authToken && this.props.authToken.get('id')){
+      iconRight = (
+        <span>
+          <IconButton iconStyle={iconStyle} onTouchTap={this.props.apply.bind(this)} iconClassName="material-icons">search</IconButton>
+          <IconMenu iconButtonElement={
+            <IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>
+          }>
+            <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
+            <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
+            <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
+            <MenuItem index={0} onTouchTap={this.viewLoggedIn.bind(this)} primaryText={`View Logged In Job`} />
 
+          </IconMenu>
+        </span>
+      );
+    }
     let { job } = this.props;
     return (
       <div>
-        <PublicHeader />
+        <PublicHeader iconRight={iconRight} onTouchTap={this.props.apply.bind(this)} />
         {this.renderContent(job)}
       </div>
     );

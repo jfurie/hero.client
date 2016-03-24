@@ -2,6 +2,7 @@ import express from 'express';
 import swig from 'swig';
 import config from './config/config';
 import compression from 'compression';
+import removeMd  from 'remove-markdown';
 let app = null;
 
 process.on('uncaughtException', function (err) {
@@ -22,8 +23,50 @@ function startApp() {
     cache: false
   });
   app.use(express.static(config.root + '/public'));
+  app.get('/j/:shortId/:title', function(req, res) {
+    let request = require('request');
+    console.log('shortId started');
+    request(`${config.apiBaseUrl}/api/jobs/meta?shortId=${req.params.shortId}`, function (error, response, body) {
+      let meta = {};
+      console.log('error:',error,'\n body: ',body);
+      if (!error && response.statusCode == 200) {
+        let data = JSON.parse(body);
+        console.log(data);
+        meta.title = data.title;
+        if(data.company){
+          meta.title = meta.title +  ' at ' + data.company.name;
+        }
+        if(data.city && data.state){
+          meta.title = meta.title +  ' in ' + data.city +', ' + data.state;
+        }
+        meta.description = removeMd(data.description.replace('### Job Description ', '')).substring(0, 170);
+        if(!meta.description || meta.description == ''){
+          meta.description = 'The next 5 minutes could change everything. Discover the top tech companies hiring near you.';
+        }
+        meta.url = req.protocol + '://' + req.get('host') + req.originalUrl;
+        meta.type = 'hero_jobs:jobie';
+
+        if (data.location) {
+          meta.location = data.location;
+        }
+
+        if (data.image) {
+          meta.image = data.image;
+        }
+      }
+
+      res.render('main', {meta});
+    });
+  });
   app.get('*', function(req, res) {
-    res.render('main', {});
+    let meta = {};
+
+    meta.title = 'Hero.jobs';
+    meta.url = req.protocol + '://' + req.get('host');
+    meta.image = `${meta.url}/img/hero_logo.png`;
+    meta.type = 'website';
+
+    res.render('main', {meta});
   });
   app.listen(config.port, function() {
     console.log('Browse your REST API at %s', config.port);
