@@ -2,6 +2,7 @@ import express from 'express';
 import swig from 'swig';
 import config from './config/config';
 import compression from 'compression';
+import removeMd  from 'remove-markdown';
 let app = null;
 
 process.on('uncaughtException', function (err) {
@@ -24,16 +25,26 @@ function startApp() {
   app.use(express.static(config.root + '/public'));
   app.get('/j/:shortId/:title', function(req, res) {
     let request = require('request');
-
+    console.log('shortId started');
     request(`${config.apiBaseUrl}/api/jobs/meta?shortId=${req.params.shortId}`, function (error, response, body) {
       let meta = {};
-
+      console.log('error:',error,'\n body: ',body);
       if (!error && response.statusCode == 200) {
         let data = JSON.parse(body);
+        console.log(data);
         meta.title = data.title;
-        meta.description = data.description.replace('### Job Description ', '').substring(0, 170);
+        if(data.company){
+          meta.title = meta.title +  ' at ' + data.company.name;
+        }
+        if(data.city && data.state){
+          meta.title = meta.title +  ' in ' + data.city +', ' + data.state;
+        }
+        meta.description = removeMd(data.description.replace('### Job Description ', '')).substring(0, 170);
+        if(!meta.description || meta.description == ''){
+          meta.description = 'The next 5 minutes could change everything. Discover the top tech companies hiring near you.';
+        }
         meta.url = req.protocol + '://' + req.get('host') + req.originalUrl;
-        meta.type = 'jobie_hero_jobs:jobie';
+        meta.type = 'hero_jobs:jobie';
 
         if (data.location) {
           meta.location = data.location;
