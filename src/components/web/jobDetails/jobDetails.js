@@ -45,7 +45,9 @@ const style = {
     paddingTop: '4px',
   },
 };
-
+function cleanTitle(title){
+  return title.replace(/[^A-Za-z0-9_\.~]+/gm, '-');
+}
 @connect(() => (
 {}), {pushState, replaceState})
 export default class JobDetails extends React.Component {
@@ -106,8 +108,9 @@ export default class JobDetails extends React.Component {
     let {job} = this.props;
 
     let subject = `Check out ${this.props.job.get('title')} on HERO`;
-
-    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${job.get('company').get('name')}-${job.get('title')}`;
+    let title = this.props.job.get('company').get('name') + '-' +this.props.job.get('title');
+    title = cleanTitle(title);
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${title}`;
 
     let body = `${encodeURIComponent(job.get('title'))}%0A${encodeURIComponent(url)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
@@ -150,7 +153,9 @@ export default class JobDetails extends React.Component {
   }
 
   viewPublic(){
-    this.props.pushState(null, `/j/${this.props.job.get('shortId')}/${this.props.job.get('company').get('name')}-${this.props.job.get('title')}`);
+    let title = this.props.job.get('company').get('name') + '-' +this.props.job.get('title');
+    title = cleanTitle(title);
+    this.props.pushState(null, `/j/${this.props.job.get('shortId')}/${title}`);
   }
 
   renderContent(job) {
