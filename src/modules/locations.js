@@ -29,12 +29,12 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case GET_LOCATION_SUCCESS: {
-    let location = {};
+    let locationMap = {};
     let id = action.result.id;
-    location[id] = action.result;
+    locationMap[id] = action.result;
 
     return {
-      list: state.list.mergeDeep(location),
+      list: state.list.mergeDeep(locationMap),
     };
   }
   case GET_LOCATION_FAIL: {
@@ -57,7 +57,7 @@ export function getOneLocation(id) {
   };
 }
 
-export function saveLocationByCompanyResult(location){
+export function saveLocationResult(location){
   return {
     type: GET_LOCATION_SUCCESS,
     result: location,

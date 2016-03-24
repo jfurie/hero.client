@@ -1,6 +1,6 @@
 import React from 'react';
 import IN from 'linkedin';
-import { RaisedButton, Dialog, TextField, Styles } from 'material-ui';
+import { RaisedButton, Dialog, TextField, FontIcon } from 'material-ui';
 
 import validateContact from '../../../validators/contact';
 
@@ -90,9 +90,11 @@ class PublicSignUp extends React.Component {
                 label="Apply with LinkedIn"
                 fullWidth
                 onTouchTap={this.handleLinkedIn.bind(this)}
-                backgroundColor={Styles.Colors.blue600}
-                labelColor={Styles.Colors.white}
+                backgroundColor="#1582bb"
+                labelColor="#fff"
+                icon={<FontIcon className="fa fa-linkedin-square" />}
             />
+          <div style={{marginTop: '16px', textAlign: 'center', color: '#333', fontSize: '18px'}}>or</div>
             <TextField
                 fullWidth
                 errorText={(data.errors && data.errors.firstName) || ''}
