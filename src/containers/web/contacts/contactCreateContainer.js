@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState } from 'redux-router';
 
-import { createContact, getOneContact, getContactsByCompany, editContact } from '../../../modules/contacts';
+import { createContact, getContactDetail, getContactsByCompany, editContact } from '../../../modules/contacts';
 import {createCompanyContact} from '../../../modules/companyContacts';
 import { ContactCreate } from '../../../components/web';
 import { getMyCompanies } from '../../../modules/companies/index';
@@ -30,7 +30,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData, { pushState, getMyCompanies, createContact, createCompanyContact, getOneContact, getContactsByCompany, editContact, getAllCategories })
+@connect(getData, { pushState, getMyCompanies, createContact, createCompanyContact, getContactDetail, getContactsByCompany, editContact, getAllCategories })
 export default class ContactCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -42,7 +42,7 @@ export default class ContactCreateContainer extends React.Component {
 
   componentDidMount() {
     this.props.getMyCompanies();
-    this.props.getOneContact(this.props.params.contactId);
+    this.props.getContactDetail(this.props.params.contactId);
     this.props.getAllCategories();
   }
 

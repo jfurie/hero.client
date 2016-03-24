@@ -1,6 +1,7 @@
 import { createCandidateFavorite, deleteCandidateFavorite, saveCandidateByContactResult } from '../candidates';
 import { saveJobsByContactResult } from '../jobs';
 import { saveCompaniesResult } from '../companies';
+import { saveLocationResult } from '../locations';
 import * as constants from './constants';
 
 export function getAllContacts() {
@@ -182,6 +183,9 @@ export function getContactDetail(id) {
         if (contact.jobs && contact.jobs.length > 0) {
           dispatch(saveJobsByContactResult(contact.jobs, contact.id));
           dispatch(saveCompaniesResult(contact.companies));
+          if (contact.location) {
+            dispatch(saveLocationResult(contact.location));
+          }
         }
         return contact;
       }),
