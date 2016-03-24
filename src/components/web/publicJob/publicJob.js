@@ -5,7 +5,7 @@ import { pushState, replaceState } from 'redux-router';
 
 import { CardTitle } from 'material-ui';
 import defaultImage from './publicJob.jpg';
-import {SkillsCard, LocationCard, PublicHeader, DetailsCard, CustomTabsSwipe, CompanyAvatar } from '../../../components/web';
+import {SkillsCard, LocationCard, PublicHeader, DetailsCard, CompanyAvatar } from '../../../components/web';
 import {IconMenu, MenuItem, RaisedButton, FontIcon, Styles, Card, CardText, Avatar, IconButton } from 'material-ui';
 import './publicJob.scss';
 
