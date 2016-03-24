@@ -55,19 +55,6 @@ class Layout extends React.Component {
             }}
             className="mapContainer"
         >
-          <GoogleMap
-              center={geoField}
-              defaultZoom={13}
-              options={{
-                mapTypeControl: false,
-                disableDefaultUI: true,
-                draggable: false,
-                scrollwheel: false,
-                navigationControl: false,
-                scaleControl: false,
-                disableDoubleClickZoom: true,
-              }}
-          />
         </div>
         <div
             className="mainContainer"

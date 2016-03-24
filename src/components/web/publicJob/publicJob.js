@@ -169,7 +169,7 @@ export default class PublicJob extends React.Component {
           <div></div>
           <div></div>
         </CustomTabsSwipe>
-        <div style={{padding: '16px 24px', textAlign: 'center', backgroundColor: '#333'}}>
+        <div style={{padding: '16px 24px', textAlign: 'center', backgroundColor: '#212121'}}>
           <RaisedButton label="Apply Now" primary style={{}} onTouchTap={this.props.apply.bind(this)} />
         </div>
         </div>
@@ -212,7 +212,7 @@ export default class PublicJob extends React.Component {
             <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
-            <MenuItem index={0} onTouchTap={this.viewLoggedIn.bind(this)} primaryText={`View Logged In Job`} />
+            <MenuItem index={0} onTouchTap={this.viewLoggedIn.bind(this)} primaryText={`View Job in App`} />
 
           </IconMenu>
         </span>

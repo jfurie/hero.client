@@ -190,3 +190,10 @@ body {
 .example-leave.example-leave-active {
   opacity: 0;
 }
+
+.mapContainer {
+    background-image: url("/img/SantaMonica.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}​

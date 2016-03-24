@@ -87,7 +87,7 @@ const style = {
     width:'272px',
   },
   stackSkill:{
-    backgroundColor:'#333333',
+    backgroundColor:'#212121',
     borderRadius:'3px',
     display:'inline-block',
     width:'69px',
