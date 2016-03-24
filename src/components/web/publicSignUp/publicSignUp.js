@@ -94,7 +94,7 @@ class PublicSignUp extends React.Component {
                 labelColor="#fff"
                 icon={<FontIcon className="fa fa-linkedin-square" />}
             />
-          <div style={{marginTop: '16px', textAlign: 'center', color: '#333', fontSize: '18px'}}>or</div>
+          <div style={{marginTop: '16px', textAlign: 'center', color: '#212121', fontSize: '18px'}}>or</div>
             <TextField
                 fullWidth
                 errorText={(data.errors && data.errors.firstName) || ''}

@@ -418,6 +418,14 @@ export default function reducer(state = initialState, action = {}) {
     });
     return state;
   }
+  case constants.TOGGLE_TAG_SUCCESS: {
+    let jobMap = {};
+    jobMap[action.result.id] = action.result;
+
+    let newList = state.get('list').merge(jobMap);
+
+    return state.set('list', newList);
+  }
   default:
     return state;
   }

@@ -17,7 +17,7 @@ let style = {
     padding: '24px',
     position: 'relative',
     minHeight: '50px',
-    backgroundColor: '#333',
+    backgroundColor: '#212121',
   },
   topTitle: {
     color: Styles.Colors.white,
