@@ -27,8 +27,8 @@ let styles = {
       borderRightStyle: 'solid',
     },
     selectedCell: {
-      borderColor: '#333333',
-      backgroundColor: '#333333',
+      borderColor: '#212121',
+      backgroundColor: '#212121',
       borderRadius: '3px',
       color: '#fff',
       borderLeftStyle: 'none',

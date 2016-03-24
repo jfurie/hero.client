@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import GoogleMap from 'google-map-react';
 
 @connect(state => ({
   public: state.publik,
@@ -34,10 +33,6 @@ class Layout extends React.Component {
   render () {
     let height = this.state.windowHeight;
 
-    let geoField = {
-      lat: 34.0219,
-      lng: -118.4814,
-    };
 
     return (
       <div>
@@ -55,19 +50,6 @@ class Layout extends React.Component {
             }}
             className="mapContainer"
         >
-          <GoogleMap
-              center={geoField}
-              defaultZoom={13}
-              options={{
-                mapTypeControl: false,
-                disableDefaultUI: true,
-                draggable: false,
-                scrollwheel: false,
-                navigationControl: false,
-                scaleControl: false,
-                disableDoubleClickZoom: true,
-              }}
-          />
         </div>
         <div
             className="mainContainer"
