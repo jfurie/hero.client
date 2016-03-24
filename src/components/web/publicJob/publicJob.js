@@ -139,7 +139,6 @@ export default class PublicJob extends React.Component {
               floatActionContent={<FontIcon className="material-icons">check</FontIcon>}
               floatActionLabel={'Click to Apply'}
           />
-        <CustomTabsSwipe onChange={this.props.apply.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
           <div>
             <Card>
               <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
@@ -168,7 +167,6 @@ export default class PublicJob extends React.Component {
           <div></div>
           <div></div>
           <div></div>
-        </CustomTabsSwipe>
         <div style={{padding: '16px 24px', textAlign: 'center', backgroundColor: '#212121'}}>
           <RaisedButton label="Apply Now" primary style={{}} onTouchTap={this.props.apply.bind(this)} />
         </div>
