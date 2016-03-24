@@ -2,7 +2,7 @@ import superagent from 'superagent';
 import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
 import { saveCandidatesByJobResult } from '../candidates';
-
+import { saveLocationResult } from '../locations';
 
 
 export function getJobsByCompany(companyId){
@@ -233,6 +233,10 @@ export function getJobDetail(id) {
       promise: (client, auth) => client.api.get(`/jobs/detail?id=${id}`, {
         authToken: auth.authToken,
       }).then((job)=> {
+        if (job.location) {
+          dispatch(saveLocationResult(job.location));
+        }
+
         if (job.notes && job.notes.length > 0) {
           dispatch(saveNotesByJobResult(job.notes));
         }
