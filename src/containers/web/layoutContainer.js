@@ -8,7 +8,6 @@ import { getUserContact, getUserStats } from '../../modules/users';
 import { onNavOpen, onNavClose, toggleNav } from '../../modules/leftNav';
 import { LeftNavTop } from '../../components/web';
 import { logout, resetLogoutReady } from '../../modules/auth';
-import GoogleMap from 'google-map-react';
 
 @connect(state => ({
   auth: state.auth,
@@ -121,8 +120,6 @@ class Layout extends React.Component {
   render () {
     let {leftNav, user} = this.props;
     let height = this.state.windowHeight;
-    let geoField = {          lat: 34.0219,
-              lng: -118.4814,};
     return (
       <div>
         <div style={{
