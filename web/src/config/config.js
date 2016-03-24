@@ -1,7 +1,7 @@
 import path from 'path';
 import _ from 'lodash';
 let rootPath = path.normalize(__dirname + '/..');
-let env = process.env.NODE_ENV || 'development';
+let env = process.env.NODE_ENV || 'local';
 let workers = process.env.WEB_CONCURRENCY || 1;
 let config = {
   all: {
