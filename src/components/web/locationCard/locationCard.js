@@ -31,7 +31,7 @@ class LocationCard extends React.Component {
 
   render() {
 
-    let {location} = this.props;
+    let {location, maskLocation} = this.props;
 
     let options = {
       mapTypeControl: false,
@@ -57,7 +57,12 @@ class LocationCard extends React.Component {
       let countryCode = location.get('countryCode');
       geoField = location.get('geoField').toJSON();
 
-      address = line1 || '';
+      if (maskLocation) {
+        address = '';
+      }
+      else {
+        address = line1 || '';
+      }
 
       if (city) {
         address += address ? ', ' : '';
@@ -95,6 +100,20 @@ class LocationCard extends React.Component {
       defaultAnimation: 2,
     };
 
+    let externalLink;
+
+    if (defaultZoom > 3) {
+      if (maskLocation) {
+        externalLink = `http://maps.google.com/maps?q=${address}&z=${defaultZoom}`;
+      }
+      else {
+        externalLink = `http://maps.google.com/maps?q=${geoField.lat},${geoField.lng}&z=${defaultZoom}`;
+      }
+    }
+    else {
+      externalLink = 'http://maps.google.com';
+    }
+
     return (
       <Card>
         <CardTitle title="Location" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
@@ -116,7 +135,7 @@ class LocationCard extends React.Component {
           >
             <a
                 style={{position: 'absolute', left: -1, right: -1, bottom: -1, top: -1, zIndex: 2000, cursor: 'pointer'}}
-                href={defaultZoom > 3 ? `http://maps.google.com/maps?q=${geoField.lat},${geoField.lng}&z=${defaultZoom}` : 'http://maps.google.com'}
+                href={externalLink}
                 target="_blank"
             />
             <div style={{position: 'absolute', left: -1, right: -1, bottom: -1, height: '25px', backgroundColor: '#fff', zIndex: 1000}} />
@@ -137,7 +156,7 @@ class LocationCard extends React.Component {
                       center={geoField}
                   >
                     {
-                      defaultZoom > 3 ?
+                      !maskLocation && defaultZoom > 3 ?
                       <Marker
                           {...marker}
                       />
