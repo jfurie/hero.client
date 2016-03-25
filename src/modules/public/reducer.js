@@ -33,7 +33,7 @@ export default function reducer(state = initialState, action = {}) {
     return state.set('err', action.err);
   }
   case constants.APPLY_TO_JOB_SUCCESS: {
-    return state;
+    return state.set('newApplicant', action.result);
   }
   default:
     return state;
