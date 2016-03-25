@@ -71,11 +71,35 @@ const style = {
     fontSize: '12px',
     transform: 'none',
   },
+  toolbarInline:{
+    backgroundColor: '#ffffff',
+    height: '64px',
+    position:'fixed',
+    zIndex:'1000',
+  },
 };
 
 export default class NoteCreate extends React.Component {
   constructor(props){
     super(props);
+    let clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.handleResize = this.handleResize.bind(this);
+    this.state = {
+      windowWidth:clientWidth,
+    };
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
+
+  handleResize(){
+    let clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.setState({'windowWidth':clientWidth});
   }
 
   _handleClose(){
@@ -144,7 +168,7 @@ export default class NoteCreate extends React.Component {
                       />
                     </div>
                     <div className="col-xs-10 " style={{marginTop:'20px', marginBottom:'20px'}}>
-                      <RaisedButton primary={true} label='Save' onTouchTap={this._handleSubmit.bind(this)}></RaisedButton>
+                      <RaisedButton primary label="Save" onTouchTap={this._handleSubmit.bind(this)} />
                     </div>
                   </div>
                 </form>
@@ -155,30 +179,47 @@ export default class NoteCreate extends React.Component {
   }
   render(){
     let {note} = this.props;
+    if(this.state.windowWidth > 768){
+      style.toolbarInline.width ='375px';
+    } else {
+      style.toolbarInline.width = '100%';
+    }
     let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     let contentHeight = clientHeight - 64;
     if(this.props.inline){
       return (
       <div>
-        {this._renderContents()}
+        <Toolbar style={style.toolbarInline}>
+          <ToolbarGroup key={0} float="left">
+            <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName="material-icons">close</IconButton>
+            <ToolbarTitle style={style.toolbarTitle} text={!note.get('id') || note.get('id').indexOf('tmp') > -1 ? 'Create Note' : 'Edit Note'} />
+          </ToolbarGroup>
+          <ToolbarGroup key={1} float="right">
+            <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
+          </ToolbarGroup>
+        </Toolbar>
+        <div style={{height:'64px'}}></div>
+        <div>
+          {this._renderContents()}
+        </div>
       </div>);
     } else {
       return (
       <div>
           <Dialog
-                open={this.props.open}
-                autoDetectWindowHeight={false}
-                autoScrollBodyContent={false}
-                repositionOnUpdate={false}
-                defaultOpen={false}
-                style={style.dialog}
-                bodyStyle={style.bodyStyle}
-                contentStyle={style.contentStyle}
-            >
+              open={this.props.open}
+              autoDetectWindowHeight={false}
+              autoScrollBodyContent={false}
+              repositionOnUpdate={false}
+              defaultOpen={false}
+              style={style.dialog}
+              bodyStyle={style.bodyStyle}
+              contentStyle={style.contentStyle}
+          >
             <div style={{minHeight: `${clientHeight}px`, overflowY:'scroll'}}>
               <Toolbar style={style.toolbar}>
                 <ToolbarGroup key={0} float="left">
-                  <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName='material-icons'>close</IconButton>
+                  <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName="material-icons">close</IconButton>
                   <ToolbarTitle style={style.toolbarTitle} text={!note.get('id') || note.get('id').indexOf('tmp') > -1 ? 'Create Note' : 'Edit Note'} />
                 </ToolbarGroup>
                 <ToolbarGroup key={1} float="right">
