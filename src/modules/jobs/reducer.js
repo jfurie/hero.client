@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import * as constants from './constants';
-
+import Q from 'q';
 import {actionTypes} from 'redux-localstorage';
 
 const initialState = new Immutable.Map({
@@ -425,6 +425,10 @@ export default function reducer(state = initialState, action = {}) {
     let newList = state.get('list').merge(jobMap);
 
     return state.set('list', newList);
+  }
+  case constants.DELETE_JOB_SUCCESS: {
+      let id = action.result.id;
+      return state.updateIn(['list',id,'_isDeleted'],true);
   }
   default:
     return state;

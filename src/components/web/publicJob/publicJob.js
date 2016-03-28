@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
 //import marked from 'marked';
-
+import marked from 'marked';
 import { CardTitle } from 'material-ui';
 import defaultImage from './publicJob.jpg';
 import {SkillsCard, LocationCard, PublicHeader, DetailsCard, CompanyAvatar } from '../../../components/web';
@@ -120,6 +120,7 @@ export default class PublicJob extends React.Component {
         companyName = 'XYZ Company';
       }
       let categoryLinks =job.get('_categoryLinks');
+      let description = job.get('description') ? marked(job.get('description')) : '';
       return (
         <div>
           <DetailsCard
@@ -162,6 +163,12 @@ export default class PublicJob extends React.Component {
 
             <LocationCard location={job.get('location')} />
             <SkillsCard skills={categoryLinks} />
+              <Card>
+                <CardTitle title="Description" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                <CardText style={{padding:'24px'}}>
+                  <div className='description' dangerouslySetInnerHTML={{__html: description}} />
+                </CardText>
+              </Card>
           </div>
           <div></div>
           <div></div>

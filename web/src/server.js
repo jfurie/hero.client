@@ -22,7 +22,14 @@ function startApp() {
   swig.setDefaults({
     cache: false
   });
+  app.get('*',function(req,res,next){
+    if(req.headers['x-forwarded-proto']!='https')
+      res.redirect('https://'+req.get('host') + req.originalUrl);
+    else
+      next(); /* Continue to other routes if we're not redirecting */
+  });
   app.use(express.static(config.root + '/public'));
+
   app.get('/j/:shortId/:title', function(req, res) {
     let request = require('request');
     console.log('shortId started');
@@ -39,7 +46,9 @@ function startApp() {
         if(data.city && data.state){
           meta.title = meta.title +  ' in ' + data.city +', ' + data.state;
         }
-        meta.description = removeMd(data.description.replace('### Job Description ', '')).substring(0, 170);
+        if(data.description){
+          meta.description = removeMd(data.description.replace('### Job Description ', '')).substring(0, 170);
+        }
         if(!meta.description || meta.description == ''){
           meta.description = 'The next 5 minutes could change everything. Discover the top tech companies hiring near you.';
         }

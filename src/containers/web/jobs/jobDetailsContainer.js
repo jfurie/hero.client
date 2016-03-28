@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import Immutable from 'immutable';
 import { JobDetails } from '../../../components/web';
-import { getJobDetail, toggleTag } from '../../../modules/jobs';
+import { getJobDetail, toggleTag, deleteJob } from '../../../modules/jobs';
 import { getAllJobCandidates, deleteCandidate, editApplicantState } from '../../../modules/candidates';
 import { editContact } from '../../../modules/contacts';
 import { createContactFavorite, deleteContactFavorite ,createJobFavorite, deleteJobFavorite} from '../../../modules/favorites';
@@ -23,7 +23,7 @@ function getData(state, props, jobId) {
   };
 }
 
-@connect((state, props) => (getData(state, props, props.params.jobId)), {pushState, getJobDetail, toggleTag, createJobFavorite, deleteJobFavorite, getAllJobCandidates, getImageByJobId, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote, createContactFavorite, deleteContactFavorite, editContact, editApplicantState, deleteCandidate})
+@connect((state, props) => (getData(state, props, props.params.jobId)), {pushState, getJobDetail, toggleTag, createJobFavorite, deleteJobFavorite, getAllJobCandidates, getImageByJobId, getNotesByJob, updateNoteLocal, saveLocalNote, replaceNoteLocal, deleteNote, createContactFavorite, deleteContactFavorite, editContact, editApplicantState, deleteCandidate, deleteJob})
 class JobDetailsPage extends React.Component {
 
   constructor(props) {

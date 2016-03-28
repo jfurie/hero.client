@@ -115,7 +115,7 @@ class LocationCard extends React.Component {
               }}
           >
             <a
-                style={{position: 'absolute', left: -1, right: -1, bottom: -1, top: -1, zIndex: 2000, cursor: 'pointer'}}
+                style={{position: 'absolute', left: -1, right: -1, bottom: -1, top: -1, zIndex: 1400, cursor: 'pointer'}}
                 href={defaultZoom > 3 ? `http://maps.google.com/maps?q=${geoField.lat},${geoField.lng}&z=${defaultZoom}` : 'http://maps.google.com'}
                 target="_blank"
             />
