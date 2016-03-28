@@ -426,7 +426,7 @@ export function toggleTag(jobId, tag){
   return (dispatch) => {
     dispatch({
       types: [constants.TOGGLE_TAG, constants.TOGGLE_TAG_SUCCESS, constants.TOGGLE_TAG_FAIL],
-      promise: (client, auth) => client.api.put(`/jobs/toggleTag?id=${jobId}&tag=${tag}`, {
+      promise: (client, auth) => client.api.put(`/jobs/${jobId}/toggleTag?tag=${tag}`, {
         authToken: auth.authToken,
       }).then(function (job) {
         return job;
