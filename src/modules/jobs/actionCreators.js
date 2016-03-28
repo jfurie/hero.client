@@ -208,7 +208,7 @@ export function deleteJob(id) {
       return {
         response,
         id
-      }
+      };
     }),
   };
 }

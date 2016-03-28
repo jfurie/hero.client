@@ -166,7 +166,7 @@ export default class JobDetails extends React.Component {
     }).then(function(){
       self.props.deleteJob(self.props.job.get('id'));
     }).catch(function(){
-      console.log('no')
+      console.log('no');
     });
   }
 
