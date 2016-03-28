@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
 import marked from 'marked';
-
 import { CardTitle } from 'material-ui';
 import defaultImage from './publicJob.jpg';
 import {SkillsCard, LocationCard, PublicHeader, DetailsCard, Gravatar, CompanyAvatar, CardBasic } from '../../../components/web';
@@ -238,8 +237,6 @@ export default class PublicJob extends React.Component {
               </Card>
             : (null)
             }
-
-
           </div>
           <div></div>
           <div></div>
