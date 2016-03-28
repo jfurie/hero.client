@@ -110,7 +110,7 @@ export default class NoteCreateContainer extends React.Component {
         onChange={this._handleChange.bind(this)}
         onSubmit={this._handleSave.bind(this)}
         open={this.state.open}
-        inline={false}  />
+        inline={true}  />
     );
   }
 }

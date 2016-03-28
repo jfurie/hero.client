@@ -85,7 +85,7 @@ class ClientDetailsPage extends React.Component {
 
     setTimeout(() => {
       if(self.props.params.companyId){
-        self.props.getCompanyDetails([self.props.params.companyId], ['contacts', 'jobs']);
+        self.props.getCompanyDetails([self.props.params.companyId], ['contacts', 'jobs', 'notes']);
         self.props.getImageByCompanyId(self.props.params.companyId);
       }
 
