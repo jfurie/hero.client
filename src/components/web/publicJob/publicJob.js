@@ -120,7 +120,6 @@ export default class PublicJob extends React.Component {
         companyName = 'XYZ Company';
       }
       let categoryLinks =job.get('_categoryLinks');
-      let description = job.get('description') ? marked(job.get('description')) : '';
       return (
         <div>
           <DetailsCard
