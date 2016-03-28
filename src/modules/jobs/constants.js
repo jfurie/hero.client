@@ -53,3 +53,6 @@ export const EDIT_JOB_CATEGORY = 'hero.client/jobs/EDIT_JOB_CATEGORY';
 export const EDIT_JOB_CATEGORY_SUCCESS = 'hero.client/jobs/EDIT_JOB_CATEGORY_SUCCESS';
 export const EDIT_JOB_CATEGORY_FAIL = 'hero.client/jobs/EDIT_JOB_CATEGORY_FAIL';
 export const SET_FRAMEWORKS = 'hero.client/jobs/SET_FRAMEWORKS';
+export const TOGGLE_TAG = 'hero.client/jobs/TOGGLE_TAG';
+export const TOGGLE_TAG_SUCCESS = 'hero.client/jobs/TOGGLE_TAG_SUCCESS';
+export const TOGGLE_TAG_FAIL = 'hero.client/jobs/TOGGLE_TAG_FAIL';

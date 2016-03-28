@@ -101,7 +101,7 @@ export default class JobDetails extends React.Component {
   }
 
   _onTouchTapHot() {
-    //this.props.toggleJobTag('HOT!');
+    this.props.toggleTag(this.props.job.get('id'), 'HOT!');
   }
 
   _onTouchTapShare() {
@@ -215,26 +215,6 @@ export default class JobDetails extends React.Component {
         onTouchTap: this._onTouchTapShare.bind(this),
       }];
 
-      let stats = [{
-        title: 'Applied',
-        value: 12,
-      }, {
-        title: 'Submitted',
-        value: 4,
-      }, {
-        title: 'Accepted',
-        value: 4,
-      }, {
-        title: 'Interviews',
-        value: 5,
-      }, {
-        title: 'Offers',
-        value: 1,
-      }, {
-        title: 'Jobs',
-        value: 0,
-      }];
-
       // company
       let company = job.get('company');
       let companyWebsite = null;
@@ -288,8 +268,6 @@ export default class JobDetails extends React.Component {
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
               floatActionLabel={'Share'}
-              topTags={job.get('tags') || []}
-              stats={stats}
           />
         <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
             <div>

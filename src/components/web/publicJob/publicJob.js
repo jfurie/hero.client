@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
-//import marked from 'marked';
+import marked from 'marked';
 
 import { CardTitle } from 'material-ui';
 import defaultImage from './publicJob.jpg';
-import {SkillsCard, LocationCard, PublicHeader, DetailsCard, CustomTabsSwipe, CompanyAvatar } from '../../../components/web';
+import {SkillsCard, LocationCard, PublicHeader, DetailsCard, Gravatar, CompanyAvatar, CardBasic } from '../../../components/web';
 import {IconMenu, MenuItem, RaisedButton, FontIcon, Styles, Card, CardText, Avatar, IconButton } from 'material-ui';
 import './publicJob.scss';
 
@@ -66,7 +66,7 @@ export default class PublicJob extends React.Component {
       let cover = ((job.get('image') && job.get('image').get('item')) ? (job.get('image').get('item')) : (defaultImage));
 
       // markdown to html
-      //let description = job.get('description') ? marked(job.get('description')) : '';
+      let description = job.get('description') ? marked(job.get('description')) : '';
 
       // salary
       let salaryMin = '$[?]';
@@ -111,6 +111,7 @@ export default class PublicJob extends React.Component {
       let companyWebsite;
 
       let company = job.get('company');
+      let talentAdvocate = job.get('talentAdvocate');
 
       if (company) {
         companyName = company.get('name');
@@ -139,37 +140,106 @@ export default class PublicJob extends React.Component {
               floatActionContent={<FontIcon className="material-icons">check</FontIcon>}
               floatActionLabel={'Click to Apply'}
           />
-        <CustomTabsSwipe onChange={this.props.apply.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
           <div>
+            <LocationCard location={job.get('location')} maskLocation />
+            <SkillsCard skills={categoryLinks} />
             <Card>
-              <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
               <CardText>
-                {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
+                {this.renderBigListItem('Company Mission',company.get('productSolution'),
                 <Avatar
-                    icon={<FontIcon className="material-icons">info_outline</FontIcon>}
+                    icon={<FontIcon className="material-icons">store</FontIcon>}
                     color={Styles.Colors.grey600}
                     backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
               <CardText>
-                {this.renderBigListItem('Bonus & perks', job.get('bonusPerks'),
+                {this.renderBigListItem('Culture',company.get('culture'),
+                <Avatar
+                    icon={<FontIcon className="material-icons">face</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
+              <CardText>
+                {this.renderBigListItem('Benefits',company.get('benefits'),
                 <Avatar
                     icon={<FontIcon className="material-icons">redeem</FontIcon>}
                     color={Styles.Colors.grey600}
                     backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
+              <CardText>
+                {this.renderBigListItem('Tech Stack',company.get('techstack'),
+                <Avatar
+                    icon={<FontIcon className="material-icons">storage</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
+              <CardText>
+                {this.renderBigListItem('Leadership',company.get('leadership'),
+                <Avatar
+                    icon={<FontIcon className="material-icons">stars</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
             </Card>
+            <Card>
+              <CardText>
+                <div style={{display:'flex'}}>
+                  <div style={{flex:'0 0 56px'}}>
+                    <Avatar
+                        icon={<FontIcon className="material-icons">verified_user</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />
+                  </div>
+                  <div style={{width: '100%', marginRight: '8px'}}>
+                    <div className="description">
+                      <div dangerouslySetInnerHTML={{__html: description}} />
+                    </div>
+                  </div>
+                </div>
+              </CardText>
+            </Card>
+            {
+              talentAdvocate ?
+              <Card>
+                <CardTitle title="Hiring Manager" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                <CardText>
+                  <div style={{display:'flex'}}>
+                    <div style={{flex:'0 0 56px'}}>
+                      <Avatar
+                          icon={<FontIcon className="material-icons">verified_user</FontIcon>}
+                          color={Styles.Colors.grey600}
+                          backgroundColor={Styles.Colors.white}
+                      />
+                    </div>
+                    {
+                      <div style={{width: '100%', marginRight: '8px'}}>
+                        <CardBasic
+                            image={<Gravatar url={talentAdvocate.get('email')} status={'notset'} style={{width: '40px'}}/>}
+                            title= {<div style={{fontWeight: 'bold'}}>{talentAdvocate.get('displayName')}</div>}
+                            subtitle1={talentAdvocate.get('companies').first().get('name')}
+                            subtitle2={talentAdvocate.get('title')}
+                            rightContent={<CompanyAvatar style={{width:'40px'}} url={company.get('website')} />}
+                        />
+                      </div>
+                    }
+                  </div>
+                </CardText>
+              </Card>
+            : (null)
+            }
 
-            <LocationCard location={job.get('location')} />
-            <SkillsCard skills={categoryLinks} />
+
           </div>
           <div></div>
           <div></div>
           <div></div>
           <div></div>
-        </CustomTabsSwipe>
-        <div style={{padding: '16px 24px', textAlign: 'center', backgroundColor: '#333'}}>
+        <div style={{padding: '16px 24px', textAlign: 'center', backgroundColor: '#212121'}}>
           <RaisedButton label="Apply Now" primary style={{}} onTouchTap={this.props.apply.bind(this)} />
         </div>
         </div>
@@ -208,11 +278,12 @@ export default class PublicJob extends React.Component {
           <IconButton iconStyle={iconStyle} onTouchTap={this.props.apply.bind(this)} iconClassName="material-icons">search</IconButton>
           <IconMenu iconButtonElement={
             <IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>
-          }>
+          }
+          >
             <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
-            <MenuItem index={0} onTouchTap={this.viewLoggedIn.bind(this)} primaryText={`View Logged In Job`} />
+            <MenuItem index={0} onTouchTap={this.viewLoggedIn.bind(this)} primaryText={`View Job in App`} />
 
           </IconMenu>
         </span>

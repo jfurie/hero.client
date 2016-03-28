@@ -8,7 +8,6 @@ import { getUserContact, getUserStats } from '../../modules/users';
 import { onNavOpen, onNavClose, toggleNav } from '../../modules/leftNav';
 import { LeftNavTop } from '../../components/web';
 import { logout, resetLogoutReady } from '../../modules/auth';
-import GoogleMap from 'google-map-react';
 
 @connect(state => ({
   auth: state.auth,
@@ -121,8 +120,6 @@ class Layout extends React.Component {
   render () {
     let {leftNav, user} = this.props;
     let height = this.state.windowHeight;
-    let geoField = {          lat: 34.0219,
-              lng: -118.4814,};
     return (
       <div>
         <div style={{
@@ -137,21 +134,7 @@ class Layout extends React.Component {
           filter:'blur(4px)',
 
         }} className='mapContainer'>
-          <GoogleMap
-            center={geoField}
-            defaultZoom={13}
-            options={{
-              mapTypeControl: false,
-              disableDefaultUI: true,
-              draggable: false,
-              scrollwheel: false,
-              navigationControl: false,
-              scaleControl: false,
-              disableDoubleClickZoom: true,
-              styles: [{'featureType':'administrative','elementType':'labels.text.fill','stylers':[{'color':'#444444'}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#f2f2f2'}]},{'featureType':'poi','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'road','elementType':'all','stylers':[{'saturation':-100},{'lightness':45}]},{'featureType':'road.highway','elementType':'all','stylers':[{'visibility':'simplified'}]},{'featureType':'road.arterial','elementType':'labels.icon','stylers':[{'visibility':'off'}]},{'featureType':'transit','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#46bcec'},{'visibility':'on'}]}],
-            }}
-          >
-          </GoogleMap>
+
         </div>
         <div className='mainContainer' style={{
           minHeight:height+'px',

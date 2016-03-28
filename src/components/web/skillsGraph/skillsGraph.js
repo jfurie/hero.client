@@ -17,7 +17,7 @@ export default class SkillsGraph extends React.Component {
   //         </div>
   //       </div>
   //       <div style={style.graph}>
-  //         <div style={{borderRadius:'4px',width: percent+'%', height:'20px', backgroundColor: '#333333' }}></div>
+  //         <div style={{borderRadius:'4px',width: percent+'%', height:'20px', backgroundColor: '#212121' }}></div>
   //       </div>
   //     </div>
   //   );
@@ -66,7 +66,7 @@ export default class SkillsGraph extends React.Component {
                     <tr style={{width:'100%'}}>
                       <td style={{whiteSpace: 'nowrap', paddingBottom:'1px', paddingRight:'5px',textAlign:'right'}}>{category.get('shortTitle')}</td>
                       <td ref='widthCheck' style={{minWidth:'200px', width:'auto', paddingBottom:'1px'}}>
-                         <div style={{borderRadius:'4px',width: percent+'%', height:'20px', backgroundColor: '#333333' }}></div>
+                         <div style={{borderRadius:'4px',width: percent+'%', height:'20px', backgroundColor: '#212121' }}></div>
                       </td>
                     </tr>
                   );

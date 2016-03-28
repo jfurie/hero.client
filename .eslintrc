@@ -8,6 +8,12 @@
   "plugins": [
     "react"
   ],
+  "globals": {
+    "twttr": true,
+    "ga": true,
+    "fbq": true,
+    "mixpanel": true
+  },
   "rules": {
     "no-console": 0,
     "indent": [2, 2],

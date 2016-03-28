@@ -5,9 +5,11 @@ import { PublicJob, PublicSignUp } from '../../../components/web';
 import { getCategoriesIfNeeded } from '../../../modules/categories';
 function getData(state, props) {
   let job = state.publik.get('jobs').get(props.params.shortId);
-  console.log(state.auth);
+  let newApplicant = state.publik.get('newApplicant');
+
   return {
     job,
+    newApplicant,
     authToken:state.auth.get('authToken'),
   };
 }
@@ -30,6 +32,38 @@ class PublicJobContainer extends React.Component {
     if(this.props.params.shortId !== nextProps.params.shortId){
       this.props.getJobByShortId(nextProps.params.shortId);
     }
+
+    if (this.props.newApplicant != nextProps.newApplicant) {
+      this.conversion(nextProps.newApplicant.contact);
+    }
+  }
+
+  conversion(data) {
+    // twitter event
+    twttr.conversion.trackPid('ntgf3', { tw_sale_amount: 0, tw_order_quantity: 0 });
+
+    //google event
+    ga('send', {
+      'hitType': 'event',
+      'eventCategory': 'landing',
+      'eventAction': 'apply',
+    });
+
+    //FB Event
+    fbq('track', 'Lead');
+
+    mixpanel.people.set({
+      '$email': data.email,
+      '$first_name': data.firstName,
+      '$last_name': data.lastName,
+      '$name': data.displayName,
+      '$created': data.created,
+      '$phone': data.phone,
+      'provider': 'form',
+    });
+
+    mixpanel.alias(data.email);
+    mixpanel.track('applied');
   }
 
   openSignUpModal() {

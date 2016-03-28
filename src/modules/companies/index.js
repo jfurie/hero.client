@@ -453,40 +453,40 @@ export function saveCompaniesResult(companies){
 }
 
 export function getCompanyDetails(companyIds, include) {
-  let filter = {
-    where: {
-      id: {inq:companyIds},
-    },
-    include:[
-      {
-        relation:'jobs',
-        scope:{
-          fields: ['id'],
-        },
+  return (dispatch, getState) => {
+    let filter = {
+      where: {
+        id: {inq:companyIds},
       },
-      {
-        relation:'contacts',
-        scope:{
-          fields: ['id'],
+      include:[
+        {
+          relation:'jobs',
+          scope:{
+            fields: ['id'],
+          },
         },
-      },
-      {
-        relation:'notes',
-        scope:{
-          order: 'updated DESC',
-          where: { or: [
-            {and: [{privacyValue: 0}, {userId: '123'}]},
-            {privacyValue: 1},
-          ]},
-          fields: ['id'],
+        {
+          relation:'contacts',
+          scope:{
+            fields: ['id'],
+          },
         },
-      },
-    ],
-  };
+        {
+          relation:'notes',
+          scope:{
+            order: 'updated DESC',
+            where: { or: [
+              {and: [{privacyValue: 0}, {userId: getState().auth.get('user').get('id')}]},
+              {privacyValue: 1},
+            ]},
+            fields: ['id'],
+          },
+        },
+      ],
+    };
 
-  let filterString = encodeURIComponent(JSON.stringify(filter));
+    let filterString = encodeURIComponent(JSON.stringify(filter));
 
-  return (dispatch) => {
     dispatch({
       types: [constants.GET_COMPANY_DETAILS, constants.GET_COMPANY_DETAILS_SUCCESS, constants.GET_COMPANY_DETAILS_FAIL],
       promise: (client, auth) => client.api.get(`/companies?filter=${filterString}`, {
