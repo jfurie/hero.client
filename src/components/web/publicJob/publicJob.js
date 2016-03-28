@@ -150,7 +150,7 @@ export default class PublicJob extends React.Component {
                 />)}
               </CardText>
             </Card>
-            <LocationCard location={job.get('location')} maskLocation />
+            <LocationCard location={job.get('location')} maskLocation zoom={11} />
             <SkillsCard skills={categoryLinks} />
             <Card>
               <CardText>

@@ -31,7 +31,7 @@ class LocationCard extends React.Component {
 
   render() {
 
-    let {location, maskLocation} = this.props;
+    let {location, maskLocation, zoom} = this.props;
 
     let options = {
       mapTypeControl: false,
@@ -83,7 +83,7 @@ class LocationCard extends React.Component {
         address += `${countryCode}`;
       }
 
-      defaultZoom = 13;
+      defaultZoom = zoom || 13;
     }
     else {
       address = 'United States';
@@ -134,10 +134,18 @@ class LocationCard extends React.Component {
               }}
           >
             <a
-                style={{position: 'absolute', left: -1, right: -1, bottom: -1, top: -1, zIndex: 10, cursor: 'pointer'}}
+                style={{display: 'flex', alignItems: 'center', position: 'absolute', left: -1, right: -1, bottom: -1, top: -1, zIndex: 10, cursor: 'pointer'}}
                 href={externalLink}
                 target="_blank"
-            />
+            >
+            {
+              maskLocation ?
+              <div style={{width: '100%', textAlign: 'center'}}>
+                <div style={{marginTop: '-25px', display: 'inline-block', width: '120px', height: '120px', borderRadius: '50%', backgroundColor: Styles.Colors.blue200, border: `2px solid ${Styles.Colors.blue500}`, opacity: '0.5'}}></div>
+              </div>
+              : (null)
+            }
+            </a>
             <div style={{position: 'absolute', left: -1, right: -1, bottom: -1, height: '25px', backgroundColor: '#fff', zIndex: 1000}} />
             <GoogleMapLoader
                 containerElement={
