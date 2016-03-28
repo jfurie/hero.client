@@ -140,8 +140,6 @@ export default class PublicJob extends React.Component {
               floatActionLabel={'Click to Apply'}
           />
           <div>
-            <LocationCard location={job.get('location')} maskLocation />
-            <SkillsCard skills={categoryLinks} />
             <Card>
               <CardText>
                 {this.renderBigListItem('Company Mission',company.get('productSolution'),
@@ -151,6 +149,10 @@ export default class PublicJob extends React.Component {
                     backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
+            </Card>
+            <LocationCard location={job.get('location')} maskLocation />
+            <SkillsCard skills={categoryLinks} />
+            <Card>
               <CardText>
                 {this.renderBigListItem('Culture',company.get('culture'),
                 <Avatar
@@ -184,24 +186,28 @@ export default class PublicJob extends React.Component {
                 />)}
               </CardText>
             </Card>
-            <Card>
-              <CardText>
-                <div style={{display:'flex'}}>
-                  <div style={{flex:'0 0 56px'}}>
-                    <Avatar
-                        icon={<FontIcon className="material-icons">verified_user</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />
-                  </div>
-                  <div style={{width: '100%', marginRight: '8px'}}>
-                    <div className="description">
-                      <div dangerouslySetInnerHTML={{__html: description}} />
+            {
+              description ?
+              <Card>
+                <CardText>
+                  <div style={{display:'flex'}}>
+                    <div style={{flex:'0 0 56px'}}>
+                      <Avatar
+                          icon={<FontIcon className="material-icons">stars</FontIcon>}
+                          color={Styles.Colors.grey600}
+                          backgroundColor={Styles.Colors.white}
+                      />
+                    </div>
+                    <div style={{width: '100%', marginRight: '8px'}}>
+                      <div className="description">
+                        <div dangerouslySetInnerHTML={{__html: description}} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardText>
-            </Card>
+                </CardText>
+              </Card>
+              : (null)
+            }
             {
               talentAdvocate ?
               <Card>
@@ -220,7 +226,7 @@ export default class PublicJob extends React.Component {
                         <CardBasic
                             image={<Gravatar url={talentAdvocate.get('email')} status={'notset'} style={{width: '40px'}}/>}
                             title= {<div style={{fontWeight: 'bold'}}>{talentAdvocate.get('displayName')}</div>}
-                            subtitle1={company.get('name')}
+                            subtitle1={talentAdvocate.get('companies').first().get('name')}
                             subtitle2={talentAdvocate.get('title')}
                             rightContent={<CompanyAvatar style={{width:'40px'}} url={company.get('website')} />}
                         />
