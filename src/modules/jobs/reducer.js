@@ -426,6 +426,10 @@ export default function reducer(state = initialState, action = {}) {
 
     return state.set('list', newList);
   }
+  case constants.DELETE_JOB_SUCCESS: {
+    let id = action.result.id;
+    return state.updateIn(['list',id,'_isDeleted'],true);
+  }
   default:
     return state;
   }
