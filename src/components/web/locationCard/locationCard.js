@@ -134,7 +134,7 @@ class LocationCard extends React.Component {
               }}
           >
             <a
-                style={{position: 'absolute', left: -1, right: -1, bottom: -1, top: -1, zIndex: 2000, cursor: 'pointer'}}
+                style={{position: 'absolute', left: -1, right: -1, bottom: -1, top: -1, zIndex: 10, cursor: 'pointer'}}
                 href={externalLink}
                 target="_blank"
             />

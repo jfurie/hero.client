@@ -196,6 +196,23 @@ export function getOneJob(id) {
   };
 }
 
+export function deleteJob(id) {
+  return {
+    types: [constants.DELETE_JOB, constants.DELETE_JOB_SUCCESS, constants.DELETE_JOB_FAIL],
+    promise: (client, auth) => client.api.del(`/jobs/${id}`, {
+      authToken: auth.authToken,
+      data: {
+        id,
+      },
+    }).then(response =>{
+      return {
+        response,
+        id
+      };
+    }),
+  };
+}
+
 export function searchJobs(query) {
   return {
     types: [constants.SEARCH_JOBS, constants.SEARCH_JOBS_SUCCESS, constants.SEARCH_JOBS_FAIL],

@@ -5,9 +5,9 @@ import marked from 'marked';
 
 import { List, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import {SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
+import {SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
 import {
-  IconButton, FontIcon, Styles,
+  IconButton, FontIcon, Styles, Divider,
   IconMenu, MenuItem, Card, CardText, Avatar,
 } from 'material-ui';
 import './jobDetails.scss';
@@ -153,9 +153,21 @@ export default class JobDetails extends React.Component {
   }
 
   viewPublic(){
-    let title = this.props.job.get('company').get('name') + '-' +this.props.job.get('title');
+    let self = this;
+    let title = self.props.job.get('company').get('name') + '-' +self.props.job.get('title');
     title = cleanTitle(title);
-    this.props.pushState(null, `/j/${this.props.job.get('shortId')}/${title}`);
+    self.props.pushState(null, `/j/${self.props.job.get('shortId')}/${title}`);
+  }
+  deleteJob(){
+    let self = this;
+    this.refs.confirm.confirm({
+      title:'Delete Job',
+      message:'Are you sure you want to delete this Job? (This cannot be undone)'
+    }).then(function(){
+      self.props.deleteJob(self.props.job.get('id'));
+    }).catch(function(){
+      console.log('no');
+    });
   }
 
   renderContent(job) {
@@ -318,7 +330,7 @@ export default class JobDetails extends React.Component {
               <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
             </List>
           </CustomTabsSwipe>
-
+          <Confirm ref='confirm' />
         </div>
       );
 
@@ -342,6 +354,8 @@ export default class JobDetails extends React.Component {
             <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
             <MenuItem index={0} onTouchTap={this.viewPublic.bind(this)} primaryText={`View Public Job`} />
+            <Divider />
+            <MenuItem index={0} onTouchTap={this.deleteJob.bind(this)} primaryText={`Delete Job`} />
           </IconMenu>
         }
         />
