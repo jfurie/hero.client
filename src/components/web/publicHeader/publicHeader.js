@@ -30,6 +30,7 @@ class PublicHeader extends React.Component {
     // compile style
     let style = {
       position: 'fixed',
+      zIndex: 1400,
       backgroundColor: Styles.Colors.grey900,
       width:'100%',
     };
