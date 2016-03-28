@@ -221,7 +221,7 @@ export default class PublicJob extends React.Component {
                         <CardBasic
                             image={<Gravatar url={talentAdvocate.get('email')} status={'notset'} style={{width: '40px'}}/>}
                             title= {<div style={{fontWeight: 'bold'}}>{talentAdvocate.get('displayName')}</div>}
-                            subtitle1={company.get('name')}
+                            subtitle1={talentAdvocate.get('companies').first().get('name')}
                             subtitle2={talentAdvocate.get('title')}
                             rightContent={<CompanyAvatar style={{width:'40px'}} url={company.get('website')} />}
                         />
