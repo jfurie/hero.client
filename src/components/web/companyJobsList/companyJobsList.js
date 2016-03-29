@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { List } from 'material-ui';
 import { JobCardContainer } from '../../../components/web';
-
 const style = {
   peopleList: {
     marginTop: '7px',

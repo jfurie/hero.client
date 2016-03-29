@@ -6,7 +6,15 @@ class CompanyAvatar extends React.Component {
 
   constructor(props){
     super(props);
-
+    this.setUrl = this.setUrl.bind(this);
+    this.state = {
+      imgSrc: DEFAULT_IMG,
+    };
+  }
+  componentDidMount(){
+    this.setUrl(this.props);
+  }
+  setUrl(props){
     let url = props.url;
 
     if (url) {
@@ -14,14 +22,17 @@ class CompanyAvatar extends React.Component {
       url = url.replace(/http(s?):\/\//, '');
       url = url.replace(/\/$/, '');
 
-      this.state = {
+      this.setState({
         imgSrc: `https://logo.clearbit.com/${url}`,
-      };
+      });
     } else {
-      this.state = {
+      this.setState({
         imgSrc: DEFAULT_IMG,
-      };
+      });
     }
+  }
+  componentWillReceiveProps(props){
+    this.setUrl(props);
   }
   handleTouchTap(e){
     if(this.props.onTouchTap){

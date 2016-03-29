@@ -161,6 +161,16 @@ export default function reducer(state = initialState, action = {}) {
 
     return state.set('list', state.get('list').mergeDeep(companyList));
   }
+  case jobConstants.GET_JOB_DETAIL_SUCCESS: {
+    if(action.result.company){
+      let companyList =  {};
+      companyList[action.result.company.id] = action.result;
+
+      return state.set('list', state.get('list').mergeDeep(companyList));
+    } else {
+      return state;
+    }
+  }
   case constants.GET_MY_COMPANIES_SUCCESS: {
 
     let companiesMap = {};
