@@ -123,14 +123,7 @@ class CompanyJobsList extends React.Component {
       <List style={style.list} subheader={`${count} ${ressourceName}`}>
         {jobs.map((job) => {
           return (
-            <div>
-              <JobCardContainer
-                  onJobClick={this._showJobDetails.bind(this)}
-                  jobId={job.get('id')}
-                  favoriteJob={this.favoriteJob.bind(this)}
-                  unfavoriteJob={this.unfavoriteJob.bind(this)}
-              />
-            </div>
+            <JobCardContainer {...self.props} jobId={job.get('id')} />
           );
         })}
       </List>
