@@ -33,7 +33,7 @@ class JobCardContainer extends React.Component {
   }
 
   componentDidMount() {
-    let self = this;
+    //let self = this;
 
     setTimeout(() => {
       // if(self.props.jobId){
