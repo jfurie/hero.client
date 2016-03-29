@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { List } from 'material-ui';
-import { JobListItem } from '../../../components/web';
-
+import { JobCardContainer } from '../../../components/web';
 const style = {
   peopleList: {
     marginTop: '7px',
@@ -125,9 +124,9 @@ class CompanyJobsList extends React.Component {
         {jobs.map((job) => {
           return (
             <div>
-              <JobListItem
+              <JobCardContainer
                   onJobClick={this._showJobDetails.bind(this)}
-                  job={job}
+                  jobId={job.get('id')}
                   favoriteJob={this.favoriteJob.bind(this)}
                   unfavoriteJob={this.unfavoriteJob.bind(this)}
               />
