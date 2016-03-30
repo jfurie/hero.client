@@ -165,7 +165,7 @@ var Dialog = React.createClass({
     }
 
     return {
-      open: open,
+      open,
       muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
     };
   },
@@ -326,7 +326,7 @@ var Dialog = React.createClass({
     var _this2 = this;
 
     var props = {
-      key: key,
+      key,
       secondary: true,
       onClick: actionJSON.onClick,
       onTouchTap: function onTouchTap() {

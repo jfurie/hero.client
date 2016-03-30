@@ -1,8 +1,7 @@
 import React from 'react';
-import IN from 'linkedin';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
-import { RaisedButton, Dialog, TextField, FontIcon } from 'material-ui';
+import { RaisedButton, TextField, FontIcon } from 'material-ui';
 import { DialogNew } from '../../../components/web';
 import Config from '../../../utils/config';
 import validateContact from '../../../validators/contact';
@@ -53,20 +52,19 @@ class PublicSignUp extends React.Component {
             if(querykey != 'linkedinToken'){
               queryArr.push(querykey+ '=' +this.props.location.query[querykey]);
             }
-          };
+          }
           self.props.replaceState(null,this.props.location.pathname +'?'+queryArr.join('&'));
           self.setState({saving:true});
           self.submitData();
 
 
         }
-      })
+      });
 
     }
   }
 
   handleLinkedIn() {
-    let self = this;
     document.location = Config.get('apiBaseUrl') + '/auth/linkedinToken?redirect='+ encodeURIComponent(document.location.href);
 
     // IN.User.authorize(function(){
@@ -89,7 +87,7 @@ class PublicSignUp extends React.Component {
   //         replaceState(null,this.props.location.pathname +'?'+queryArr.join('&'));
   //       }
   //     });
-   }
+  }
 
   handleChange(e, name) {
     let data ={...this.state.data};
