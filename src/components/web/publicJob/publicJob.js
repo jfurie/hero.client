@@ -167,7 +167,7 @@ export default class PublicJob extends React.Component {
                       />
                     </div>
                     <div style={{width: '100%', marginRight: '8px'}}>
-                      <div style={style.title}>{'Description'}</div>
+                      <div style={style.title}>{'Job Description'}</div>
                       <div className="description">
                         <div dangerouslySetInnerHTML={{__html: description}} />
                       </div>
