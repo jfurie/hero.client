@@ -106,6 +106,7 @@ class PublicJobContainer extends React.Component {
             share={this.share.bind(this)}
         />
         <PublicSignUp
+            triggerModal={this.openSignUpModal.bind(this)}
             open={this.state.openSignUpModal}
             close={this.closeSignUpModal.bind(this)}
             submit={this.apply.bind(this)}
