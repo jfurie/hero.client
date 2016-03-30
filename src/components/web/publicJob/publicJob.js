@@ -228,7 +228,7 @@ export default class PublicJob extends React.Component {
                             title= {<div style={{fontWeight: 'bold'}}>{talentAdvocate.get('displayName')}</div>}
                             subtitle1={talentAdvocate.get('companies').first().get('name')}
                             subtitle2={talentAdvocate.get('title')}
-                            rightContent={<CompanyAvatar style={{width:'40px'}} url={company.get('website')} />}
+                            rightContent={<CompanyAvatar style={{width:'40px'}} url={talentAdvocate.get('companies').first().get('website')} />}
                         />
                       </div>
                     }
