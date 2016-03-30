@@ -754,7 +754,7 @@ export default class ContactDetails extends React.Component {
             <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (
               <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />
-            ) : (null)}
+            ) : (  <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Re-invite Contact" />)}
             <MenuItem index={0} onTouchTap={this.addNoteModalOpen.bind(this)} primaryText={`Create Note`} />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
           </IconMenu>
