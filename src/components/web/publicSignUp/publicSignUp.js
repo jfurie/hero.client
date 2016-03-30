@@ -1,9 +1,20 @@
 import React from 'react';
 import IN from 'linkedin';
+import { connect } from 'react-redux';
+import { pushState, replaceState } from 'redux-router';
 import { RaisedButton, Dialog, TextField, FontIcon } from 'material-ui';
-
+import { DialogNew } from '../../../components/web';
+import Config from '../../../utils/config';
 import validateContact from '../../../validators/contact';
+import superagent from 'superagent';
 
+@connect((state) =>
+{
+  return {
+    linkedinToken: state.router.location.query.linkedinToken,
+    location: state.router.location,
+  };
+}, {pushState, replaceState})
 class PublicSignUp extends React.Component {
   constructor(props) {
     super(props);
@@ -13,13 +24,22 @@ class PublicSignUp extends React.Component {
         url: document.location.href,
       },
     };
-  }
-
-  handleLinkedIn() {
     let self = this;
-    IN.User.authorize(function(){
-      let url = '/people/~:(id,first-name,headline,last-name,email-address,public-profile-url,picture-url,positions,picture-urls::(original))?format=json';
-      IN.API.Raw(url).method('GET').result(function(data){
+    if(props.linkedinToken){
+      self.props.triggerModal();
+      let promise = new Promise((resolve,reject)=>{
+        let request = superagent.get(Config.get('apiBaseUrl') + '/auth/linkedinProfile?linkedinToken='+props.linkedinToken);
+        request.end((err, {
+          body,
+        } = {}) => {
+          if (err) {
+            return reject(body || err);
+          } else {
+            return resolve(body);
+          }
+        });
+      });
+      promise.then((data) =>{
         let dataForm ={...self.state.data};
         dataForm.linkedIn =data;
         dataForm.firstName = data.firstName;
@@ -28,12 +48,48 @@ class PublicSignUp extends React.Component {
         dataForm.displayName = `${dataForm.firstName} ${dataForm.lastName}`;
         self.setState({data:dataForm});
         if(!self.state.saving){
+          var queryArr = [];
+          for (var querykey in this.props.location.query) {
+            if(querykey != 'linkedinToken'){
+              queryArr.push(querykey+ '=' +this.props.location.query[querykey]);
+            }
+          };
+          self.props.replaceState(null,this.props.location.pathname +'?'+queryArr.join('&'));
           self.setState({saving:true});
           self.submitData();
+
+
         }
-      });
-    }, this);
+      })
+
+    }
   }
+
+  handleLinkedIn() {
+    let self = this;
+    document.location = Config.get('apiBaseUrl') + '/auth/linkedinToken?redirect='+ encodeURIComponent(document.location.href);
+
+    // IN.User.authorize(function(){
+    //   let url = '/people/~:(id,first-name,headline,last-name,email-address,public-profile-url,picture-url,positions,picture-urls::(original))?format=json';
+    //   IN.API.Raw(url).method('GET').result(function(data){
+  //       let dataForm ={...self.state.data};
+  //       dataForm.linkedIn =data;
+  //       dataForm.firstName = data.firstName;
+  //       dataForm.email = data.emailAddress;
+  //       dataForm.lastName = data.lastName;
+  //       dataForm.displayName = `${dataForm.firstName} ${dataForm.lastName}`;
+  //       self.setState({data:dataForm});
+  //       if(!self.state.saving){
+  //         self.setState({saving:true});
+  //         self.submitData();
+  //         var queryArr = [];
+  //         for (var querykey in this.props.location.query) {
+  //           queryArr.push(querykey+ '=' +this.props.location.query[querykey]);
+  //         };
+  //         replaceState(null,this.props.location.pathname +'?'+queryArr.join('&'));
+  //       }
+  //     });
+   }
 
   handleChange(e, name) {
     let data ={...this.state.data};
@@ -138,17 +194,21 @@ class PublicSignUp extends React.Component {
   }
 
   render(){
+    var dialogStyles = {
+      zIndex:'3000',
+      paddingTop:'50px'
+    };
     return (
       <div>
-        <Dialog
+        <DialogNew
+            style={dialogStyles}
             title={this.state.saved ? 'Thank you!' : 'Apply'}
             modal={false}
-            autoScrollBodyContent
             open={this.props.open}
             onRequestClose={this.props.close.bind(this)}
         >
         {this.state.saved? this.renderSuccess() : this.renderForm()}
-        </Dialog>
+        </DialogNew>
       </div>
     );
   }
