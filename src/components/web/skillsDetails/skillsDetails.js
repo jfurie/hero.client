@@ -54,7 +54,7 @@ const style = {
   stackTitle:{
     fontSize:'13px',
     color:'#000000',
-    marginBottom:'8px',
+    paddingBottom:'8px',
 
   },
 };

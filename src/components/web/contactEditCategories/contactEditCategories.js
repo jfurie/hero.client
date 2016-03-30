@@ -270,7 +270,7 @@ export default class ContactEditCategoriesContainer extends React.Component {
                  />
             </CardText>
 
-              {currentContactCategory.get('experience') >0 && categoryItem.get('frameworkArr').length > 0 ?(<CardText>
+              {currentContactCategory.get('experience') >0 ?(<CardText>
                 <div style={{display:'flex'}}>
                   <div style={{flex:'0 0 65px'}}>
                     <Avatar
