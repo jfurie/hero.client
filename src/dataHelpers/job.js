@@ -16,7 +16,7 @@ export default function getJobDataFromState(state, jobId) {
 
     //company
     if(job.has('companyId')){
-      let company = state.companies.get('list').find(x=> x.get('id') == job.get('companyId'));
+      let company =state.companies.get('list').get(job.get('companyId'));
       if(company){
         job = job.set('company',company);
       }
