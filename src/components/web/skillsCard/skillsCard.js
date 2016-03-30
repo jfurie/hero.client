@@ -63,7 +63,7 @@ export default class ContactDetails extends React.Component {
         <Card>
           {
             showPrimary ?
-            <CardTitle title="Primary Skills" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+            <CardTitle title="Primary Skills Required" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
             : (null)
           }
           {
@@ -82,7 +82,7 @@ export default class ContactDetails extends React.Component {
           }
           {
             showSecondary ?
-            <CardTitle title="Secondary Skills" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+            <CardTitle title="Nice to Have Skills" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
             : (null)
           }
           {
@@ -101,7 +101,7 @@ export default class ContactDetails extends React.Component {
           }
           {
             showAll ?
-            <CardTitle title="Stacks/Frameworks" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+            <CardTitle title="Stacks/Frameworks Used" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
             : (null)
           }
           {
