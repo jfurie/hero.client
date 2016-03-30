@@ -154,6 +154,28 @@ export default class PublicJob extends React.Component {
             </Card>
             <LocationCard location={job.get('location')} maskLocation zoom={11} />
             <SkillsCard skills={categoryLinks} />
+            {
+              description ?
+              <Card>
+                <CardText>
+                  <div style={{display:'flex'}}>
+                    <div style={{flex:'0 0 56px'}}>
+                      <Avatar
+                          icon={<FontIcon className="material-icons">stars</FontIcon>}
+                          color={Styles.Colors.grey600}
+                          backgroundColor={Styles.Colors.white}
+                      />
+                    </div>
+                    <div style={{width: '100%', marginRight: '8px'}}>
+                      <div className="description">
+                        <div dangerouslySetInnerHTML={{__html: description}} />
+                      </div>
+                    </div>
+                  </div>
+                </CardText>
+              </Card>
+              : (null)
+            }
             <Card>
               {company.get('culture')?(
                 <CardText>
