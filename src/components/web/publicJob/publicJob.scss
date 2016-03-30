@@ -1,4 +1,6 @@
 .description {
+  color: rgba(0, 0, 0, 0.54);
+  font-weight: 500;
     html, address,
   blockquote,
   body, dd, div,
@@ -54,7 +56,7 @@
   s, strike, del  { text-decoration: line-through }
   hr              { border: 1px inset }
   ol, ul, dir,
-  menu, dd        { margin-left: 40px }
+  menu, dd        { margin-left: 16px }
   ol              { list-style-type: decimal }
   ul, ul li       { list-style-type: disc }
   ol ul, ul ol,
