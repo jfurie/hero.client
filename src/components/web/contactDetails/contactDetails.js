@@ -6,7 +6,7 @@ import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
 import categoryLinkSort from '../../../utils/categoryLinkSort';
-import {SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal } from '../../../components/web';
+import {SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
 import {
   CardTitle, IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
@@ -440,7 +440,7 @@ export default class ContactDetails extends React.Component {
           content ?
           <div style={{display: 'inline-block'}}>
             <div style={style.title}>{title}</div>
-            <div style={style.content}>{content}</div>
+            <div style={style.content}><MarkedViewer value={content}/></div>
           </div>
           :
           <div style={{display: 'flex', alignItems: 'center'}}>

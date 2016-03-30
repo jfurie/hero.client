@@ -4,7 +4,7 @@ import { pushState, replaceState } from 'redux-router';
 import marked from 'marked';
 import { CardTitle } from 'material-ui';
 import defaultImage from './publicJob.jpg';
-import {SkillsCard, LocationCard, PublicHeader, DetailsCard, Gravatar, CompanyAvatar, CardBasic } from '../../../components/web';
+import {SkillsCard, LocationCard, PublicHeader, DetailsCard, Gravatar, CompanyAvatar, CardBasic, MarkedViewer } from '../../../components/web';
 import {IconMenu, MenuItem, RaisedButton, FontIcon, Styles, Card, CardText, Avatar, IconButton } from 'material-ui';
 import './publicJob.scss';
 
@@ -47,7 +47,9 @@ export default class PublicJob extends React.Component {
           content ?
           <div style={{display: 'inline-block'}}>
             <div style={style.title}>{title}</div>
-            <div style={style.content}>{content}</div>
+            <div style={style.content}>
+              <MarkedViewer value={content} />
+            </div>
           </div>
           :
           <div style={{display: 'flex', alignItems: 'center'}}>
@@ -153,38 +155,46 @@ export default class PublicJob extends React.Component {
             <LocationCard location={job.get('location')} maskLocation zoom={11} />
             <SkillsCard skills={categoryLinks} />
             <Card>
-              <CardText>
-                {this.renderBigListItem('Culture',company.get('culture'),
-                <Avatar
-                    icon={<FontIcon className="material-icons">face</FontIcon>}
-                    color={Styles.Colors.grey600}
-                    backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-              <CardText>
-                {this.renderBigListItem('Benefits',company.get('benefits'),
-                <Avatar
-                    icon={<FontIcon className="material-icons">redeem</FontIcon>}
-                    color={Styles.Colors.grey600}
-                    backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-              <CardText>
-                {this.renderBigListItem('Tech Stack',company.get('techstack'),
-                <Avatar
-                    icon={<FontIcon className="material-icons">storage</FontIcon>}
-                    color={Styles.Colors.grey600}
-                    backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
-              <CardText>
-                {this.renderBigListItem('Leadership',company.get('leadership'),
-                <Avatar
-                    icon={<FontIcon className="material-icons">stars</FontIcon>}
-                    color={Styles.Colors.grey600}
-                    backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
+              {company.get('culture')?(
+                <CardText>
+                  {this.renderBigListItem('Culture',company.get('culture'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">face</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+              ):(<span></span>)}
+              {company.get('benefits')?(
+                <CardText>
+                  {this.renderBigListItem('Benefits',company.get('benefits'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">redeem</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+              ):(<span></span>)}
+              {company.get('techstack')?(
+                <CardText>
+                  {this.renderBigListItem('Tech Stack',company.get('techstack'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">storage</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+              ):(<span></span>)}
+              {company.get('leadership')?(
+                <CardText>
+                  {this.renderBigListItem('Leadership',company.get('leadership'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">stars</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+              ):(<span></span>)}
             </Card>
             {
               description ?
@@ -199,6 +209,7 @@ export default class PublicJob extends React.Component {
                       />
                     </div>
                     <div style={{width: '100%', marginRight: '8px'}}>
+                      <div style={style.title}>{'Description'}</div>
                       <div className="description">
                         <div dangerouslySetInnerHTML={{__html: description}} />
                       </div>
@@ -211,7 +222,7 @@ export default class PublicJob extends React.Component {
             {
               talentAdvocate ?
               <Card>
-                <CardTitle title="Hiring Manager" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                <CardTitle title="Hiring Contact" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 <CardText>
                   <div style={{display:'flex'}}>
                     <div style={{flex:'0 0 56px'}}>

@@ -31,7 +31,7 @@ class InvitedPage extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (this.props.auth.changingPassword == true && nextProps.auth.changingPassword == false && !nextProps.auth.changingPasswordError) {
+    if (this.props.auth.get('changingPassword') == true && nextProps.auth.get('changingPassword') == false && !nextProps.auth.get('changingPasswordError')) {
       this.props.pushState(null, '/');
     }
   }

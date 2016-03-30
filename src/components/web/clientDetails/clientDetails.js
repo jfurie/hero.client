@@ -9,7 +9,7 @@ import Avatar from 'material-ui/lib/avatar';
 
 import {
   LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
-  CompanyNotesList, DetailsCard, CompanyAvatar,
+  CompanyNotesList, DetailsCard, CompanyAvatar, MarkedViewer
 } from '../../../components/web';
 import defaultImage from './default-company.jpg';
 const style = {
@@ -181,7 +181,7 @@ export default class ClientDetails extends React.Component {
           content ?
           <div style={{display: 'inline-block'}}>
             <div style={style.title}>{title}</div>
-            <div style={style.content}>{content}</div>
+            <div style={style.content}><MarkedViewer value={content} /></div>
           </div>
           :
           <div style={{display: 'flex', alignItems: 'center'}}>
@@ -200,7 +200,7 @@ export default class ClientDetails extends React.Component {
           {avatar}
         </div>
         <div style={{display: 'flex', alignItems: 'center'}}>
-          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px', marginTop:'11px'}}><MarkedViewer value={content} /></div>
         </div>
       </div>
     );
@@ -398,7 +398,7 @@ export default class ClientDetails extends React.Component {
                 <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(twitter) ? (
                   <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('twitter', `@${twitter}`,
+                    {this.renderBigListItem('twitter', `${twitter}`,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
@@ -418,7 +418,7 @@ export default class ClientDetails extends React.Component {
                 ) : (null)}
                 {(angelList) ? (
                   <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Angel List', `@${angelList}`,
+                    {this.renderBigListItem('Angel List', `${angelList}`,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
@@ -428,7 +428,7 @@ export default class ClientDetails extends React.Component {
                 ) : (null)}
                 {(crunchbase) ? (
                   <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Crunchbase', `@${crunchbase}`,
+                    {this.renderBigListItem('Crunchbase', `${crunchbase}`,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
@@ -441,7 +441,7 @@ export default class ClientDetails extends React.Component {
                 <CardTitle title="Job Boards" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(jobboard) ? (
                   <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Job Board', `@${jobboard}`,
+                    {this.renderBigListItem('Job Board', `${jobboard}`,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
@@ -452,7 +452,7 @@ export default class ClientDetails extends React.Component {
 
                 {(ziprecruiter) ? (
                   <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Zip Recruiter', `@${ziprecruiter}`,
+                    {this.renderBigListItem('Zip Recruiter', `${ziprecruiter}`,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}

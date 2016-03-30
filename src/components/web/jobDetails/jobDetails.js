@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import {SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList } from '../../../components/web';
+import {SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles, Divider,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -71,7 +71,8 @@ export default class JobDetails extends React.Component {
           content ?
           <div style={{display: 'inline-block'}}>
             <div style={style.title}>{title}</div>
-            <div style={style.content}>{content}</div>
+            <div style={style.content}>
+              <MarkedViewer value={content} /></div>
           </div>
           :
           <div style={{display: 'flex', alignItems: 'center'}}>
