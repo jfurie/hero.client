@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import {
-  IconButton, ToolbarGroup, Toolbar, SelectField, MenuItem,
+  IconButton, ToolbarGroup, Toolbar, SelectField, MenuItem, Toggle,
   FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles,
   Card, CardMedia, CardText, LinearProgress, DatePicker,
 } from 'material-ui';
@@ -209,6 +209,14 @@ export default class JobEdit extends React.Component {
     } else {
       newJob = newJob.delete('department');
     }
+
+    this.props.onJobChange(newJob);
+  }
+
+  _handlePublicToggle(e, value){
+    let newJob = this.props.job;
+
+    newJob = newJob.set('public', value);
 
     this.props.onJobChange(newJob);
   }
@@ -433,6 +441,14 @@ export default class JobEdit extends React.Component {
                         );
                       })}
                     </SelectField>
+                  </div>
+
+                  <div className="col-xs-10 ">
+                    <Toggle
+                        label="Make Public"
+                        onToggle={this._handlePublicToggle.bind(this)}
+                        toggled={job.get('public')}
+                    />
                   </div>
 
                   <div className="col-xs-10 " style={{marginTop:'20px', marginBottom:'20px'}}>

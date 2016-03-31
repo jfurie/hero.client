@@ -108,7 +108,13 @@ export default class JobDetails extends React.Component {
     let {job} = this.props;
 
     let subject = `Check out ${this.props.job.get('title')} on HERO`;
-    let title = this.props.job.get('company').get('name') + '-' +this.props.job.get('title');
+
+    let title = job.get('title');
+
+    if (job.get('public')) {
+      title = `${job.get('company').get('name')} ${title}`;
+    }
+
     title = cleanTitle(title);
     let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${title}`;
 
@@ -153,11 +159,29 @@ export default class JobDetails extends React.Component {
   }
 
   viewPublic(){
-    let self = this;
-    let title = self.props.job.get('company').get('name') + '-' +self.props.job.get('title');
+    let {job} = this.props;
+
+    let title = job.get('title');
+
+    if (job.get('public')) {
+      title = `${job.get('company').get('name')} ${title}`;
+    }
+
     title = cleanTitle(title);
-    self.props.pushState(null, `/j/${self.props.job.get('shortId')}/${title}`);
+
+    this.props.pushState(null, `/j/${job.get('shortId')}/${title}`);
   }
+
+  viewPrivate(){
+    let {job} = this.props;
+
+    let title = job.get('title');
+
+    title = cleanTitle(title);
+
+    this.props.pushState(null, `/j/${job.get('shortId')}/${title}?token=${job.get('token')}`);
+  }
+
   deleteJob(){
     let self = this;
     this.refs.confirm.confirm({
@@ -354,6 +378,8 @@ export default class JobDetails extends React.Component {
             <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
             <MenuItem index={0} onTouchTap={this.viewPublic.bind(this)} primaryText={`View Public Job`} />
+            <MenuItem index={0} onTouchTap={this.viewPrivate.bind(this)} primaryText={`View Private Job`} />
+
             <Divider />
             <MenuItem index={0} onTouchTap={this.deleteJob.bind(this)} primaryText={`Delete Job`} />
           </IconMenu>

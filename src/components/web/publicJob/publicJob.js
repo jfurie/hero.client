@@ -24,6 +24,10 @@ const style = {
   },
 };
 
+function cleanTitle(title){
+  return title.replace(/[^A-Za-z0-9_\.~]+/gm, '-');
+}
+
 @connect(() => (
 {}), {pushState, replaceState})
 export default class PublicJob extends React.Component {
@@ -199,14 +203,19 @@ export default class PublicJob extends React.Component {
                     backgroundColor={Styles.Colors.white}
                 />)}
               </CardText>
-              <CardText>
-                {this.renderBigListItem('Leadership',company.get('leadership'),
-                <Avatar
-                    icon={<FontIcon className="material-icons">stars</FontIcon>}
-                    color={Styles.Colors.grey600}
-                    backgroundColor={Styles.Colors.white}
-                />)}
-              </CardText>
+              {
+                company.get('leadership') ?
+                <CardText>
+                  {this.renderBigListItem('Leadership',company.get('leadership'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">stars</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                : (null)
+              }
+
             </Card>
             {
               talentAdvocate ?
@@ -254,7 +263,7 @@ export default class PublicJob extends React.Component {
     }
   }
   _onTouchTapEdit(){
-    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/edit`);
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/edit?returnUrl=${`/j/${this.props.job.get('shortId')}/${cleanTitle(this.props.job.get('title'))}`}`);
   }
   _onTouchAddCandidate(){
     this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/candidates/search`);
@@ -265,6 +274,29 @@ export default class PublicJob extends React.Component {
   viewLoggedIn(){
     this.props.pushState(null, `/jobs/${this.props.job.get('id')}`);
   }
+
+  viewPublic(){
+    let {job} = this.props;
+
+    let title = job.get('title');
+
+    if (job.get('public')) {
+      title = `${job.get('company').get('name')} ${title}`;
+    }
+
+    title = cleanTitle(title);
+
+    this.props.pushState(null, `/j/${job.get('shortId')}/${title}`);
+  }
+
+  viewPrivate(){
+    let {job} = this.props;
+    let title = job.get('title');
+    title = cleanTitle(title);
+
+    this.props.pushState(null, `/j/${job.get('shortId')}/${title}?token=${job.get('token')}`);
+  }
+
   render() {
     let iconStyle = {
       color: Styles.Colors.white,
@@ -287,7 +319,12 @@ export default class PublicJob extends React.Component {
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
             <MenuItem index={0} onTouchTap={this.viewLoggedIn.bind(this)} primaryText={`View Job in App`} />
-
+            {
+              this.props.token ?
+              <MenuItem index={0} onTouchTap={this.viewPublic.bind(this)} primaryText={`View Public Job`} />
+              :
+              <MenuItem index={0} onTouchTap={this.viewPrivate.bind(this)} primaryText={`View Private Job`} />
+            }
           </IconMenu>
         </span>
       );

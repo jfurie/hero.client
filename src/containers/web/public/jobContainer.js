@@ -7,11 +7,18 @@ function getData(state, props) {
   let job = state.publik.get('jobs').get(props.params.shortId);
   let newApplicant = state.publik.get('newApplicant');
 
+  let token = props.location.query.token || null;
+
   return {
     job,
+    token,
     newApplicant,
     authToken:state.auth.get('authToken'),
   };
+}
+
+function cleanTitle(title){
+  return title.replace(/[^A-Za-z0-9_\.~]+/gm, '-');
 }
 
 @connect((state, props) => (getData(state, props)), {getJobByShortId, applyToJob,getCategoriesIfNeeded})
@@ -25,12 +32,12 @@ class PublicJobContainer extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getJobByShortId(this.props.params.shortId);
+    this.props.getJobByShortId(this.props.params.shortId, this.props.token);
     this.props.getCategoriesIfNeeded();
   }
   componentWillReceiveProps(nextProps){
-    if(this.props.params.shortId !== nextProps.params.shortId){
-      this.props.getJobByShortId(nextProps.params.shortId);
+    if(this.props.params.shortId !== nextProps.params.shortId || this.props.token !== nextProps.token){
+      this.props.getJobByShortId(nextProps.params.shortId, nextProps.token);
     }
 
     if (this.props.newApplicant != nextProps.newApplicant) {
@@ -87,7 +94,15 @@ class PublicJobContainer extends React.Component {
 
     let subject = `Check out ${this.props.job.get('title')} on HERO`;
 
-    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${job.get('company').get('name')}-${job.get('title')}`;
+    let title = job.get('title');
+
+    if (job.get('public')) {
+      title = `${job.get('company').get('name')} ${title}`;
+    }
+
+    title = cleanTitle(title);
+
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${title}`;
 
     let body = `${encodeURIComponent(job.get('title'))}%0A${encodeURIComponent(url)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
@@ -104,6 +119,7 @@ class PublicJobContainer extends React.Component {
             job={job}
             apply={this.openSignUpModal.bind(this)}
             share={this.share.bind(this)}
+            token={this.props.token}
         />
         <PublicSignUp
             open={this.state.openSignUpModal}
