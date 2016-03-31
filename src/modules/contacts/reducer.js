@@ -1,6 +1,7 @@
 import * as constants from './constants';
 import * as companyConstants from '../companies/constants';
 import * as jobConstants from '../jobs/constants';
+import * as authConstants from '../auth/constants';
 import Immutable from 'immutable';
 import {actionTypes} from 'redux-localstorage';
 
@@ -30,6 +31,9 @@ export default function reducer(state = initialState, action = {}) {
     } else{
       return state;
     }
+  }
+  case authConstants.LOGOUT:{
+    return initialState;
   }
   case constants.GET_CONTACTS_BY_IDS_SUCCESS:{
     let contactsMap = {};

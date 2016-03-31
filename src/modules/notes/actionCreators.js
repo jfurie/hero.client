@@ -192,6 +192,9 @@ export function getNotesByIdsIfNeeded(noteIds){
         newNoteIds.push(noteId);
       }
     }));
-    return dispatch(getNotesByIds(newNoteIds));
+    if(newNoteIds && newNoteIds.length > 0){
+      return dispatch(getNotesByIds(newNoteIds));
+    }
+
   };
 }
