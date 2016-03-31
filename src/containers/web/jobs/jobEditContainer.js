@@ -79,7 +79,8 @@ export default class JobEditContainer extends React.Component {
             self.props.history.replaceState(null, self.props.location.query.returnUrl);
           } else{
             // self.props.history.replaceState(null, `/jobs/${id}`);
-            self.props.history.replaceState(null, `/clients/${newProps.job.get('companyId')}/jobs/${newProps.job.get('newId')}`);
+            self.props.history.goBack();
+            //self.props.history.replaceState(null, `/clients/${newProps.job.get('companyId')}/jobs/${newProps.job.get('newId')}`);
           }
         }, 500);
 

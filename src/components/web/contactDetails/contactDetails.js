@@ -6,7 +6,7 @@ import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
 import categoryLinkSort from '../../../utils/categoryLinkSort';
-import {SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal } from '../../../components/web';
+import {SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
 import {
   CardTitle, IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
@@ -440,7 +440,7 @@ export default class ContactDetails extends React.Component {
           content ?
           <div style={{display: 'inline-block'}}>
             <div style={style.title}>{title}</div>
-            <div style={style.content}>{content}</div>
+            <div style={style.content}><MarkedViewer value={content}/></div>
           </div>
           :
           <div style={{display: 'flex', alignItems: 'center'}}>
@@ -754,7 +754,7 @@ export default class ContactDetails extends React.Component {
             <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (
               <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Invite Contact" />
-            ) : (null)}
+            ) : (  <MenuItem index={0} onTouchTap={this.inviteToHero.bind(this)} primaryText="Re-invite Contact" />)}
             <MenuItem index={0} onTouchTap={this.addNoteModalOpen.bind(this)} primaryText={`Create Note`} />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
           </IconMenu>

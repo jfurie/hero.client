@@ -22,12 +22,12 @@ function startApp() {
   swig.setDefaults({
     cache: false
   });
-  app.get('*',function(req,res,next){
-    if(req.headers['x-forwarded-proto']!='https')
-      res.redirect('https://'+req.get('host') + req.originalUrl);
-    else
-      next(); /* Continue to other routes if we're not redirecting */
-  });
+  // app.get('*',function(req,res,next){
+  //   if(req.headers['x-forwarded-proto']!='https')
+  //     res.redirect('https://'+req.get('host') + req.originalUrl);
+  //   else
+  //     next(); /* Continue to other routes if we're not redirecting */
+  // });
   app.use(express.static(config.root + '/public'));
 
   app.get('/j/:shortId/:title', function(req, res) {

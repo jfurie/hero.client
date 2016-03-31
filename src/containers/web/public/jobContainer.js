@@ -122,6 +122,7 @@ class PublicJobContainer extends React.Component {
             token={this.props.token}
         />
         <PublicSignUp
+            triggerModal={this.openSignUpModal.bind(this)}
             open={this.state.openSignUpModal}
             close={this.closeSignUpModal.bind(this)}
             submit={this.apply.bind(this)}

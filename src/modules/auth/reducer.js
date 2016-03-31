@@ -101,7 +101,7 @@ export default function reducer(state = initialState, action = {}) {
   case constants.CHANGEPASSWORD_SUCCESS:
     return state.withMutations(ctx => {
       ctx.set('changingPasswordError',null)
-      .set('changingPassword',true);
+      .set('changingPassword',false);
     });
   case constants.CHANGEPASSWORD_FAIL:
     return state.withMutations(ctx =>{

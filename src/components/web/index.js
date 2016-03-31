@@ -63,7 +63,9 @@ export SkillsDetails from './skillsDetails/skillsDetails';
 export SkillsGraph from './skillsGraph/skillsGraph';
 export SkillsCard from './skillsCard/skillsCard';
 export Giffer from './giffer/giffer';
+export DialogNew from './dialogNew/dialogNew';
 export Confirm from './confirm/confirm';
+export MarkedViewer from './markedViewer/markedViewer';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';
