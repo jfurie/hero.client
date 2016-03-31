@@ -22,7 +22,15 @@ const style = {
   card: {
     paddingTop: '4px',
   },
+  smallListItem: {
+    padding: 0,
+    margin: '16px',
+  },
 };
+
+function cleanTitle(title){
+  return title.replace(/[^A-Za-z0-9_\.~]+/gm, '-');
+}
 
 @connect(() => (
 {}), {pushState, replaceState})
@@ -57,6 +65,19 @@ export default class PublicJob extends React.Component {
           </div>
         }
 
+      </div>
+    );
+  }
+
+  renderSmallListItem(content,avatar){
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
+        </div>
       </div>
     );
   }
@@ -110,6 +131,13 @@ export default class PublicJob extends React.Component {
       // company
       let companyName;
       let companyWebsite;
+      let companyTwitter;
+      let companyFacebook;
+      let companyAngelList;
+      let companyCrunchbase;
+      let companyJobboard;
+      let companyZiprecruiter;
+      let companyIndeed;
 
       let company = job.get('company');
       let talentAdvocate = job.get('talentAdvocate');
@@ -117,6 +145,13 @@ export default class PublicJob extends React.Component {
       if (company) {
         companyName = company.get('name');
         companyWebsite = company.get('website');
+        companyTwitter = company.get('twitterHandle');
+        companyFacebook = company.get('facebookHandle');
+        companyAngelList = company.get('angelList');
+        companyCrunchbase = company.get('crunchbase');
+        companyJobboard = company.get('jobboard');
+        companyZiprecruiter = company.get('ziprecruiter');
+        companyIndeed = company.get('indeed');
       }
       else {
         companyName = 'XYZ Company';
@@ -153,6 +188,29 @@ export default class PublicJob extends React.Component {
               </CardText>
             </Card>
             <LocationCard location={job.get('location')} maskLocation zoom={11} />
+            <Card>
+              <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+
+              {(companyWebsite) ? (
+                <CardText style={style.smallListItem}>
+                  {this.renderSmallListItem(companyWebsite,
+                  <Avatar
+                      icon={<FontIcon className="material-icons">public</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+              ) : (null)}
+
+              <CardText style={style.smallListItem}>
+                {this.renderSmallListItem('Available Immediately',
+                <Avatar
+                    icon={<FontIcon className="material-icons">access_time</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
+            </Card>
             <SkillsCard skills={categoryLinks} />
             {
               description ?
@@ -220,6 +278,91 @@ export default class PublicJob extends React.Component {
               ):(<span></span>)}
             </Card>
             {
+              companyTwitter || companyFacebook || companyAngelList || companyCrunchbase ?
+              <Card>
+                <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                {(companyTwitter) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('twitter', `@${companyTwitter}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(companyFacebook) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('facebook', `facebook.com/${companyFacebook}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(companyAngelList) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Angel List', `@${companyAngelList}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(companyCrunchbase) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Crunchbase', `@${companyCrunchbase}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+              </Card>
+              : (null)
+            }
+            {
+              companyJobboard || companyZiprecruiter || companyIndeed ?
+              <Card>
+                <CardTitle title="Job Boards" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                {(companyJobboard) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Job Board', `@${companyJobboard}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+
+                {(companyZiprecruiter) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Zip Recruiter', `@${companyZiprecruiter}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(companyIndeed) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('indeed', `@${companyIndeed}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+              </Card>
+              : (null)
+            }
+            {
               talentAdvocate ?
               <Card>
                 <CardTitle title="Hiring Contact" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
@@ -265,7 +408,7 @@ export default class PublicJob extends React.Component {
     }
   }
   _onTouchTapEdit(){
-    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/edit`);
+    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/edit?returnUrl=${`/j/${this.props.job.get('shortId')}/${cleanTitle(this.props.job.get('title'))}`}`);
   }
   _onTouchAddCandidate(){
     this.props.pushState(null,`/clients/${this.props.job.get('companyId')}/jobs/${this.props.job.get('id')}/candidates/search`);
@@ -276,6 +419,29 @@ export default class PublicJob extends React.Component {
   viewLoggedIn(){
     this.props.pushState(null, `/jobs/${this.props.job.get('id')}`);
   }
+
+  viewPublic(){
+    let {job} = this.props;
+
+    let title = job.get('title');
+
+    if (job.get('public')) {
+      title = `${job.get('company').get('name')} ${title}`;
+    }
+
+    title = cleanTitle(title);
+
+    this.props.pushState(null, `/j/${job.get('shortId')}/${title}`);
+  }
+
+  viewPrivate(){
+    let {job} = this.props;
+    let title = job.get('title');
+    title = cleanTitle(title);
+
+    this.props.pushState(null, `/j/${job.get('shortId')}/${title}?token=${job.get('token')}`);
+  }
+
   render() {
     let iconStyle = {
       color: Styles.Colors.white,
@@ -298,7 +464,12 @@ export default class PublicJob extends React.Component {
             <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
             <MenuItem index={0} onTouchTap={this.viewLoggedIn.bind(this)} primaryText={`View Job in App`} />
-
+            {
+              this.props.token ?
+              <MenuItem index={0} onTouchTap={this.viewPublic.bind(this)} primaryText={`View Public Job`} />
+              :
+              <MenuItem index={0} onTouchTap={this.viewPrivate.bind(this)} primaryText={`View Private Job`} />
+            }
           </IconMenu>
         </span>
       );
