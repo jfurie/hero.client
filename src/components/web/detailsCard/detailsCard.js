@@ -260,7 +260,7 @@ class DetailsCard extends React.Component {
     return (
       <Card>
         <CardMedia style={styleNew.cardmedia}>
-          <img src={this.props.cover} />
+          <div style={{height:'250px', width:'100%', backgroundSize:'cover', backgroundImage:`url(${this.props.cover})`}} ></div>
         </CardMedia>
         <div style={styleNew.cardTitleComponent}>
 
