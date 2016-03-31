@@ -22,6 +22,10 @@ const style = {
   card: {
     paddingTop: '4px',
   },
+  smallListItem: {
+    padding: 0,
+    margin: '16px',
+  },
 };
 
 function cleanTitle(title){
@@ -59,6 +63,19 @@ export default class PublicJob extends React.Component {
           </div>
         }
 
+      </div>
+    );
+  }
+
+  renderSmallListItem(content,avatar){
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
+        </div>
       </div>
     );
   }
@@ -112,6 +129,13 @@ export default class PublicJob extends React.Component {
       // company
       let companyName;
       let companyWebsite;
+      let companyTwitter;
+      let companyFacebook;
+      let companyAngelList;
+      let companyCrunchbase;
+      let companyJobboard;
+      let companyZiprecruiter;
+      let companyIndeed;
 
       let company = job.get('company');
       let talentAdvocate = job.get('talentAdvocate');
@@ -119,6 +143,13 @@ export default class PublicJob extends React.Component {
       if (company) {
         companyName = company.get('name');
         companyWebsite = company.get('website');
+        companyTwitter = company.get('twitterHandle');
+        companyFacebook = company.get('facebookHandle');
+        companyAngelList = company.get('angelList');
+        companyCrunchbase = company.get('crunchbase');
+        companyJobboard = company.get('jobboard');
+        companyZiprecruiter = company.get('ziprecruiter');
+        companyIndeed = company.get('indeed');
       }
       else {
         companyName = 'XYZ Company';
@@ -155,6 +186,29 @@ export default class PublicJob extends React.Component {
               </CardText>
             </Card>
             <LocationCard location={job.get('location')} maskLocation zoom={11} />
+            <Card>
+              <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+
+              {(companyWebsite) ? (
+                <CardText style={style.smallListItem}>
+                  {this.renderSmallListItem(companyWebsite,
+                  <Avatar
+                      icon={<FontIcon className="material-icons">public</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+              ) : (null)}
+
+              <CardText style={style.smallListItem}>
+                {this.renderSmallListItem('Available Immediately',
+                <Avatar
+                    icon={<FontIcon className="material-icons">access_time</FontIcon>}
+                    color={Styles.Colors.grey600}
+                    backgroundColor={Styles.Colors.white}
+                />)}
+              </CardText>
+            </Card>
             <SkillsCard skills={categoryLinks} />
             {
               description ?
@@ -215,8 +269,92 @@ export default class PublicJob extends React.Component {
                 </CardText>
                 : (null)
               }
-
             </Card>
+            {
+              companyTwitter || companyFacebook || companyAngelList || companyCrunchbase ?
+              <Card>
+                <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                {(companyTwitter) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('twitter', `@${companyTwitter}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(companyFacebook) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('facebook', `facebook.com/${companyFacebook}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(companyAngelList) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Angel List', `@${companyAngelList}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(companyCrunchbase) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Crunchbase', `@${companyCrunchbase}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+              </Card>
+              : (null)
+            }
+            {
+              companyJobboard || companyZiprecruiter || companyIndeed ?
+              <Card>
+                <CardTitle title="Job Boards" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                {(companyJobboard) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Job Board', `@${companyJobboard}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+
+                {(companyZiprecruiter) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('Zip Recruiter', `@${companyZiprecruiter}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+                {(companyIndeed) ? (
+                  <CardText style={style.smallListItem}>
+                    {this.renderBigListItem('indeed', `@${companyIndeed}`,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ) : (null)}
+              </Card>
+              : (null)
+            }
             {
               talentAdvocate ?
               <Card>
