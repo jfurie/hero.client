@@ -40,7 +40,7 @@ function startApp() {
         let data = JSON.parse(body);
         console.log(data);
         meta.title = data.title;
-        if(data.company){
+        if(data.public && data.company){
           meta.title = meta.title +  ' at ' + data.company.name;
         }
         if(data.city && data.state){
@@ -62,6 +62,7 @@ function startApp() {
         if (data.image) {
           meta.image = data.image;
         }
+        console.log(meta);
       }
 
       res.render('main', {meta});
