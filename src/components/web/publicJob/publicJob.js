@@ -45,6 +45,10 @@ export default class PublicJob extends React.Component {
     };
   }
 
+  openInNewTab(url) {
+    window.open(url);
+  }
+
   renderBigListItem(title,content,avatar){
     return (
       <div style={{display:'flex'}}>
@@ -133,11 +137,7 @@ export default class PublicJob extends React.Component {
       let companyWebsite;
       let companyTwitter;
       let companyFacebook;
-      let companyAngelList;
       let companyCrunchbase;
-      let companyJobboard;
-      let companyZiprecruiter;
-      let companyIndeed;
 
       let company = job.get('company');
       let talentAdvocate = job.get('talentAdvocate');
@@ -147,11 +147,7 @@ export default class PublicJob extends React.Component {
         companyWebsite = company.get('website');
         companyTwitter = company.get('twitterHandle');
         companyFacebook = company.get('facebookHandle');
-        companyAngelList = company.get('angelList');
         companyCrunchbase = company.get('crunchbase');
-        companyJobboard = company.get('jobboard');
-        companyZiprecruiter = company.get('ziprecruiter');
-        companyIndeed = company.get('indeed');
       }
       else {
         companyName = 'XYZ Company';
@@ -192,7 +188,9 @@ export default class PublicJob extends React.Component {
               <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
 
               {(companyWebsite) ? (
-                <CardText style={style.smallListItem}>
+                <CardText style={style.smallListItem}
+                    onTouchTap={this.openInNewTab.bind(this, `${companyWebsite}`)}
+                >
                   {this.renderSmallListItem(companyWebsite,
                   <Avatar
                       icon={<FontIcon className="material-icons">public</FontIcon>}
@@ -278,80 +276,38 @@ export default class PublicJob extends React.Component {
               ):(<span></span>)}
             </Card>
             {
-              companyTwitter || companyFacebook || companyAngelList || companyCrunchbase ?
+              companyTwitter || companyFacebook || companyCrunchbase ?
               <Card>
                 <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(companyTwitter) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('twitter', `@${companyTwitter}`,
+                  <CardText style={style.smallListItem}
+                      onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${companyTwitter}`)}
+                  >
+                    {this.renderSmallListItem('twitter',
                     <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        icon={<FontIcon className="fa fa-twitter-square" />}
                         color={Styles.Colors.grey600}
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
                 ) : (null)}
                 {(companyFacebook) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('facebook', `facebook.com/${companyFacebook}`,
+                  <CardText style={style.smallListItem}
+                      onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${companyFacebook}`)}
+                  >
+                    {this.renderSmallListItem('facebook',
                     <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                ) : (null)}
-                {(companyAngelList) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Angel List', `@${companyAngelList}`,
-                    <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        icon={<FontIcon className="fa fa-facebook-square" />}
                         color={Styles.Colors.grey600}
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
                 ) : (null)}
                 {(companyCrunchbase) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Crunchbase', `@${companyCrunchbase}`,
-                    <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                ) : (null)}
-              </Card>
-              : (null)
-            }
-            {
-              companyJobboard || companyZiprecruiter || companyIndeed ?
-              <Card>
-                <CardTitle title="Job Boards" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
-                {(companyJobboard) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Job Board', `@${companyJobboard}`,
-                    <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                ) : (null)}
-
-                {(companyZiprecruiter) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Zip Recruiter', `@${companyZiprecruiter}`,
-                    <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                ) : (null)}
-                {(companyIndeed) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('indeed', `@${companyIndeed}`,
+                  <CardText style={style.smallListItem}
+                      onTouchTap={this.openInNewTab.bind(this, `${companyCrunchbase}`)}
+                  >
+                    {this.renderSmallListItem('Crunchbase',
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
