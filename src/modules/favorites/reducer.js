@@ -16,6 +16,9 @@ export default function reducer(state = initialState, action = {}) {
       return state;
     }
   }
+  case authConstants.LOGOUT:{
+    return initialState;
+  }
   case constants.GET_FAVORITES_SUCCESS:
   case constants.GET_FAVORITE_BY_TYPE_SUCCESS:{
     let favoriteMap = {};

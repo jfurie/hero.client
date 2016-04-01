@@ -99,7 +99,7 @@ function postLogin(auth, client, state, dispatch){
     }
     dispatch(getContactsByIdsIfNeeded(contactIds));
     dispatch(getJobsByIdsIfNeeded(jobIds));
-    dispatch(getCompanyDetails(companyIds, ['contact']));
+    dispatch(getCompanyDetails(companyIds, ['contacts']));
   });
   return getDataBasedOnUserId(context).then((context)=>{
     return context.response;

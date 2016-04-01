@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import * as constants from './constants';
-
+import * as authConstants from '../auth/constants';
 import {actionTypes} from 'redux-localstorage';
 
 const initialState = new Immutable.Map({
@@ -22,6 +22,9 @@ export default function reducer(state = initialState, action = {}) {
     } else{
       return state;
     }
+  }
+  case authConstants.LOGOUT:{
+    return initialState;
   }
   case constants.GET_JOBS_BY_IDS_SUCCESS: {
     let jobsMap = {};

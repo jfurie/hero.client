@@ -290,7 +290,12 @@ export function getJobsByIdsIfNeeded(jobIds){
         newJobIds.push(jobId);
       }
     }));
-    return dispatch(getJobsByIds(newJobIds));
+    if(newJobIds && newJobIds.length > 0){
+      return dispatch(getJobsByIds(newJobIds));
+    } else {
+      return Promise.resolve();
+    }
+
   };
 }
 
