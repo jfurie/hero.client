@@ -2,7 +2,7 @@ import Immutable from 'immutable';
 
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
-
+import * as authConstants from '../auth/constants';
 import { getJobsByIdsIfNeeded } from '../jobs';
 import { getContactsByIdsIfNeeded } from '../contacts';
 import { getNotesByIdsIfNeeded } from '../notes';
@@ -30,6 +30,9 @@ export default function reducer(state = initialState, action = {}) {
     } else{
       return state;
     }
+  }
+  case authConstants.LOGOUT:{
+    return initialState;
   }
   case constants.GET_COMPANIES_BY_IDS_SUCCESS: {
     let companiesMap = {};
@@ -164,8 +167,7 @@ export default function reducer(state = initialState, action = {}) {
   case jobConstants.GET_JOB_DETAIL_SUCCESS: {
     if(action.result.company){
       let companyList =  {};
-      companyList[action.result.company.id] = action.result;
-
+      companyList[action.result.company.id] = action.result.company;
       return state.set('list', state.get('list').mergeDeep(companyList));
     } else {
       return state;
