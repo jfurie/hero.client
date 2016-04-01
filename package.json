@@ -52,6 +52,7 @@
     "marked": "^0.3.5",
     "material-ui": "^0.14.2",
     "md5": "^2.0.0",
+    "normalizr": "^2.0.1",
     "phone-formatter": "0.0.2",
     "q": "^1.4.1",
     "react": "^0.14.7",

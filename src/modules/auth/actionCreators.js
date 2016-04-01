@@ -2,7 +2,7 @@ import * as constants from './constants';
 import { getFavoritesByUserId } from '../favorites';
 import { getContactsByIdsIfNeeded } from '../contacts';
 import { getCompanyDetails } from '../companies';
-import { getJobsByIdsIfNeeded } from '../jobs';
+import { getJobsByIds } from '../jobs';
 
 export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;
@@ -98,7 +98,7 @@ function postLogin(auth, client, state, dispatch){
       });
     }
     dispatch(getContactsByIdsIfNeeded(contactIds));
-    dispatch(getJobsByIdsIfNeeded(jobIds));
+    dispatch(getJobsByIds(jobIds,['talentAdvocate']));
     dispatch(getCompanyDetails(companyIds, ['contacts']));
   });
   return getDataBasedOnUserId(context).then((context)=>{

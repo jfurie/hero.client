@@ -3,6 +3,7 @@ import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
 import { saveCandidatesByJobResult } from '../candidates';
 import { saveLocationResult } from '../locations';
+import Schemas from '../../utils/schemas';
 
 
 export function getJobsByCompany(companyId){
@@ -267,22 +268,30 @@ export function getJobDetail(id) {
   };
 }
 
-export function getJobsByIds(jobIds){
+export function getJobsByIds(jobIds, include){
   return (dispatch) => {
     return dispatch({
       types:[constants.GET_JOBS_BY_IDS, constants.GET_JOBS_BY_IDS_SUCCESS, constants.GET_JOBS_BY_IDS_FAIL],
       promise:(client,auth) => {
-        let filter= {where:{id:{inq:jobIds}}};
+        let filter= {
+          where:{
+            id:{
+              inq:jobIds
+            }
+          },
+          include
+        };
         let filterString = encodeURIComponent(JSON.stringify(filter));
         return client.api.get(`/jobs?filter=${filterString}`,{
           authToken: auth.authToken,
-        });
+        },
+        Schemas.JOB_ARRAY);
       }
     });
   };
 }
 
-export function getJobsByIdsIfNeeded(jobIds){
+export function getJobsByIdsIfNeeded(jobIds, include){
   return (dispatch, getState) => {
     var newJobIds =[];
     jobIds.map((jobId => {
@@ -291,7 +300,7 @@ export function getJobsByIdsIfNeeded(jobIds){
       }
     }));
     if(newJobIds && newJobIds.length > 0){
-      return dispatch(getJobsByIds(newJobIds));
+      return dispatch(getJobsByIds(newJobIds, include));
     } else {
       return Promise.resolve();
     }
