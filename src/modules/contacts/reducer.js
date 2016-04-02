@@ -40,7 +40,7 @@ export default function reducer(state = initialState, action = {}) {
     action.result.map((c) => {
       contactsMap[c.id] = c;
     });
-    return state.set('list',state.get('list').merge(contactsMap));
+    return state.set('list',state.get('list').mergeDeep(contactsMap));
   }
   case constants.GET_CONTACTS:
     return state;
