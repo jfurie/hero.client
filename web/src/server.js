@@ -63,9 +63,14 @@ function startApp() {
           meta.image = data.image;
         }
         console.log(meta);
+
+        res.render('main', {meta});
+      }
+      else {
+        res.status(404);
+        res.render('404');
       }
 
-      res.render('main', {meta});
     });
   });
   app.get('*', function(req, res) {

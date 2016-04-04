@@ -116,7 +116,7 @@ render(){
           underlineShow={false}
           onEnterKeyDown={this.props.onQuerySubmit.bind(this)}
           onChange={this.props.onQueryChange.bind(this)}
-          hintText="Search Contacts"
+          hintText="Search"
           fullWidth={true}
           value={this.props.location.state && this.props.location.state.query}
         >
