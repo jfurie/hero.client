@@ -154,7 +154,7 @@ export default class PublicJob extends React.Component {
         companyName = 'XYZ Company';
       }
 
-      if (talentAdvocate.get('companies')) {
+      if (talentAdvocate && talentAdvocate.get('companies')) {
         talentAdvocateCompany = talentAdvocate.get('companies').first();
       }
 
