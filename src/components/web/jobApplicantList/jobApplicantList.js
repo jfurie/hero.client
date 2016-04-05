@@ -434,7 +434,7 @@ class JobApplicantList extends React.Component {
     }, {
       value: 'Submitted',
       icon: 'inbox',
-      selectable: isHero,
+      selectable: true,
     }, {
       value: 'Accepted',
       icon: 'thumb_up',
