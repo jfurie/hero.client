@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
 import marked from 'marked';
 
-import { List, CardTitle } from 'material-ui';
+import { List, ListItem, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
 import { Gravatar, CardBasic, SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
 import {
@@ -363,7 +363,8 @@ export default class JobDetails extends React.Component {
                 <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
 
                 {(companyWebsite) ? (
-                  <CardText style={style.smallListItem}
+                  <ListItem>
+                  <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, `${companyWebsite}`)}
                   >
                     {this.renderSmallListItem(companyWebsite,
@@ -373,6 +374,7 @@ export default class JobDetails extends React.Component {
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
 
                 <CardText style={style.smallListItem}>
@@ -455,7 +457,8 @@ export default class JobDetails extends React.Component {
                 <Card>
                   <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                   {(companyTwitter) ? (
-                    <CardText style={style.smallListItem}
+                    <ListItem>
+                    <CardText style={{padding: 0}}
                         onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${companyTwitter}`)}
                     >
                       {this.renderSmallListItem('twitter',
@@ -465,9 +468,11 @@ export default class JobDetails extends React.Component {
                           backgroundColor={Styles.Colors.white}
                       />)}
                     </CardText>
+                    </ListItem>
                   ) : (null)}
                   {(companyFacebook) ? (
-                    <CardText style={style.smallListItem}
+                    <ListItem>
+                    <CardText style={{padding: 0}}
                         onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${companyFacebook}`)}
                     >
                       {this.renderSmallListItem('facebook',
@@ -477,9 +482,11 @@ export default class JobDetails extends React.Component {
                           backgroundColor={Styles.Colors.white}
                       />)}
                     </CardText>
+                    </ListItem>
                   ) : (null)}
                   {(companyCrunchbase) ? (
-                    <CardText style={style.smallListItem}
+                    <ListItem>
+                    <CardText style={{padding: 0}}
                         onTouchTap={this.openInNewTab.bind(this, `${companyCrunchbase}`)}
                     >
                       {this.renderSmallListItem('Crunchbase',
@@ -489,6 +496,7 @@ export default class JobDetails extends React.Component {
                           backgroundColor={Styles.Colors.white}
                       />)}
                     </CardText>
+                    </ListItem>
                   ) : (null)}
                 </Card>
                 : (null)

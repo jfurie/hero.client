@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
 import {
-  List, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog, Card, CardTitle, CardText,
+  List, ListItem, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog, Card, CardTitle, CardText,
 } from 'material-ui';
 
 import Avatar from 'material-ui/lib/avatar';
@@ -331,7 +331,8 @@ export default class ClientDetails extends React.Component {
                 ) : (null)}
 
                 {(website) ? (
-                  <CardText style={style.smallListItem}
+                  <ListItem>
+                  <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, website)}
                   >
                     {this.renderSmallListItem(website,
@@ -341,6 +342,7 @@ export default class ClientDetails extends React.Component {
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
 
                 {(phone) ? (
@@ -405,7 +407,8 @@ export default class ClientDetails extends React.Component {
               <Card>
                 <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(twitter) ? (
-                  <CardText style={style.smallListItem}
+                  <ListItem>
+                  <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${twitter}`)}
                   >
                     {this.renderSmallListItem('twitter',
@@ -415,9 +418,11 @@ export default class ClientDetails extends React.Component {
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
                 {(facebook) ? (
-                  <CardText style={style.smallListItem}
+                  <ListItem>
+                  <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${facebook}`)}
                   >
                     {this.renderSmallListItem('facebook',
@@ -427,9 +432,11 @@ export default class ClientDetails extends React.Component {
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
                 {(angelList) ? (
-                  <CardText style={style.smallListItem}
+                  <ListItem>
+                  <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, `${angelList}`)}
                   >
                     {this.renderSmallListItem('Angel List',
@@ -439,9 +446,11 @@ export default class ClientDetails extends React.Component {
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
                 {(crunchbase) ? (
-                  <CardText style={style.smallListItem}
+                  <ListItem>
+                  <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, `${crunchbase}`)}
                   >
                     {this.renderSmallListItem('Crunchbase',
@@ -451,6 +460,7 @@ export default class ClientDetails extends React.Component {
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
               </Card>
               <Card>
