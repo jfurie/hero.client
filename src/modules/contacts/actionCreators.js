@@ -358,3 +358,10 @@ export function setExperience(contactId,contactCategory, category){
   };
 
 }
+
+export function saveContactResult(contact){
+  return {
+    type: constants.GET_ONE_CONTACT_SUCCESS,
+    result: contact,
+  };
+}

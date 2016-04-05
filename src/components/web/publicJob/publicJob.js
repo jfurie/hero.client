@@ -141,6 +141,7 @@ export default class PublicJob extends React.Component {
 
       let company = job.get('company');
       let talentAdvocate = job.get('talentAdvocate');
+      let talentAdvocateCompany;
 
       if (company) {
         companyName = company.get('name');
@@ -152,6 +153,11 @@ export default class PublicJob extends React.Component {
       else {
         companyName = 'XYZ Company';
       }
+
+      if (talentAdvocate.get('companies')) {
+        talentAdvocateCompany = talentAdvocate.get('companies').first();
+      }
+
       let categoryLinks =job.get('_categoryLinks');
       return (
         <div>
@@ -336,9 +342,9 @@ export default class PublicJob extends React.Component {
                         <CardBasic
                             image={<Gravatar email={talentAdvocate.get('email')} status={'notset'} style={{width: '40px'}}/>}
                             title= {<div style={{fontWeight: 'bold'}}>{talentAdvocate.get('displayName')}</div>}
-                            subtitle1={talentAdvocate.get('companies').first().get('name')}
+                            subtitle1={talentAdvocateCompany && talentAdvocateCompany.get('name')}
                             subtitle2={talentAdvocate.get('title')}
-                            rightContent={<CompanyAvatar style={{width:'40px'}} url={talentAdvocate.get('companies').first().get('website')} />}
+                            rightContent={<CompanyAvatar style={{width:'40px'}} url={talentAdvocateCompany && talentAdvocateCompany.get('website')} />}
                         />
                       </div>
                     }
