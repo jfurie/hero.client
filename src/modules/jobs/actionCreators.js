@@ -3,6 +3,7 @@ import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
 import { saveCandidatesByJobResult } from '../candidates';
 import { saveLocationResult } from '../locations';
+import { saveContactResult } from '../contacts';
 
 
 export function getJobsByCompany(companyId){
@@ -207,7 +208,7 @@ export function deleteJob(id) {
     }).then(response =>{
       return {
         response,
-        id
+        id,
       };
     }),
   };
@@ -254,6 +255,10 @@ export function getJobDetail(id) {
           dispatch(saveLocationResult(job.location));
         }
 
+        if (job.talentAdvocate) {
+          dispatch(saveContactResult(job.talentAdvocate));
+        }
+
         if (job.notes && job.notes.length > 0) {
           dispatch(saveNotesByJobResult(job.notes));
         }
@@ -277,14 +282,14 @@ export function getJobsByIds(jobIds){
         return client.api.get(`/jobs?filter=${filterString}`,{
           authToken: auth.authToken,
         });
-      }
+      },
     });
   };
 }
 
 export function getJobsByIdsIfNeeded(jobIds){
   return (dispatch, getState) => {
-    var newJobIds =[];
+    let newJobIds =[];
     jobIds.map((jobId => {
       if(!getState().companies.get('list').get(jobId)){
         newJobIds.push(jobId);
@@ -315,7 +320,7 @@ export function setCategoryLocal(jobId, jobCategory){
       jobCategory = jobCategory.toJSON();
     }
     if(!jobCategory.id){
-      jobCategory.id = 'tmp_' + guid();
+      jobCategory.id = `tmp_${guid()}`;
     }
   }
   return {
