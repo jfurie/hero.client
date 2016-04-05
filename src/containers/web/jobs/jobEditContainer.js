@@ -7,8 +7,9 @@ import { getOneCompany, getMyCompanies } from '../../../modules/companies/index'
 import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getJobDetail, getMyJobs } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { JobEdit } from '../../../components/web';
+import Config from '../../../utils/config';
 
-const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
+const HEROCOMPANYID = Config.get('heroCompanyId');
 
 let getData = (state, props) => {
   let job = state.jobs.get('list').get(props.params.jobId);

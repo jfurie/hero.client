@@ -152,7 +152,9 @@ export default class JobDetails extends React.Component {
   }
 
   _onTouchCompanyIcon(){
-    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}`);
+    if (this.props.isHero) {
+      this.props.pushState(null,`/clients/${this.props.job.get('companyId')}`);
+    }
   }
   editSkills(){
     this.props.pushState(null, `/jobs/${this.props.job.get('id')}/categories/edit`);
@@ -326,6 +328,11 @@ export default class JobDetails extends React.Component {
       }
       let categoryLinks = job.get('_categoryLinks');
 
+      let tabs = ['Details', 'Applicants'];
+
+      if (this.props.isHero) {
+        tabs.push('Notes');
+      }
 
       return (
 
@@ -346,7 +353,7 @@ export default class JobDetails extends React.Component {
               floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
               floatActionLabel={'Share'}
           />
-        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Applicants', 'Notes']}>
+        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={tabs}>
             <div>
               <Card>
                 <CardText>
@@ -534,6 +541,7 @@ export default class JobDetails extends React.Component {
             </div>
             <div style={{minHeight:'800px'}}>
               <JobApplicantList
+                  isHero={this.props.isHero}
                   candidates={job.get('candidates')}
                   favoriteContact={this.props.favoriteContact.bind(this)}
                   unfavoriteContact={this.props.unfavoriteContact.bind(this)}
@@ -543,9 +551,14 @@ export default class JobDetails extends React.Component {
                   tab={this.props.tab}
               />
             </div>
-            <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
-              <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
-            </List>
+            {
+              tabs.indexOf('Notes') > -1 ?
+              <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
+                <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
+              </List>
+              : (null)
+            }
+
           </CustomTabsSwipe>
           <Confirm ref="confirm" />
         </div>
@@ -562,23 +575,27 @@ export default class JobDetails extends React.Component {
     let { job } = this.props;
     return (
       <div>
-        <Header showHome transparent goBack={this.goBack.bind(this)} iconRight={
-          <IconMenu iconButtonElement={
-            <IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>
-          }
-          >
-            <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
-            <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
-            <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
-            <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
-            <MenuItem index={0} onTouchTap={this.viewPublic.bind(this)} primaryText={`View Public Job`} />
-            <MenuItem index={0} onTouchTap={this.viewPrivate.bind(this)} primaryText={`View Private Job`} />
+        {
+          this.props.isHero ?
+          <Header showHome transparent goBack={this.goBack.bind(this)} iconRight={
+            <IconMenu iconButtonElement={
+              <IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>
+            }
+            >
+              <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
+              <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
+              <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
+              <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
+              <MenuItem index={0} onTouchTap={this.viewPublic.bind(this)} primaryText={`View Public Job`} />
+              <MenuItem index={0} onTouchTap={this.viewPrivate.bind(this)} primaryText={`View Private Job`} />
 
-            <Divider />
-            <MenuItem index={0} onTouchTap={this.deleteJob.bind(this)} primaryText={`Delete Job`} />
-          </IconMenu>
+              <Divider />
+              <MenuItem index={0} onTouchTap={this.deleteJob.bind(this)} primaryText={`Delete Job`} />
+            </IconMenu>
+          }
+          />
+        : (null)
         }
-        />
         {this.renderContent(job)}
       </div>
     );

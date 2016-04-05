@@ -3,6 +3,9 @@ import { getFavoritesByUserId } from '../favorites';
 import { getContactsByIdsIfNeeded } from '../contacts';
 import { getCompanyDetails } from '../companies';
 import { getJobsByIdsIfNeeded } from '../jobs';
+import Config from '../../utils/config';
+
+const HEROACCOUNTID = Config.get('heroAccountId');
 
 export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;
@@ -28,7 +31,7 @@ export function load() {
 
 export function resetLogoutReady(){
   return {
-    type: constants.RESET_LOGOUT_READY
+    type: constants.RESET_LOGOUT_READY,
   };
 }
 
@@ -37,7 +40,7 @@ function getUser(context){
   if(currentProfileUserId && currentProfileUserId == context.auth.userId && context.state.users.users.get(context.auth.userId)){
     return Promise.resolve(context);
   } else {
-    return context.client.api.get('/users/'+context.auth.userId, {
+    return context.client.api.get(`/users/${context.auth.userId}`, {
       authToken: context.auth,
     }).then(response =>{
       context.response.user = response;
@@ -72,11 +75,14 @@ function postLogin(auth, client, state, dispatch){
     response:{
       authToken:auth,
     },
-    state
+    state,
   };
   dispatch({
     type:constants.SET_AUTH,
-    result:{authToken: auth},
+    result:{
+      authToken: auth,
+      isHero: auth.accountInfo.account.id == HEROACCOUNTID,
+    },
   });
   dispatch(getFavoritesByUserId(auth.userId)).then((response)=>{
     let contactIds = [];
@@ -114,14 +120,14 @@ export function changePassword(password, tmpAuthToken) {
       return client.api.post('/users/changepassword', {
         data: {
           password,
-          access_token:tmpAuthToken
+          access_token:tmpAuthToken,
         },
         params: {
-          access_token:tmpAuthToken
+          access_token:tmpAuthToken,
         },
         authToken:tmpAuthToken,
       });
-    }
+    },
   };
 }
 
@@ -137,7 +143,7 @@ export function login(email, password) {
           },
           authToken,
         }).then((auth)=>postLogin(auth,client,getState(),dispatch));
-      }
+      },
     });
   };
 }
@@ -165,7 +171,7 @@ export function logginWithAuthLocalStorage() {
             return reject();
           }
         });
-      }
+      },
     });
   };
 }
@@ -176,7 +182,7 @@ export function checkAuthServer(accessToken){
       promise: (client) => {
         return new Promise((resolve, reject) => {
           if (accessToken) {
-            return client.api.get('/accessTokens/' + accessToken + '?access_token=' + accessToken, {
+            return client.api.get(`/accessTokens/${accessToken}?access_token=${accessToken}`, {
             }).then(()=> {
               //client.localStorage.set('Auth', token);
               resolve();
@@ -205,7 +211,7 @@ export function logginWithAccessToken(accessToken,cb) {
       promise: (client) => {
         return new Promise((resolve, reject) => {
           if (accessToken) {
-            return client.api.get('/accessTokens/' + accessToken + '?access_token=' + accessToken, {
+            return client.api.get(`/accessTokens/${accessToken}?access_token=${accessToken}`, {
             }).then((token)=> {
               //client.localStorage.set('Auth', token);
               //TODO:set authToken to store

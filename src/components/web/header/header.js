@@ -72,7 +72,16 @@ class Header extends React.Component {
       iconRightProp.style = iconStyle;
     }
 
-    let iconRight = <span><IconButton iconStyle={iconStyle} onTouchTap={this.searchClicked.bind(this)} iconClassName='material-icons'>search</IconButton> {this.props.iconRight}</span>;
+    let iconRight = (
+      <span>
+        {
+          this.props.showSearch ?
+          <IconButton iconStyle={iconStyle} onTouchTap={this.searchClicked.bind(this)} iconClassName="material-icons">search</IconButton>
+          : (null)
+        }
+        {this.props.iconRight}
+      </span>
+    );
 
     //console.log(this.props.history);
     let iconLeft = null;
