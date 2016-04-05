@@ -4,8 +4,9 @@ import Immutable from 'immutable';
 import {ClientsCreate} from '../../../components/web';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { editCompany, createCompany, getMyCompanies, getOneCompany, updateCompanyImage } from '../../../modules/companies';
+import Config from '../../../utils/config';
 
-const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
+const HEROCOMPANYID = Config.get('heroCompanyId');
 
 let getData = (state, props) => {
   let company = null;

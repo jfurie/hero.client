@@ -367,7 +367,7 @@ class JobApplicantList extends React.Component {
   }
 
   render() {
-    let { candidates } = this.props;
+    let { candidates, isHero } = this.props;
 
     // let totalCount = candidates.length;
     // let vettedCount = candidates.filter(x => {
@@ -406,51 +406,65 @@ class JobApplicantList extends React.Component {
     let applicantStateOptions = [{
       value: 'Applied',
       icon: 'person',
+      selectable: isHero,
     }, {
       value: 'Matched',
       icon: 'android',
+      selectable: isHero,
     }, {
       value: 'Sourced',
       icon: 'headset_mic',
+      selectable: isHero,
     }, {
       value: 'Reffered',
       icon: 'people',
+      selectable: isHero,
     }, {
       value: 'Screened',
       icon: 'assignment_turned_in',
+      selectable: isHero,
     }, {
       value: 'Contacted',
       icon: 'perm_phone_msg',
+      selectable: isHero,
     }, {
       value: 'Queued',
       icon: 'playlist_add',
+      selectable: isHero,
     }, {
       value: 'Submitted',
       icon: 'inbox',
+      selectable: isHero,
     }, {
       value: 'Accepted',
       icon: 'thumb_up',
       color: Styles.Colors.purple500,
+      selectable: true,
     }, {
       value: 'Interviewing',
       icon: 'event',
       color: Styles.Colors.pink500,
+      selectable: true,
     }, {
       value: 'Offer Letter',
       icon: 'attach_money',
       color: Styles.Colors.green500,
+      selectable: true,
     }, {
       value: 'Hired',
       icon: 'verified_user',
       color: Styles.Colors.blue600,
+      selectable: true,
     }, {
       value: 'REJECTED',
       icon: 'do_not_disturb',
       color: Styles.Colors.red500,
+      selectable: true,
     }, {
       value: 'CANDIDATE REJECTED',
       icon: 'do_not_disturb',
       color: Styles.Colors.red500,
+      selectable: isHero,
     }];
 
     style.filterBar.display = this.state.isStuck ? 'flex' : 'none';
@@ -600,6 +614,7 @@ class JobApplicantList extends React.Component {
         <div style={{paddingBottom: '30px'}}>
           {applicantStateOptions.map((option, key) => {
             return (
+              option.selectable ?
               <ListItem
                   key={key}
                   leftIcon={<FontIcon className="material-icons" style={{color: option.color || Styles.Colors.grey600}}>{option.icon}</FontIcon>}
@@ -607,6 +622,7 @@ class JobApplicantList extends React.Component {
               >
                 {option.value}
               </ListItem>
+              : (null)
             );
           })}
         </div>

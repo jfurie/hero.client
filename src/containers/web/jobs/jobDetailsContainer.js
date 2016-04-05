@@ -17,6 +17,7 @@ function getData(state, props, jobId) {
 
   return {
     tab,
+    isHero: state.auth.get('isHero'),
     job: getJobDataFromState(state, jobId),
     notes: state.notes,
     localNote: state.notes.localNote,

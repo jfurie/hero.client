@@ -6,8 +6,10 @@ import { Header, ClientsCreateModal, ClientsList } from '../../../components/web
 import { getCompanyDetails, getAllCompanies, getMyCompanies, createCompany, searchCompany, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies';
 import { getCurrentAccount } from '../../../modules/currentAccount';
 import { getContactsByCompany } from '../../../modules/contacts';
+import Config from '../../../utils/config';
 
-const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
+const HEROCOMPANYID = Config.get('heroCompanyId');
+
 @connect((state) => {
   let visibleCompanies = new Immutable.Map();
   if (state.companies.get('currentSearch') != '') {
@@ -58,7 +60,7 @@ class ClientPage extends React.Component {
     this.props.getCurrentAccount();
 
     //get the hero compnay contacts
-    this.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
+    this.props.getContactsByCompany(HEROCOMPANYID);
     // let self = this;
     // setTimeout(() => {
     //   self.props.getAllCompanies();
