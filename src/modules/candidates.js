@@ -492,7 +492,7 @@ export function editApplicantState(id, state){
   return (dispatch) => {
     dispatch({
       types: [EDIT_CANDIDATE, EDIT_CANDIDATE_SUCCESS, EDIT_CANDIDATE_FAIL],
-      promise: (client, auth) => client.api.put(`/candidates/editApplicantState?id=${id}&state=${state}`, {
+      promise: (client, auth) => client.api.put(`/candidates/${id}/editApplicantState?state=${state}`, {
         authToken: auth.authToken,
       }).then(function (candidate) {
 
