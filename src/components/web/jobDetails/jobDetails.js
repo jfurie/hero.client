@@ -44,6 +44,10 @@ const style = {
   card: {
     paddingTop: '4px',
   },
+  smallListItem: {
+    padding: 0,
+    margin: '16px',
+  },
 };
 function cleanTitle(title){
   return title.replace(/[^A-Za-z0-9_\.~]+/gm, '-');
