@@ -415,7 +415,7 @@ export default class ClientsCreateModal extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'productSolution')}
                         value={company.get('productSolution')}
                         floatingLabelStyle={{left:'0px'}}
-                        floatingLabelText="What problem are you addressing and how are you addressing it?"
+                        floatingLabelText="Company Mission"
                     />
                   </div>
                   <div className="col-xs-10 ">
