@@ -406,7 +406,7 @@ export default class JobApplicantListItem extends React.Component {
           </div>
           <div style={{marginRight: 0}}>
             {
-              selectedApplicantStateOption.nextStates ?
+              selectedApplicantStateOption && selectedApplicantStateOption.nextStates ?
               selectedApplicantStateOption.nextStates.map(x => {
                 let option = applicantStateOptions.filter(y => {
                   return y.selectable && y.value == x;
