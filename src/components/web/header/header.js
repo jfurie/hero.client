@@ -75,7 +75,7 @@ class Header extends React.Component {
     let iconRight = (
       <span>
         {
-          this.props.showSearch ?
+          !this.props.hideSearch ?
           <IconButton iconStyle={iconStyle} onTouchTap={this.searchClicked.bind(this)} iconClassName="material-icons">search</IconButton>
           : (null)
         }
