@@ -767,7 +767,7 @@ export default class ContactDetails extends React.Component {
 
     return (
       <div>
-        <Header showHome={this.props.isHero} showSearch={this.props.isHero} transparent goBack={this.goBack.bind(this)} iconRight={
+        <Header showHome={this.props.isHero} hideSearch={!this.props.isHero} transparent goBack={this.goBack.bind(this)} iconRight={
           this.props.isHero ?
           <IconMenu iconButtonElement={<IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>}>
             <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
