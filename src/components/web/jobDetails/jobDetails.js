@@ -286,6 +286,11 @@ export default class JobDetails extends React.Component {
       let companyTwitter;
       let companyFacebook;
       let companyCrunchbase;
+      let productSolution;
+      let culture;
+      let benefits;
+      let techstack;
+      let leadership;
 
       let company = job.get('company');
       let talentAdvocate = job.get('talentAdvocate');
@@ -297,6 +302,11 @@ export default class JobDetails extends React.Component {
         companyTwitter = company.get('twitterHandle');
         companyFacebook = company.get('facebookHandle');
         companyCrunchbase = company.get('crunchbase');
+        productSolution = company.get('productSolution');
+        culture = company.get('culture');
+        benefits = company.get('benefits');
+        techstack = company.get('techstack');
+        leadership = company.get('leadership');
       }
       else {
         companyName = 'XYZ Company';
@@ -357,7 +367,7 @@ export default class JobDetails extends React.Component {
             <div>
               <Card>
                 <CardText>
-                  {this.renderBigListItem('Company Mission',company.get('productSolution'),
+                  {this.renderBigListItem('Company Mission',productSolution,
                   <Avatar
                       icon={<FontIcon className="material-icons">store</FontIcon>}
                       color={Styles.Colors.grey600}
@@ -418,9 +428,9 @@ export default class JobDetails extends React.Component {
                 : (null)
               }
               <Card>
-                {company.get('culture')?(
+                {culture?(
                   <CardText>
-                    {this.renderBigListItem('Culture',company.get('culture'),
+                    {this.renderBigListItem('Culture',culture,
                     <Avatar
                         icon={<FontIcon className="material-icons">face</FontIcon>}
                         color={Styles.Colors.grey600}
@@ -428,9 +438,9 @@ export default class JobDetails extends React.Component {
                     />)}
                   </CardText>
                 ):(<span></span>)}
-                {company.get('benefits')?(
+                {benefits?(
                   <CardText>
-                    {this.renderBigListItem('Benefits',company.get('benefits'),
+                    {this.renderBigListItem('Benefits',benefits,
                     <Avatar
                         icon={<FontIcon className="material-icons">redeem</FontIcon>}
                         color={Styles.Colors.grey600}
@@ -438,9 +448,9 @@ export default class JobDetails extends React.Component {
                     />)}
                   </CardText>
                 ):(<span></span>)}
-                {company.get('techstack')?(
+                {techstack?(
                   <CardText>
-                    {this.renderBigListItem('Tech Stack',company.get('techstack'),
+                    {this.renderBigListItem('Tech Stack',techstack,
                     <Avatar
                         icon={<FontIcon className="material-icons">storage</FontIcon>}
                         color={Styles.Colors.grey600}
@@ -448,9 +458,9 @@ export default class JobDetails extends React.Component {
                     />)}
                   </CardText>
                 ):(<span></span>)}
-                {company.get('leadership')?(
+                {leadership?(
                   <CardText>
-                    {this.renderBigListItem('Leadership',company.get('leadership'),
+                    {this.renderBigListItem('Leadership',leadership,
                     <Avatar
                         icon={<FontIcon className="material-icons">stars</FontIcon>}
                         color={Styles.Colors.grey600}
