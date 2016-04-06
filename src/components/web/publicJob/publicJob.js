@@ -5,7 +5,7 @@ import marked from 'marked';
 import { CardTitle } from 'material-ui';
 import defaultImage from './publicJob.jpg';
 import {SkillsCard, LocationCard, PublicHeader, DetailsCard, Gravatar, CompanyAvatar, CardBasic, MarkedViewer } from '../../../components/web';
-import {IconMenu, MenuItem, RaisedButton, FontIcon, Styles, Card, CardText, Avatar, IconButton } from 'material-ui';
+import {ListItem, IconMenu, MenuItem, RaisedButton, FontIcon, Styles, Card, CardText, Avatar, IconButton } from 'material-ui';
 import './publicJob.scss';
 
 const style = {
@@ -141,6 +141,7 @@ export default class PublicJob extends React.Component {
 
       let company = job.get('company');
       let talentAdvocate = job.get('talentAdvocate');
+      let talentAdvocateCompany;
 
       if (company) {
         companyName = company.get('name');
@@ -152,6 +153,11 @@ export default class PublicJob extends React.Component {
       else {
         companyName = 'XYZ Company';
       }
+
+      if (talentAdvocate && talentAdvocate.get('companies')) {
+        talentAdvocateCompany = talentAdvocate.get('companies').first();
+      }
+
       let categoryLinks =job.get('_categoryLinks');
       return (
         <div>
@@ -188,7 +194,8 @@ export default class PublicJob extends React.Component {
               <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
 
               {(companyWebsite) ? (
-                <CardText style={style.smallListItem}
+                <ListItem>
+                <CardText style={{padding: 0}}
                     onTouchTap={this.openInNewTab.bind(this, `${companyWebsite}`)}
                 >
                   {this.renderSmallListItem(companyWebsite,
@@ -198,6 +205,7 @@ export default class PublicJob extends React.Component {
                       backgroundColor={Styles.Colors.white}
                   />)}
                 </CardText>
+                </ListItem>
               ) : (null)}
 
               <CardText style={style.smallListItem}>
@@ -280,7 +288,8 @@ export default class PublicJob extends React.Component {
               <Card>
                 <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(companyTwitter) ? (
-                  <CardText style={style.smallListItem}
+                  <ListItem>
+                  <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${companyTwitter}`)}
                   >
                     {this.renderSmallListItem('twitter',
@@ -290,9 +299,11 @@ export default class PublicJob extends React.Component {
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
                 {(companyFacebook) ? (
-                  <CardText style={style.smallListItem}
+                  <ListItem>
+                  <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${companyFacebook}`)}
                   >
                     {this.renderSmallListItem('facebook',
@@ -302,9 +313,11 @@ export default class PublicJob extends React.Component {
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
                 {(companyCrunchbase) ? (
-                  <CardText style={style.smallListItem}
+                  <ListItem>
+                  <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, `${companyCrunchbase}`)}
                   >
                     {this.renderSmallListItem('Crunchbase',
@@ -314,6 +327,7 @@ export default class PublicJob extends React.Component {
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
               </Card>
               : (null)
@@ -336,9 +350,9 @@ export default class PublicJob extends React.Component {
                         <CardBasic
                             image={<Gravatar email={talentAdvocate.get('email')} status={'notset'} style={{width: '40px'}}/>}
                             title= {<div style={{fontWeight: 'bold'}}>{talentAdvocate.get('displayName')}</div>}
-                            subtitle1={talentAdvocate.get('companies').first().get('name')}
+                            subtitle1={talentAdvocateCompany && talentAdvocateCompany.get('name')}
                             subtitle2={talentAdvocate.get('title')}
-                            rightContent={<CompanyAvatar style={{width:'40px'}} url={talentAdvocate.get('companies').first().get('website')} />}
+                            rightContent={<CompanyAvatar style={{width:'40px'}} url={talentAdvocateCompany && talentAdvocateCompany.get('website')} />}
                         />
                       </div>
                     }

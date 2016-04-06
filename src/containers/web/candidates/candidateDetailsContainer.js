@@ -1,11 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-//import { pushState } from 'redux-router';
 
 import { ContactDetails } from '../../../components/web';
 import { getCandidateDetail } from '../../../modules/candidates';
-
-//const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 
 function getData(state, props) {
   return {

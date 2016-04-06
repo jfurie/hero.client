@@ -40,7 +40,7 @@ export default function reducer(state = initialState, action = {}) {
     action.result.map((c) => {
       contactsMap[c.id] = c;
     });
-    return state.set('list',state.get('list').merge(contactsMap));
+    return state.set('list',state.get('list').mergeDeep(contactsMap));
   }
   case constants.GET_CONTACTS:
     return state;
@@ -219,7 +219,7 @@ export default function reducer(state = initialState, action = {}) {
     let companyId = action.result.companyId;
     let byCompanyMapNew = {};
 
-    byCompanyMapNew[companyId] = state.byCompanyId.get(companyId) || new Immutable.List();
+    byCompanyMapNew[companyId] = state.get('byCompanyId').get(companyId) || new Immutable.List();
     byCompanyMapNew[companyId] = byCompanyMapNew[companyId].push(action.result.id);
     return state.withMutations(ctx=> {
       ctx

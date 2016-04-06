@@ -286,7 +286,7 @@ export default class JobApplicantListItem extends React.Component {
 
   render(){
     let self = this;
-    let {contact,type} = this.props;
+    let {contact,type,selectedApplicantStateOption,applicantStateOptions} = this.props;
 
     function kFormatter(num) {
       return num > 999 ? `${(num/1000).toFixed(0)}k` : num;
@@ -350,10 +350,10 @@ export default class JobApplicantListItem extends React.Component {
         }}>
         <ListItem
             onTouchTap={this._onTouchTapState.bind(this)}
-            leftIcon={<FontIcon className="material-icons" style={{color: '#fff'}}>{this.props.selectedApplicantStateOption ? this.props.selectedApplicantStateOption.icon : ''}</FontIcon>}
+            leftIcon={<FontIcon className="material-icons" style={{color: '#fff'}}>{selectedApplicantStateOption ? selectedApplicantStateOption.icon : ''}</FontIcon>}
             style={{
               color: '#fff',
-              backgroundColor: this.props.selectedApplicantStateOption && this.props.selectedApplicantStateOption.color ? this.props.selectedApplicantStateOption.color : Styles.Colors.grey600,
+              backgroundColor: selectedApplicantStateOption && selectedApplicantStateOption.color ? selectedApplicantStateOption.color : Styles.Colors.grey600,
             }}
           >
           {this.props.applicantState || 'New'}
@@ -405,9 +405,37 @@ export default class JobApplicantListItem extends React.Component {
             <FavoriteButton isFavorited={contact.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
           </div>
           <div style={{marginRight: 0}}>
-          <IconButton iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="More">
-            <FontIcon className="material-icons">more_vert</FontIcon>
-          </IconButton>
+            {
+              selectedApplicantStateOption && selectedApplicantStateOption.nextStates ?
+              selectedApplicantStateOption.nextStates.map(x => {
+                let option = applicantStateOptions.filter(y => {
+                  return y.selectable && y.value == x;
+                });
+
+                option = option ? option[0] : null;
+
+                return (
+                  option ?
+                  <IconButton
+                      iconStyle={{color:Styles.Colors.grey600}}
+                      tooltipPosition="top-center"
+                      tooltip={option.value}
+                      onTouchTap={this.props.editApplicantState.bind(this, contact, option.value)}
+                  >
+                    <FontIcon className="material-icons">{option.icon}</FontIcon>
+                  </IconButton>
+                  : (null)
+                );
+              })
+              : (null)
+            }
+            {
+              /*
+              <IconButton iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="More">
+                <FontIcon className="material-icons">more_vert</FontIcon>
+              </IconButton>
+              */
+            }
           </div>
         </CardActions>
       </Card>

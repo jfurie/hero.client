@@ -2,14 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
 import {
-  List, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog, Card, CardTitle, CardText,
+  List, ListItem, FontIcon, IconMenu, IconButton, Styles, MenuItem, Dialog, Card, CardTitle, CardText,
 } from 'material-ui';
 
 import Avatar from 'material-ui/lib/avatar';
 
 import {
   LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
-  CompanyNotesList, DetailsCard, CompanyAvatar, MarkedViewer
+  CompanyNotesList, DetailsCard, CompanyAvatar, MarkedViewer,
 } from '../../../components/web';
 import defaultImage from './default-company.jpg';
 const style = {
@@ -193,6 +193,10 @@ export default class ClientDetails extends React.Component {
     );
   }
 
+  openInNewTab(url) {
+    window.open(url);
+  }
+
   renderSmallListItem(content,avatar){
     return (
       <div style={{display:'flex'}}>
@@ -200,7 +204,7 @@ export default class ClientDetails extends React.Component {
           {avatar}
         </div>
         <div style={{display: 'flex', alignItems: 'center'}}>
-          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px', marginTop:'11px'}}><MarkedViewer value={content} /></div>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
         </div>
       </div>
     );
@@ -327,7 +331,10 @@ export default class ClientDetails extends React.Component {
                 ) : (null)}
 
                 {(website) ? (
-                  <CardText style={style.smallListItem}>
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, website)}
+                  >
                     {this.renderSmallListItem(website,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
@@ -335,10 +342,13 @@ export default class ClientDetails extends React.Component {
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
 
                 {(phone) ? (
-                  <CardText style={style.smallListItem}>
+                  <CardText style={style.smallListItem}
+                      onTouchTap={this._onTouchTapCall.bind(this)}
+                  >
                     {this.renderSmallListItem(phone,
                     <Avatar
                         icon={<FontIcon className="material-icons">phone</FontIcon>}
@@ -397,44 +407,60 @@ export default class ClientDetails extends React.Component {
               <Card>
                 <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                 {(twitter) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('twitter', `${twitter}`,
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${twitter}`)}
+                  >
+                    {this.renderSmallListItem('twitter',
                     <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        icon={<FontIcon className="fa fa-twitter-square" />}
                         color={Styles.Colors.grey600}
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
                 {(facebook) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('facebook', `facebook.com/${facebook}`,
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${facebook}`)}
+                  >
+                    {this.renderSmallListItem('facebook',
                     <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        icon={<FontIcon className="fa fa-facebook-square" />}
                         color={Styles.Colors.grey600}
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
                 {(angelList) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Angel List', `${angelList}`,
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, `${angelList}`)}
+                  >
+                    {this.renderSmallListItem('Angel List',
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
                 {(crunchbase) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Crunchbase', `${crunchbase}`,
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, `${crunchbase}`)}
+                  >
+                    {this.renderSmallListItem('Crunchbase',
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
                 ) : (null)}
               </Card>
               <Card>
