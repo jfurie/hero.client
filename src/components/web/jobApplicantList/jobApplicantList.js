@@ -176,6 +176,16 @@ class JobApplicantList extends React.Component {
     });
   }
 
+  editApplicantStateNoDialog(contact, state) {
+    let candidate = this.props.candidates.filter(x => {
+      return x.get('contactId') == contact.get('id');
+    }).get(0);
+
+    if (this.props.editApplicantState && candidate.get('applicantState') != state) {
+      this.props.editApplicantState(candidate.get('id'), state);
+    }
+  }
+
   selectApplicantState(contact) {
     this.setState({
       contactPendingApplicantStateChange: contact,
@@ -434,22 +444,26 @@ class JobApplicantList extends React.Component {
     }, {
       value: 'Submitted',
       icon: 'inbox',
-      selectable: isHero,
+      selectable: true,
+      nextStates: ['Accepted', 'REJECTED'],
     }, {
       value: 'Accepted',
       icon: 'thumb_up',
       color: Styles.Colors.purple500,
       selectable: true,
+      nextStates: ['Interviewing', 'REJECTED'],
     }, {
       value: 'Interviewing',
       icon: 'event',
       color: Styles.Colors.pink500,
       selectable: true,
+      nextStates: ['Offer Letter', 'REJECTED'],
     }, {
       value: 'Offer Letter',
       icon: 'attach_money',
       color: Styles.Colors.green500,
       selectable: true,
+      nextStates: ['Hired', 'REJECTED'],
     }, {
       value: 'Hired',
       icon: 'verified_user',
@@ -580,6 +594,7 @@ class JobApplicantList extends React.Component {
                   applicantStateOptions={applicantStateOptions}
                   selectedApplicantStateOption={selectedApplicantStateOption}
                   applicantState={candidate.get('applicantState')}
+                  editApplicantState={this.editApplicantStateNoDialog.bind(this)}
               />
             );
           })}
