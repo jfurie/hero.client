@@ -182,10 +182,12 @@ export function getContactDetail(id) {
       }).then((contact)=> {
         if (contact.jobs && contact.jobs.length > 0) {
           dispatch(saveJobsByContactResult(contact.jobs, contact.id));
+        }
+        if (contact.companies && contact.companies.length > 0) {
           dispatch(saveCompaniesResult(contact.companies));
-          if (contact.location) {
-            dispatch(saveLocationResult(contact.location));
-          }
+        }
+        if (contact.location) {
+          dispatch(saveLocationResult(contact.location));
         }
         return contact;
       }),
@@ -355,4 +357,11 @@ export function setExperience(contactId,contactCategory, category){
     });
   };
 
+}
+
+export function saveContactResult(contact){
+  return {
+    type: constants.GET_ONE_CONTACT_SUCCESS,
+    result: contact,
+  };
 }

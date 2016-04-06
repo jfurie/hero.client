@@ -17,8 +17,9 @@ import { getAllJobCandidates, createCandidate } from '../../../modules/candidate
 
 import { invite } from '../../../modules/users';
 import getCompanyDataFromState from '../../../dataHelpers/company';
+import Config from '../../../utils/config';
 
-const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
+const HEROCOMPANYID = Config.get('heroCompanyId');
 
 function getData(state, props) {
 
@@ -96,7 +97,7 @@ class ClientDetailsPage extends React.Component {
       //   self.props.getAllJobCandidates(self.props.params.jobId);
       // }
       self.props.getContactsByCompany(HEROCOMPANYID);
-      //self.props.getContactsByCompany('568f0ea89faa7b2c74c18080');
+      //self.props.getContactsByCompany(HEROCOMPANYID);
     }, 500);
   }
 

@@ -23,7 +23,7 @@ function startApp() {
     cache: false
   });
   app.get('*',function(req,res,next){
-    if(req.headers['x-forwarded-proto']!='https')
+    if(req.headers['x-forwarded-proto']!='https' && config.env !== 'local')
       res.redirect('https://'+req.get('host') + req.originalUrl);
     else
       next(); /* Continue to other routes if we're not redirecting */
@@ -63,9 +63,14 @@ function startApp() {
           meta.image = data.image;
         }
         console.log(meta);
+
+        res.render('main', {meta});
+      }
+      else {
+        res.status(404);
+        res.render('404');
       }
 
-      res.render('main', {meta});
     });
   });
   app.get('*', function(req, res) {

@@ -102,7 +102,7 @@ export default class ContactDetails extends React.Component {
   }
 
   inviteToHero() {
-    this.props.invite(this.props.contact.get('email'), window.location.origin + '/invited');
+    this.props.invite(this.props.contact.get('email'), `${window.location.origin}/invited`);
     this.setState({confirmOpen: true});
     this.handleConfirmInviteGo();
   }
@@ -118,15 +118,15 @@ export default class ContactDetails extends React.Component {
   addNote(note){
     if (!note) {
       note = new Immutable.Map({
-        id: 'tmp_' + this._guid(),
+        id: `tmp_${this._guid()}`,
         privacyValue: 0,
       });
     }
     this.props.replaceNoteLocal(note);
     if(this.state.isContactContext){
-      this.props.pushState({}, `/contacts/${this.props.contact.get('id')}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+      this.props.pushState({}, `/contacts/${this.props.contact.get('id')}/notes/${note.get('id')}/create?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
     } else {
-      this.props.pushState({}, `/candidates/${this.props.candidate.get('id')}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+      this.props.pushState({}, `/candidates/${this.props.candidate.get('id')}/notes/${note.get('id')}/create?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
     }
   }
   deleteNote(note){
@@ -388,7 +388,8 @@ export default class ContactDetails extends React.Component {
       if(currentCategory.get('experience') > 0){
         let found = self.props.categories.find(x=>x.get('id') == currentCategory.get('categoryId'));
         if(found){
-          skillImg = <img style={{
+          skillImg =
+          <img style={{
             width: '35px',
             height:'35px',
             borderRadius:'0px',
@@ -399,7 +400,8 @@ export default class ContactDetails extends React.Component {
             border: '2px solid white',
             borderBottom: 'none',
             borderRight: 'none',
-          }} src={found.get('imageUrl')} />;
+          }} src={found.get('imageUrl')}
+          />;
         }
       }
     }
@@ -541,11 +543,18 @@ export default class ContactDetails extends React.Component {
         description += summary;
       }
       let categoryLinks = contact.get('_categoryLinks');
-      return (
 
+      let tabs = ['Details'];
+
+      if (this.props.isHero) {
+        tabs.push('Jobs');
+        tabs.push('Notes');
+      }
+
+      return (
         <div>
           {this.renderCandidateDetailsCard(contact)}
-          <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
+          <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={tabs}>
             <div style={{minHeight:'800px'}}>
               <Card>
                 <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
@@ -562,8 +571,9 @@ export default class ContactDetails extends React.Component {
 
                 {(resume) ? (
                   <CardText
-                    style={style.smallListItem}
-                    onTouchTap={this.clickResume.bind(this)}>
+                      style={style.smallListItem}
+                      onTouchTap={this.clickResume.bind(this)}
+                  >
                     {this.renderSmallListItem('Resume',
                     <Avatar
                         icon={<FontIcon className="material-icons">description</FontIcon>}
@@ -687,27 +697,35 @@ export default class ContactDetails extends React.Component {
                 </CardText>
               </Card>
             </div>
-            <div style={{minHeight:'800px'}}>
-              <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
-                {contact.get('jobs') && contact.get('jobs').map((job, key) => {
-                  return (
-                    <div key={key}>
-                      <JobListItem
-                          onJobClick={this._showJobDetails.bind(this)}
-                          job={job}
-                          favoriteJob={this.props.favoriteJob.bind(this)}
-                          unfavoriteJob={this.props.unfavoriteJob.bind(this)}
-                      />
-                    </div>
-                  );
-                })}
-              </List>
-            </div>
-            <div style={{minHeight:'800px'}}>
-              <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
-                <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
-              </List>
-            </div>
+            {
+              tabs.indexOf('Jobs') > -1 ?
+              <div style={{minHeight:'800px'}}>
+                <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
+                  {contact.get('jobs') && contact.get('jobs').map((job, key) => {
+                    return (
+                      <div key={key}>
+                        <JobListItem
+                            onJobClick={this._showJobDetails.bind(this)}
+                            job={job}
+                            favoriteJob={this.props.favoriteJob.bind(this)}
+                            unfavoriteJob={this.props.unfavoriteJob.bind(this)}
+                        />
+                      </div>
+                    );
+                  })}
+                </List>
+              </div>
+              : (null)
+            }
+            {
+              tabs.indexOf('Notes') > -1 ?
+              <div style={{minHeight:'800px'}}>
+                <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
+                  <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
+                </List>
+              </div>
+              : (null)
+            }
           </CustomTabsSwipe>
         </div>
       );
@@ -749,7 +767,8 @@ export default class ContactDetails extends React.Component {
 
     return (
       <div>
-        <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
+        <Header showHome={this.props.isHero} showSearch={this.props.isHero} transparent goBack={this.goBack.bind(this)} iconRight={
+          this.props.isHero ?
           <IconMenu iconButtonElement={<IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>}>
             <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (
@@ -758,10 +777,11 @@ export default class ContactDetails extends React.Component {
             <MenuItem index={0} onTouchTap={this.addNoteModalOpen.bind(this)} primaryText={`Create Note`} />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
           </IconMenu>
+          : (null)
         }
         />
         {this.renderContent(contact)}
-        <InviteSuccessModal email={this.props.contact && this.props.contact.get('email')} ref={'inviteSuccessModal'}></InviteSuccessModal>
+        <InviteSuccessModal email={this.props.contact && this.props.contact.get('email')} ref={'inviteSuccessModal'} />
       </div>
 
     );

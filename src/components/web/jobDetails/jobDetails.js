@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
 import marked from 'marked';
 
-import { List, CardTitle } from 'material-ui';
+import { List, ListItem, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import {SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
+import { Gravatar, CardBasic, SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles, Divider,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -44,6 +44,10 @@ const style = {
   card: {
     paddingTop: '4px',
   },
+  smallListItem: {
+    padding: 0,
+    margin: '16px',
+  },
 };
 function cleanTitle(title){
   return title.replace(/[^A-Za-z0-9_\.~]+/gm, '-');
@@ -59,6 +63,19 @@ export default class JobDetails extends React.Component {
       justInvited: false,
       confirmOpen: false,
     };
+  }
+
+  renderSmallListItem(content,avatar){
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
+        </div>
+      </div>
+    );
   }
 
   renderBigListItem(title,content,avatar){
@@ -135,7 +152,9 @@ export default class JobDetails extends React.Component {
   }
 
   _onTouchCompanyIcon(){
-    this.props.pushState(null,`/clients/${this.props.job.get('companyId')}`);
+    if (this.props.isHero) {
+      this.props.pushState(null,`/clients/${this.props.job.get('companyId')}`);
+    }
   }
   editSkills(){
     this.props.pushState(null, `/jobs/${this.props.job.get('id')}/categories/edit`);
@@ -187,12 +206,21 @@ export default class JobDetails extends React.Component {
     let self = this;
     this.refs.confirm.confirm({
       title:'Delete Job',
-      message:'Are you sure you want to delete this Job? (This cannot be undone)'
+      message:'Are you sure you want to delete this Job? (This cannot be undone)',
     }).then(function(){
       self.props.deleteJob(self.props.job.get('id'));
     }).catch(function(){
       console.log('no');
     });
+  }
+
+  openInNewTab(url) {
+    window.open(url);
+  }
+
+  openHiringContact() {
+    let {job} = this.props;
+    this.props.pushState(null, `/contacts/${job.get('talentAdvocateId')}`);
   }
 
   renderContent(job) {
@@ -253,15 +281,29 @@ export default class JobDetails extends React.Component {
       }];
 
       // company
+      let companyName;
+      let companyWebsite;
+      let companyTwitter;
+      let companyFacebook;
+      let companyCrunchbase;
+
       let company = job.get('company');
-      let companyWebsite = null;
-      let companyName = null;
+      let talentAdvocate = job.get('talentAdvocate');
+      let talentAdvocateCompany;
+
       if (company) {
-        companyWebsite = company.get('website');
         companyName = company.get('name');
+        companyWebsite = company.get('website');
+        companyTwitter = company.get('twitterHandle');
+        companyFacebook = company.get('facebookHandle');
+        companyCrunchbase = company.get('crunchbase');
       }
       else {
         companyName = 'XYZ Company';
+      }
+
+      if (talentAdvocate && talentAdvocate.get('companies')) {
+        talentAdvocateCompany = talentAdvocate.get('companies').first();
       }
 
       // location stuff
@@ -286,6 +328,11 @@ export default class JobDetails extends React.Component {
       }
       let categoryLinks = job.get('_categoryLinks');
 
+      let tabs = ['Details', 'Applicants'];
+
+      if (this.props.isHero) {
+        tabs.push('Notes');
+      }
 
       return (
 
@@ -306,42 +353,195 @@ export default class JobDetails extends React.Component {
               floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
               floatActionLabel={'Share'}
           />
-        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={['Details', 'Desc', 'Applicants', 'Notes']}>
+        <CustomTabsSwipe onChange={this.tabChange.bind(this)} startingTab={this.props.tab} isLight isInline tabs={tabs}>
             <div>
-              <Card style={style.card}>
-                <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
-                <CardText>
-                  {this.renderBigListItem('Quick Pitch', job.get('quickPitch'),
-                  <Avatar
-                      icon={<FontIcon className="material-icons">info_outline</FontIcon>}
-                      color={Styles.Colors.grey600}
-                      backgroundColor={Styles.Colors.white}
-                  />)}
-                </CardText>
-                <CardText>
-                  {this.renderBigListItem('Bonus & perks', job.get('bonusPerks'),
-                  <Avatar
-                      icon={<FontIcon className="material-icons">redeem</FontIcon>}
-                      color={Styles.Colors.grey600}
-                      backgroundColor={Styles.Colors.white}
-                  />)}
-                </CardText>
-              </Card>
-
-              <LocationCard location={job.get('location')} />
-              <SkillsCard skills={categoryLinks} />
-            </div>
-            <div style={{minHeight:'800px'}}>
               <Card>
-                <CardText >
-                  <div className="description">
-                    <div dangerouslySetInnerHTML={{__html: description}} />
-                  </div>
+                <CardText>
+                  {this.renderBigListItem('Company Mission',company.get('productSolution'),
+                  <Avatar
+                      icon={<FontIcon className="material-icons">store</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
                 </CardText>
               </Card>
+              <LocationCard location={job.get('location')} />
+              <Card>
+                <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+
+                {(companyWebsite) ? (
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, `${companyWebsite}`)}
+                  >
+                    {this.renderSmallListItem(companyWebsite,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                  </ListItem>
+                ) : (null)}
+
+                <CardText style={style.smallListItem}>
+                  {this.renderSmallListItem('Available Immediately',
+                  <Avatar
+                      icon={<FontIcon className="material-icons">access_time</FontIcon>}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+              </Card>
+              <SkillsCard skills={categoryLinks} />
+              {
+                description ?
+                <Card>
+                  <CardText>
+                    <div style={{display:'flex'}}>
+                      <div style={{flex:'0 0 56px'}}>
+                        <Avatar
+                            icon={<FontIcon className="material-icons">stars</FontIcon>}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />
+                      </div>
+                      <div style={{width: '100%', marginRight: '8px'}}>
+                        <div style={style.title}>{'Job Description'}</div>
+                        <div className="description">
+                          <div dangerouslySetInnerHTML={{__html: description}} />
+                        </div>
+                      </div>
+                    </div>
+                  </CardText>
+                </Card>
+                : (null)
+              }
+              <Card>
+                {company.get('culture')?(
+                  <CardText>
+                    {this.renderBigListItem('Culture',company.get('culture'),
+                    <Avatar
+                        icon={<FontIcon className="material-icons">face</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ):(<span></span>)}
+                {company.get('benefits')?(
+                  <CardText>
+                    {this.renderBigListItem('Benefits',company.get('benefits'),
+                    <Avatar
+                        icon={<FontIcon className="material-icons">redeem</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ):(<span></span>)}
+                {company.get('techstack')?(
+                  <CardText>
+                    {this.renderBigListItem('Tech Stack',company.get('techstack'),
+                    <Avatar
+                        icon={<FontIcon className="material-icons">storage</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ):(<span></span>)}
+                {company.get('leadership')?(
+                  <CardText>
+                    {this.renderBigListItem('Leadership',company.get('leadership'),
+                    <Avatar
+                        icon={<FontIcon className="material-icons">stars</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                ):(<span></span>)}
+              </Card>
+              {
+                companyTwitter || companyFacebook || companyCrunchbase ?
+                <Card>
+                  <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                  {(companyTwitter) ? (
+                    <ListItem>
+                    <CardText style={{padding: 0}}
+                        onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${companyTwitter}`)}
+                    >
+                      {this.renderSmallListItem('twitter',
+                      <Avatar
+                          icon={<FontIcon className="fa fa-twitter-square" />}
+                          color={Styles.Colors.grey600}
+                          backgroundColor={Styles.Colors.white}
+                      />)}
+                    </CardText>
+                    </ListItem>
+                  ) : (null)}
+                  {(companyFacebook) ? (
+                    <ListItem>
+                    <CardText style={{padding: 0}}
+                        onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${companyFacebook}`)}
+                    >
+                      {this.renderSmallListItem('facebook',
+                      <Avatar
+                          icon={<FontIcon className="fa fa-facebook-square" />}
+                          color={Styles.Colors.grey600}
+                          backgroundColor={Styles.Colors.white}
+                      />)}
+                    </CardText>
+                    </ListItem>
+                  ) : (null)}
+                  {(companyCrunchbase) ? (
+                    <ListItem>
+                    <CardText style={{padding: 0}}
+                        onTouchTap={this.openInNewTab.bind(this, `${companyCrunchbase}`)}
+                    >
+                      {this.renderSmallListItem('Crunchbase',
+                      <Avatar
+                          icon={<FontIcon className="material-icons">public</FontIcon>}
+                          color={Styles.Colors.grey600}
+                          backgroundColor={Styles.Colors.white}
+                      />)}
+                    </CardText>
+                    </ListItem>
+                  ) : (null)}
+                </Card>
+                : (null)
+              }
+              {
+                talentAdvocate ?
+                <Card>
+                  <CardTitle title="Hiring Contact" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                  <CardText>
+                    <div style={{display:'flex'}}>
+                      <div style={{flex:'0 0 56px'}}>
+                        <Avatar
+                            icon={<FontIcon className="material-icons">verified_user</FontIcon>}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />
+                      </div>
+                      {
+                        <div style={{width: '100%', marginRight: '8px'}}>
+                          <CardBasic
+                              onTouchTap={this.openHiringContact.bind(this)}
+                              image={<Gravatar email={talentAdvocate.get('email')} status={'notset'} style={{width: '40px'}}/>}
+                              title= {<div style={{fontWeight: 'bold'}}>{talentAdvocate.get('displayName')}</div>}
+                              subtitle1={talentAdvocateCompany && talentAdvocateCompany.get('name')}
+                              subtitle2={talentAdvocate.get('title')}
+                              rightContent={<CompanyAvatar style={{width:'40px'}} url={talentAdvocateCompany && talentAdvocateCompany.get('website')} />}
+                          />
+                        </div>
+                      }
+                    </div>
+                  </CardText>
+                </Card>
+              : (null)
+              }
             </div>
             <div style={{minHeight:'800px'}}>
               <JobApplicantList
+                  isHero={this.props.isHero}
                   candidates={job.get('candidates')}
                   favoriteContact={this.props.favoriteContact.bind(this)}
                   unfavoriteContact={this.props.unfavoriteContact.bind(this)}
@@ -351,11 +551,16 @@ export default class JobDetails extends React.Component {
                   tab={this.props.tab}
               />
             </div>
-            <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
-              <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
-            </List>
+            {
+              tabs.indexOf('Notes') > -1 ?
+              <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
+                <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
+              </List>
+              : (null)
+            }
+
           </CustomTabsSwipe>
-          <Confirm ref='confirm' />
+          <Confirm ref="confirm" />
         </div>
       );
 
@@ -370,22 +575,27 @@ export default class JobDetails extends React.Component {
     let { job } = this.props;
     return (
       <div>
-        <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
-          <IconMenu iconButtonElement={
-            <IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>
-          }>
-            <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
-            <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
-            <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
-            <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
-            <MenuItem index={0} onTouchTap={this.viewPublic.bind(this)} primaryText={`View Public Job`} />
-            <MenuItem index={0} onTouchTap={this.viewPrivate.bind(this)} primaryText={`View Private Job`} />
+        {
+          this.props.isHero ?
+          <Header showHome transparent goBack={this.goBack.bind(this)} iconRight={
+            <IconMenu iconButtonElement={
+              <IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>
+            }
+            >
+              <MenuItem onTouchTap={this._onTouchTapEdit.bind(this)} index={0} primaryText="Edit Job" />
+              <MenuItem onTouchTap={this._onTouchAddCandidate.bind(this)} index={0} primaryText="Find Candidate" />
+              <MenuItem index={0} onTouchTap={this.createNoteModalOpen.bind(this)} primaryText="Add Note" />
+              <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
+              <MenuItem index={0} onTouchTap={this.viewPublic.bind(this)} primaryText={`View Public Job`} />
+              <MenuItem index={0} onTouchTap={this.viewPrivate.bind(this)} primaryText={`View Private Job`} />
 
-            <Divider />
-            <MenuItem index={0} onTouchTap={this.deleteJob.bind(this)} primaryText={`Delete Job`} />
-          </IconMenu>
+              <Divider />
+              <MenuItem index={0} onTouchTap={this.deleteJob.bind(this)} primaryText={`Delete Job`} />
+            </IconMenu>
+          }
+          />
+        : (null)
         }
-        />
         {this.renderContent(job)}
       </div>
     );

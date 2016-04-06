@@ -176,6 +176,16 @@ class JobApplicantList extends React.Component {
     });
   }
 
+  editApplicantStateNoDialog(contact, state) {
+    let candidate = this.props.candidates.filter(x => {
+      return x.get('contactId') == contact.get('id');
+    }).get(0);
+
+    if (this.props.editApplicantState && candidate.get('applicantState') != state) {
+      this.props.editApplicantState(candidate.get('id'), state);
+    }
+  }
+
   selectApplicantState(contact) {
     this.setState({
       contactPendingApplicantStateChange: contact,
@@ -367,7 +377,7 @@ class JobApplicantList extends React.Component {
   }
 
   render() {
-    let { candidates } = this.props;
+    let { candidates, isHero } = this.props;
 
     // let totalCount = candidates.length;
     // let vettedCount = candidates.filter(x => {
@@ -406,51 +416,69 @@ class JobApplicantList extends React.Component {
     let applicantStateOptions = [{
       value: 'Applied',
       icon: 'person',
+      selectable: isHero,
     }, {
       value: 'Matched',
       icon: 'android',
+      selectable: isHero,
     }, {
       value: 'Sourced',
       icon: 'headset_mic',
+      selectable: isHero,
     }, {
       value: 'Reffered',
       icon: 'people',
+      selectable: isHero,
     }, {
       value: 'Screened',
       icon: 'assignment_turned_in',
+      selectable: isHero,
     }, {
       value: 'Contacted',
       icon: 'perm_phone_msg',
+      selectable: isHero,
     }, {
       value: 'Queued',
       icon: 'playlist_add',
+      selectable: isHero,
     }, {
       value: 'Submitted',
       icon: 'inbox',
+      selectable: true,
+      nextStates: ['Accepted', 'REJECTED'],
     }, {
       value: 'Accepted',
       icon: 'thumb_up',
       color: Styles.Colors.purple500,
+      selectable: true,
+      nextStates: ['Interviewing', 'REJECTED'],
     }, {
       value: 'Interviewing',
       icon: 'event',
       color: Styles.Colors.pink500,
+      selectable: true,
+      nextStates: ['Offer Letter', 'REJECTED'],
     }, {
       value: 'Offer Letter',
       icon: 'attach_money',
       color: Styles.Colors.green500,
+      selectable: true,
+      nextStates: ['Hired', 'REJECTED'],
     }, {
       value: 'Hired',
       icon: 'verified_user',
       color: Styles.Colors.blue600,
+      selectable: true,
     }, {
       value: 'REJECTED',
       icon: 'do_not_disturb',
       color: Styles.Colors.red500,
+      selectable: true,
     }, {
       value: 'CANDIDATE REJECTED',
       icon: 'do_not_disturb',
       color: Styles.Colors.red500,
+      selectable: isHero,
     }];
 
     style.filterBar.display = this.state.isStuck ? 'flex' : 'none';
@@ -566,6 +594,7 @@ class JobApplicantList extends React.Component {
                   applicantStateOptions={applicantStateOptions}
                   selectedApplicantStateOption={selectedApplicantStateOption}
                   applicantState={candidate.get('applicantState')}
+                  editApplicantState={this.editApplicantStateNoDialog.bind(this)}
               />
             );
           })}
@@ -600,6 +629,7 @@ class JobApplicantList extends React.Component {
         <div style={{paddingBottom: '30px'}}>
           {applicantStateOptions.map((option, key) => {
             return (
+              option.selectable ?
               <ListItem
                   key={key}
                   leftIcon={<FontIcon className="material-icons" style={{color: option.color || Styles.Colors.grey600}}>{option.icon}</FontIcon>}
@@ -607,6 +637,7 @@ class JobApplicantList extends React.Component {
               >
                 {option.value}
               </ListItem>
+              : (null)
             );
           })}
         </div>

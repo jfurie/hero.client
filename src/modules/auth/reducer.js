@@ -5,6 +5,7 @@ import Immutable from 'immutable';
 const initialState = new Immutable.Map({
   loaded: false,
   auth: {},
+  isHero: null,
 });
 
 export default function reducer(state = initialState, action = {}) {
@@ -44,7 +45,11 @@ export default function reducer(state = initialState, action = {}) {
       .set('authToken', Immutable.fromJS(action.result.authToken));
     });
   case constants.SET_AUTH:{
-    return state.set('authToken',Immutable.fromJS(action.result.authToken));
+    return state.withMutations(ctx=> {
+      ctx
+      .set('isHero',action.result.isHero)
+      .set('authToken',Immutable.fromJS(action.result.authToken));
+    });
   }
   case constants.LOGIN_FAIL:
     return state.withMutations(ctx=>{
