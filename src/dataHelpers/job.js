@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import getCandidateDataFromState from './candidate';
 
 export default function getJobDataFromState(state, jobId) {
   let job = ((state.jobs.get('list').size > 0) ? (state.jobs.get('list').get(jobId)) : (null));
@@ -6,13 +7,21 @@ export default function getJobDataFromState(state, jobId) {
   if (job) {
 
     // candidates
+    let jobCandidateIds = [];
     let jobCandidates = new Immutable.List();
 
-    jobCandidates = state.candidates.list.filter(candidate =>{
+    jobCandidateIds = state.candidates.list.filter(candidate =>{
       return candidate.get('jobId') == job.get('id');
-    }).toList();
+    }).map(candidate => {
+      return candidate.get('id');
+    });
+
+    jobCandidateIds.forEach(candidateId => {
+      jobCandidates = jobCandidates.push(getCandidateDataFromState(state, candidateId));
+    });
 
     job = job.set('candidates', jobCandidates);
+
 
     //company
     if(job.has('companyId')){

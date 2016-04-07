@@ -28,6 +28,9 @@ const DELETE_CANDIDATE = 'hero.client/candidates/DELETE_CANDIDATE';
 const DELETE_CANDIDATE_SUCCESS = 'hero.client/candidates/DELETE_CANDIDATE_SUCCESS';
 const DELETE_CANDIDATE_FAIL = 'hero.client/candidates/DELETE_CANDIDATE_FAIL';
 const SAVE_CANDIDATE_BY_CONTACT_RESULT = 'hero.client/candidates/SAVE_CANDIDATE_BY_CONTACT_RESULT';
+const GET_CANDIDATES_BY_IDS = 'hero.client/candidates/GET_CANDIDATES_BY_IDS';
+const GET_CANDIDATES_BY_IDS_SUCCESS = 'hero.client/candidates/GET_CANDIDATES_BY_IDS_SUCCESS';
+const GET_CANDIDATES_BY_IDS_FAIL = 'hero.client/candidates/GET_CANDIDATES_BY_IDS_FAIL';
 
 const RESET_ERROR = 'hero.client/candidates/RESET_ERROR';
 const initialState = {
@@ -40,6 +43,17 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case GET_CANDIDATES_BY_IDS_SUCCESS: {
+    let candidatesMap = {};
+    action.result.map((c) => {
+      candidatesMap[c.id] = c;
+    });
+
+    return {
+      ...state,
+      list: state.list.merge(candidatesMap),
+    };
+  }
   case CREATE_CANDIDATE: {
     return {
       ...state,
@@ -499,5 +513,36 @@ export function editApplicantState(id, state){
         return candidate;
       }),
     });
+  };
+}
+
+export function getCandidatesByIds(candidateIds){
+  return (dispatch) => {
+    return dispatch({
+      types:[GET_CANDIDATES_BY_IDS, GET_CANDIDATES_BY_IDS_SUCCESS, GET_CANDIDATES_BY_IDS_FAIL],
+      promise:(client,auth) => {
+        let filter= {where:{id:{inq:candidateIds}}};
+        let filterString = encodeURIComponent(JSON.stringify(filter));
+        return client.api.get(`/candidates?filter=${filterString}`,{
+          authToken: auth.authToken,
+        });
+      },
+    });
+  };
+}
+
+export function getCandidatesByIdsIfNeeded(candidateIds){
+  return (dispatch, getState) => {
+    let newCandidateIds =[];
+    candidateIds.map((candidateId => {
+      if(!getState().candidates.list.get(candidateId)){
+        newCandidateIds.push(candidateId);
+      }
+    }));
+    if(newCandidateIds && newCandidateIds.length > 0){
+      return dispatch(getCandidatesByIds(candidateIds));
+    } else {
+      return Promise.resolve();
+    }
   };
 }
