@@ -1,10 +1,9 @@
 import superagent from 'superagent';
 import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
-import { saveCandidatesByJobResult } from '../candidates';
+import { saveCandidatesResult } from '../candidates';
 import { saveLocationResult } from '../locations';
 import { saveContactResult } from '../contacts';
-import { getCandidatesByIdsIfNeeded } from '../candidates';
 import { getContactsByIdsIfNeeded } from '../contacts';
 import { getNotesByIdsIfNeeded } from '../notes';
 import { getLocationsByIdsIfNeeded } from '../locations';
@@ -171,12 +170,65 @@ export function saveJob(job, category){
   };
 }
 
-export function getMyJobs(){
-  return {
-    types: [constants.GET_MY_JOBS, constants.GET_MY_JOBS_SUCCESS, constants.GET_MY_JOBS_FAIL],
-    promise: (client, auth) => client.api.get('/jobs/myJobs', {
-      authToken: auth.authToken,
-    }),
+// export function getMyJobs(){
+//   return {
+//     types: [constants.GET_MY_JOBS, constants.GET_MY_JOBS_SUCCESS, constants.GET_MY_JOBS_FAIL],
+//     promise: (client, auth) => client.api.get('/jobs/myJobs', {
+//       authToken: auth.authToken,
+//     }),
+//   };
+// }
+
+export function getMyJobs() {
+  let filter = {
+    include:[
+      {
+        relation:'candidates',
+      },
+    ],
+  };
+
+  let filterString = encodeURIComponent(JSON.stringify(filter));
+
+  return (dispatch) => {
+    dispatch({
+      types: [constants.GET_MY_JOBS, constants.GET_MY_JOBS_SUCCESS, constants.GET_MY_JOBS_FAIL],
+      promise: (client, auth) => client.api.get(`/jobs?filter=${filterString}`, {
+        authToken: auth.authToken,
+      }).then((jobs)=> {
+        let companyIds = [];
+        let locationIds = [];
+        let contactIds = [];
+
+        jobs.forEach(job => {
+          if (job.companyId) {
+            companyIds.push(job.companyId);
+          }
+
+          if (job.locationId) {
+            locationIds.push(job.locationId);
+          }
+
+          if (job.talentAdvocateId) {
+            contactIds.push(job.talentAdvocateId);
+          }
+
+          if (job.candidates) {
+            job.candidates.map((candidate => {
+              contactIds.push(candidate.contactId);
+            }));
+
+            dispatch(saveCandidatesResult(job.candidates));
+          }
+        });
+
+        dispatch(getCompaniesByIdsIfNeeded(companyIds));
+        dispatch(getLocationsByIdsIfNeeded(locationIds));
+        dispatch(getContactsByIdsIfNeeded(contactIds));
+
+        return jobs;
+      }),
+    });
   };
 }
 
@@ -257,9 +309,6 @@ export function getJobDetails(jobIds, include) {
       include:[
         {
           relation:'candidates',
-          scope:{
-            fields: ['id','contactId'],
-          },
         },
         {
           relation:'notes',
@@ -285,7 +334,6 @@ export function getJobDetails(jobIds, include) {
         let companyIds = [];
         let locationIds = [];
         let contactIds = [];
-        let candidateIds = [];
         let noteIds = [];
 
         jobs.forEach(job => {
@@ -303,9 +351,10 @@ export function getJobDetails(jobIds, include) {
 
           if (include && include.indexOf('candidates') > -1 && job.candidates) {
             job.candidates.map((candidate => {
-              candidateIds.push(candidate.id);
               contactIds.push(candidate.contactId);
             }));
+
+            dispatch(saveCandidatesResult(job.candidates));
           }
 
           if (include && include.indexOf('notes') > -1 && job.notes) {
@@ -318,7 +367,6 @@ export function getJobDetails(jobIds, include) {
         dispatch(getCompaniesByIdsIfNeeded(companyIds));
         dispatch(getLocationsByIdsIfNeeded(locationIds));
         dispatch(getContactsByIdsIfNeeded(contactIds));
-        dispatch(getCandidatesByIdsIfNeeded(candidateIds));
         dispatch(getNotesByIdsIfNeeded(noteIds));
 
         return jobs;
@@ -347,7 +395,7 @@ export function getJobDetail(id) {
         }
 
         if (job.candidates && job.candidates.length > 0) {
-          dispatch(saveCandidatesByJobResult(job.candidates));
+          dispatch(saveCandidatesResult(job.candidates));
         }
         return job;
       }),

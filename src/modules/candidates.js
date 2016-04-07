@@ -203,19 +203,19 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.mergeDeep(candidatesMap),
     };
   }
-  case jobConstants.GET_MY_JOBS_SUCCESS:
-    {
-      let candidateList =  {};
-      action.result.map(job =>{
-        job.candidates.map(candidate=>{
-          candidateList[candidate.id] = candidate;
-        });
-      });
-      return {
-        ...state,
-        list:state.list.mergeDeep(candidateList),
-      };
-    }
+  // case jobConstants.GET_MY_JOBS_SUCCESS:
+  //   {
+  //     let candidateList =  {};
+  //     action.result.map(job =>{
+  //       job.candidates.map(candidate=>{
+  //         candidateList[candidate.id] = candidate;
+  //       });
+  //     });
+  //     return {
+  //       ...state,
+  //       list:state.list.mergeDeep(candidateList),
+  //     };
+  //   }
   case jobConstants.GET_JOB_DETAIL_SUCCESS:
     {
       let candidateList =  {};
@@ -488,7 +488,7 @@ export function deleteCandidate(candidate){
   };
 }
 
-export function saveCandidatesByJobResult(candidates){
+export function saveCandidatesResult(candidates){
   return {
     type: GET_CANDIDATES_SUCCESS,
     result: candidates,
