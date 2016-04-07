@@ -148,16 +148,16 @@ export default function reducer(state = initialState, action = {}) {
       state.set('searches', state.get('searches').mergeDeep(action.result)).set('currentSearch', action.query);
     });
   }
-  case jobConstants.GET_MY_JOBS_SUCCESS: {
-    let companyList =  {};
-    action.result.map(job =>{
-      if(job.company){
-        companyList[job.company.id] = job.company;
-      }
-    });
-
-    return state.set('list', state.get('list').mergeDeep(companyList));
-  }
+  // case jobConstants.GET_MY_JOBS_SUCCESS: {
+  //   let companyList =  {};
+  //   action.result.map(job =>{
+  //     if(job.company){
+  //       companyList[job.company.id] = job.company;
+  //     }
+  //   });
+  //
+  //   return state.set('list', state.get('list').mergeDeep(companyList));
+  // }
   case jobConstants.GET_JOB_SUCCESS: {
     let companyList =  {};
     companyList[action.result.company.id] = action.result;
