@@ -40,7 +40,7 @@ export default function reducer(state = initialState, action = {}) {
       companiesMap[c.id] = c;
     });
 
-    return state.set('list', state.get('list').merge(companiesMap));
+    return state.set('list', state.get('list').mergeDeep(companiesMap));
   }
   case constants.GET_COMPANY_DETAILS_SUCCESS: {
     let companiesMap = {};
