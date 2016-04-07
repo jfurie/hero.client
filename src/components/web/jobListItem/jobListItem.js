@@ -168,11 +168,11 @@ export default class JobListItem extends React.Component {
     }
 
     candidates.forEach(function(c, key) {
-      if (key < limit) {
+      if ((key < limit) && c.get('contact')) {
         peopleList.push(
         <Gravatar
           style={style.gravatar}
-          key={key} email={c.get('email')}
+          key={key} email={c.get('contact').get('email')}
           status={'notset'}
           label={c.get('contact').get('displayName')}
           tooltipPosition="right"
