@@ -184,8 +184,13 @@ export default class ContactCreate extends React.Component {
   }
 
   _renderContents() {
-    let { contact, companies, categories } = this.props;
+    let { contact, companies, categories, currentCompanyId } = this.props;
 
+    companies = companies.sort(function(a, b){
+      if(a.get('name') < b.get('name')) return -1;
+      if(a.get('name') > b.get('name')) return 1;
+      return 0;
+    });
     contact = contact || new Immutable.Map({errors:new Immutable.Map()});
 
     let isCandidate = contact.get('isCandidate');
@@ -228,10 +233,11 @@ export default class ContactCreate extends React.Component {
                         floatingLabelText="Company"
                         floatingLabelStyle={style.floatLabel}
                         fullWidth
+                        disabled={companyId != null}
                         style={style.select}
                         onChange={this._handleCompanySelectValueChange.bind(this)}
                         hintText={''}
-                        value={companyId}
+                        value={currentCompanyId}
                     >
                       {companies.map((company, index) => {
                         return (
