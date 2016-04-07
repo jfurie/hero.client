@@ -442,7 +442,7 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'rfl')}
                               value={contact.get('rfl')}
-                              floatingLabelText="rfl"
+                              floatingLabelText="Reason for Leaving"
                           />
                         </div>
                         <div>
@@ -551,13 +551,19 @@ export default class ContactCreate extends React.Component {
         {this._renderContents()}
       </div>);
     } else {
+      let title = null;
+      if(this.props.contact && this.props.contact.get('id') && this.props.contact.get('id').indexOf('tmp_') > -1){
+        title = 'Create Contact';
+      } else {
+        title = 'Edit Contact';
+      }
       return (
       <div>
             <div style={{}}>
               <Toolbar style={style.toolbar}>
                 <ToolbarGroup key={0} float="left">
                   <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName="material-icons">close</IconButton>
-                  <ToolbarTitle style={style.toolbarTitle} text="Create Contact" />
+                  <ToolbarTitle style={style.toolbarTitle} text={title} />
                 </ToolbarGroup>
                 <ToolbarGroup key={1} float="right">
                   <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>
