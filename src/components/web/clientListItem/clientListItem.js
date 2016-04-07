@@ -163,8 +163,14 @@ export default class ClientListItem extends React.Component {
           subtitle2={location}
           onTouchTap={this.clickClient.bind(this)}
           rightContent={
-            !this.props.hideRecruiter && company.get('clientAdvocate')?(<div onClick={this.clickClientAdvocate.bind(this)}>
-              <Gravatar url={company.get('clientAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{company.get('clientAdvocate').get('displayName')}</div>
+            !this.props.hideRecruiter && company.get('clientAdvocate')?
+            (<div onClick={this.clickClientAdvocate.bind(this)}>
+              <Gravatar
+                  email={company.get('clientAdvocate').get('email')}
+                  status={'notset'} style={style.accountOwnerGravatar}
+                  label={company.get('clientAdvocate').get('displayName')}
+                  tooltipPosition="right"
+              />
             </div>):(<div></div>)
           }
       />
@@ -272,7 +278,8 @@ export default class ClientListItem extends React.Component {
             <CardActions style={{
               backgroundColor:'rgba(100,100,100,0.2)',
               padding: 0,
-            }}>
+            }}
+            >
               <PhoneButton phone={this.props.company && this.props.company.get('phone')} />
               <EmailButton email={this.props.company && this.props.company.get('email')} />
               <FavoriteButton isFavorited={company.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
