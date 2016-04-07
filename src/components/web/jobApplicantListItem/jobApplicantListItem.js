@@ -288,6 +288,10 @@ export default class JobApplicantListItem extends React.Component {
     let self = this;
     let {contact,type,selectedApplicantStateOption,applicantStateOptions} = this.props;
 
+    if (!contact) {
+      return (null);
+    }
+
     function kFormatter(num) {
       return num > 999 ? `${(num/1000).toFixed(0)}k` : num;
     }

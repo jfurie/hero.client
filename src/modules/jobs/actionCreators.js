@@ -4,7 +4,11 @@ import { saveNotesByJobResult } from '../notes';
 import { saveCandidatesByJobResult } from '../candidates';
 import { saveLocationResult } from '../locations';
 import { saveContactResult } from '../contacts';
-
+import { getCandidatesByIdsIfNeeded } from '../candidates';
+import { getContactsByIdsIfNeeded } from '../contacts';
+import { getNotesByIdsIfNeeded } from '../notes';
+import { getLocationsByIdsIfNeeded } from '../locations';
+import { getCompaniesByIdsIfNeeded } from '../companies';
 
 export function getJobsByCompany(companyId){
 
@@ -241,6 +245,85 @@ export function saveJobsByContactResult(jobs, contactId){
   return {
     type: constants.GET_JOBS_BY_CONTACT_SUCCESS,
     result: {jobs, contactId},
+  };
+}
+
+export function getJobDetails(jobIds, include) {
+  return (dispatch, getState) => {
+    let filter = {
+      where: {
+        id: {inq:jobIds},
+      },
+      include:[
+        {
+          relation:'candidates',
+          scope:{
+            fields: ['id','contactId'],
+          },
+        },
+        {
+          relation:'notes',
+          scope:{
+            order: 'updated DESC',
+            where: { or: [
+              {and: [{privacyValue: 0}, {userId: getState().auth.get('user').get('id')}]},
+              {privacyValue: 1},
+            ]},
+            fields: ['id'],
+          },
+        },
+      ],
+    };
+
+    let filterString = encodeURIComponent(JSON.stringify(filter));
+
+    dispatch({
+      types: [constants.GET_JOB_DETAILS, constants.GET_JOB_DETAILS_SUCCESS, constants.GET_JOB_DETAILS_FAIL],
+      promise: (client, auth) => client.api.get(`/jobs?filter=${filterString}`, {
+        authToken: auth.authToken,
+      }).then((jobs)=> {
+        let companyIds = [];
+        let locationIds = [];
+        let contactIds = [];
+        let candidateIds = [];
+        let noteIds = [];
+
+        jobs.forEach(job => {
+          if (job.companyId) {
+            companyIds.push(job.companyId);
+          }
+
+          if (job.locationId) {
+            locationIds.push(job.locationId);
+          }
+
+          if (job.talentAdvocateId) {
+            contactIds.push(job.talentAdvocateId);
+          }
+
+          if (include && include.indexOf('candidates') > -1 && job.candidates) {
+            job.candidates.map((candidate => {
+              candidateIds.push(candidate.id);
+              contactIds.push(candidate.contactId);
+            }));
+          }
+
+          if (include && include.indexOf('notes') > -1 && job.notes) {
+            job.notes.map((note => {
+              noteIds.push(note.id);
+            }));
+          }
+        });
+
+        dispatch(getCompaniesByIdsIfNeeded(companyIds));
+        dispatch(getLocationsByIdsIfNeeded(locationIds));
+        dispatch(getContactsByIdsIfNeeded(contactIds));
+        dispatch(getCandidatesByIdsIfNeeded(candidateIds));
+        dispatch(getNotesByIdsIfNeeded(noteIds));
+
+        return jobs;
+      }),
+    });
   };
 }
 

@@ -330,6 +330,14 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_JOB_DETAIL_FAIL: {
     return state.set('err', action.err);
   }
+  case constants.GET_JOB_DETAILS_SUCCESS: {
+    let jobsMap = {};
+    action.result.map((c) => {
+      jobsMap[c.id] = c;
+    });
+
+    return state.set('list', state.get('list').mergeDeep(jobsMap));
+  }
   case constants.SET_EXPERIENCE:{
     let jobCategory = action.result;
     state = state.updateIn(['list',action.jobId,'_categoryLinks'],arr =>{
