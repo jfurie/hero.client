@@ -275,19 +275,19 @@ export default function reducer(state = initialState, action = {}) {
       .set('list', state.get('list').merge(contactsMap));
     });
   }
-  case jobConstants.GET_MY_JOBS_SUCCESS:
-    {
-      let contactList =  {};
-      action.result.map(job =>{
-        job.candidates.map(candidate=>{
-          contactList[candidate.contact.id] = candidate.contact;
-        });
-      });
-      return state.withMutations(ctx=> {
-        ctx
-        .set('list', state.get('list').mergeDeep(contactList));
-      });
-    }
+  // case jobConstants.GET_MY_JOBS_SUCCESS:
+  //   {
+  //     let contactList =  {};
+  //     action.result.map(job =>{
+  //       job.candidates.map(candidate=>{
+  //         contactList[candidate.contact.id] = candidate.contact;
+  //       });
+  //     });
+  //     return state.withMutations(ctx=> {
+  //       ctx
+  //       .set('list', state.get('list').mergeDeep(contactList));
+  //     });
+  //   }
   case constants.SEARCH_CONTACTS_SUCCESS: {
     let query = action.result.query;
 
