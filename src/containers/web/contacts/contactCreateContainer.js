@@ -20,6 +20,11 @@ let getData = (state, props) => {
 
   if (props.params.companyId) {
     company = state.companies.get('list').get(props.params.companyId);
+  } else {
+    let companies = contact && contact.get('companies');
+    if(companies && companies.size >0){
+      company =companies.first();
+    }
   }
 
   return {
@@ -51,8 +56,10 @@ export default class ContactCreateContainer extends React.Component {
 
   componentWillReceiveProps(newProps){
     this.setState({contact: newProps.contact});
-    if(newProps.companyId !== this.props.companyId){
-      this.setState({currentCompanyId: newProps.companyId});
+    if(newProps.company && !this.props.company){
+      this.setState({currentCompanyId: newProps.company.get('id')});
+    } else if(newProps.company && this.props.company && newProps.company.get('id') !== this.props.company.get('id')){
+      this.setState({currentCompanyId: newProps.company.get('id')});
     }
     let self = this;
     if( newProps.contact && newProps.contact.get('saving') == false
