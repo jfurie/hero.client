@@ -192,7 +192,7 @@ export default class ContactCreate extends React.Component {
   }
 
   _renderContents() {
-    let { contact, companies, categories, currentCompanyId } = this.props;
+    let { contact, companies, currentCompanyId } = this.props;
 
     companies = companies.sort(function(a, b){
       if(a.get('name') < b.get('name')) return -1;
@@ -284,6 +284,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'firstName')}
                         value={contact.get('firstName')}
                         floatingLabelText="First Name"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-10 ">
@@ -294,6 +295,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'lastName')}
                         value={contact.get('lastName')}
                         floatingLabelText="Last Name"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-10 ">
@@ -304,6 +306,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'title')}
                         value={contact.get('title')}
                         floatingLabelText="Title"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-10 ">
@@ -314,6 +317,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'email')}
                         value={contact.get('email')}
                         floatingLabelText="Email"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-10 ">
@@ -324,6 +328,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'phone')}
                         value={contact.get('phone')}
                         floatingLabelText="Phone Number"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-10 ">
@@ -357,6 +362,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'website')}
                         value={contact.get('website')}
                         floatingLabelText="Website"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-12">
@@ -399,22 +405,28 @@ export default class ContactCreate extends React.Component {
                         </div>
                         <div>
                           <TextField
+                              multiLine
+                              rows={3}
                               style={style.textField}
                               errorText={(contact.get('errors') && contact.get('errors').summary) || ''}
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'summary')}
                               value={contact.get('summary')}
                               floatingLabelText="Summary"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
                           <TextField
+                              multiLine
+                              rows={3}
                               style={style.textField}
                               errorText={(contact.get('errors') && contact.get('errors').pitch) || ''}
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'pitch')}
                               value={contact.get('pitch')}
                               floatingLabelText="Pitch"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -425,6 +437,7 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'currentSalary')}
                               value={contact.get('currentSalary')}
                               floatingLabelText="Current Salary"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -435,6 +448,7 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'currentHourly')}
                               value={contact.get('currentHourly')}
                               floatingLabelText="Current Hourly"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -445,6 +459,7 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'desiredSalary')}
                               value={contact.get('desiredSalary')}
                               floatingLabelText="Desired Salary"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -455,6 +470,7 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'desiredHourly')}
                               value={contact.get('desiredHourly')}
                               floatingLabelText="Desired Hourly"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -465,6 +481,7 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'bonusNotes')}
                               value={contact.get('bonusNotes')}
                               floatingLabelText="Bonus Notes"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -475,6 +492,7 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'availability')}
                               value={contact.get('availability')}
                               floatingLabelText="Availability"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -485,35 +503,8 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'rfl')}
                               value={contact.get('rfl')}
                               floatingLabelText="Reason for Leaving"
+                              floatingLabelStyle={{left:'0px'}}
                           />
-                        </div>
-                        <div>
-                          <SelectField
-                              floatingLabelText="Candidate Type"
-                              floatingLabelStyle={style.floatLabel}
-                              fullWidth
-                              style={style.select}
-                              onChange={this._handleCategorySelectValueChange.bind(this)}
-                              hintText={''}
-                              value={this.getCategoryFromTitle(contact.get('candidateType'))}
-                          >
-                            {categories.map((category) => {
-                              return (
-                                <MenuItem
-                                    value={category}
-                                    primaryText={category.get('title')}
-                                />
-                              );
-                            })}
-                          </SelectField>
-                          {/*<TextField
-                              style={style.textField}
-                              errorText={(contact.get('errors') && contact.get('errors').candidateType) || ''}
-                              errorStyle={style.error}
-                              onChange={(e) => this._handleChange.bind(this)(e, 'candidateType')}
-                              value={contact.get('candidateType')}
-                              floatingLabelText="Candidate Type"
-                          />*/}
                         </div>
                         <div>
                           <TextField
@@ -522,6 +513,7 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'startDate')}
                               value={contact.get('startDate')}
+                              floatingLabelStyle={{left:'0px'}}
                               floatingLabelText="Start Date"
                           />
                         </div>
@@ -532,6 +524,7 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'targetLocations')}
                               value={contact.get('targetLocations')}
+                              floatingLabelStyle={{left:'0px'}}
                               floatingLabelText="Target Locations"
                           />
                         </div>
@@ -542,16 +535,20 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'jobsAppliedFor')}
                               value={contact.get('jobsAppliedFor')}
+                              floatingLabelStyle={{left:'0px'}}
                               floatingLabelText="Jobs Applied For"
                           />
                         </div>
                         <div>
                           <TextField
+                              multiLine
+                              rows={3}
                               style={style.textField}
                               errorText={(contact.get('errors') && contact.get('errors').xfactors) || ''}
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'xfactors')}
                               value={contact.get('xfactors')}
+                              floatingLabelStyle={{left:'0px'}}
                               floatingLabelText="xfactors"
                           />
                         </div>
@@ -562,6 +559,7 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'contactable')}
                               value={contact.get('contactable')}
+                              floatingLabelStyle={{left:'0px'}}
                               floatingLabelText="Contactable"
                           />
                         </div>
