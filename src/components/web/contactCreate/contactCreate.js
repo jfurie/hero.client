@@ -156,6 +156,14 @@ export default class ContactCreate extends React.Component {
     }
     this.props.onContactChange(newContact);
   }
+  _handleWorkAuthorizationSelectValueChange(event, index, value){
+    let newContact = this.props.contact;
+
+    if (value) {
+      newContact = newContact.set('workAuthorization',value);
+    }
+    this.props.onContactChange(newContact);
+  }
 
   _handleSubmit(){
     if(this.props.contact.get('saving') == true) return;
@@ -207,6 +215,24 @@ export default class ContactCreate extends React.Component {
       tags = [];
     }
     let statuses = ['New','Active','Prospect','Took a Job','Placed','Blacklisted'];
+    let workAuthorizations = ['US Citizen','Green Card','EAD','H1-B Visa','OPT','CPT','TN-Visa','F1 Visa','F2 Visa','Requires New Sponsorship'];
+    // <select id="00N6100000CHqyf">
+    // <option value="">--None--</option>
+    // <option value="US Citizen">US Citizen</option>
+    // <option value="Green Card">Green Card</option>
+    // <option value="EAD">EAD</option>
+    // <option value="H1-B Visa">H1-B Visa</option>
+    // <option value="C2C Only">C2C Only</option>
+    // <option value="1099 Contract Only">1099 Contract Only</option>
+    // <option value="W2 Contract Only">W2 Contract Only</option>
+    // <option value="OPT">OPT</option>
+    // <option value="CPT">CPT</option>
+    // <option value="TN-Visa">TN-Visa</option>
+    // <option value="F1 Visa">F1 Visa</option>
+    // <option value="F2 Visa">F2 Visa</option>
+    // <option value="Requires New Sponsorship">Requires New Sponsorship</option>
+    // <option value="C2C Only - through an employer">C2C Only - through an employer</option>
+    // </select>
     return (
       <div className="row center-xs">
           <div className="col-xs-12">
@@ -352,14 +378,24 @@ export default class ContactCreate extends React.Component {
                     contact.get('isCandidate') ?
                       <div className="col-xs-10">
                         <div>
-                          <TextField
-                              style={style.textField}
-                              errorText={(contact.get('errors') && contact.get('errors').workAuthorization) || ''}
-                              errorStyle={style.error}
-                              onChange={(e) => this._handleChange.bind(this)(e, 'workAuthorization')}
-                              value={contact.get('workAuthorization')}
+                          <SelectField
                               floatingLabelText="Work Authorization"
-                          />
+                              floatingLabelStyle={style.floatLabel}
+                              fullWidth
+                              style={style.select}
+                              onChange={this._handleWorkAuthorizationSelectValueChange.bind(this)}
+                              hintText={''}
+                              value={contact.get('workAuthorization')}
+                          >
+                            {workAuthorizations.map((workAuthorization) => {
+                              return (
+                                <MenuItem
+                                    value={workAuthorization}
+                                    primaryText={workAuthorization}
+                                />
+                              );
+                            })}
+                          </SelectField>
                         </div>
                         <div>
                           <TextField
