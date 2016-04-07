@@ -1,13 +1,25 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, CandidatesList } from '../../../components/web';
+import { Header, ContactsList } from '../../../components/web';
 import { getMyCandidates } from '../../../modules/candidates';
-import { createContactFavorite, deleteContactFavorite } from '../../../modules/favorites';
 
-@connect(state => ({
-  candidates: state.candidates,
-  auth: state.auth,
-}), { getMyCandidates, createContactFavorite, deleteContactFavorite })
+import getContactDataFromState from '../../../dataHelpers/contact';
+
+@connect((state) => {
+  let contacts = new Immutable.Map();
+  let contactsMap = {};
+  state.candidates.list.forEach(candidate => {
+    let contact = getContactDataFromState(state, candidate.get('contactId'));
+    if (contact) {
+      contactsMap[contact.get('id')] = contact;
+    }
+  });
+
+  return {
+    contacts: contacts.merge(contactsMap),
+  };
+}, { getMyCandidates })
 class MyCandidatesPage extends React.Component {
 
   constructor() {
@@ -18,25 +30,14 @@ class MyCandidatesPage extends React.Component {
     this.props.getMyCandidates();
   }
 
-  favoriteContact(contact) {
-    this.props.createContactFavorite(contact.get('id'));
-  }
-
-  unfavoriteContact(contact) {
-    this.props.deleteContactFavorite(contact.get('id'));
-  }
-
   render() {
-
-    let {candidates} = this.props;
+    let {contacts} = this.props;
 
     return (
       <div>
         <Header title={'Candidates'}/>
-        <CandidatesList
-            candidates={candidates.myCandidateIds}
-            favoriteContact={this.favoriteContact.bind(this)}
-            unfavoriteContact={this.unfavoriteContact.bind(this)}
+        <ContactsList
+            contacts={contacts}
         />
       </div>);
   }
