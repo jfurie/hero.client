@@ -277,7 +277,14 @@ export default class JobListItem extends React.Component {
                 onTouchTap={this.clickJob.bind(this)}
                 rightContent={
                   job.get('talentAdvocate')?(<div onClick={this.clickTalentAdvocate.bind(this)}>
-                    <Gravatar url={job.get('talentAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{job.get('talentAdvocate').get('displayName')}</div>
+                    <Gravatar
+                        email={job.get('talentAdvocate').get('email')}
+                        status={'notset'}
+                        style={style.accountOwnerGravatar}
+                        label={job.get('talentAdvocate').get('displayName')}
+                        tooltipPosition="right"
+                    />
+
                   </div>):(<div></div>)
                 }
             />

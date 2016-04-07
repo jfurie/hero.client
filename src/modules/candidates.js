@@ -1,5 +1,8 @@
 import Immutable from 'immutable';
 import * as jobConstants from './jobs/constants';
+import { getContactsByIdsIfNeeded } from './contacts';
+import { getJobsByIdsIfNeeded } from './jobs';
+import { getCompaniesByIdsIfNeeded } from './companies';
 
 const CREATE_CANDIDATE = 'hero.client/candidates/CREATE_CANDIDATE';
 const CREATE_CANDIDATE_SUCCESS = 'hero.client/candidates/CREATE_CANDIDATE_SUCCESS';
@@ -432,12 +435,53 @@ export function getAllAccountCandidates(accountId) {
   };
 }
 
+// export function getMyCandidates() {
+//   return {
+//     types: [GET_MY_CANDIDATES, GET_MY_CANDIDATES_SUCCESS, GET_MY_CANDIDATES_FAIL],
+//     promise: (client, auth) => client.api.get(`/candidates/myCandidates`, {
+//       authToken: auth.authToken,
+//     }),
+//   };
+// }
+
 export function getMyCandidates() {
-  return {
-    types: [GET_MY_CANDIDATES, GET_MY_CANDIDATES_SUCCESS, GET_MY_CANDIDATES_FAIL],
-    promise: (client, auth) => client.api.get(`/candidates/myCandidates`, {
-      authToken: auth.authToken,
-    }),
+  let filter = {
+
+  };
+
+  let filterString = encodeURIComponent(JSON.stringify(filter));
+
+  return (dispatch) => {
+    dispatch({
+      types: [GET_MY_CANDIDATES, GET_MY_CANDIDATES_SUCCESS, GET_MY_CANDIDATES_FAIL],
+      promise: (client, auth) => client.api.get(`/candidates?filter=${filterString}`, {
+        authToken: auth.authToken,
+      }).then((candidates)=> {
+        let jobIds = [];
+        let contactIds = [];
+        let companyIds = [];
+
+        candidates.forEach(candidate => {
+          if (candidate.companyId) {
+            companyIds.push(candidate.companyId);
+          }
+
+          if (candidate.jobId) {
+            jobIds.push(candidate.jobId);
+          }
+
+          if (candidate.contactId) {
+            contactIds.push(candidate.contactId);
+          }
+        });
+
+        dispatch(getCompaniesByIdsIfNeeded(companyIds));
+        dispatch(getJobsByIdsIfNeeded(jobIds));
+        dispatch(getContactsByIdsIfNeeded(contactIds));
+
+        return candidates;
+      }),
+    });
   };
 }
 
