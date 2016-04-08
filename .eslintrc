@@ -12,7 +12,8 @@
     "twttr": true,
     "ga": true,
     "fbq": true,
-    "mixpanel": true
+    "mixpanel": true,
+    "Clipboard": true
   },
   "rules": {
     "no-console": 0,

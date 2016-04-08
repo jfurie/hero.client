@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List, ListItem, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import { Gravatar, CardBasic, SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
+import { ShareLinkModal, Gravatar, CardBasic, SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles, Divider,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -62,6 +62,7 @@ export default class JobDetails extends React.Component {
     this.state = {
       justInvited: false,
       confirmOpen: false,
+      openShareLinkModal: false,
     };
   }
 
@@ -125,8 +126,6 @@ export default class JobDetails extends React.Component {
   _onTouchTapShare() {
     let {job} = this.props;
 
-    let subject = `Check out ${this.props.job.get('title')} on HERO`;
-
     let title = job.get('title');
 
     if (job.get('public')) {
@@ -134,10 +133,18 @@ export default class JobDetails extends React.Component {
     }
 
     title = cleanTitle(title);
-    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${title}`;
 
-    let body = `${encodeURIComponent(job.get('title'))}%0A${encodeURIComponent(url)}`;
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${title}`;
+    this.setState({
+      openShareLinkModal: true,
+      shareUrl: url,
+    });
+  }
+
+  _onCloseShareLinkModal() {
+    this.setState({
+      openShareLinkModal: false,
+    });
   }
 
   _onTouchTapSearch() {
@@ -611,6 +618,7 @@ export default class JobDetails extends React.Component {
         : (null)
         }
         {this.renderContent(job)}
+        <ShareLinkModal url={this.state.shareUrl} open={this.state.openShareLinkModal} onClose={this._onCloseShareLinkModal.bind(this)} />
       </div>
     );
   }
