@@ -5,7 +5,7 @@ import {
   FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles,
   Card, CardMedia, CardText, LinearProgress, DatePicker,
 } from 'material-ui';
-import { FileInput, TagsInput, Dialog } from '../';
+import { FileInput, Dialog } from '../';
 import {
  Location,
 } from '../';
