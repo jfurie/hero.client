@@ -27,7 +27,7 @@ export default function reducer(state = initialState, action = {}) {
       favoriteMap[result.id] = result;
     });
     favoriteMap = Immutable.fromJS(favoriteMap);
-    return state.set('list',favoriteMap);
+    return state.set('list',state.get('list').merge(favoriteMap));
   }
   case constants.CREATE_COMPANY_FAVORITE_SUCCESS: {
     let favoriteMap = {};
