@@ -2,7 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import {
    IconButton, ToolbarGroup, Toolbar, Toggle, SelectField, MenuItem,
-  FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles, Snackbar,
+  FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles, Snackbar, Checkbox,
 } from 'material-ui';
 import { Location, TagsInput } from '../';
 
@@ -21,6 +21,20 @@ const style = {
     marginTop:'16px',
     marginBottom:'16px',
     marginLeft:'16px',
+    textAlign:'left',
+  },
+  subheader2:{
+    color: Styles.Colors.grey600,
+    fontSize:'14px',
+    marginTop:'16px',
+    marginBottom:'16px',
+    textAlign:'left',
+  },
+  label:{
+    color: Styles.Colors.grey600,
+    fontSize:'16px',
+    marginTop:'16px',
+    marginBottom:'16px',
     textAlign:'left',
   },
   textField: {
@@ -73,8 +87,13 @@ const style = {
     fontSize: '12px',
     transform: 'none',
   },
+  checkblock: {
+    maxWidth: 250,
+  },
+  checkbox: {
+    marginBottom: 16,
+  }
 };
-
 export default class ContactCreate extends React.Component {
   constructor(props){
     super(props);
@@ -176,6 +195,19 @@ export default class ContactCreate extends React.Component {
     } else {
       this.props.onContactChange(newContact);
     }
+  }
+
+  _handleDayOfTheWeek(day, e, value){
+    let newContact = this.props.contact.setIn(['availabilityDetails','daysOfTheWeek',day],value);
+    this.props.onContactChange(newContact);
+  }
+  _handleTimeOfDay(time, e, value){
+    var contact = this.props.contact;
+    if(!contact.getIn(['availabilityDetails','timeOfDay'])){
+      contact = contact.setIn(['availabilityDetails','timeOfDay'],Immutable.fromJS({}));
+    }
+    let newContact = contact.setIn(['availabilityDetails','timeOfDay',time],value);
+    this.props.onContactChange(newContact);
   }
 
   getCategoryFromTitle(title) {
@@ -484,14 +516,75 @@ export default class ContactCreate extends React.Component {
                               floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
+                        <div style={style.label}>Interview Availability</div>
+                        <div className="row">
+
+                          <div style={{textAlign:'left'}} className="col-xs-6">
+                           <div style={style.subheader2}>Days of the week</div>
+                            <Checkbox
+                              label="Monday"
+                              style={style.checkbox}
+                              onCheck={this._handleDayOfTheWeek.bind(this,'Monday')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','daysOfTheWeek','Monday'])}
+                            />
+                            <Checkbox
+                              label="Tuesday"
+                              style={style.checkbox}
+                              onCheck={this._handleDayOfTheWeek.bind(this,'Tuesday')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','daysOfTheWeek','Tuesday'])}
+                            />
+                            <Checkbox
+                              label="Wednesday"
+                              style={style.checkbox}
+                              onCheck={this._handleDayOfTheWeek.bind(this,'Wednesday')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','daysOfTheWeek','Wednesday'])}
+                            />
+                            <Checkbox
+                              label="Thursday"
+                              style={style.checkbox}
+                              onCheck={this._handleDayOfTheWeek.bind(this,'Thursday')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','daysOfTheWeek','Thursday'])}
+                            />
+                            <Checkbox
+                              label="Friday"
+                              style={style.checkbox}
+                              onCheck={this._handleDayOfTheWeek.bind(this,'Friday')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','daysOfTheWeek','Friday'])}
+                            />
+                          </div>
+                          <div style={{textAlign:'left'}} className="col-xs-6">
+                            <div style={style.subheader2}>Time of day</div>
+                            <Checkbox
+                              label="Morning"
+                              style={style.checkbox}
+                              onCheck={this._handleTimeOfDay.bind(this,'Morning')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','timeOfDay','Morning'])}
+                            />
+                            <Checkbox
+                              label="Lunchtime"
+                              style={style.checkbox}
+                              onCheck={this._handleTimeOfDay.bind(this,'Lunchtime')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','timeOfDay','Lunchtime'])}
+                            />
+                            <Checkbox
+                              label="Evening"
+                              style={style.checkbox}
+                              onCheck={this._handleTimeOfDay.bind(this,'Evening')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','timeOfDay','Evening'])}
+                            />
+                          </div>
+
+                        </div>
                         <div>
                           <TextField
+                              multiLine
+                              rows={3}
                               style={style.textField}
                               errorText={(contact.get('errors') && contact.get('errors').availability) || ''}
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'availability')}
                               value={contact.get('availability')}
-                              floatingLabelText="Availability"
+                              floatingLabelText="Availability Notes"
                               floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
