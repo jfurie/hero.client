@@ -72,10 +72,7 @@ export default class ClientCreateContainer extends React.Component {
             self.props.history.replaceState(null, `/clients/${id}`);
           }
         }, 500);
-
-        this.props.getMyCompanies();
       }
-
     }
 
     if(newProps.params.companyId != this.props.params.companyId && newProps.params.companyId.indexOf('tmp')<=-1 ){
