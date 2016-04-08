@@ -2,7 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import {
    IconButton, ToolbarGroup, Toolbar, Toggle, SelectField, MenuItem,
-  FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles, Snackbar,
+  FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles, Snackbar, Checkbox,
 } from 'material-ui';
 import { Location, TagsInput } from '../';
 
@@ -21,6 +21,20 @@ const style = {
     marginTop:'16px',
     marginBottom:'16px',
     marginLeft:'16px',
+    textAlign:'left',
+  },
+  subheader2:{
+    color: Styles.Colors.grey600,
+    fontSize:'14px',
+    marginTop:'16px',
+    marginBottom:'16px',
+    textAlign:'left',
+  },
+  label:{
+    color: Styles.Colors.grey600,
+    fontSize:'16px',
+    marginTop:'16px',
+    marginBottom:'16px',
     textAlign:'left',
   },
   textField: {
@@ -73,8 +87,13 @@ const style = {
     fontSize: '12px',
     transform: 'none',
   },
+  checkblock: {
+    maxWidth: 250,
+  },
+  checkbox: {
+    marginBottom: 16,
+  }
 };
-
 export default class ContactCreate extends React.Component {
   constructor(props){
     super(props);
@@ -156,6 +175,14 @@ export default class ContactCreate extends React.Component {
     }
     this.props.onContactChange(newContact);
   }
+  _handleWorkAuthorizationSelectValueChange(event, index, value){
+    let newContact = this.props.contact;
+
+    if (value) {
+      newContact = newContact.set('workAuthorization',value);
+    }
+    this.props.onContactChange(newContact);
+  }
 
   _handleSubmit(){
     if(this.props.contact.get('saving') == true) return;
@@ -168,6 +195,19 @@ export default class ContactCreate extends React.Component {
     } else {
       this.props.onContactChange(newContact);
     }
+  }
+
+  _handleDayOfTheWeek(day, e, value){
+    let newContact = this.props.contact.setIn(['availabilityDetails','daysOfTheWeek',day],value);
+    this.props.onContactChange(newContact);
+  }
+  _handleTimeOfDay(time, e, value){
+    var contact = this.props.contact;
+    if(!contact.getIn(['availabilityDetails','timeOfDay'])){
+      contact = contact.setIn(['availabilityDetails','timeOfDay'],Immutable.fromJS({}));
+    }
+    let newContact = contact.setIn(['availabilityDetails','timeOfDay',time],value);
+    this.props.onContactChange(newContact);
   }
 
   getCategoryFromTitle(title) {
@@ -184,8 +224,13 @@ export default class ContactCreate extends React.Component {
   }
 
   _renderContents() {
-    let { contact, companies, categories } = this.props;
+    let { contact, companies, currentCompanyId } = this.props;
 
+    companies = companies.sort(function(a, b){
+      if(a.get('name') < b.get('name')) return -1;
+      if(a.get('name') > b.get('name')) return 1;
+      return 0;
+    });
     contact = contact || new Immutable.Map({errors:new Immutable.Map()});
 
     let isCandidate = contact.get('isCandidate');
@@ -202,6 +247,24 @@ export default class ContactCreate extends React.Component {
       tags = [];
     }
     let statuses = ['New','Active','Prospect','Took a Job','Placed','Blacklisted'];
+    let workAuthorizations = ['US Citizen','Green Card','EAD','H1-B Visa','OPT','CPT','TN-Visa','F1 Visa','F2 Visa','Requires New Sponsorship'];
+    // <select id="00N6100000CHqyf">
+    // <option value="">--None--</option>
+    // <option value="US Citizen">US Citizen</option>
+    // <option value="Green Card">Green Card</option>
+    // <option value="EAD">EAD</option>
+    // <option value="H1-B Visa">H1-B Visa</option>
+    // <option value="C2C Only">C2C Only</option>
+    // <option value="1099 Contract Only">1099 Contract Only</option>
+    // <option value="W2 Contract Only">W2 Contract Only</option>
+    // <option value="OPT">OPT</option>
+    // <option value="CPT">CPT</option>
+    // <option value="TN-Visa">TN-Visa</option>
+    // <option value="F1 Visa">F1 Visa</option>
+    // <option value="F2 Visa">F2 Visa</option>
+    // <option value="Requires New Sponsorship">Requires New Sponsorship</option>
+    // <option value="C2C Only - through an employer">C2C Only - through an employer</option>
+    // </select>
     return (
       <div className="row center-xs">
           <div className="col-xs-12">
@@ -228,10 +291,11 @@ export default class ContactCreate extends React.Component {
                         floatingLabelText="Company"
                         floatingLabelStyle={style.floatLabel}
                         fullWidth
+                        disabled={companyId != null}
                         style={style.select}
                         onChange={this._handleCompanySelectValueChange.bind(this)}
                         hintText={''}
-                        value={companyId}
+                        value={currentCompanyId}
                     >
                       {companies.map((company, index) => {
                         return (
@@ -252,6 +316,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'firstName')}
                         value={contact.get('firstName')}
                         floatingLabelText="First Name"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-10 ">
@@ -262,6 +327,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'lastName')}
                         value={contact.get('lastName')}
                         floatingLabelText="Last Name"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-10 ">
@@ -272,6 +338,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'title')}
                         value={contact.get('title')}
                         floatingLabelText="Title"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-10 ">
@@ -282,6 +349,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'email')}
                         value={contact.get('email')}
                         floatingLabelText="Email"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-10 ">
@@ -292,6 +360,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'phone')}
                         value={contact.get('phone')}
                         floatingLabelText="Phone Number"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-10 ">
@@ -325,6 +394,7 @@ export default class ContactCreate extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'website')}
                         value={contact.get('website')}
                         floatingLabelText="Website"
+                        floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
                   <div className="col-xs-12">
@@ -346,33 +416,49 @@ export default class ContactCreate extends React.Component {
                     contact.get('isCandidate') ?
                       <div className="col-xs-10">
                         <div>
-                          <TextField
-                              style={style.textField}
-                              errorText={(contact.get('errors') && contact.get('errors').workAuthorization) || ''}
-                              errorStyle={style.error}
-                              onChange={(e) => this._handleChange.bind(this)(e, 'workAuthorization')}
-                              value={contact.get('workAuthorization')}
+                          <SelectField
                               floatingLabelText="Work Authorization"
-                          />
+                              floatingLabelStyle={style.floatLabel}
+                              fullWidth
+                              style={style.select}
+                              onChange={this._handleWorkAuthorizationSelectValueChange.bind(this)}
+                              hintText={''}
+                              value={contact.get('workAuthorization')}
+                          >
+                            {workAuthorizations.map((workAuthorization) => {
+                              return (
+                                <MenuItem
+                                    value={workAuthorization}
+                                    primaryText={workAuthorization}
+                                />
+                              );
+                            })}
+                          </SelectField>
                         </div>
                         <div>
                           <TextField
+                              multiLine
+                              rows={3}
                               style={style.textField}
                               errorText={(contact.get('errors') && contact.get('errors').summary) || ''}
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'summary')}
                               value={contact.get('summary')}
                               floatingLabelText="Summary"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
                           <TextField
+                              multiLine
+                              rows={3}
                               style={style.textField}
                               errorText={(contact.get('errors') && contact.get('errors').pitch) || ''}
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'pitch')}
                               value={contact.get('pitch')}
                               floatingLabelText="Pitch"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -383,6 +469,7 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'currentSalary')}
                               value={contact.get('currentSalary')}
                               floatingLabelText="Current Salary"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -393,6 +480,7 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'currentHourly')}
                               value={contact.get('currentHourly')}
                               floatingLabelText="Current Hourly"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -403,6 +491,7 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'desiredSalary')}
                               value={contact.get('desiredSalary')}
                               floatingLabelText="Desired Salary"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -413,6 +502,7 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'desiredHourly')}
                               value={contact.get('desiredHourly')}
                               floatingLabelText="Desired Hourly"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -423,16 +513,79 @@ export default class ContactCreate extends React.Component {
                               onChange={(e) => this._handleChange.bind(this)(e, 'bonusNotes')}
                               value={contact.get('bonusNotes')}
                               floatingLabelText="Bonus Notes"
+                              floatingLabelStyle={{left:'0px'}}
                           />
+                        </div>
+                        <div style={style.label}>Interview Availability</div>
+                        <div className="row">
+
+                          <div style={{textAlign:'left'}} className="col-xs-6">
+                           <div style={style.subheader2}>Days of the week</div>
+                            <Checkbox
+                              label="Monday"
+                              style={style.checkbox}
+                              onCheck={this._handleDayOfTheWeek.bind(this,'Monday')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','daysOfTheWeek','Monday'])}
+                            />
+                            <Checkbox
+                              label="Tuesday"
+                              style={style.checkbox}
+                              onCheck={this._handleDayOfTheWeek.bind(this,'Tuesday')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','daysOfTheWeek','Tuesday'])}
+                            />
+                            <Checkbox
+                              label="Wednesday"
+                              style={style.checkbox}
+                              onCheck={this._handleDayOfTheWeek.bind(this,'Wednesday')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','daysOfTheWeek','Wednesday'])}
+                            />
+                            <Checkbox
+                              label="Thursday"
+                              style={style.checkbox}
+                              onCheck={this._handleDayOfTheWeek.bind(this,'Thursday')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','daysOfTheWeek','Thursday'])}
+                            />
+                            <Checkbox
+                              label="Friday"
+                              style={style.checkbox}
+                              onCheck={this._handleDayOfTheWeek.bind(this,'Friday')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','daysOfTheWeek','Friday'])}
+                            />
+                          </div>
+                          <div style={{textAlign:'left'}} className="col-xs-6">
+                            <div style={style.subheader2}>Time of day</div>
+                            <Checkbox
+                              label="Morning"
+                              style={style.checkbox}
+                              onCheck={this._handleTimeOfDay.bind(this,'Morning')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','timeOfDay','Morning'])}
+                            />
+                            <Checkbox
+                              label="Lunchtime"
+                              style={style.checkbox}
+                              onCheck={this._handleTimeOfDay.bind(this,'Lunchtime')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','timeOfDay','Lunchtime'])}
+                            />
+                            <Checkbox
+                              label="Evening"
+                              style={style.checkbox}
+                              onCheck={this._handleTimeOfDay.bind(this,'Evening')}
+                              checked ={this.props.contact.getIn(['availabilityDetails','timeOfDay','Evening'])}
+                            />
+                          </div>
+
                         </div>
                         <div>
                           <TextField
+                              multiLine
+                              rows={3}
                               style={style.textField}
                               errorText={(contact.get('errors') && contact.get('errors').availability) || ''}
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'availability')}
                               value={contact.get('availability')}
-                              floatingLabelText="Availability"
+                              floatingLabelText="Availability Notes"
+                              floatingLabelStyle={{left:'0px'}}
                           />
                         </div>
                         <div>
@@ -442,36 +595,9 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'rfl')}
                               value={contact.get('rfl')}
-                              floatingLabelText="rfl"
+                              floatingLabelText="Reason for Leaving"
+                              floatingLabelStyle={{left:'0px'}}
                           />
-                        </div>
-                        <div>
-                          <SelectField
-                              floatingLabelText="Candidate Type"
-                              floatingLabelStyle={style.floatLabel}
-                              fullWidth
-                              style={style.select}
-                              onChange={this._handleCategorySelectValueChange.bind(this)}
-                              hintText={''}
-                              value={this.getCategoryFromTitle(contact.get('candidateType'))}
-                          >
-                            {categories.map((category) => {
-                              return (
-                                <MenuItem
-                                    value={category}
-                                    primaryText={category.get('title')}
-                                />
-                              );
-                            })}
-                          </SelectField>
-                          {/*<TextField
-                              style={style.textField}
-                              errorText={(contact.get('errors') && contact.get('errors').candidateType) || ''}
-                              errorStyle={style.error}
-                              onChange={(e) => this._handleChange.bind(this)(e, 'candidateType')}
-                              value={contact.get('candidateType')}
-                              floatingLabelText="Candidate Type"
-                          />*/}
                         </div>
                         <div>
                           <TextField
@@ -480,6 +606,7 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'startDate')}
                               value={contact.get('startDate')}
+                              floatingLabelStyle={{left:'0px'}}
                               floatingLabelText="Start Date"
                           />
                         </div>
@@ -490,6 +617,7 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'targetLocations')}
                               value={contact.get('targetLocations')}
+                              floatingLabelStyle={{left:'0px'}}
                               floatingLabelText="Target Locations"
                           />
                         </div>
@@ -500,16 +628,20 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'jobsAppliedFor')}
                               value={contact.get('jobsAppliedFor')}
+                              floatingLabelStyle={{left:'0px'}}
                               floatingLabelText="Jobs Applied For"
                           />
                         </div>
                         <div>
                           <TextField
+                              multiLine
+                              rows={3}
                               style={style.textField}
                               errorText={(contact.get('errors') && contact.get('errors').xfactors) || ''}
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'xfactors')}
                               value={contact.get('xfactors')}
+                              floatingLabelStyle={{left:'0px'}}
                               floatingLabelText="xfactors"
                           />
                         </div>
@@ -520,6 +652,7 @@ export default class ContactCreate extends React.Component {
                               errorStyle={style.error}
                               onChange={(e) => this._handleChange.bind(this)(e, 'contactable')}
                               value={contact.get('contactable')}
+                              floatingLabelStyle={{left:'0px'}}
                               floatingLabelText="Contactable"
                           />
                         </div>
@@ -551,13 +684,19 @@ export default class ContactCreate extends React.Component {
         {this._renderContents()}
       </div>);
     } else {
+      let title = null;
+      if(this.props.contact && this.props.contact.get('id') && this.props.contact.get('id').indexOf('tmp_') > -1){
+        title = 'Create Contact';
+      } else {
+        title = 'Edit Contact';
+      }
       return (
       <div>
             <div style={{}}>
               <Toolbar style={style.toolbar}>
                 <ToolbarGroup key={0} float="left">
                   <IconButton onTouchTap={this._handleClose.bind(this)} style={style.toolbarIcon} iconClassName="material-icons">close</IconButton>
-                  <ToolbarTitle style={style.toolbarTitle} text="Create Contact" />
+                  <ToolbarTitle style={style.toolbarTitle} text={title} />
                 </ToolbarGroup>
                 <ToolbarGroup key={1} float="right">
                   <FlatButton onTouchTap={this._handleSubmit.bind(this)} style={style.toolbarFlat}>Save</FlatButton>

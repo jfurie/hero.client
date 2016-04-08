@@ -2,6 +2,7 @@ import React from 'react';
 import { List } from 'material-ui';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
+import Infinite from 'react-infinite';
 import ContactCardContainer from '../../../containers/web/contacts/contactCardContainer';
 @connect(() => (
 {}), {pushState})
@@ -46,8 +47,28 @@ class ContactsList extends React.Component {
       return a.get('displayName').localeCompare(b.get('displayName'));
     });
 
+    let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+    let heights = contacts.map((contact) =>{
+      let height;
+
+      if (contact.get('desiredSalary')) {
+        height = 205;
+      }
+      else {
+        height = 157;
+      }
+
+      return height;
+    });
+    heights = heights.toArray();
+    if(!heights || heights.length <= 0){
+      heights = 271;
+    }
+
     return (
       <List style={{backgroundColor: 'transparent'}} subheader={`${contactCount} Contact${(contactCount !== 1) ? ('s') : ('')}`}>
+        <Infinite containerHeight={clientHeight - (56+64)} elementHeight={heights} useWindowAsScrollContainer>
         {contacts.map((contact) => {
           return (
             <div>
@@ -62,6 +83,7 @@ class ContactsList extends React.Component {
             </div>
           );
         })}
+        </Infinite>
       </List>
     );
   }

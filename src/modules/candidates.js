@@ -1,5 +1,8 @@
 import Immutable from 'immutable';
 import * as jobConstants from './jobs/constants';
+import { getContactsByIdsIfNeeded } from './contacts';
+import { getJobsByIdsIfNeeded } from './jobs';
+import { getCompaniesByIdsIfNeeded } from './companies';
 
 const CREATE_CANDIDATE = 'hero.client/candidates/CREATE_CANDIDATE';
 const CREATE_CANDIDATE_SUCCESS = 'hero.client/candidates/CREATE_CANDIDATE_SUCCESS';
@@ -28,6 +31,9 @@ const DELETE_CANDIDATE = 'hero.client/candidates/DELETE_CANDIDATE';
 const DELETE_CANDIDATE_SUCCESS = 'hero.client/candidates/DELETE_CANDIDATE_SUCCESS';
 const DELETE_CANDIDATE_FAIL = 'hero.client/candidates/DELETE_CANDIDATE_FAIL';
 const SAVE_CANDIDATE_BY_CONTACT_RESULT = 'hero.client/candidates/SAVE_CANDIDATE_BY_CONTACT_RESULT';
+const GET_CANDIDATES_BY_IDS = 'hero.client/candidates/GET_CANDIDATES_BY_IDS';
+const GET_CANDIDATES_BY_IDS_SUCCESS = 'hero.client/candidates/GET_CANDIDATES_BY_IDS_SUCCESS';
+const GET_CANDIDATES_BY_IDS_FAIL = 'hero.client/candidates/GET_CANDIDATES_BY_IDS_FAIL';
 
 const RESET_ERROR = 'hero.client/candidates/RESET_ERROR';
 const initialState = {
@@ -40,6 +46,17 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+  case GET_CANDIDATES_BY_IDS_SUCCESS: {
+    let candidatesMap = {};
+    action.result.map((c) => {
+      candidatesMap[c.id] = c;
+    });
+
+    return {
+      ...state,
+      list: state.list.merge(candidatesMap),
+    };
+  }
   case CREATE_CANDIDATE: {
     return {
       ...state,
@@ -189,19 +206,19 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.mergeDeep(candidatesMap),
     };
   }
-  case jobConstants.GET_MY_JOBS_SUCCESS:
-    {
-      let candidateList =  {};
-      action.result.map(job =>{
-        job.candidates.map(candidate=>{
-          candidateList[candidate.id] = candidate;
-        });
-      });
-      return {
-        ...state,
-        list:state.list.mergeDeep(candidateList),
-      };
-    }
+  // case jobConstants.GET_MY_JOBS_SUCCESS:
+  //   {
+  //     let candidateList =  {};
+  //     action.result.map(job =>{
+  //       job.candidates.map(candidate=>{
+  //         candidateList[candidate.id] = candidate;
+  //       });
+  //     });
+  //     return {
+  //       ...state,
+  //       list:state.list.mergeDeep(candidateList),
+  //     };
+  //   }
   case jobConstants.GET_JOB_DETAIL_SUCCESS:
     {
       let candidateList =  {};
@@ -345,6 +362,18 @@ export function getOneCandidate(candidateId) {
 }
 
 export function createCandidate(candidateData, jobId) {
+  let contact;
+  if (typeof candidateData.toJSON === 'function') {
+    contact = candidateData.toJSON();
+  }
+  else {
+    contact = candidateData;
+  }
+
+  if (contact.id.indexOf('tmp') > -1) {
+    delete contact.id;
+  }
+
   return (dispatch) => {
     dispatch({
       types: [CREATE_CANDIDATE, CREATE_CANDIDATE_SUCCESS, CREATE_CANDIDATE_FAIL],
@@ -352,7 +381,7 @@ export function createCandidate(candidateData, jobId) {
         let createCandidatePromise = client.api.post('/candidates', {
           authToken: auth.authToken,
           data: {
-            contact: candidateData,
+            contact,
             jobId,
           },
         });
@@ -418,12 +447,53 @@ export function getAllAccountCandidates(accountId) {
   };
 }
 
+// export function getMyCandidates() {
+//   return {
+//     types: [GET_MY_CANDIDATES, GET_MY_CANDIDATES_SUCCESS, GET_MY_CANDIDATES_FAIL],
+//     promise: (client, auth) => client.api.get(`/candidates/myCandidates`, {
+//       authToken: auth.authToken,
+//     }),
+//   };
+// }
+
 export function getMyCandidates() {
-  return {
-    types: [GET_MY_CANDIDATES, GET_MY_CANDIDATES_SUCCESS, GET_MY_CANDIDATES_FAIL],
-    promise: (client, auth) => client.api.get(`/candidates/myCandidates`, {
-      authToken: auth.authToken,
-    }),
+  let filter = {
+
+  };
+
+  let filterString = encodeURIComponent(JSON.stringify(filter));
+
+  return (dispatch) => {
+    dispatch({
+      types: [GET_MY_CANDIDATES, GET_MY_CANDIDATES_SUCCESS, GET_MY_CANDIDATES_FAIL],
+      promise: (client, auth) => client.api.get(`/candidates?filter=${filterString}`, {
+        authToken: auth.authToken,
+      }).then((candidates)=> {
+        let jobIds = [];
+        let contactIds = [];
+        let companyIds = [];
+
+        candidates.forEach(candidate => {
+          if (candidate.companyId) {
+            companyIds.push(candidate.companyId);
+          }
+
+          if (candidate.jobId) {
+            jobIds.push(candidate.jobId);
+          }
+
+          if (candidate.contactId) {
+            contactIds.push(candidate.contactId);
+          }
+        });
+
+        dispatch(getCompaniesByIdsIfNeeded(companyIds));
+        dispatch(getJobsByIdsIfNeeded(jobIds));
+        dispatch(getContactsByIdsIfNeeded(contactIds));
+
+        return candidates;
+      }),
+    });
   };
 }
 
@@ -474,7 +544,7 @@ export function deleteCandidate(candidate){
   };
 }
 
-export function saveCandidatesByJobResult(candidates){
+export function saveCandidatesResult(candidates){
   return {
     type: GET_CANDIDATES_SUCCESS,
     result: candidates,
@@ -499,5 +569,36 @@ export function editApplicantState(id, state){
         return candidate;
       }),
     });
+  };
+}
+
+export function getCandidatesByIds(candidateIds){
+  return (dispatch) => {
+    return dispatch({
+      types:[GET_CANDIDATES_BY_IDS, GET_CANDIDATES_BY_IDS_SUCCESS, GET_CANDIDATES_BY_IDS_FAIL],
+      promise:(client,auth) => {
+        let filter= {where:{id:{inq:candidateIds}}};
+        let filterString = encodeURIComponent(JSON.stringify(filter));
+        return client.api.get(`/candidates?filter=${filterString}`,{
+          authToken: auth.authToken,
+        });
+      },
+    });
+  };
+}
+
+export function getCandidatesByIdsIfNeeded(candidateIds){
+  return (dispatch, getState) => {
+    let newCandidateIds =[];
+    candidateIds.map((candidateId => {
+      if(!getState().candidates.list.get(candidateId)){
+        newCandidateIds.push(candidateId);
+      }
+    }));
+    if(newCandidateIds && newCandidateIds.length > 0){
+      return dispatch(getCandidatesByIds(candidateIds));
+    } else {
+      return Promise.resolve();
+    }
   };
 }

@@ -6,6 +6,7 @@ var _ = require('lodash');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var env = process.env.NODE_ENV || 'local';
 var isDEV =  env == 'local';
+process.env.NODE_ENV = env;
 console.log('process.env.NODE_ENV',process.env.NODE_ENV);
 var original = {
   debug: isDEV,

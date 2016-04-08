@@ -278,6 +278,10 @@ export default class ClientDetails extends React.Component {
       let website = company.get('website');
       let phone = company.get('phone');
       let addressLine = null;
+
+      if (website && !website.startsWith('http')) {
+        website = `http://${website}`;
+      }
       //let colors = Styles.Colors;
 
       // build extra line

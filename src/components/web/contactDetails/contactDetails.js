@@ -453,6 +453,60 @@ export default class ContactDetails extends React.Component {
       </div>
     );
   }
+  renderAvailabilityDetails(title, availabilityDetails,notes, avatar){
+    let daysOfTheWeek = [];
+    if(availabilityDetails){
+      if(availabilityDetails.getIn('daysOfTheWeek','Monday')){
+        daysOfTheWeek.push('Monday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Tuesday')){
+        daysOfTheWeek.push('Tuesday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Wednesday')){
+        daysOfTheWeek.push('Wednesday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Thursday')){
+        daysOfTheWeek.push('Thursday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Friday')){
+        daysOfTheWeek.push('Friday');
+      }
+    }
+
+
+    let timeOfDayArr = [];
+    if(availabilityDetails){
+      if(availabilityDetails.getIn('timeOfDay','Morning')){
+        timeOfDayArr.push('Morning');
+      }
+      if(availabilityDetails.getIn('timeOfDay','Lunchtime')){
+        timeOfDayArr.push('Lunchtime');
+      }
+      if(availabilityDetails.getIn('timeOfDay','Evening')){
+        timeOfDayArr.push('Evening');
+      }
+    }
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        {
+          <div style={{display: 'inline-block'}}>
+            <div style={style.title}>{title}</div>
+            <div style={style.content}>
+              <div>
+                <div>Days: {daysOfTheWeek.join(', ')}</div>
+                <div>Times: {timeOfDayArr.join(', ')}</div>
+                <div>{notes}</div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    );
+
+  }
 
   renderSmallListItem(content,avatar){
     return (
@@ -663,8 +717,8 @@ export default class ContactDetails extends React.Component {
                       backgroundColor={Styles.Colors.white}
                   />)}
                 </CardText>
-                <CardText>
-                  {this.renderBigListItem('Availability', contact.get('availability'),
+                 <CardText>
+                  {this.renderAvailabilityDetails('Availability',  contact.get('availabilityDetails'), contact.get('availability'),
                   <Avatar
                       icon={<FontIcon className="material-icons">insert_invitation</FontIcon>}
                       color={Styles.Colors.grey600}

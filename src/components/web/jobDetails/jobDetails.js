@@ -307,6 +307,10 @@ export default class JobDetails extends React.Component {
         benefits = company.get('benefits');
         techstack = company.get('techstack');
         leadership = company.get('leadership');
+
+        if (companyWebsite && !companyWebsite.startsWith('http')) {
+          companyWebsite = `http://${companyWebsite}`;
+        }
       }
       else {
         companyName = 'XYZ Company';

@@ -3,10 +3,10 @@ import Immutable from 'immutable';
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 import * as authConstants from '../auth/constants';
-import { getJobsByIdsIfNeeded } from '../jobs';
-import { getContactsByIdsIfNeeded } from '../contacts';
-import { getNotesByIdsIfNeeded } from '../notes';
-import { getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
+import { getJobsByIds, getJobsByIdsIfNeeded } from '../jobs';
+import { getContactsByIds, getContactsByIdsIfNeeded } from '../contacts';
+import { getNotesByIds, getNotesByIdsIfNeeded } from '../notes';
+import { getLocationsByIds, getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
 import { getFavoriteByType } from '../favorites';
 
 import superagent from 'superagent';
@@ -40,7 +40,7 @@ export default function reducer(state = initialState, action = {}) {
       companiesMap[c.id] = c;
     });
 
-    return state.set('list', state.get('list').merge(companiesMap));
+    return state.set('list', state.get('list').mergeDeep(companiesMap));
   }
   case constants.GET_COMPANY_DETAILS_SUCCESS: {
     let companiesMap = {};
@@ -148,16 +148,16 @@ export default function reducer(state = initialState, action = {}) {
       state.set('searches', state.get('searches').mergeDeep(action.result)).set('currentSearch', action.query);
     });
   }
-  case jobConstants.GET_MY_JOBS_SUCCESS: {
-    let companyList =  {};
-    action.result.map(job =>{
-      if(job.company){
-        companyList[job.company.id] = job.company;
-      }
-    });
-
-    return state.set('list', state.get('list').mergeDeep(companyList));
-  }
+  // case jobConstants.GET_MY_JOBS_SUCCESS: {
+  //   let companyList =  {};
+  //   action.result.map(job =>{
+  //     if(job.company){
+  //       companyList[job.company.id] = job.company;
+  //     }
+  //   });
+  //
+  //   return state.set('list', state.get('list').mergeDeep(companyList));
+  // }
   case jobConstants.GET_JOB_SUCCESS: {
     let companyList =  {};
     companyList[action.result.company.id] = action.result;
@@ -464,7 +464,7 @@ export function saveCompaniesResult(companies){
   };
 }
 
-export function getCompanyDetails(companyIds, include) {
+export function getCompanyDetails(companyIds, include, latest) {
   return (dispatch, getState) => {
     let filter = {
       where: {
@@ -537,10 +537,18 @@ export function getCompanyDetails(companyIds, include) {
           }
         });
 
-        dispatch(getLocationsByIdsIfNeeded(locationIds));
-        dispatch(getContactsByIdsIfNeeded(contactIds));
-        dispatch(getJobsByIdsIfNeeded(jobIds));
-        dispatch(getNotesByIdsIfNeeded(noteIds));
+        if (latest) {
+          dispatch(getLocationsByIds(locationIds));
+          dispatch(getContactsByIds(contactIds));
+          dispatch(getJobsByIds(jobIds));
+          dispatch(getNotesByIds(noteIds));
+        }
+        else {
+          dispatch(getLocationsByIdsIfNeeded(locationIds));
+          dispatch(getContactsByIdsIfNeeded(contactIds));
+          dispatch(getJobsByIdsIfNeeded(jobIds));
+          dispatch(getNotesByIdsIfNeeded(noteIds));
+        }
 
         return companies;
       }),
