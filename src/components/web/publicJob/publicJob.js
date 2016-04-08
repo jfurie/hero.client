@@ -149,6 +149,10 @@ export default class PublicJob extends React.Component {
         companyTwitter = company.get('twitterHandle');
         companyFacebook = company.get('facebookHandle');
         companyCrunchbase = company.get('crunchbase');
+
+        if (companyWebsite && !companyWebsite.startsWith('http')) {
+          companyWebsite = `http://${companyWebsite}`;
+        }
       }
       else {
         companyName = 'XYZ Company';
