@@ -455,31 +455,36 @@ export default class ContactDetails extends React.Component {
   }
   renderAvailabilityDetails(title, availabilityDetails,notes, avatar){
     let daysOfTheWeek = [];
-    if(availabilityDetails.getIn('daysOfTheWeek','Monday')){
-      daysOfTheWeek.push('Monday');
-    }
-    if(availabilityDetails.getIn('daysOfTheWeek','Tuesday')){
-      daysOfTheWeek.push('Tuesday');
-    }
-    if(availabilityDetails.getIn('daysOfTheWeek','Wednesday')){
-      daysOfTheWeek.push('Wednesday');
-    }
-    if(availabilityDetails.getIn('daysOfTheWeek','Thursday')){
-      daysOfTheWeek.push('Thursday');
-    }
-    if(availabilityDetails.getIn('daysOfTheWeek','Friday')){
-      daysOfTheWeek.push('Friday');
+    if(availabilityDetails){
+      if(availabilityDetails.getIn('daysOfTheWeek','Monday')){
+        daysOfTheWeek.push('Monday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Tuesday')){
+        daysOfTheWeek.push('Tuesday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Wednesday')){
+        daysOfTheWeek.push('Wednesday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Thursday')){
+        daysOfTheWeek.push('Thursday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Friday')){
+        daysOfTheWeek.push('Friday');
+      }
     }
 
+
     let timeOfDayArr = [];
-    if(availabilityDetails.getIn('timeOfDay','Morning')){
-      timeOfDayArr.push('Morning');
-    }
-    if(availabilityDetails.getIn('timeOfDay','Lunchtime')){
-      timeOfDayArr.push('Lunchtime');
-    }
-    if(availabilityDetails.getIn('timeOfDay','Evening')){
-      timeOfDayArr.push('Evening');
+    if(availabilityDetails){
+      if(availabilityDetails.getIn('timeOfDay','Morning')){
+        timeOfDayArr.push('Morning');
+      }
+      if(availabilityDetails.getIn('timeOfDay','Lunchtime')){
+        timeOfDayArr.push('Lunchtime');
+      }
+      if(availabilityDetails.getIn('timeOfDay','Evening')){
+        timeOfDayArr.push('Evening');
+      }
     }
     return (
       <div style={{display:'flex'}}>
