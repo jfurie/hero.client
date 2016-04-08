@@ -129,7 +129,8 @@ export default class ClientListItem extends React.Component {
 
   _onTouchTapShare() {
     let subject = `Check out ${this.props.company.get('name')} on HERO`;
-    let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/clients/${this.props.company.get('id')}`;
+    let body = `${encodeURIComponent(this.props.company.get('name'))}%0A${encodeURIComponent(url)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
@@ -283,7 +284,7 @@ export default class ClientListItem extends React.Component {
               <PhoneButton phone={this.props.company && this.props.company.get('phone')} />
               <EmailButton email={this.props.company && this.props.company.get('email')} />
               <FavoriteButton isFavorited={company.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
-              <ShareButton />
+              <ShareButton onTouchTap={this._onTouchTapShare.bind(this)} />
             </CardActions>
           </div>):(<div></div>)}
 

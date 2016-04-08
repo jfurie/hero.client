@@ -108,6 +108,10 @@ let style = {
   },
 };
 
+function cleanTitle(title){
+  return title.replace(/[^A-Za-z0-9_\.~]+/gm, '-');
+}
+
 @connect((state) =>
 {
   return {categories: state.categories.list};
@@ -137,8 +141,20 @@ export default class JobListItem extends React.Component {
   }
 
   _onTouchTapShare() {
-    let subject = `Check out ${this.props.job.get('name')} on HERO`;
-    let body = `${encodeURIComponent(this.props.job.get('name'))}%0A${encodeURIComponent(window.location.href)}`;
+    let {job} = this.props;
+
+    let subject = `Check out ${this.props.job.get('title')} on HERO`;
+
+    let title = job.get('title');
+
+    if (job.get('public')) {
+      title = `${job.get('company').get('name')} ${title}`;
+    }
+
+    title = cleanTitle(title);
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${title}`;
+
+    let body = `${encodeURIComponent(job.get('title'))}%0A${encodeURIComponent(url)}`;
     window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
   }
 
@@ -337,7 +353,7 @@ export default class JobListItem extends React.Component {
           >
             <FindButton />
             <FavoriteButton isFavorited={job.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
-            <ShareButton />
+            <ShareButton onTouchTap={this._onTouchTapShare.bind(this)} />
           </CardActions>
         </div>):(<div></div>)}
 
