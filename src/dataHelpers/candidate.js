@@ -8,6 +8,9 @@ export default function getCandidateDataFromState(state, candidateId) {
 
     let job = state.jobs.get('list').get(candidate.get('jobId'));
     candidate = candidate.set('job', job);
+
+    let company = state.companies.get('list').get(candidate.get('companyId'));
+    candidate = candidate.set('company', company);
   }
 
   return candidate;
