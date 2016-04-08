@@ -362,6 +362,18 @@ export function getOneCandidate(candidateId) {
 }
 
 export function createCandidate(candidateData, jobId) {
+  let contact;
+  if (typeof candidateData.toJSON === 'function') {
+    contact = candidateData.toJSON();
+  }
+  else {
+    contact = candidateData;
+  }
+
+  if (contact.id.indexOf('tmp') > -1) {
+    delete contact.id;
+  }
+
   return (dispatch) => {
     dispatch({
       types: [CREATE_CANDIDATE, CREATE_CANDIDATE_SUCCESS, CREATE_CANDIDATE_FAIL],
@@ -369,7 +381,7 @@ export function createCandidate(candidateData, jobId) {
         let createCandidatePromise = client.api.post('/candidates', {
           authToken: auth.authToken,
           data: {
-            contact: candidateData,
+            contact,
             jobId,
           },
         });

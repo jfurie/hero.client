@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState } from 'redux-router';
 
+import { createCandidate } from '../../../modules/candidates';
 import { createContact, getContactDetail, getContactsByCompany, editContact } from '../../../modules/contacts';
 import {createCompanyContact} from '../../../modules/companyContacts';
 import { ContactCreate } from '../../../components/web';
@@ -31,11 +32,12 @@ let getData = (state, props) => {
     contact,
     company,
     companies: state.companies.get('myCompanyIds'),
+    candidates: state.candidates,
     categories,
   };
 };
 
-@connect(getData, { pushState, getMyCompanies, createContact, createCompanyContact, getContactDetail, getContactsByCompany, editContact, getAllCategories })
+@connect(getData, { pushState, getMyCompanies, createContact, createCandidate, createCompanyContact, getContactDetail, getContactsByCompany, editContact, getAllCategories })
 export default class ContactCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -47,7 +49,11 @@ export default class ContactCreateContainer extends React.Component {
 
   componentDidMount() {
     this.props.getMyCompanies();
-    this.props.getContactDetail(this.props.params.contactId);
+
+    if (this.props.params.contactId.indexOf('tmp') == -1) {
+      this.props.getContactDetail(this.props.params.contactId);
+    }
+
     this.props.getAllCategories();
     this.setState({
       currentCompanyId:this.props.params.companyId
@@ -89,7 +95,7 @@ export default class ContactCreateContainer extends React.Component {
           },4000);
         } else {
           //Redirect to Job
-          self.props.history.replaceState(null,`/clients/${self.props.params.companyId}/jobs/${self.props.params.jobId}`);
+          self.props.history.replaceState(null,`/jobs/${self.props.params.jobId}?tab=Applicants`);
         }
       }
     }
@@ -132,7 +138,7 @@ export default class ContactCreateContainer extends React.Component {
           referrer: 'hero.client',
         });
 
-        this.props.createCandidate(contact, self.props.params.jobId);
+        this.props.createCandidate(contact, this.props.params.jobId);
       } else if (this.state.currentCompanyId) {
         this.props.createCompanyContact(this.state.currentCompanyId, contact);
       }

@@ -3,10 +3,10 @@ import Immutable from 'immutable';
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 import * as authConstants from '../auth/constants';
-import { getJobsByIdsIfNeeded } from '../jobs';
-import { getContactsByIdsIfNeeded } from '../contacts';
-import { getNotesByIdsIfNeeded } from '../notes';
-import { getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
+import { getJobsByIds, getJobsByIdsIfNeeded } from '../jobs';
+import { getContactsByIds, getContactsByIdsIfNeeded } from '../contacts';
+import { getNotesByIds, getNotesByIdsIfNeeded } from '../notes';
+import { getLocationsByIds, getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
 import { getFavoriteByType } from '../favorites';
 
 import superagent from 'superagent';
@@ -464,7 +464,7 @@ export function saveCompaniesResult(companies){
   };
 }
 
-export function getCompanyDetails(companyIds, include) {
+export function getCompanyDetails(companyIds, include, latest) {
   return (dispatch, getState) => {
     let filter = {
       where: {
@@ -537,10 +537,18 @@ export function getCompanyDetails(companyIds, include) {
           }
         });
 
-        dispatch(getLocationsByIdsIfNeeded(locationIds));
-        dispatch(getContactsByIdsIfNeeded(contactIds));
-        dispatch(getJobsByIdsIfNeeded(jobIds));
-        dispatch(getNotesByIdsIfNeeded(noteIds));
+        if (latest) {
+          dispatch(getLocationsByIds(locationIds));
+          dispatch(getContactsByIds(contactIds));
+          dispatch(getJobsByIds(jobIds));
+          dispatch(getNotesByIds(noteIds));
+        }
+        else {
+          dispatch(getLocationsByIdsIfNeeded(locationIds));
+          dispatch(getContactsByIdsIfNeeded(contactIds));
+          dispatch(getJobsByIdsIfNeeded(jobIds));
+          dispatch(getNotesByIdsIfNeeded(noteIds));
+        }
 
         return companies;
       }),
