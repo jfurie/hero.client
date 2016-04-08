@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import categoryLinkSort from '../../../utils/categoryLinkSort';
 import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar } from 'material-ui';
-import { CompanyAvatar, Gravatar, Tag, FindButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
+import { ShareLinkModal, CompanyAvatar, Gravatar, Tag, FindButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
 let style = {
   layout:{
     display:'flex',
@@ -119,6 +119,9 @@ function cleanTitle(title){
 export default class JobListItem extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      openShareLinkModal: false,
+    };
   }
   clickJob(){
     let {job} = this.props;
@@ -142,9 +145,7 @@ export default class JobListItem extends React.Component {
 
   _onTouchTapShare() {
     let {job} = this.props;
-
-    let subject = `Check out ${this.props.job.get('title')} on HERO`;
-
+    
     let title = job.get('title');
 
     if (job.get('public')) {
@@ -154,8 +155,16 @@ export default class JobListItem extends React.Component {
     title = cleanTitle(title);
     let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${title}`;
 
-    let body = `${encodeURIComponent(job.get('title'))}%0A${encodeURIComponent(url)}`;
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
+    this.setState({
+      openShareLinkModal: true,
+      shareUrl: url,
+    });
+  }
+
+  _onCloseShareLinkModal() {
+    this.setState({
+      openShareLinkModal: false,
+    });
   }
 
   _onTouchTapSave() {
@@ -243,8 +252,6 @@ export default class JobListItem extends React.Component {
       }
     }
 
-
-
     let isHot = false;
     let isInterviewing = false;
 
@@ -253,6 +260,7 @@ export default class JobListItem extends React.Component {
       isInterviewing = job.get('tags').indexOf('Interviewing') > -1;
     }
     return (
+      <div>
       <Card
           style={{
             height: type !=='mini'?'auto':'80px',
@@ -358,6 +366,8 @@ export default class JobListItem extends React.Component {
         </div>):(<div></div>)}
 
       </Card>
+      <ShareLinkModal url={this.state.shareUrl} open={this.state.openShareLinkModal} onClose={this._onCloseShareLinkModal.bind(this)} />
+      </div>
     );
   }
 }

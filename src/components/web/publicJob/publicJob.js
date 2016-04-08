@@ -4,7 +4,7 @@ import { pushState, replaceState } from 'redux-router';
 import marked from 'marked';
 import { CardTitle } from 'material-ui';
 import defaultImage from './publicJob.jpg';
-import {SkillsCard, LocationCard, PublicHeader, DetailsCard, Gravatar, CompanyAvatar, CardBasic, MarkedViewer } from '../../../components/web';
+import {ShareLinkModal, SkillsCard, LocationCard, PublicHeader, DetailsCard, Gravatar, CompanyAvatar, CardBasic, MarkedViewer } from '../../../components/web';
 import {ListItem, IconMenu, MenuItem, RaisedButton, FontIcon, Styles, Card, CardText, Avatar, IconButton } from 'material-ui';
 import './publicJob.scss';
 
@@ -453,6 +453,7 @@ export default class PublicJob extends React.Component {
       <div>
         <PublicHeader iconRight={iconRight} onTouchTap={this.props.apply.bind(this)} />
         {this.renderContent(job)}
+        <ShareLinkModal url={this.props.shareUrl} open={this.props.openShareLinkModal} onClose={this.props.closeShare.bind(this)} />
       </div>
     );
   }
