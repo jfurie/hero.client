@@ -77,10 +77,12 @@ class CustomTabsSwipe extends React.Component {
   }
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
+    this.intervalId = setInterval(this.handleResize,1000);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
+    clearInterval(this.intervalId);
   }
 
   // _handleChangeIndex() {
