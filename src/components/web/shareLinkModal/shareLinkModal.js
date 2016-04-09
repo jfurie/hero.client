@@ -34,7 +34,10 @@ class ShareLinkModal extends React.Component {
   }
 
   select(e) {
-    e.target.select();
+    let target = e.target;
+    setTimeout(function() {
+      target.select();
+    }, 0);
   }
 
   render() {
