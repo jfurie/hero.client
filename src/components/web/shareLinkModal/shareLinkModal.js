@@ -37,6 +37,7 @@ class ShareLinkModal extends React.Component {
     let target = e.target;
     setTimeout(function() {
       target.select();
+      target.setSelectionRange(0, 9999);
     }, 0);
   }
 
