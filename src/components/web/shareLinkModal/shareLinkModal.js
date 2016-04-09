@@ -22,15 +22,19 @@ class ShareLinkModal extends React.Component {
 
     clipboard.on('success', function() {
       self.setState({
-        copyStatus: 'Copied',
+        copySuccess: 'Copied',
       });
     });
 
     clipboard.on('error', function() {
       self.setState({
-        copyStatus: 'Selected',
+        copyError: 'Can\'t copy',
       });
     });
+  }
+
+  select(e) {
+    e.target.select();
   }
 
   render() {
@@ -57,9 +61,10 @@ class ShareLinkModal extends React.Component {
           open={this.props.open}
           onRequestClose={this.onClose.bind(this)}
       >
-          <TextField value={url} className="copy-text" style={{width: '100%'}} />
+          <TextField value={url} className="copy-text" style={{width: '100%'}} onFocus={this.select.bind(this)} />
           <br />
-          <div style={{color: Styles.Colors.green500}}>{this.state.copyStatus}</div>
+          <div style={{color: Styles.Colors.green500}}>{this.state.copySuccess}</div>
+          <div style={{color: Styles.Colors.red500}}>{this.state.copyError}</div>
       </Dialog>
     );
   }
