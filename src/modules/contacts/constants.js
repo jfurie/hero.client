@@ -42,3 +42,6 @@ export const EDIT_CONTACT_CATEGORY = 'hero.client/contacts/EDIT_CONTACT_CATEGORY
 export const EDIT_CONTACT_CATEGORY_SUCCESS = 'hero.client/contacts/EDIT_CONTACT_CATEGORY_SUCCESS';
 export const EDIT_CONTACT_CATEGORY_FAIL = 'hero.client/contacts/EDIT_CONTACT_CATEGORY_FAIL';
 export const SET_FRAMEWORKS = 'hero.client/contacts/SET_FRAMEWORKS';
+export const GET_CONTACT_DETAILS = 'hero.client/contacts/GET_CONTACT_DETAILS';
+export const GET_CONTACT_DETAILS_SUCCESS = 'hero.client/contacts/GET_CONTACT_DETAILS_SUCCESS';
+export const GET_CONTACT_DETAILS_FAIL = 'hero.client/contacts/GET_CONTACT_DETAILS_FAIL';

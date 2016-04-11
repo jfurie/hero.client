@@ -317,6 +317,14 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_CONTACT_DETAIL_FAIL: {
     return state;
   }
+  case constants.GET_CONTACT_DETAILS_SUCCESS: {
+    let contactsMap = {};
+    action.result.map((c) => {
+      contactsMap[c.id] = c;
+    });
+
+    return state.set('list', state.get('list').mergeDeep(contactsMap));
+  }
   case constants.GET_MY_CONTACTS_SUCCESS: {
     let contactsMap = {};
     action.result.map((c) => {
