@@ -243,14 +243,22 @@ export default class JobDetails extends React.Component {
       // salary
       let salaryMin = '$[?]';
       let salaryMax = '$[?]';
-
-      if (job.get('minSalary')) {
-        salaryMin = `$${~~(job.get('minSalary')) / 1000}k`;
+      if(job.get('isHourly')){
+        if (job.get('minSalary')) {
+          salaryMin = `$${~~(job.get('minSalary'))}/hr`;
+        }
+        if (job.get('maxSalary')) {
+          salaryMax = `$${~~(job.get('maxSalary'))}/hr`;
+        }
+      } else {
+        if (job.get('minSalary')) {
+          salaryMin = `$${~~(job.get('minSalary')) / 1000}k`;
+        }
+        if (job.get('maxSalary')) {
+          salaryMax = `$${~~(job.get('maxSalary')) / 1000}k`;
+        }
       }
 
-      if (job.get('maxSalary')) {
-        salaryMax = `$${~~(job.get('maxSalary')) / 1000}k`;
-      }
 
       // fee
       // let fee = 'Fee: [?]%';
