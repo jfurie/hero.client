@@ -44,12 +44,28 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.GET_COMPANY_DETAILS_SUCCESS: {
     let companiesMap = {};
-    action.result.map((c) => {
-      companiesMap[c.id] = c;
+    action.companyIds.map((c) => {
+      let result = action.result.find(x => {
+        return x.id == c;
+      });
+      if(result){
+        companiesMap[c] = result;
+      } else {
+        companiesMap[c] = {id:c, show404:true};
+      }
     });
 
     return state.set('list', state.get('list').mergeDeep(companiesMap));
   }
+  case constants.GET_COMPANY_DETAILS_FAIL: {
+    let companiesMap = {};
+    action.companyIds.map((c) => {
+      companiesMap[c] = {id:c, show404:true};
+    });
+
+    return state.set('list', state.get('list').mergeDeep(companiesMap));
+  }
+
   case constants.GET_COMPANIES: {
     return state;
   }
@@ -500,6 +516,7 @@ export function getCompanyDetails(companyIds, include, latest) {
     let filterString = encodeURIComponent(JSON.stringify(filter));
 
     dispatch({
+      companyIds,
       types: [constants.GET_COMPANY_DETAILS, constants.GET_COMPANY_DETAILS_SUCCESS, constants.GET_COMPANY_DETAILS_FAIL],
       promise: (client, auth) => client.api.get(`/companies?filter=${filterString}`, {
         authToken: auth.authToken,

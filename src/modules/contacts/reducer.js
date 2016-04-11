@@ -307,6 +307,7 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_CONTACT_DETAIL_SUCCESS: {
     let contactsMap = {};
     let id = action.result.id;
+    action.result.show404 = false;
     contactsMap[id] = action.result;
 
     return state.withMutations(ctx=> {
@@ -315,7 +316,16 @@ export default function reducer(state = initialState, action = {}) {
     });
   }
   case constants.GET_CONTACT_DETAIL_FAIL: {
-    return state;
+    let contactsMap = {};
+    let contact = {
+      show404:true,
+      id:action.id,
+    };
+    contactsMap[action.id] = contact;
+    return state.withMutations(ctx=> {
+      ctx
+      .set('list', state.get('list').mergeDeep(Immutable.fromJS(contactsMap)));
+    });
   }
   case constants.GET_MY_CONTACTS_SUCCESS: {
     let contactsMap = {};

@@ -176,6 +176,7 @@ export function saveContactsByCompanyResult(contacts){
 export function getContactDetail(id) {
   return (dispatch) => {
     dispatch({
+      id,
       types: [constants.GET_CONTACT_DETAIL, constants.GET_CONTACT_DETAIL_SUCCESS, constants.GET_CONTACT_DETAIL_FAIL],
       promise: (client, auth) => client.api.get(`/contacts/detail?id=${id}`, {
         authToken: auth.authToken,
