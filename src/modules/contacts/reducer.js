@@ -327,6 +327,14 @@ export default function reducer(state = initialState, action = {}) {
       .set('list', state.get('list').mergeDeep(Immutable.fromJS(contactsMap)));
     });
   }
+  case constants.GET_CONTACT_DETAILS_SUCCESS: {
+    let contactsMap = {};
+    action.result.map((c) => {
+      contactsMap[c.id] = c;
+    });
+
+    return state.set('list', state.get('list').mergeDeep(contactsMap));
+  }
   case constants.GET_MY_CONTACTS_SUCCESS: {
     let contactsMap = {};
     action.result.map((c) => {

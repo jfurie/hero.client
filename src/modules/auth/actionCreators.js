@@ -1,6 +1,6 @@
 import * as constants from './constants';
 import { getFavoritesByUserId } from '../favorites';
-import { getContactsByIdsIfNeeded } from '../contacts';
+import { getContactDetails } from '../contacts';
 import { getCompanyDetails } from '../companies';
 import { getJobDetails } from '../jobs';
 
@@ -104,7 +104,7 @@ function postLogin(auth, client, state, dispatch){
         }
       });
     }
-    dispatch(getContactsByIdsIfNeeded(contactIds));
+    dispatch(getContactDetails(contactIds, ['companies']));
     dispatch(getJobDetails(jobIds, ['candidates']));
     dispatch(getCompanyDetails(companyIds, ['contacts']));
   });

@@ -1,7 +1,7 @@
 import { createCandidateFavorite, deleteCandidateFavorite, saveCandidateByContactResult } from '../candidates';
 import { saveJobsByContactResult } from '../jobs';
-import { saveCompaniesResult } from '../companies';
-import { saveLocationResult } from '../locations';
+import { getCompaniesByIdsIfNeeded, saveCompaniesResult } from '../companies';
+import { getLocationsByIdsIfNeeded, saveLocationResult } from '../locations';
 import * as constants from './constants';
 
 export function getAllContacts() {
@@ -191,6 +191,53 @@ export function getContactDetail(id) {
           dispatch(saveLocationResult(contact.location));
         }
         return contact;
+      }),
+    });
+  };
+}
+
+export function getContactDetails(contactIds, include) {
+  return (dispatch) => {
+    let filter = {
+      where: {
+        id: {inq:contactIds},
+      },
+      include:[
+        {
+          relation:'companies',
+          scope: {
+            fields: ['id'],
+          },
+        },
+      ],
+    };
+
+    let filterString = encodeURIComponent(JSON.stringify(filter));
+
+    dispatch({
+      types: [constants.GET_CONTACT_DETAILS, constants.GET_CONTACT_DETAILS_SUCCESS, constants.GET_CONTACT_DETAILS_FAIL],
+      promise: (client, auth) => client.api.get(`/contacts?filter=${filterString}`, {
+        authToken: auth.authToken,
+      }).then((contacts)=> {
+        let companyIds = [];
+        let locationIds = [];
+
+        contacts.forEach(contact => {
+          if (contact.locationId) {
+            locationIds.push(contact.locationId);
+          }
+
+          if (include && include.indexOf('companies') > -1 && contact.companies) {
+            contact.companies.map((company => {
+              companyIds.push(company.id);
+            }));
+          }
+        });
+
+        dispatch(getCompaniesByIdsIfNeeded(companyIds));
+        dispatch(getLocationsByIdsIfNeeded(locationIds));
+
+        return contacts;
       }),
     });
   };
