@@ -135,7 +135,7 @@ export default class JobCreateContainer extends React.Component {
     this._handleChange(job);
 
     if (companyId) {
-      this.props.getCompanyDetails(companyId);
+      this.props.getCompanyDetails([companyId]);
     }
   }
 
