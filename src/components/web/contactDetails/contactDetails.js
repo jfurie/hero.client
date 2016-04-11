@@ -6,7 +6,7 @@ import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
 import categoryLinkSort from '../../../utils/categoryLinkSort';
-import {SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
+import {NotFound,SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
 import {
   CardTitle, IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
@@ -817,6 +817,10 @@ export default class ContactDetails extends React.Component {
     if (contact) {
       invited = contact.get('isInvited');
       email = contact.get('email') || null;
+    }
+
+    if(contact && contact.get('show404')){
+      return <NotFound />;
     }
 
     return (

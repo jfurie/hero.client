@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { Header } from '../../components/web';
+import { Header, NotFound } from '../../components/web';
 
 @connect(state => ({ type: state.router.location.query.type }))
 class ErrorPage extends React.Component {
@@ -11,8 +11,8 @@ class ErrorPage extends React.Component {
   render() {
 
     let {type} = this.props;
-
-    return (
+    if(type == 'access'){
+      return (
       <div>
         <Header />
         <div id='innerView'>
@@ -25,6 +25,10 @@ class ErrorPage extends React.Component {
           <Link to="/"> back to home</Link>
         </div>
       </div>);
+    } else {
+      return <NotFound />;
+    }
+
   }
 }
 

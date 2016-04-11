@@ -378,6 +378,7 @@ export function getJobDetails(jobIds, include) {
 export function getJobDetail(id) {
   return (dispatch) => {
     dispatch({
+      id,
       types: [constants.GET_JOB_DETAIL, constants.GET_JOB_DETAIL_SUCCESS, constants.GET_JOB_DETAIL_FAIL],
       promise: (client, auth) => client.api.get(`/jobs/${id}/detail`, {
         authToken: auth.authToken,

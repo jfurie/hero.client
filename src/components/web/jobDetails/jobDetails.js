@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List, ListItem, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import { ShareLinkModal, Gravatar, CardBasic, SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
+import {NotFound, ShareLinkModal, Gravatar, CardBasic, SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles, Divider,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -594,6 +594,9 @@ export default class JobDetails extends React.Component {
   render() {
 
     let { job } = this.props;
+    if(job && job.get('show404')){
+      return <NotFound />;
+    }
     return (
       <div>
         {
