@@ -8,8 +8,8 @@ import {
 import Avatar from 'material-ui/lib/avatar';
 
 import {
-  LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
-  CompanyNotesList, DetailsCard, CompanyAvatar, MarkedViewer,
+  ShareLinkModal, LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
+  CompanyNotesList, DetailsCard, CompanyAvatar, MarkedViewer, NotFound,
 } from '../../../components/web';
 import defaultImage from './default-company.jpg';
 const style = {
@@ -73,8 +73,11 @@ export default class ClientDetails extends React.Component {
 
   constructor(props){
     super(props);
+    this.state = {
+      windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
+      openShareLinkModal: false,
+    };
     this.handleResize.bind(this);
-    this.state = {windowHeight: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight};
   }
 
   componentDidMount() {
@@ -162,9 +165,17 @@ export default class ClientDetails extends React.Component {
   }
 
   _onTouchTapShare() {
-    let subject = `Check out ${this.props.company.get('name')} on HERO`;
-    let body = `${encodeURIComponent(this.props.company.get('name'))}%0A${encodeURIComponent(window.location.href)}`;
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/clients/${this.props.company.get('id')}`;
+    this.setState({
+      openShareLinkModal: true,
+      shareUrl: url,
+    });
+  }
+
+  _onCloseShareLinkModal() {
+    this.setState({
+      openShareLinkModal: false,
+    });
   }
 
   closeModal(){
@@ -534,6 +545,9 @@ export default class ClientDetails extends React.Component {
 
   render(){
     let { company } = this.props;
+    if(company && company.get('show404')){
+      return <NotFound />;
+    }
     if(this.props.inline){
       return (
         <div>
@@ -546,9 +560,8 @@ export default class ClientDetails extends React.Component {
             </IconMenu>
           } transparent
           />
-
-
         {this.renderContent(company)}
+        <ShareLinkModal url={this.state.shareUrl} open={this.state.openShareLinkModal} onClose={this._onCloseShareLinkModal.bind(this)} />
         </div>
       );
     } else {
@@ -581,7 +594,7 @@ export default class ClientDetails extends React.Component {
               </div>
             </div>
           </Dialog>
-
+          <ShareLinkModal url={this.state.shareUrl} open={this.state.openShareLinkModal} onClose={this._onCloseShareLinkModal.bind(this)} />
         </div>
       );
     }
