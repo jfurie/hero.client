@@ -6,7 +6,7 @@ import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
 import categoryLinkSort from '../../../utils/categoryLinkSort';
-import { NoResultsCard, NotFound,SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
+import { ShareLinkModal, NoResultsCard, NotFound,SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
 import {
   CardTitle, IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
@@ -65,6 +65,7 @@ export default class ContactDetails extends React.Component {
       confirmOpen: false,
       isCandidateContext: context.isCandidate,
       isContactContext: context.isContact,
+      openShareLinkModal: false,
     };
   }
 
@@ -193,17 +194,17 @@ export default class ContactDetails extends React.Component {
   }
 
   _onTouchTapShare() {
-    let contact = null;
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/contacts/${this.props.contact.get('id')}`;
+    this.setState({
+      openShareLinkModal: true,
+      shareUrl: url,
+    });
+  }
 
-    if (this.state.isContactContext && !this.state.isCandidateContext) { /* contact context */
-      contact = this.props.contact;
-    } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
-      contact = this.props.candidate.get('contact');
-    }
-
-    let subject = `Check out ${contact.get('displayName')} on HERO`;
-    let body = `${encodeURIComponent(contact.get('displayName'))}%0A${encodeURIComponent(window.location.href)}`;
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
+  _onCloseShareLinkModal() {
+    this.setState({
+      openShareLinkModal: false,
+    });
   }
 
   _handleTapOnChat() {
@@ -425,7 +426,7 @@ export default class ContactDetails extends React.Component {
           cover={common.cover}
           actions={actions}
           avatar={avatar}
-          floatActionOnTap={this._handleTapOnChat.bind(this)}
+          floatActionOnTap={this._onTouchTapShare.bind(this)}
           floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
           floatActionLabel={'Share'}
       />
@@ -771,7 +772,7 @@ export default class ContactDetails extends React.Component {
                   })}
                 </List>
                 :
-                <NoResultsCard title="No Jobs" text={'You don\'t have any jobs for this contact.'} />
+                <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Jobs" text={'You don\'t have any jobs for this contact.'} />
               }
               </div>
               : (null)
@@ -785,7 +786,7 @@ export default class ContactDetails extends React.Component {
                     <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
                   </List>
                 :
-                <NoResultsCard title="No Notes" text={'You don\'t have any notes for this contact.'} actionLabel="Add Note" action={this.addNoteModalOpen.bind(this)} />
+                <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Notes" text={'You don\'t have any notes for this contact.'} actionLabel="Add Note" action={this.addNoteModalOpen.bind(this)} />
               }
               </div>
             : (null)
@@ -850,6 +851,7 @@ export default class ContactDetails extends React.Component {
         />
         {this.renderContent(contact)}
         <InviteSuccessModal email={this.props.contact && this.props.contact.get('email')} ref={'inviteSuccessModal'} />
+        <ShareLinkModal url={this.state.shareUrl} open={this.state.openShareLinkModal} onClose={this._onCloseShareLinkModal.bind(this)} />
       </div>
 
     );
