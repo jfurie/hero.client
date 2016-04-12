@@ -39,7 +39,20 @@ export default function getContactDataFromState(state, contactId) {
       }
     }
 
+
     contact = contact.set('companies', contactCompanies);
+
+    //notes
+    let contactNotes = new Immutable.List();
+    contactNotes = state.notes.list.filter(note => {
+      return note.get('notableId') == contact.get('id');
+    }).toList();
+
+    contactNotes = contactNotes.sort((a, b) => {
+      return new Date(b.get('created')) - new Date(a.get('created'));
+    });
+
+    contact = contact.set('notes', contactNotes);
 
     // location
     let location = state.locations.list.get(contact.get('locationId'));
