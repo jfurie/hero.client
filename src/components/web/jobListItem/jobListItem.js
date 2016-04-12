@@ -76,6 +76,7 @@ let style = {
     display: 'inline',
     width: '20px',
     height: '20px',
+    cursor:'pointer',
     container: {
       display: 'inline',
       position: 'relative',
@@ -93,11 +94,13 @@ let style = {
     marginLeft: '7px',
     top: '-8px',
     lineHeight: 0,
+    cursor:'pointer',
   },
   accountOwnerGravatar:{
     display: 'inline',
     width: '25px',
     height: '25px',
+    cursor:'pointer',
     container:{
       top:'9px',
       display: 'inline',
@@ -145,7 +148,7 @@ export default class JobListItem extends React.Component {
 
   _onTouchTapShare() {
     let {job} = this.props;
-    
+
     let title = job.get('title');
 
     if (job.get('public')) {
@@ -294,10 +297,10 @@ export default class JobListItem extends React.Component {
             </div>
           </div>):(<div></div>)}
             <CardBasic
-                image={<CompanyAvatar style={{width:'40px'}} url={job.get('company')&&job.get('company').get('website')} />}
-                title= {<div style={{fontWeight: 'bold'}}>{job.get('title')}</div>}
-                subtitle1={job.get('company')&&job.get('company').get('name')}
-                subtitle2={<span>{job.get('department')?job.get('department'):'Tech'} Department</span>}
+                image={<CompanyAvatar style={{width:'40px', cursor:'pointer'}} url={job.get('company')&&job.get('company').get('website')} />}
+                title= {<div style={{fontWeight: 'bold', cursor:'pointer'}}>{job.get('title')}</div>}
+                subtitle1={<span style={{cursor:'pointer'}} >{job.get('company')&&job.get('company').get('name')}</span>}
+                subtitle2={<span style={{cursor:'pointer'}} >{job.get('department')?job.get('department'):'Tech'} Department</span>}
                 onTouchTap={this.clickJob.bind(this)}
                 rightContent={
                   job.get('talentAdvocate')?(<div onClick={this.clickTalentAdvocate.bind(this)}>

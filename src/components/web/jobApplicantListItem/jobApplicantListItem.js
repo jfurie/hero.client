@@ -10,6 +10,7 @@ let style = {
     avatar: {
       border: '2px solid',
       borderColor: Styles.Colors.grey500,
+      cursor:'pointer',
     },
     layout:{
       display:'flex',
@@ -33,12 +34,14 @@ let style = {
       lineHeight: '16px',
       fontWeight: 'bold',
       textAlign: 'left',
+      cursor:'pointer',
     },
     subtitle:{
       color: 'rgba(0, 0, 0, 0.54)',
       fontSize: '14px',
       lineHeight: '18px',
       textAlign: 'left',
+      cursor:'pointer',
     },
   },
   layout:{
@@ -60,11 +63,13 @@ let style = {
     color: 'rgba(0, 0, 0, 0.870588)',
     fontSize: '16px',
     lineHeight: '16px',
+    cursor: 'pointer',
   },
   subtitle:{
     color: 'rgba(0, 0, 0, 0.54)',
     fontSize: '14px',
     lineHeight: '18px',
+    cursor: 'pointer',
   },
   icon:{
     fontSize:'14px',
@@ -111,6 +116,7 @@ let style = {
     display: 'inline',
     width: '30px',
     height: '30px',
+    cursor: 'pointer',
   },
   plusAvatar: {
     display: 'inline',
@@ -120,6 +126,7 @@ let style = {
     fontSize: '16px',
     position: 'relative',
     top: '-11px',
+    cursor: 'pointer',
   },
   badgeWrap:{
     position: 'relative',
@@ -130,6 +137,7 @@ let style = {
     display: 'inline',
     width: '25px',
     height: '25px',
+    cursor: 'pointer',
     container:{
       top:'9px',
       display: 'inline',
