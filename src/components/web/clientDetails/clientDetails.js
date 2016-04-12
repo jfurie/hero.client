@@ -8,7 +8,7 @@ import {
 import Avatar from 'material-ui/lib/avatar';
 
 import {
-  ShareLinkModal, LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
+  NoResultsCard, ShareLinkModal, LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
   CompanyNotesList, DetailsCard, CompanyAvatar, MarkedViewer, NotFound,
 } from '../../../components/web';
 import defaultImage from './default-company.jpg';
@@ -513,23 +513,50 @@ export default class ClientDetails extends React.Component {
                 ) : (null)}
               </Card>
             </div>
-            <CompanyJobsList
-                company={company}
-                onJobClick={this._handleJobClick.bind(this)}
-                jobs={company.get('jobs')}
-                favoriteJob={this.props.favoriteJob.bind(this)}
-                unfavoriteJob={this.props.unfavoriteJob.bind(this)}
-            />
-            <ContactsList
-                contacts={company.get('contacts')}
-                company={company}
-                type="full"
-                favoriteContact={this.props.favoriteContact.bind(this)}
-                unfavoriteContact={this.props.unfavoriteContact.bind(this)}
-            />
-            <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
-              <CompanyNotesList company={company} editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={company.get('notes')}/>
-            </List>
+          {
+            <div style={{minHeight:'400px'}}>
+            {
+              company.get('jobs') && company.get('jobs').size > 0 ?
+              <CompanyJobsList
+                  company={company}
+                  onJobClick={this._handleJobClick.bind(this)}
+                  jobs={company.get('jobs')}
+                  favoriteJob={this.props.favoriteJob.bind(this)}
+                  unfavoriteJob={this.props.unfavoriteJob.bind(this)}
+              />
+              :
+              <NoResultsCard title="No Jobs" text={`You don\'t have any jobs for ${company.get('name')}`} actionLabel="Add Job" action={this.createJobModalOpen.bind(this)} />
+            }
+            </div>
+          }
+          {
+            <div style={{minHeight:'400px'}}>
+            {
+              company.get('contacts') && company.get('contacts').size > 0 ?
+              <ContactsList
+                  contacts={company.get('contacts')}
+                  company={company}
+                  type="full"
+                  favoriteContact={this.props.favoriteContact.bind(this)}
+                  unfavoriteContact={this.props.unfavoriteContact.bind(this)}
+              />
+              :
+              <NoResultsCard title="No Contacts" text={`You don\'t have any contacts for ${company.get('name')}`} actionLabel="Add Contact" action={this.createContactModalOpen.bind(this)} />
+            }
+            </div>
+          }
+          {
+            <div style={{minHeight:'400px'}}>
+            {
+              company.get('notes') && company.get('notes').size > 0 ?
+              <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
+                <CompanyNotesList company={company} editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={company.get('notes')}/>
+              </List>
+              :
+              <NoResultsCard title="No Notes" text={`You don\'t have any notes for ${company.get('name')}`} actionLabel="Add Note" action={this.createNoteModalOpen.bind(this)} />
+            }
+            </div>
+          }
           </CustomTabsSwipe>
 
         </div>

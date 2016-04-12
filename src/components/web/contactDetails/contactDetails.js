@@ -6,7 +6,7 @@ import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
 import categoryLinkSort from '../../../utils/categoryLinkSort';
-import {NotFound,SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
+import { NoResultsCard, NotFound,SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
 import {
   CardTitle, IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
@@ -754,6 +754,8 @@ export default class ContactDetails extends React.Component {
             {
               tabs.indexOf('Jobs') > -1 ?
               <div style={{minHeight:'800px'}}>
+              {
+                contact.get('jobs') && contact.get('jobs').size > 0 ?
                 <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
                   {contact.get('jobs') && contact.get('jobs').map((job, key) => {
                     return (
@@ -768,17 +770,25 @@ export default class ContactDetails extends React.Component {
                     );
                   })}
                 </List>
+                :
+                <NoResultsCard title="No Jobs" text={`You don\'t have any jobs for ${contact.get('displayName')}`} />
+              }
               </div>
               : (null)
             }
             {
               tabs.indexOf('Notes') > -1 ?
               <div style={{minHeight:'800px'}}>
-                <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
-                  <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
-                </List>
+              {
+                contact.get('notes') && contact.get('notes').size > 0 ?
+                  <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
+                    <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
+                  </List>
+                :
+                <NoResultsCard title="No Notes" text={`You don\'t have any notes for ${contact.get('displayName')}`} actionLabel="Add Note" action={this.addNoteModalOpen.bind(this)} />
+              }
               </div>
-              : (null)
+            : (null)
             }
           </CustomTabsSwipe>
         </div>
