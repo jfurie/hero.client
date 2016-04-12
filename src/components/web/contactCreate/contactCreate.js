@@ -247,7 +247,7 @@ export default class ContactCreate extends React.Component {
       tags = [];
     }
     let statuses = ['New','Active','Prospect','Took a Job','Placed','Blacklisted'];
-    let workAuthorizations = ['US Citizen','Green Card','EAD','H1-B Visa','OPT','CPT','TN-Visa','F1 Visa','F2 Visa','Requires New Sponsorship'];
+    let workAuthorizations = ['US Citizen','Green Card','EAD','H1-B Visa','O1','OPT','CPT','TN-Visa','F1 Visa','F2 Visa','Requires New Sponsorship' ];
     // <select id="00N6100000CHqyf">
     // <option value="">--None--</option>
     // <option value="US Citizen">US Citizen</option>
