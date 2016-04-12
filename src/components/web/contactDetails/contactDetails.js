@@ -786,6 +786,7 @@ export default class ContactDetails extends React.Component {
                     <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
                   </List>
                 :
+                <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Notes" text={'You don\'t have any notes for this contact.'} actionLabel="Add Note" action={this.addNoteModalOpen.bind(this)} />
               }
               </div>
             : (null)
