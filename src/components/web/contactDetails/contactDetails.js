@@ -753,7 +753,7 @@ export default class ContactDetails extends React.Component {
             </div>
             {
               tabs.indexOf('Jobs') > -1 ?
-              <div style={{minHeight:'800px'}}>
+              <div style={{minHeight:'400px'}}>
               {
                 contact.get('jobs') && contact.get('jobs').size > 0 ?
                 <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
@@ -771,21 +771,21 @@ export default class ContactDetails extends React.Component {
                   })}
                 </List>
                 :
-                <NoResultsCard title="No Jobs" text={`You don\'t have any jobs for ${contact.get('displayName')}`} />
+                <NoResultsCard title="No Jobs" text={'You don\'t have any jobs for this contact.'} />
               }
               </div>
               : (null)
             }
             {
               tabs.indexOf('Notes') > -1 ?
-              <div style={{minHeight:'800px'}}>
+              <div style={{minHeight:'400px'}}>
               {
                 contact.get('notes') && contact.get('notes').size > 0 ?
                   <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
                     <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
                   </List>
                 :
-                <NoResultsCard title="No Notes" text={`You don\'t have any notes for ${contact.get('displayName')}`} actionLabel="Add Note" action={this.addNoteModalOpen.bind(this)} />
+                <NoResultsCard title="No Notes" text={'You don\'t have any notes for this contact.'} actionLabel="Add Note" action={this.addNoteModalOpen.bind(this)} />
               }
               </div>
             : (null)

@@ -568,33 +568,37 @@ export default class JobDetails extends React.Component {
               : (null)
               }
             </div>
-            <div style={{minHeight:'800px'}}>
-              {
-                job.get('candidates') && job.get('candidates').size > 0 ?
-                <JobApplicantList
-                    isHero={this.props.isHero}
-                    candidates={job.get('candidates')}
-                    favoriteContact={this.props.favoriteContact.bind(this)}
-                    unfavoriteContact={this.props.unfavoriteContact.bind(this)}
-                    editContact={this.props.editContact.bind(this)}
-                    deleteCandidate={this.props.deleteCandidate.bind(this)}
-                    editApplicantState={this.props.editApplicantState.bind(this)}
-                    tab={this.props.tab}
-                />
-                :
-                <NoResultsCard title="No Applicants" text={`You don\'t have any applicants for ${job.get('title')}`} actionLabel="Add Applicant" action={this._onTouchAddCandidate.bind(this)} />
-              }
-            </div>
+            {
+              job.get('candidates') && job.get('candidates').size > 0 ?
+              <div style={{minHeight:'800px'}}>
+              <JobApplicantList
+                  isHero={this.props.isHero}
+                  candidates={job.get('candidates')}
+                  favoriteContact={this.props.favoriteContact.bind(this)}
+                  unfavoriteContact={this.props.unfavoriteContact.bind(this)}
+                  editContact={this.props.editContact.bind(this)}
+                  deleteCandidate={this.props.deleteCandidate.bind(this)}
+                  editApplicantState={this.props.editApplicantState.bind(this)}
+                  tab={this.props.tab}
+              />
+              </div>
+              :
+              <div style={{minHeight:'400px'}}>
+              <NoResultsCard title="No Applicants" text={'You don\'t have any applicants for this job.'} actionLabel="Add Applicant" action={this._onTouchAddCandidate.bind(this)} />
+              </div>
+            }
             {
               tabs.indexOf('Notes') > -1 ?
-              job.get('notes') && job.get('notes').size > 0 ?
-              <div style={{minHeight:'800px'}}>
+              <div style={{minHeight:'500px'}}>
+              {
+                job.get('notes') && job.get('notes').size > 0 ?
                 <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
                   <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
                 </List>
+                :
+                <NoResultsCard title="No Notes" text={'You don\'t have any notes for this job.'} actionLabel="Add Note" action={this.createNoteModalOpen.bind(this)} />
+              }
               </div>
-              :
-              <NoResultsCard title="No Notes" text={`You don\'t have any notes for ${job.get('title')}`} actionLabel="Add Note" action={this.createNoteModalOpen.bind(this)} />
               : (null)
             }
 

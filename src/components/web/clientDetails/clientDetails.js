@@ -525,7 +525,7 @@ export default class ClientDetails extends React.Component {
                   unfavoriteJob={this.props.unfavoriteJob.bind(this)}
               />
               :
-              <NoResultsCard title="No Jobs" text={`You don\'t have any jobs for ${company.get('name')}`} actionLabel="Add Job" action={this.createJobModalOpen.bind(this)} />
+              <NoResultsCard title="No Jobs" text={'You don\'t have any jobs for this company.'} actionLabel="Add Job" action={this.createJobModalOpen.bind(this)} />
             }
             </div>
           }
@@ -541,7 +541,7 @@ export default class ClientDetails extends React.Component {
                   unfavoriteContact={this.props.unfavoriteContact.bind(this)}
               />
               :
-              <NoResultsCard title="No Contacts" text={`You don\'t have any contacts for ${company.get('name')}`} actionLabel="Add Contact" action={this.createContactModalOpen.bind(this)} />
+              <NoResultsCard title="No Contacts" text={'You don\'t have any contacts for this company.'} actionLabel="Add Contact" action={this.createContactModalOpen.bind(this)} />
             }
             </div>
           }
@@ -553,7 +553,7 @@ export default class ClientDetails extends React.Component {
                 <CompanyNotesList company={company} editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={company.get('notes')}/>
               </List>
               :
-              <NoResultsCard title="No Notes" text={`You don\'t have any notes for ${company.get('name')}`} actionLabel="Add Note" action={this.createNoteModalOpen.bind(this)} />
+              <NoResultsCard title="No Notes" text={'You don\'t have any notes for this company.'} actionLabel="Add Note" action={this.createNoteModalOpen.bind(this)} />
             }
             </div>
           }
