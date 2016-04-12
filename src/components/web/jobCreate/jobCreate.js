@@ -228,9 +228,9 @@ export default class JobCreate extends React.Component {
     let contactId = null;
     let pos = 1;
 
-    this.props.contacts.forEach(function(c, id) {
+    this.props.contacts.forEach(function(c) {
       if (pos === index) {
-        contactId = id;
+        contactId = c.get('id');
       }
       pos++;
     });
