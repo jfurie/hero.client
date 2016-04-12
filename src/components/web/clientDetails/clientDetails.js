@@ -9,7 +9,7 @@ import Avatar from 'material-ui/lib/avatar';
 
 import {
   ShareLinkModal, LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
-  CompanyNotesList, DetailsCard, CompanyAvatar, MarkedViewer,
+  CompanyNotesList, DetailsCard, CompanyAvatar, MarkedViewer, NotFound,
 } from '../../../components/web';
 import defaultImage from './default-company.jpg';
 const style = {
@@ -545,6 +545,9 @@ export default class ClientDetails extends React.Component {
 
   render(){
     let { company } = this.props;
+    if(company && company.get('show404')){
+      return <NotFound />;
+    }
     if(this.props.inline){
       return (
         <div>
