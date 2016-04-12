@@ -42,6 +42,11 @@ const style = {
   },
 };
 
+function validateEmail(email) {
+  let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
 export default class ContactSearch extends React.Component {
   constructor(props){
     super(props);
@@ -53,6 +58,23 @@ export default class ContactSearch extends React.Component {
 
   onQueryClear() {
     this.props.onQueryClear(this.refs.queryTextField);
+  }
+
+  handleAddClient(){
+    let firstName =null;
+    let lastName = null;
+    let email = null;
+    if(validateEmail(this.props.query)){
+      email = this.props.query;
+    } else {
+      firstName = this.props.query.split(' ').slice(0, -1).join(' ');
+      lastName = this.props.query.split(' ').slice(-1).join(' ');
+    }
+    this.props.onDbContactSelect({
+      firstName,
+      lastName,
+      email,
+    });
   }
 
   render(){
@@ -90,7 +112,7 @@ export default class ContactSearch extends React.Component {
         style={style.section}
         fullWidth={true}
         label={'add ' + (query ? query : 'contact')}
-        onTouchTap={this.props.onDbContactSelect.bind(this, { firstName: query })}
+        onTouchTap={this.handleAddClient.bind(this)}
       />
       {
         searchResults.length > 0 || suggestions.length > 0 ?
