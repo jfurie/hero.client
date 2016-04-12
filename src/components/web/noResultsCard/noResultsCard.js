@@ -10,7 +10,7 @@ class NoResultsCard extends React.Component {
     let { title, text, actionLabel, action } = this.props;
 
     return (
-      <Card style={{margin: '8px', marginTop: '12px'}}>
+      <Card style={{margin: '8px'}}>
         <CardTitle
             title={title || 'No results'}
         />
