@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List, ListItem, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import {NotFound, ShareLinkModal, Gravatar, CardBasic, SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
+import { NoResultsCard, NotFound, ShareLinkModal, Gravatar, CardBasic, SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles, Divider,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -568,7 +568,9 @@ export default class JobDetails extends React.Component {
               : (null)
               }
             </div>
-            <div style={{minHeight:'800px'}}>
+            {
+              job.get('candidates') && job.get('candidates').size > 0 ?
+              <div style={{minHeight:'800px'}}>
               <JobApplicantList
                   isHero={this.props.isHero}
                   candidates={job.get('candidates')}
@@ -579,12 +581,24 @@ export default class JobDetails extends React.Component {
                   editApplicantState={this.props.editApplicantState.bind(this)}
                   tab={this.props.tab}
               />
-            </div>
+              </div>
+              :
+              <div style={{minHeight:'400px'}}>
+              <NoResultsCard title="No Applicants" text={'You don\'t have any applicants for this job.'} actionLabel="Add Applicant" action={this._onTouchAddCandidate.bind(this)} />
+              </div>
+            }
             {
               tabs.indexOf('Notes') > -1 ?
-              <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
-                <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
-              </List>
+              <div style={{minHeight:'500px'}}>
+              {
+                job.get('notes') && job.get('notes').size > 0 ?
+                <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
+                  <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
+                </List>
+                :
+                <NoResultsCard title="No Notes" text={'You don\'t have any notes for this job.'} actionLabel="Add Note" action={this.createNoteModalOpen.bind(this)} />
+              }
+              </div>
               : (null)
             }
 
