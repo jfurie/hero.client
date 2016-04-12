@@ -584,7 +584,7 @@ export default class JobDetails extends React.Component {
               </div>
               :
               <div style={{minHeight:'400px'}}>
-              <NoResultsCard title="No Applicants" text={'You don\'t have any applicants for this job.'} actionLabel="Add Applicant" action={this._onTouchAddCandidate.bind(this)} />
+              <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Applicants" text={'You don\'t have any applicants for this job.'} actionLabel="Add Applicant" action={this._onTouchAddCandidate.bind(this)} />
               </div>
             }
             {
@@ -596,7 +596,7 @@ export default class JobDetails extends React.Component {
                   <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
                 </List>
                 :
-                <NoResultsCard title="No Notes" text={'You don\'t have any notes for this job.'} actionLabel="Add Note" action={this.createNoteModalOpen.bind(this)} />
+                <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Notes" text={'You don\'t have any notes for this job.'} actionLabel="Add Note" action={this.createNoteModalOpen.bind(this)} />
               }
               </div>
               : (null)
