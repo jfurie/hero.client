@@ -75,6 +75,7 @@ let style = {
     display: 'inline',
     width: '20px',
     height: '20px',
+    cursor:'pointer',
   },
   plusAvatar: {
     display: 'inline',
@@ -86,11 +87,13 @@ let style = {
     marginRight: '7px',
     top: '-8px',
     lineHeight: 0,
+    cursor:'pointer',
   },
   accountOwnerGravatar:{
     display: 'inline',
     width: '25px',
     height: '25px',
+    cursor:'pointer',
     container:{
       top:'9px',
       display: 'inline',
@@ -168,10 +171,10 @@ export default class ClientListItem extends React.Component {
 
     return (
       <CardBasic
-          image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
-          title={company && company.get('name')}
-          subtitle1={company.get('businessType') || 'Software Company'}
-          subtitle2={location}
+          image={<CompanyAvatar style={{width:'40px',cursor:'pointer'}} url={company && company.get('website')} />}
+          title={<span style={{cursor:'pointer'}}>{company && company.get('name')}</span>}
+          subtitle1={<span style={{cursor:'pointer'}}>{company.get('businessType') || 'Software Company'}</span>}
+          subtitle2={<span style={{cursor:'pointer'}}>{location}</span>}
           onTouchTap={this.clickClient.bind(this)}
           rightContent={
             !this.props.hideRecruiter && company.get('clientAdvocate')?
