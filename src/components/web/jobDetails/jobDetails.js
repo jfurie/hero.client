@@ -79,6 +79,20 @@ export default class JobDetails extends React.Component {
     );
   }
 
+  renderSmallListLink(content,avatar){
+    return (
+      <div style={{position: 'relative', display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px', maxWidth: '240px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{content}</div>
+        </div>
+        <FontIcon style={{position: 'absolute', display: 'flex', alignItems: 'center', top: 0, bottom: 0, right: 0, color: Styles.Colors.grey700}} className="material-icons">keyboard_arrow_right</FontIcon>
+      </div>
+    );
+  }
+
   renderBigListItem(title,content,avatar){
     return (
       <div style={{display:'flex'}}>
@@ -403,7 +417,7 @@ export default class JobDetails extends React.Component {
                   <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, `${companyWebsite}`)}
                   >
-                    {this.renderSmallListItem(companyWebsite,
+                    {this.renderSmallListLink(companyWebsite,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
@@ -497,7 +511,8 @@ export default class JobDetails extends React.Component {
                     <CardText style={{padding: 0}}
                         onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${companyTwitter}`)}
                     >
-                      {this.renderSmallListItem('twitter',
+                      {this.renderSmallListLink(
+                      <span>Twitter: @{companyTwitter}</span>,
                       <Avatar
                           icon={<FontIcon className="fa fa-twitter-square" />}
                           color={Styles.Colors.grey600}
@@ -511,7 +526,8 @@ export default class JobDetails extends React.Component {
                     <CardText style={{padding: 0}}
                         onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${companyFacebook}`)}
                     >
-                      {this.renderSmallListItem('facebook',
+                      {this.renderSmallListLink(
+                      <span>Facebook: @{companyFacebook}</span>,
                       <Avatar
                           icon={<FontIcon className="fa fa-facebook-square" />}
                           color={Styles.Colors.grey600}
@@ -525,7 +541,7 @@ export default class JobDetails extends React.Component {
                     <CardText style={{padding: 0}}
                         onTouchTap={this.openInNewTab.bind(this, `${companyCrunchbase}`)}
                     >
-                      {this.renderSmallListItem('Crunchbase',
+                      {this.renderSmallListLink('Crunchbase',
                       <Avatar
                           icon={<FontIcon className="material-icons">public</FontIcon>}
                           color={Styles.Colors.grey600}
