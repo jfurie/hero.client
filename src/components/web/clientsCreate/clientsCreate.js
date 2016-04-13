@@ -300,6 +300,16 @@ export default class ClientsCreateModal extends React.Component {
                     />
                   </div>
                   <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={(company.get('errors') && company.get('errors').indeedId) || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'indeedId')}
+                        value={company.get('indeedId')}
+                        floatingLabelText="Indeed Id"
+                    />
+                  </div>
+                  <div className="col-xs-10 ">
                     <TagsInput value={tags} onChange={this._handleTagsChange.bind(this)} title="Tags" />
                   </div>
                   <div className="col-xs-12">
