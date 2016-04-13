@@ -279,7 +279,7 @@ class HomePage extends React.Component {
                 unfavoriteCompany={this.unfavoriteCompany.bind(this)}
             />
             :
-            <NoResultsCard title="No Clients" text={'You don\'t have any saved clients.'} actionLabel="Show All Clients" action={this.goToPage.bind(this, '/clients')} />
+            <NoResultsCard title="No Clients" text={'You don\'t have any saved clients.'} actionLabel="View All Clients" action={this.goToPage.bind(this, '/clients')} />
           }
           </div>
           <div>
@@ -292,7 +292,7 @@ class HomePage extends React.Component {
                 unfavoriteJob={this.unfavoriteJob.bind(this)}
             />
             :
-            <NoResultsCard title="No Jobs" text={'You don\'t have any saved jobs.'} actionLabel="Show All Jobs" action={this.goToPage.bind(this, '/jobs')} />
+            <NoResultsCard title="No Jobs" text={'You don\'t have any saved jobs.'} actionLabel="View All Jobs" action={this.goToPage.bind(this, '/jobs')} />
           }
           </div>
           <div style={style.slide}>
@@ -304,7 +304,7 @@ class HomePage extends React.Component {
                 unfavoriteContact={this.unfavoriteContact.bind(this)}
             />
             :
-            <NoResultsCard title="No Candidates" text={'You don\'t have any saved candidates.'} actionLabel="Show All Candidates" action={this.goToPage.bind(this, '/candidates')} />
+            <NoResultsCard title="No Candidates" text={'You don\'t have any saved candidates.'} actionLabel="View All Candidates" action={this.goToPage.bind(this, '/candidates')} />
           }
           </div>
         </CustomTabsSwipe>
