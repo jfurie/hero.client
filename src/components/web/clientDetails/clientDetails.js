@@ -295,6 +295,7 @@ export default class ClientDetails extends React.Component {
 
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
+      let instagram = company.get('instagramHandle');
       let angelList = company.get('angelList');
       let crunchbase = company.get('crunchbase');
       let jobboard = company.get('jobboard');
@@ -434,7 +435,7 @@ export default class ClientDetails extends React.Component {
                 </CardText>
               </Card>
               {
-                twitter || facebook || crunchbase || angelList ?
+                twitter || facebook || instagram || crunchbase || angelList ?
                 <Card>
                   <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
                     {(twitter) ? (
@@ -461,6 +462,21 @@ export default class ClientDetails extends React.Component {
                         <span>Facebook: @{facebook}</span>,
                         <Avatar
                             icon={<FontIcon className="fa fa-facebook-square" />}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
+                    {(instagram) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `https://instagram.com/${instagram}`)}
+                      >
+                        {this.renderSmallListLink(
+                        <span>Instagram: @{instagram}</span>,
+                        <Avatar
+                            icon={<FontIcon className="fa fa-instagram" />}
                             color={Styles.Colors.grey600}
                             backgroundColor={Styles.Colors.white}
                         />)}
