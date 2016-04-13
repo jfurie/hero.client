@@ -353,9 +353,19 @@ export default class ClientsCreateModal extends React.Component {
                         floatingLabelText="Twitter Handle (optional)"
                     />
                   </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors').instagramHandle || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'instagramHandle')}
+                        value={company.get('instagramHandle')}
+                        floatingLabelText="Instagram Handle (optional)"
+                    />
+                  </div>
                   <div className="col-xs-12">
                     <Divider style={style.divider} />
-                    <div style={style.subheader}>Jobs</div>
+                    <div style={style.subheader}>Job Boards</div>
                   </div>
                   <div className="col-xs-10">
                     <TextField
