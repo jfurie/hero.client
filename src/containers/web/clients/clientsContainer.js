@@ -2,13 +2,15 @@ import React from 'react';
 import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
-import { Header, ClientsCreateModal, ClientsList } from '../../../components/web';
+import { Header, ClientsCreateModal, ClientsList, ActionButtonItem, ActionButton } from '../../../components/web';
 import { getCompanyDetails, getAllCompanies, getMyCompanies, createCompany, searchCompany, createCompanyFavorite, deleteCompanyFavorite } from '../../../modules/companies';
 import { getCurrentAccount } from '../../../modules/currentAccount';
 import { getContactsByCompany } from '../../../modules/contacts';
+import { Styles } from 'material-ui';
 import Config from '../../../utils/config';
-
+import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 const HEROCOMPANYID = Config.get('heroCompanyId');
+
 
 @connect((state) => {
   let visibleCompanies = new Immutable.Map();
@@ -113,11 +115,19 @@ class ClientPage extends React.Component {
   unfavoriteCompany(company) {
     this.props.deleteCompanyFavorite(company.get('id'));
   }
+    onClientSearchOpen() {
+    this.refs.actionButtons.close();
+    this.props.history.pushState(null,`/clients/search`);
+  }
 
   render() {
 
     let { visibleCompanies, heroContacts } = this.props;
-
+    let actions = [
+      <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
+        <ContentAdd />
+      </ActionButtonItem>,
+    ];
     return (
       <div>
         <ClientsCreateModal heroContacts={heroContacts} onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen} />
@@ -127,6 +137,7 @@ class ClientPage extends React.Component {
             favoriteCompany={this.favoriteCompany.bind(this)}
             unfavoriteCompany={this.unfavoriteCompany.bind(this)}
         />
+        <ActionButton ref="actionButtons" actions={actions}/>
 
       </div>);
   }

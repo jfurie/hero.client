@@ -202,7 +202,7 @@ class HomePage extends React.Component {
 
     setTimeout(function () {
       //self.props.history.replaceState(null,`/clients/${job.companyId}/jobs/${job.id}/create`);
-      self.props.history.replaceState(null,`/jobs/${job.id}/create`);
+      self.props.history.pushState(null,`/jobs/${job.id}/create`);
 
     }, 500);
 
