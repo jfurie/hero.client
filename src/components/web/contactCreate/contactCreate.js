@@ -397,12 +397,108 @@ export default class ContactCreate extends React.Component {
                         floatingLabelStyle={{left:'0px'}}
                     />
                   </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={(contact.get('errors') && contact.get('errors').website2) || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'website2')}
+                        value={contact.get('website2')}
+                        floatingLabelText="Website 2"
+                        floatingLabelStyle={{left:'0px'}}
+                    />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={(contact.get('errors') && contact.get('errors').website3) || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'website3')}
+                        value={contact.get('website3')}
+                        floatingLabelText="Website 3"
+                        floatingLabelStyle={{left:'0px'}}
+                    />
+                  </div>
                   <div className="col-xs-12">
                     <Divider style={style.divider} />
                     <div style={style.subheader}>Location</div>
                   </div>
                   <div className="col-xs-10" >
                     <Location location={contact.get('location')} onChange={this._handleLocationChange.bind(this,'location')} />
+                  </div>
+                  <div className="col-xs-12">
+                    <Divider style={style.divider} />
+                    <div style={style.subheader}>Social</div>
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={contact.get('errors') && contact.get('errors').linkedinHandle || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'linkedinHandle')}
+                        value={contact.get('linkedinHandle')}
+                        floatingLabelText="LinkedIn Handle (optional)"
+                    />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={contact.get('errors') && contact.get('errors').indeedUrl || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'indeedUrl')}
+                        value={contact.get('indeedUrl')}
+                        floatingLabelText="Indeed URL (optional)"
+                    />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={contact.get('errors') && contact.get('errors').githubHandle || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'githubHandle')}
+                        value={contact.get('githubHandle')}
+                        floatingLabelText="GitHub Handle (optional)"
+                    />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={contact.get('errors') && contact.get('errors').stackoverflowUrl || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'stackoverflowUrl')}
+                        value={contact.get('stackoverflowUrl')}
+                        floatingLabelText="Stack Overflow URL (optional)"
+                    />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={contact.get('errors') && contact.get('errors').facebookHandle || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'facebookHandle')}
+                        value={contact.get('facebookHandle')}
+                        floatingLabelText="Facebook Handle (optional)"
+                    />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={contact.get('errors') && contact.get('errors').twitterHandle || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'twitterHandle')}
+                        value={contact.get('twitterHandle')}
+                        floatingLabelText="Twitter Handle (optional)"
+                    />
+                  </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={contact.get('errors') && contact.get('errors').googleHandle || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'googleHandle')}
+                        value={contact.get('googleHandle')}
+                        floatingLabelText="Google Plus Handle (optional)"
+                    />
                   </div>
                   {
                     contact.get('isCandidate') ?

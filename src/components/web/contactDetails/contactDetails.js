@@ -8,7 +8,7 @@ import Immutable from 'immutable';
 import categoryLinkSort from '../../../utils/categoryLinkSort';
 import { ShareLinkModal, NoResultsCard, NotFound,SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
 import {
-  CardTitle, IconButton, List, FontIcon, Avatar,
+  ListItem, CardTitle, IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
 } from 'material-ui';
 import image from './image';
@@ -226,6 +226,11 @@ export default class ContactDetails extends React.Component {
   editSkills(){
     this.props.pushState(null, `/contacts/${this.props.contact.get('id')}/categories/edit`);
   }
+
+  openInNewTab(url) {
+    window.open(url);
+  }
+
   getCommonDetailsCard(contact) {
 
     // build cover from gravatar
@@ -522,6 +527,20 @@ export default class ContactDetails extends React.Component {
     );
   }
 
+  renderSmallListLink(content,avatar){
+    return (
+      <div style={{position: 'relative', display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
+        </div>
+        <FontIcon style={{position: 'absolute', display: 'flex', alignItems: 'center', top: 0, bottom: 0, right: 0, color: Styles.Colors.grey700}} className="material-icons">keyboard_arrow_right</FontIcon>
+      </div>
+    );
+  }
+
   clickResume(){
     window.open(this.props.contact.get('resume').get('item'), '_blank');
   }
@@ -546,14 +565,44 @@ export default class ContactDetails extends React.Component {
     let addressLine = null;
     let source = null;
     let website = null;
+    let website2 = null;
+    let website3 = null;
     let resume = null;
+    let facebook = null;
+    let twitter = null;
+    let github = null;
+    let linkedin = null;
+    let indeed = null;
+    let stackoverflow = null;
+    let google = null;
     if (contact) {
       resume = contact.get('resume')|| null;
       email = contact.get('email') || null;
       phone = contact.get('phone') || null;
       website = contact.get('website') || null;
+      website2 = contact.get('website2') || null;
+      website3 = contact.get('website3') || null;
+      facebook = contact.get('facebookHandle') || null;
+      twitter = contact.get('twitterHandle') || null;
+      github = contact.get('githubHandle') || null;
+      linkedin = contact.get('linkedinHandle') || null;
+      indeed = contact.get('indeedUrl') || null;
+      google = contact.get('googleHandle') || null;
+      stackoverflow = contact.get('stackoverflowUrl') || null;
       if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
         source = contact.get('sourceInfo').get('referrer');
+      }
+
+      if (website && !website.startsWith('http')) {
+        website = `http://${website}`;
+      }
+
+      if (website2 && !website2.startsWith('http')) {
+        website2 = `http://${website2}`;
+      }
+
+      if (website3 && !website3.startsWith('http')) {
+        website3 = `http://${website3}`;
       }
 
       // location stuff
@@ -672,14 +721,48 @@ export default class ContactDetails extends React.Component {
                 ) : (null)}
 
                 {(website) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderSmallListItem(website,
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, website)}
+                  >
+                    {this.renderSmallListLink(website,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
+                ) : (null)}
+
+                {(website2) ? (
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, website)}
+                  >
+                    {this.renderSmallListLink(website2,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                  </ListItem>
+                ) : (null)}
+
+                {(website3) ? (
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, website)}
+                  >
+                    {this.renderSmallListLink(website3,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                  </ListItem>
                 ) : (null)}
               </Card>
 
@@ -750,6 +833,114 @@ export default class ContactDetails extends React.Component {
                       backgroundColor={Styles.Colors.white}
                   />)}
                 </CardText>
+              </Card>
+              <Card>
+              <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+              {(linkedin) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `https://linkedin.com/in/${linkedin}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>LinkedIn: @{linkedin}</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-linkedin-square" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+                ) : (null)}
+              {(indeed) ? (
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, `${indeed}`)}
+                  >
+                    {this.renderSmallListLink(
+                    <span>Indeed</span>,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                  </ListItem>
+                ) : (null)}
+              {(github) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `https://github.com/${github}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>GitHub: @{github}</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-github-square" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+              ) : (null)}
+              {(stackoverflow) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `${stackoverflow}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>Stack Overflow</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-stack-overflow" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+              ) : (null)}
+              {(twitter) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${twitter}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>Twitter: @{twitter}</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-twitter-square" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+              ) : (null)}
+              {(facebook) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${facebook}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>Facebook: @{facebook}</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-facebook-square" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+              ) : (null)}
+              {(google) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `https://plus.google.com/${google}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>Google Plus: @{google}</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-google-plus-square" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+              ) : (null)}
               </Card>
             </div>
             {
