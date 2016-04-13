@@ -502,37 +502,50 @@ export default class ClientDetails extends React.Component {
                 jobboard || ziprecruiter || indeed ?
                 <Card>
                   <CardTitle title="Job Boards" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
-                  {(jobboard) ? (
-                    <CardText style={style.smallListItem}>
-                      {this.renderBigListItem('Job Board', `${jobboard}`,
-                      <Avatar
-                          icon={<FontIcon className="material-icons">public</FontIcon>}
-                          color={Styles.Colors.grey600}
-                          backgroundColor={Styles.Colors.white}
-                      />)}
-                    </CardText>
-                  ) : (null)}
+                    {(jobboard) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `${jobboard}`)}
+                      >
+                        {this.renderSmallListLink('Job Board',
+                        <Avatar
+                            icon={<FontIcon className="material-icons">public</FontIcon>}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
 
-                  {(ziprecruiter) ? (
-                    <CardText style={style.smallListItem}>
-                      {this.renderBigListItem('Zip Recruiter', `${ziprecruiter}`,
-                      <Avatar
-                          icon={<FontIcon className="material-icons">public</FontIcon>}
-                          color={Styles.Colors.grey600}
-                          backgroundColor={Styles.Colors.white}
-                      />)}
-                    </CardText>
-                  ) : (null)}
-                  {(indeed) ? (
-                    <CardText style={style.smallListItem}>
-                      {this.renderBigListItem('indeed', `@${indeed}`,
-                      <Avatar
-                          icon={<FontIcon className="material-icons">public</FontIcon>}
-                          color={Styles.Colors.grey600}
-                          backgroundColor={Styles.Colors.white}
-                      />)}
-                    </CardText>
-                  ) : (null)}
+                    {(ziprecruiter) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `${ziprecruiter}`)}
+                      >
+                        {this.renderSmallListLink('Zip Recruiter',
+                        <Avatar
+                            icon={<FontIcon className="material-icons">public</FontIcon>}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
+
+                    {(indeed) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `${indeed}`)}
+                      >
+                        {this.renderSmallListLink('Indeed',
+                        <Avatar
+                            icon={<FontIcon className="material-icons">public</FontIcon>}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
                 </Card>
                 : (null)
               }
