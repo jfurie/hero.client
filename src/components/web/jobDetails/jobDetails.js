@@ -367,8 +367,8 @@ export default class JobDetails extends React.Component {
 
         <div>
           <DetailsCard
-              topTitle={companyName}
-              topSubtitle={`${companyName} - ${job.get('department')}`}
+              topTitle={<span onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{cursor:'pointer'}}>{companyName}</span>}
+              topSubtitle={<span onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{cursor:'pointer'}}>{`${companyName} - ${job.get('department')}`}</span>}
               location={job.get('location')}
               bottomLabel="Job Title"
               bottomTitle={job.get('title')}
@@ -377,7 +377,7 @@ export default class JobDetails extends React.Component {
               rightSubtitle={job.get('jobType') || 'Permanent'}
               cover={cover}
               actions={actions}
-              avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '95px'}} url={companyWebsite}/>}
+              avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '95px', cursor:'pointer'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
               floatActionLabel={'Share'}
