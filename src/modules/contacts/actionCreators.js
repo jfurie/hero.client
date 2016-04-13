@@ -413,3 +413,10 @@ export function saveContactResult(contact){
     result: contact,
   };
 }
+
+export function saveContactsResult(contacts){
+  return {
+    type: constants.GET_CONTACTS_SUCCESS,
+    result: contacts,
+  };
+}

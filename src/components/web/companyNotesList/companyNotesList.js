@@ -6,8 +6,8 @@ import Immutable from 'immutable';
 
 const style = {
   gravatar: {
-    display: 'inline-block'
-  }
+    display: 'inline-block',
+  },
 };
 
 class CompanyNotesList extends React.Component {
