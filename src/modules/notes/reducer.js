@@ -1,10 +1,12 @@
 import Immutable from 'immutable';
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
+import * as contactConstants from '../contacts/constants';
 const initialState = {
   list: new Immutable.Map(),
   byCompanyId: new Immutable.Map(),
   byJobId: new Immutable.Map(),
+  byContactId: new Immutable.Map(),
   localNote: new Immutable.Map(),
 };
 
@@ -223,6 +225,7 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.delete(state.localNote.get('id')),
       byCompanyId: notableType == 'company' ? state.byCompanyId.delete(state.localNote.get('id')) : state.byCompanyId,
       byJobId: notableType == 'job' ? state.byJobId.delete(state.localNote.get('id')) : state.byJobId,
+      byContactId: notableType == 'contact' ? state.byContactId.delete(state.localNote.get('id')) : state.byContactId,
       loading: false,
       localNote: state.localNote.mergeDeep({deleted:true}),
     };
@@ -271,6 +274,25 @@ export default function reducer(state = initialState, action = {}) {
       byJobId: state.byJobId.mergeDeep(byJobId),
     };
   }
+  case contactConstants.GET_CONTACT_DETAIL_SUCCESS:{
+    let notesMap = {};
+    let byContactId = {};
+    let contact = action.result;
+    if(contact && contact.notes){
+      contact.notes.map(note =>{
+        notesMap[note.id] = note;
+        byContactId[note.notableId] = note;
+      });
+    }
+    notesMap = Immutable.fromJS(notesMap);
+    byContactId = Immutable.fromJS(byContactId);
+    return {
+      ...state,
+      list: state.list.mergeDeep(notesMap),
+      byContactId: state.byJobId.mergeDeep(byContactId),
+    };
+  }
+
   default:
     return state;
   }

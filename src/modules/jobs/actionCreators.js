@@ -8,7 +8,7 @@ import { getContactsByIdsIfNeeded } from '../contacts';
 import { getNotesByIdsIfNeeded } from '../notes';
 import { getLocationsByIdsIfNeeded } from '../locations';
 import { getCompaniesByIdsIfNeeded } from '../companies';
-
+import { getFavoritesByUserId } from '../favorites';
 export function getJobsByCompany(companyId){
 
   let include = [
@@ -63,15 +63,21 @@ export function createJob(job, category){
     .set('description',category.get('description'))
     .set('title',category.get('title'));
   }
-
-  return {
-    id,
-    job,
-    types: [constants.CREATE_JOB, constants.CREATE_JOB_SUCCESS, constants.CREATE_JOB_FAIL],
-    promise: (client, auth) => client.api.post('/jobs', {
-      authToken: auth.authToken,
-      data:job,
-    }),
+  return (dispatch) => {
+    return dispatch({
+      id,
+      job,
+      types: [constants.CREATE_JOB, constants.CREATE_JOB_SUCCESS, constants.CREATE_JOB_FAIL],
+      promise: (client, auth) => client.api.post('/jobs', {
+        authToken: auth.authToken,
+        data:job,
+      }).then(result =>{
+        if(auth && auth.authToken && auth.authToken.userId){
+          dispatch(getFavoritesByUserId(auth.authToken.userId));
+        }
+        return result;
+      }),
+    });
   };
 }
 
