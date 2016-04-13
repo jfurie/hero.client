@@ -738,7 +738,7 @@ export default class ContactDetails extends React.Component {
                 {(website2) ? (
                   <ListItem>
                   <CardText style={{padding: 0}}
-                      onTouchTap={this.openInNewTab.bind(this, website)}
+                      onTouchTap={this.openInNewTab.bind(this, website2)}
                   >
                     {this.renderSmallListLink(website2,
                     <Avatar
@@ -753,7 +753,7 @@ export default class ContactDetails extends React.Component {
                 {(website3) ? (
                   <ListItem>
                   <CardText style={{padding: 0}}
-                      onTouchTap={this.openInNewTab.bind(this, website)}
+                      onTouchTap={this.openInNewTab.bind(this, website3)}
                   >
                     {this.renderSmallListLink(website3,
                     <Avatar
