@@ -90,8 +90,11 @@ export default function reducer(state = initialState, action = {}) {
       ctx.set('loggingOut',false)
       .set('user',null)
       .set('authToken',null)
-      .set('contact',null)
-      .set('logoutReady',true);
+      .set('contact',null);
+      if(action.fireLogoutReady){
+        ctx.set('logoutReady',true);
+      }
+
     });
   case constants.LOGOUT_FAIL:
     return state.withMutations(ctx => {
