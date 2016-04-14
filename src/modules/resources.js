@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 import * as jobConstants from './jobs/constants';
 import * as companyConstants from './companies/constants';
+import superagent from 'superagent';
 
 const GET_IMAGE_BY_JOB = 'hero.client/resources/GET_LOCATION';
 const GET_IMAGE_BY_JOB_SUCCESS = 'hero.client/resources/GET_IMAGE_BY_JOB_SUCCESS';
@@ -10,6 +11,10 @@ const GET_IMAGE_BY_COMPANY = 'hero.client/resources/GET_LOCATION';
 const GET_IMAGE_BY_COMPANY_SUCCESS = 'hero.client/resources/GET_IMAGE_BY_COMPANY_SUCCESS';
 const GET_IMAGE_BY_COMPANY_FAIL = 'hero.client/resources/GET_IMAGE_BY_COMPANY_FAIL';
 
+const CREATE_RESOURCE = 'hero.client/resources/CREATE_RESOURCE';
+const CREATE_RESOURCE_SUCCESS = 'hero.client/resources/CREATE_RESOURCE_SUCCESS';
+const CREATE_RESOURCE_FAIL = 'hero.client/resources/CREATE_RESOURCE_FAIL';
+const CREATE_RESOURCE_PROGRESS = 'hero.client/resources/CREATE_RESOURCE_PROGRESS';
 const initialState = {
   list: new Immutable.Map(),
   byJobId: new Immutable.Map(),
@@ -95,5 +100,50 @@ export function getImageByCompanyId(id) {
         reject(err);
       });
     }),
+  };
+}
+
+export function createResource(uniqueRequestId, type, file){
+  return (dispatch) => {
+    return dispatch({
+      uniqueRequestId,
+      types:[CREATE_RESOURCE,CREATE_RESOURCE_SUCCESS,CREATE_RESOURCE_FAIL],
+      promise: (client,auth) => client.api.post('/resources/signUrl', {
+        authToken: auth.authToken,
+        data: {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+        },
+      }).then((signUrlData) => new Promise((resolve, reject) => {
+        superagent.put(signUrlData.signed_request)
+            .send(file)
+            .on('progress', function(e) {
+              dispatch({
+                uniqueRequestId,
+                type: CREATE_RESOURCE_PROGRESS,
+                result: e.percent,
+              });
+            })
+            .end((err, {
+              body,
+            } = {}) => {
+              if (err) {
+                return reject(body || err);
+              } else {
+                return resolve(signUrlData.url);
+              }
+            });
+      })).then((signUrlData) => {
+        console.log(signUrlData);
+        return client.api.post('/resources', {
+          authToken: auth.authToken,
+          data: {
+            resourceType: type,
+            item: signUrlData,
+          },
+        });
+      }),
+    });
   };
 }
