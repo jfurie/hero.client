@@ -8,7 +8,7 @@ import Config from '../../../utils/config';
 
 import { RaisedButton, Styles, Snackbar } from 'material-ui';
 import './invitedContainer.scss';
-
+import { logout } from '../../../modules/auth';
 const style = {
   linkedinButton: {
     width: '100%',
@@ -18,7 +18,7 @@ const style = {
 
 @connect(state => ({
   auth: state.auth,
-}), {changePassword, pushState})
+}), {changePassword, pushState, logout})
 class InvitedPage extends React.Component {
 
   constructor(props) {
@@ -28,6 +28,9 @@ class InvitedPage extends React.Component {
       error: false,
       errorMessage: null,
     };
+  }
+  componentWillMount(){
+    this.props.logout(false);
   }
 
   componentWillReceiveProps (nextProps) {

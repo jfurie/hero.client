@@ -12,8 +12,9 @@ export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;
 }
 
-export function logout() {
+export function logout(fireLogoutReady = true) {
   return {
+    fireLogoutReady,
     types: [constants.LOGOUT, constants.LOGOUT_SUCCESS, constants.LOGOUT_FAIL],
     promise: (client, auth) => {
       return client.api.post('/users/logout', {
