@@ -46,7 +46,7 @@ class Layout extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if (nextProps.auth.logoutReady) {
+    if (nextProps.auth.get('logoutReady')) {
       this.props.resetLogoutReady();
       this.props.replaceState(null,'/login');
     }
