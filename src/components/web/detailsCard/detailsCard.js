@@ -1,5 +1,5 @@
 import React from 'react';
-import { FontIcon, Styles } from 'material-ui';
+import { FontIcon, Styles, Tooltip } from 'material-ui';
 
 import { Tag } from '../';
 import _ from 'lodash';
@@ -201,12 +201,19 @@ let style = {
     lineHeight: '31px',
     marginTop: '0px',
   },
+  tooltip: {
+    boxSizing: 'border-box',
+    top: 0,
+  },
 };
 
 class DetailsCard extends React.Component {
 
   constructor(props){
     super(props);
+    this.state = {
+      showTooltip: false,
+    };
   }
 
   _onTouchTapFloatAction() {
@@ -243,6 +250,19 @@ class DetailsCard extends React.Component {
       );
     }
   }
+
+  onBottomTitleMouseOver() {
+    this.setState({
+      showTooltip: true,
+    });
+  }
+
+  onBottomTitleMouseOut() {
+    this.setState({
+      showTooltip: false,
+    });
+  }
+
   render() {
     let styleNew = _.merge({},style,this.props.style);
     let { actions, topTags, stats, location } = this.props;
@@ -317,7 +337,16 @@ class DetailsCard extends React.Component {
                   this.props.bottomTitle ?
                   <div>
                     <p style={styleNew.bottomLabel}>{this.props.bottomLabel}</p>
-                    <h2 style={styleNew.bottomTitle}>{this.props.bottomTitle}</h2>
+                    <div style={{position:'relative', bottom: '12px'}}>
+                    <Tooltip
+                        label={this.props.bottomTitle}
+                        show={this.state.showTooltip}
+                        style={style.tooltip}
+                    />
+                    </div>
+                    <h2 style={styleNew.bottomTitle} onMouseOver={this.onBottomTitleMouseOver.bind(this)} onMouseOut={this.onBottomTitleMouseOut.bind(this)}>
+                      {this.props.bottomTitle}
+                    </h2>
                   </div>
                   : <div></div>
                 }
