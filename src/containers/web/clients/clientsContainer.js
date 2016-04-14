@@ -124,7 +124,7 @@ class ClientPage extends React.Component {
 
     let { visibleCompanies, heroContacts } = this.props;
     let actions = [
-      <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
+      <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this.onClientSearchOpen.bind(this)}>
         <ContentAdd />
       </ActionButtonItem>,
     ];
