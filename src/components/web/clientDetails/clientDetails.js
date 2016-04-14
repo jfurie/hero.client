@@ -8,7 +8,7 @@ import {
 import Avatar from 'material-ui/lib/avatar';
 
 import {
-  ShareLinkModal, LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
+  NoResultsCard, ShareLinkModal, LocationCard, Header, CustomTabsSwipe, ContactsList, CompanyJobsList,
   CompanyNotesList, DetailsCard, CompanyAvatar, MarkedViewer, NotFound,
 } from '../../../components/web';
 import defaultImage from './default-company.jpg';
@@ -221,6 +221,20 @@ export default class ClientDetails extends React.Component {
     );
   }
 
+  renderSmallListLink(content,avatar){
+    return (
+      <div style={{position: 'relative', display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px', maxWidth: '240px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{content}</div>
+        </div>
+        <FontIcon style={{position: 'absolute', display: 'flex', alignItems: 'center', top: 0, bottom: 0, right: 0, color: Styles.Colors.grey700}} className="material-icons">keyboard_arrow_right</FontIcon>
+      </div>
+    );
+  }
+
   goBack(){
     if(this.props.onClientDetailsClose)
       this.props.onClientDetailsClose();
@@ -281,6 +295,7 @@ export default class ClientDetails extends React.Component {
 
       let twitter = company.get('twitterHandle');
       let facebook = company.get('facebookHandle');
+      let instagram = company.get('instagramHandle');
       let angelList = company.get('angelList');
       let crunchbase = company.get('crunchbase');
       let jobboard = company.get('jobboard');
@@ -348,9 +363,9 @@ export default class ClientDetails extends React.Component {
                 {(website) ? (
                   <ListItem>
                   <CardText style={{padding: 0}}
-                      onTouchTap={this.openInNewTab.bind(this, website)}
+                      onTouchTap={this.openInNewTab.bind(this, `${website}`)}
                   >
-                    {this.renderSmallListItem(website,
+                    {this.renderSmallListLink(website,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
@@ -419,117 +434,182 @@ export default class ClientDetails extends React.Component {
                   />)}
                 </CardText>
               </Card>
-              <Card>
-                <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
-                {(twitter) ? (
-                  <ListItem>
-                  <CardText style={{padding: 0}}
-                      onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${twitter}`)}
-                  >
-                    {this.renderSmallListItem('twitter',
-                    <Avatar
-                        icon={<FontIcon className="fa fa-twitter-square" />}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                  </ListItem>
-                ) : (null)}
-                {(facebook) ? (
-                  <ListItem>
-                  <CardText style={{padding: 0}}
-                      onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${facebook}`)}
-                  >
-                    {this.renderSmallListItem('facebook',
-                    <Avatar
-                        icon={<FontIcon className="fa fa-facebook-square" />}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                  </ListItem>
-                ) : (null)}
-                {(angelList) ? (
-                  <ListItem>
-                  <CardText style={{padding: 0}}
-                      onTouchTap={this.openInNewTab.bind(this, `${angelList}`)}
-                  >
-                    {this.renderSmallListItem('Angel List',
-                    <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                  </ListItem>
-                ) : (null)}
-                {(crunchbase) ? (
-                  <ListItem>
-                  <CardText style={{padding: 0}}
-                      onTouchTap={this.openInNewTab.bind(this, `${crunchbase}`)}
-                  >
-                    {this.renderSmallListItem('Crunchbase',
-                    <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                  </ListItem>
-                ) : (null)}
-              </Card>
-              <Card>
-                <CardTitle title="Job Boards" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
-                {(jobboard) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Job Board', `${jobboard}`,
-                    <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                ) : (null)}
+              {
+                twitter || facebook || instagram || crunchbase || angelList ?
+                <Card>
+                  <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                    {(twitter) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${twitter}`)}
+                      >
+                        {this.renderSmallListLink(
+                        <span>Twitter: @{twitter}</span>,
+                        <Avatar
+                            icon={<FontIcon className="fa fa-twitter-square" />}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
+                    {(facebook) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${facebook}`)}
+                      >
+                        {this.renderSmallListLink(
+                        <span>Facebook: @{facebook}</span>,
+                        <Avatar
+                            icon={<FontIcon className="fa fa-facebook-square" />}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
+                    {(instagram) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `https://instagram.com/${instagram}`)}
+                      >
+                        {this.renderSmallListLink(
+                        <span>Instagram: @{instagram}</span>,
+                        <Avatar
+                            icon={<FontIcon className="fa fa-instagram" />}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
+                    {(crunchbase) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `${crunchbase}`)}
+                      >
+                        {this.renderSmallListLink('Crunchbase',
+                        <Avatar
+                            icon={<FontIcon className="material-icons">public</FontIcon>}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
+                    {(angelList) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `${angelList}`)}
+                      >
+                        {this.renderSmallListLink('Angel List',
+                        <Avatar
+                            icon={<FontIcon className="material-icons">public</FontIcon>}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
+                </Card>
+                : (null)
+              }
+              {
+                jobboard || ziprecruiter || indeed ?
+                <Card>
+                  <CardTitle title="Job Boards" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+                    {(jobboard) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `${jobboard}`)}
+                      >
+                        {this.renderSmallListLink('Job Board',
+                        <Avatar
+                            icon={<FontIcon className="material-icons">public</FontIcon>}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
 
-                {(ziprecruiter) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('Zip Recruiter', `${ziprecruiter}`,
-                    <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                ) : (null)}
-                {(indeed) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderBigListItem('indeed', `@${indeed}`,
-                    <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                ) : (null)}
-              </Card>
+                    {(ziprecruiter) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `${ziprecruiter}`)}
+                      >
+                        {this.renderSmallListLink('Zip Recruiter',
+                        <Avatar
+                            icon={<FontIcon className="material-icons">public</FontIcon>}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
+
+                    {(indeed) ? (
+                      <ListItem>
+                      <CardText style={{padding: 0}}
+                          onTouchTap={this.openInNewTab.bind(this, `${indeed}`)}
+                      >
+                        {this.renderSmallListLink('Indeed',
+                        <Avatar
+                            icon={<FontIcon className="material-icons">public</FontIcon>}
+                            color={Styles.Colors.grey600}
+                            backgroundColor={Styles.Colors.white}
+                        />)}
+                      </CardText>
+                      </ListItem>
+                    ) : (null)}
+                </Card>
+                : (null)
+              }
             </div>
-            <CompanyJobsList
-                company={company}
-                onJobClick={this._handleJobClick.bind(this)}
-                jobs={company.get('jobs')}
-                favoriteJob={this.props.favoriteJob.bind(this)}
-                unfavoriteJob={this.props.unfavoriteJob.bind(this)}
-            />
-            <ContactsList
-                contacts={company.get('contacts')}
-                company={company}
-                type="full"
-                favoriteContact={this.props.favoriteContact.bind(this)}
-                unfavoriteContact={this.props.unfavoriteContact.bind(this)}
-            />
-            <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
-              <CompanyNotesList company={company} editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={company.get('notes')}/>
-            </List>
+          {
+            <div style={{minHeight:'400px'}}>
+            {
+              company.get('jobs') && company.get('jobs').size > 0 ?
+              <CompanyJobsList
+                  company={company}
+                  onJobClick={this._handleJobClick.bind(this)}
+                  jobs={company.get('jobs')}
+                  favoriteJob={this.props.favoriteJob.bind(this)}
+                  unfavoriteJob={this.props.unfavoriteJob.bind(this)}
+              />
+              :
+              <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Jobs" text={'You don\'t have any jobs for this company.'} actionLabel="Add Job" action={this.createJobModalOpen.bind(this)} />
+            }
+            </div>
+          }
+          {
+            <div style={{minHeight:'400px'}}>
+            {
+              company.get('contacts') && company.get('contacts').size > 0 ?
+              <ContactsList
+                  contacts={company.get('contacts')}
+                  company={company}
+                  type="full"
+                  favoriteContact={this.props.favoriteContact.bind(this)}
+                  unfavoriteContact={this.props.unfavoriteContact.bind(this)}
+              />
+              :
+              <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Contacts" text={'You don\'t have any contacts for this company.'} actionLabel="Add Contact" action={this.createContactModalOpen.bind(this)} />
+            }
+            </div>
+          }
+          {
+            <div style={{minHeight:'400px'}}>
+            {
+              company.get('notes') && company.get('notes').size > 0 ?
+              <List subheader={`${company.get('notes').count()} Note${((company.get('notes').count() !== 1) ? ('s') : (''))}`}>
+                <CompanyNotesList company={company} editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={company.get('notes')}/>
+              </List>
+              :
+              <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Notes" text={'You don\'t have any notes for this company.'} actionLabel="Add Note" action={this.createNoteModalOpen.bind(this)} />
+            }
+            </div>
+          }
           </CustomTabsSwipe>
 
         </div>

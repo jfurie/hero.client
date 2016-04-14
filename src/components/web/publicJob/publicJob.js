@@ -86,6 +86,20 @@ export default class PublicJob extends React.Component {
     );
   }
 
+  renderSmallListLink(content,avatar){
+    return (
+      <div style={{position: 'relative', display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px', maxWidth: '240px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{content}</div>
+        </div>
+        <FontIcon style={{position: 'absolute', display: 'flex', alignItems: 'center', top: 0, bottom: 0, right: 0, color: Styles.Colors.grey700}} className="material-icons">keyboard_arrow_right</FontIcon>
+      </div>
+    );
+  }
+
   renderContent(job) {
     if (job) {
       // cover
@@ -210,7 +224,7 @@ export default class PublicJob extends React.Component {
                 <CardText style={{padding: 0}}
                     onTouchTap={this.openInNewTab.bind(this, `${companyWebsite}`)}
                 >
-                  {this.renderSmallListItem(companyWebsite,
+                  {this.renderSmallListLink(companyWebsite,
                   <Avatar
                       icon={<FontIcon className="material-icons">public</FontIcon>}
                       color={Styles.Colors.grey600}
@@ -299,48 +313,50 @@ export default class PublicJob extends React.Component {
               companyTwitter || companyFacebook || companyCrunchbase ?
               <Card>
                 <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
-                {(companyTwitter) ? (
-                  <ListItem>
-                  <CardText style={{padding: 0}}
-                      onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${companyTwitter}`)}
-                  >
-                    {this.renderSmallListItem('twitter',
-                    <Avatar
-                        icon={<FontIcon className="fa fa-twitter-square" />}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                  </ListItem>
-                ) : (null)}
-                {(companyFacebook) ? (
-                  <ListItem>
-                  <CardText style={{padding: 0}}
-                      onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${companyFacebook}`)}
-                  >
-                    {this.renderSmallListItem('facebook',
-                    <Avatar
-                        icon={<FontIcon className="fa fa-facebook-square" />}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                  </ListItem>
-                ) : (null)}
-                {(companyCrunchbase) ? (
-                  <ListItem>
-                  <CardText style={{padding: 0}}
-                      onTouchTap={this.openInNewTab.bind(this, `${companyCrunchbase}`)}
-                  >
-                    {this.renderSmallListItem('Crunchbase',
-                    <Avatar
-                        icon={<FontIcon className="material-icons">public</FontIcon>}
-                        color={Styles.Colors.grey600}
-                        backgroundColor={Styles.Colors.white}
-                    />)}
-                  </CardText>
-                  </ListItem>
-                ) : (null)}
+                  {(companyTwitter) ? (
+                    <ListItem>
+                    <CardText style={{padding: 0}}
+                        onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${companyTwitter}`)}
+                    >
+                      {this.renderSmallListLink(
+                      <span>Twitter: @{companyTwitter}</span>,
+                      <Avatar
+                          icon={<FontIcon className="fa fa-twitter-square" />}
+                          color={Styles.Colors.grey600}
+                          backgroundColor={Styles.Colors.white}
+                      />)}
+                    </CardText>
+                    </ListItem>
+                  ) : (null)}
+                  {(companyFacebook) ? (
+                    <ListItem>
+                    <CardText style={{padding: 0}}
+                        onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${companyFacebook}`)}
+                    >
+                      {this.renderSmallListLink(
+                      <span>Facebook: @{companyFacebook}</span>,
+                      <Avatar
+                          icon={<FontIcon className="fa fa-facebook-square" />}
+                          color={Styles.Colors.grey600}
+                          backgroundColor={Styles.Colors.white}
+                      />)}
+                    </CardText>
+                    </ListItem>
+                  ) : (null)}
+                  {(companyCrunchbase) ? (
+                    <ListItem>
+                    <CardText style={{padding: 0}}
+                        onTouchTap={this.openInNewTab.bind(this, `${companyCrunchbase}`)}
+                    >
+                      {this.renderSmallListLink('Crunchbase',
+                      <Avatar
+                          icon={<FontIcon className="material-icons">public</FontIcon>}
+                          color={Styles.Colors.grey600}
+                          backgroundColor={Styles.Colors.white}
+                      />)}
+                    </CardText>
+                    </ListItem>
+                  ) : (null)}
               </Card>
               : (null)
             }

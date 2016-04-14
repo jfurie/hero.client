@@ -5,7 +5,7 @@ import marked from 'marked';
 
 import { List, ListItem, CardTitle } from 'material-ui';
 import defaultImage from './default-job.jpg';
-import {NotFound, ShareLinkModal, Gravatar, CardBasic, SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
+import { NoResultsCard, NotFound, ShareLinkModal, Gravatar, CardBasic, SkillsCard,Confirm, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobApplicantList, CompanyAvatar, CompanyNotesList, MarkedViewer } from '../../../components/web';
 import {
   IconButton, FontIcon, Styles, Divider,
   IconMenu, MenuItem, Card, CardText, Avatar,
@@ -75,6 +75,20 @@ export default class JobDetails extends React.Component {
         <div style={{display: 'flex', alignItems: 'center'}}>
           <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
         </div>
+      </div>
+    );
+  }
+
+  renderSmallListLink(content,avatar){
+    return (
+      <div style={{position: 'relative', display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px', maxWidth: '240px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{content}</div>
+        </div>
+        <FontIcon style={{position: 'absolute', display: 'flex', alignItems: 'center', top: 0, bottom: 0, right: 0, color: Styles.Colors.grey700}} className="material-icons">keyboard_arrow_right</FontIcon>
       </div>
     );
   }
@@ -367,8 +381,8 @@ export default class JobDetails extends React.Component {
 
         <div>
           <DetailsCard
-              topTitle={companyName}
-              topSubtitle={`${companyName} - ${job.get('department')}`}
+              topTitle={<span onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{cursor:'pointer'}}>{companyName}</span>}
+              topSubtitle={<span onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{cursor:'pointer'}}>{`${companyName} - ${job.get('department')}`}</span>}
               location={job.get('location')}
               bottomLabel="Job Title"
               bottomTitle={job.get('title')}
@@ -377,7 +391,7 @@ export default class JobDetails extends React.Component {
               rightSubtitle={job.get('jobType') || 'Permanent'}
               cover={cover}
               actions={actions}
-              avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '95px'}} url={companyWebsite}/>}
+              avatar={<CompanyAvatar onTouchTap={this._onTouchCompanyIcon.bind(this)} style={{width: '95px', cursor:'pointer'}} url={companyWebsite}/>}
               floatActionOnTap={this._onTouchTapShare.bind(this)}
               floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
               floatActionLabel={'Share'}
@@ -403,7 +417,7 @@ export default class JobDetails extends React.Component {
                   <CardText style={{padding: 0}}
                       onTouchTap={this.openInNewTab.bind(this, `${companyWebsite}`)}
                   >
-                    {this.renderSmallListItem(companyWebsite,
+                    {this.renderSmallListLink(companyWebsite,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
@@ -497,7 +511,8 @@ export default class JobDetails extends React.Component {
                     <CardText style={{padding: 0}}
                         onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${companyTwitter}`)}
                     >
-                      {this.renderSmallListItem('twitter',
+                      {this.renderSmallListLink(
+                      <span>Twitter: @{companyTwitter}</span>,
                       <Avatar
                           icon={<FontIcon className="fa fa-twitter-square" />}
                           color={Styles.Colors.grey600}
@@ -511,7 +526,8 @@ export default class JobDetails extends React.Component {
                     <CardText style={{padding: 0}}
                         onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${companyFacebook}`)}
                     >
-                      {this.renderSmallListItem('facebook',
+                      {this.renderSmallListLink(
+                      <span>Facebook: @{companyFacebook}</span>,
                       <Avatar
                           icon={<FontIcon className="fa fa-facebook-square" />}
                           color={Styles.Colors.grey600}
@@ -525,7 +541,7 @@ export default class JobDetails extends React.Component {
                     <CardText style={{padding: 0}}
                         onTouchTap={this.openInNewTab.bind(this, `${companyCrunchbase}`)}
                     >
-                      {this.renderSmallListItem('Crunchbase',
+                      {this.renderSmallListLink('Crunchbase',
                       <Avatar
                           icon={<FontIcon className="material-icons">public</FontIcon>}
                           color={Styles.Colors.grey600}
@@ -568,7 +584,9 @@ export default class JobDetails extends React.Component {
               : (null)
               }
             </div>
-            <div style={{minHeight:'800px'}}>
+            {
+              job.get('candidates') && job.get('candidates').size > 0 ?
+              <div style={{minHeight:'800px'}}>
               <JobApplicantList
                   isHero={this.props.isHero}
                   candidates={job.get('candidates')}
@@ -579,12 +597,24 @@ export default class JobDetails extends React.Component {
                   editApplicantState={this.props.editApplicantState.bind(this)}
                   tab={this.props.tab}
               />
-            </div>
+              </div>
+              :
+              <div style={{minHeight:'400px'}}>
+              <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Applicants" text={'You don\'t have any applicants for this job.'} actionLabel="Add Applicant" action={this._onTouchAddCandidate.bind(this)} />
+              </div>
+            }
             {
               tabs.indexOf('Notes') > -1 ?
-              <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
-                <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
-              </List>
+              <div style={{minHeight:'500px'}}>
+              {
+                job.get('notes') && job.get('notes').size > 0 ?
+                <List subheader={`${job.get('notes').count()} Note${((job.get('notes').count() !== 1) ? ('s') : (''))}`}>
+                  <CompanyNotesList editNote={this.editNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={job.get('notes')}/>
+                </List>
+                :
+                <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Notes" text={'You don\'t have any notes for this job.'} actionLabel="Add Note" action={this.createNoteModalOpen.bind(this)} />
+              }
+              </div>
               : (null)
             }
 
