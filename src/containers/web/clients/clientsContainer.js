@@ -115,7 +115,7 @@ class ClientPage extends React.Component {
   unfavoriteCompany(company) {
     this.props.deleteCompanyFavorite(company.get('id'));
   }
-    onClientSearchOpen() {
+  onClientSearchOpen() {
     this.refs.actionButtons.close();
     this.props.history.pushState(null,`/clients/search`);
   }
