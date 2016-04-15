@@ -11,7 +11,7 @@ import { getFavoriteByType } from '../favorites';
 
 import superagent from 'superagent';
 import {actionTypes} from 'redux-localstorage';
-
+import s3Uploader from '../../utils/s3Uploader';
 const initialState = new Immutable.Map({
   list: new Immutable.Map(),
   myCompanyIds: new Immutable.Map(),
@@ -572,8 +572,24 @@ export function getCompanyDetails(companyIds, include, latest) {
     });
   };
 }
-
-export function updateCompanyImage(id,file) {
+export function updateCompanyImage(id, file) {
+  return (dispatch) => {
+    dispatch({
+      id,
+      types:[constants.UPDATE_COMPANY_IMAGE, constants.UPDATE_COMPANY_IMAGE_SUCCESS, constants.UPDATE_COMPANY_IMAGE_FAIL],
+      promise: (client, auth) => {
+        return s3Uploader(client,auth,'image',file,function(percent){
+          dispatch({
+            id,
+            type: constants.UPDATE_COMPANY_IMAGE_PROGRESS,
+            result: percent,
+          });
+        });
+      },
+    });
+  };
+}
+export function updateCompanyImageold(id,file) {
   return (dispatch) => {
     dispatch({
       id,

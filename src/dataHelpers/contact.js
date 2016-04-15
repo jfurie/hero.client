@@ -38,7 +38,8 @@ export default function getContactDataFromState(state, contactId) {
         }).toList();
       }
     }
-
+    let coverImage = contact ? state.resources.list.get(contact.get('coverImageId')) : new Immutable.Map();
+    contact = contact.set('coverImage', coverImage);
 
     contact = contact.set('companies', contactCompanies);
 

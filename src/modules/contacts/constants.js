@@ -45,3 +45,7 @@ export const SET_FRAMEWORKS = 'hero.client/contacts/SET_FRAMEWORKS';
 export const GET_CONTACT_DETAILS = 'hero.client/contacts/GET_CONTACT_DETAILS';
 export const GET_CONTACT_DETAILS_SUCCESS = 'hero.client/contacts/GET_CONTACT_DETAILS_SUCCESS';
 export const GET_CONTACT_DETAILS_FAIL = 'hero.client/contacts/GET_CONTACT_DETAILS_FAIL';
+export const UPDATE_COVER_IMAGE = 'hero.client/contacts/UPDATE_COVER_IMAGE';
+export const UPDATE_COVER_IMAGE_SUCCESS = 'hero.client/contacts/UPDATE_COVER_IMAGE_SUCCESS';
+export const UPDATE_COVER_IMAGE_FAIL = 'hero.client/contacts/UPDATE_COVER_IMAGE_FAIL';
+export const UPDATE_COVER_IMAGE_PROGRESS = 'hero.client/contacts/UPDATE_COVER_IMAGE_PROGRESS';

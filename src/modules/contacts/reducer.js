@@ -308,8 +308,8 @@ export default function reducer(state = initialState, action = {}) {
     let contactsMap = {};
     let id = action.result.id;
     action.result.show404 = false;
-    contactsMap[id] = action.result;
 
+    contactsMap[id] = Immutable.fromJS(action.result).delete('coverImage').delete('avatarImage');
     return state.withMutations(ctx=> {
       ctx
       .set('list', state.get('list').mergeDeep(contactsMap));
@@ -502,6 +502,35 @@ export default function reducer(state = initialState, action = {}) {
     }
     contacts = Immutable.fromJS(contacts);
     return state.mergeDeepIn(['list'],contacts);
+  }
+
+  case constants.UPDATE_COVER_IMAGE:{
+    let contact = {};
+    contact[action.id] = {
+      isUploadingCover:true,
+      percentUploadedCover:0,
+    };
+    return state.set('list', state.get('list').mergeDeep(contact));
+  }
+  case constants.UPDATE_COVER_IMAGE_SUCCESS:{
+    let contact = {};
+    let image = {
+      coverImageId:action.result.id,
+      isUploadingCover:false,
+      percentUploadedCover:100,
+    };
+    contact[action.id] = image;
+
+    return state.set('list', state.get('list').mergeDeep(contact));
+  }
+  case constants.UPDATE_COVER_IMAGE_PROGRESS:{
+    let contact = {};
+    let image = {
+      isUploadingCover:true,
+      percentUploadedCover:action.result,
+    };
+    contact[action.id] = image;
+    return state.set('list', state.get('list').mergeDeep(contact));
   }
   default:
     return state;

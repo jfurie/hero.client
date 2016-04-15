@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 import * as jobConstants from './jobs/constants';
 import * as companyConstants from './companies/constants';
+import * as contactConstants from './contacts/constants';
 import superagent from 'superagent';
 
 const GET_IMAGE_BY_JOB = 'hero.client/resources/GET_LOCATION';
@@ -61,6 +62,31 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.mergeDeep(newMap),
       byCompanyId: state.list.mergeDeep(companyIdMap),
     };
+  }
+  case contactConstants.UPDATE_COVER_IMAGE_SUCCESS:{
+    let newMap ={};
+    newMap[action.result.id] = action.result;
+    return {
+      ...state,
+      list: state.list.mergeDeep(newMap),
+    };
+  }
+  case contactConstants.GET_CONTACT_DETAIL_SUCCESS:{
+    let newMap ={};
+    if(action.result.coverImage){
+      newMap[action.result.coverImage.id] = action.result.coverImage;
+    }
+    if(action.result.avatarImage){
+      newMap[action.result.avatarImage.id] = action.result.avatarImage;
+    }
+    return {
+      ...state,
+      list: state.list.mergeDeep(newMap),
+    };
+  }
+  case CREATE_RESOURCE:{
+    let newMap ={};
+    newMap[action.id] = {}
   }
   default:
     return state;

@@ -3,6 +3,7 @@ import { saveJobsByContactResult } from '../jobs';
 import { getCompaniesByIdsIfNeeded, saveCompaniesResult } from '../companies';
 import { getLocationsByIdsIfNeeded, saveLocationResult } from '../locations';
 import * as constants from './constants';
+import s3Uploader from '../../utils/s3Uploader';
 
 export function getAllContacts() {
   return {
@@ -196,6 +197,24 @@ export function getContactDetail(id) {
   };
 }
 
+export function updateCoverImage(id, file) {
+  return (dispatch) => {
+    dispatch({
+      id,
+      types:[constants.UPDATE_COVER_IMAGE, constants.UPDATE_COVER_IMAGE_SUCCESS, constants.UPDATE_COVER_IMAGE_FAIL],
+      promise: (client, auth) => {
+        return s3Uploader(client,auth,'image',file,function(percent){
+          dispatch({
+            id,
+            type: constants.UPDATE_COVER_IMAGE_PROGRESS,
+            result: percent,
+          });
+        });
+      },
+    });
+  };
+}
+
 export function getContactDetails(contactIds, include) {
   return (dispatch) => {
     let filter = {
@@ -208,6 +227,9 @@ export function getContactDetails(contactIds, include) {
           scope: {
             fields: ['id'],
           },
+        },
+        {
+          relation:'coverImage',
         },
       ],
     };

@@ -1,10 +1,11 @@
 import React from 'react';
 import Immutable from 'immutable';
 import {
+  LinearProgress, Card, CardText, CardMedia,
    IconButton, ToolbarGroup, Toolbar, Toggle, SelectField, MenuItem,
   FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles, Snackbar, Checkbox,
 } from 'material-ui';
-import { Location, TagsInput } from '../';
+import { Location, TagsInput, FileInput } from '../';
 
 import validateContact from '../../../validators/contact';
 
@@ -306,6 +307,24 @@ export default class ContactCreate extends React.Component {
                         );
                       })}
                     </SelectField>
+                  </div>
+                  <div className='col-xs-10'>
+                      <Card>
+                        <div style={style.subheader}>Cover Image</div>
+                        <CardMedia>
+                          {(() => {
+                            if(this.props.coverImage){
+                              return (<div><img style={{maxWidth:'100%', maxHeight:'300px'}} src={this.props.coverImage.get('item')}></img></div>);
+                            } else {
+                              return (<div></div>);
+                            }
+                          })()}
+                        </CardMedia>
+                        <CardText>
+                          <LinearProgress mode="determinate" value={contact.get('percentUploaded')} />
+                          <FileInput label={this.props.coverImage?'Change Photo':'Add Photo'} onFileChanged={this.props.updateCoverImage.bind(this)} />
+                        </CardText>
+                      </Card>
                   </div>
 
                   <div className="col-xs-10 ">
