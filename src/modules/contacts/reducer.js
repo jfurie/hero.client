@@ -532,6 +532,34 @@ export default function reducer(state = initialState, action = {}) {
     contact[action.id] = image;
     return state.set('list', state.get('list').mergeDeep(contact));
   }
+  case constants.UPDATE_AVATAR_IMAGE:{
+    let contact = {};
+    contact[action.id] = {
+      isUploadingAvatar:true,
+      percentUploadedAvatar:0,
+    };
+    return state.set('list', state.get('list').mergeDeep(contact));
+  }
+  case constants.UPDATE_AVATAR_IMAGE_SUCCESS:{
+    let contact = {};
+    let image = {
+      avatarImageId:action.result.id,
+      isUploadingAvatar:false,
+      percentUploadedAvatar:100,
+    };
+    contact[action.id] = image;
+
+    return state.set('list', state.get('list').mergeDeep(contact));
+  }
+  case constants.UPDATE_AVATAR_IMAGE_PROGRESS:{
+    let contact = {};
+    let image = {
+      isUploadingAvatar:true,
+      percentUploadedAvatar:action.result,
+    };
+    contact[action.id] = image;
+    return state.set('list', state.get('list').mergeDeep(contact));
+  }
   default:
     return state;
   }

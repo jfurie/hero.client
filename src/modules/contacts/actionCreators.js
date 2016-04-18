@@ -215,6 +215,24 @@ export function updateCoverImage(id, file) {
   };
 }
 
+export function updateAvatarImage(id, file) {
+  return (dispatch) => {
+    dispatch({
+      id,
+      types:[constants.UPDATE_AVATAR_IMAGE, constants.UPDATE_AVATAR_IMAGE_SUCCESS, constants.UPDATE_AVATAR_IMAGE_FAIL],
+      promise: (client, auth) => {
+        return s3Uploader(client,auth,'image',file,function(percent){
+          dispatch({
+            id,
+            type: constants.UPDATE_AVATAR_IMAGE_PROGRESS,
+            result: percent,
+          });
+        });
+      },
+    });
+  };
+}
+
 export function getContactDetails(contactIds, include) {
   return (dispatch) => {
     let filter = {

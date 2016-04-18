@@ -286,12 +286,12 @@ export default class ContactDetails extends React.Component {
     }
 
     let coverImage = ((contact.get('coverImage')) ? (contact.get('coverImage').get('item')) : (image));
-
+    let avatarImage = ((contact.get('avatarImage')) ? (contact.get('avatarImage').get('item')) : (`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`));
     return {
       cover: coverImage, //`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       city,
       displayName,
-      avatarUrl: `https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      avatarUrl: avatarImage,
       companyName,
       title,
       subtitleAvatar,

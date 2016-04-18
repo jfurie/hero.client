@@ -133,7 +133,7 @@ tooltip="View Favorites">favorite</IconButton>
             return (
               <div key={key}>
                 <ListItem
-                    leftAvatar={<Gravatar email={contact.get('email')} status="notset" />}
+                    leftAvatar={<Gravatar url={contact.get('avatarImage') && contact.get('avatarImage').get('item')} email={contact.get('email')} status="notset" />}
                     primaryText={contact.get('displayName')}
                     secondaryText={<p>{secondaryText}</p>}
                     onTouchTap={this.onSelectContact.bind(this, contact, candidate)}

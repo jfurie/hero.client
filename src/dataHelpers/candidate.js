@@ -4,6 +4,11 @@ export default function getCandidateDataFromState(state, candidateId) {
 
   if (candidate) {
     let contact = state.contacts.get('list').get(candidate.get('contactId'));
+    if(contact && contact.get('avatarImageId')){
+      let avatarImage = state.resources.list.get(contact.get('avatarImageId'));
+      contact = contact.set('avatarImage',avatarImage);
+    }
+
     candidate = candidate.set('contact', contact);
 
     let job = state.jobs.get('list').get(candidate.get('jobId'));

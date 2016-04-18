@@ -49,3 +49,7 @@ export const UPDATE_COVER_IMAGE = 'hero.client/contacts/UPDATE_COVER_IMAGE';
 export const UPDATE_COVER_IMAGE_SUCCESS = 'hero.client/contacts/UPDATE_COVER_IMAGE_SUCCESS';
 export const UPDATE_COVER_IMAGE_FAIL = 'hero.client/contacts/UPDATE_COVER_IMAGE_FAIL';
 export const UPDATE_COVER_IMAGE_PROGRESS = 'hero.client/contacts/UPDATE_COVER_IMAGE_PROGRESS';
+export const UPDATE_AVATAR_IMAGE = 'hero.client/contacts/UPDATE_AVATAR_IMAGE';
+export const UPDATE_AVATAR_IMAGE_SUCCESS = 'hero.client/contacts/UPDATE_AVATAR_IMAGE_SUCCESS';
+export const UPDATE_AVATAR_IMAGE_FAIL = 'hero.client/contacts/UPDATE_AVATAR_IMAGE_FAIL';
+export const UPDATE_AVATAR_IMAGE_PROGRESS = 'hero.client/contacts/UPDATE_AVATAR_IMAGE_PROGRESS';
