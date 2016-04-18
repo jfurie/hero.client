@@ -72,7 +72,7 @@ class ContactSearchContainer extends React.Component {
         },4000);
       } else {
         //Redirect to Job
-        self.props.history.replaceState(null,`/jobs/${self.props.params.jobId}/applicants`);
+        self.props.history.replaceState(null,`/jobs/${self.props.params.jobId}?tab=Applicants`);
       }
     }
   }
@@ -133,12 +133,12 @@ class ContactSearchContainer extends React.Component {
       contact.companyId = this.props.params.companyId || contact.companyId;
 
       this.props.createTempContact(contact);
+
       let self = this;
 
       setTimeout(function () {
         if(self.props.params.jobId){
           if(contact.id.indexOf('tmp') > -1){
-            //this is a temp. need to create
             self.props.history.replaceState(null,`/clients/${contact.companyId}/jobs/${self.props.params.jobId}/candidates/${id}/create`);
           } else {
             self.props.createCandidate(contact, self.props.params.jobId);

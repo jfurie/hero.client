@@ -59,3 +59,6 @@ export const SET_FRAMEWORKS = 'hero.client/jobs/SET_FRAMEWORKS';
 export const TOGGLE_TAG = 'hero.client/jobs/TOGGLE_TAG';
 export const TOGGLE_TAG_SUCCESS = 'hero.client/jobs/TOGGLE_TAG_SUCCESS';
 export const TOGGLE_TAG_FAIL = 'hero.client/jobs/TOGGLE_TAG_FAIL';
+export const GET_JOB_DETAILS = 'hero.client/jobs/GET_JOB_DETAILS';
+export const GET_JOB_DETAILS_SUCCESS = 'hero.client/jobs/GET_JOB_DETAILS_SUCCESS';
+export const GET_JOB_DETAILS_FAIL = 'hero.client/jobs/GET_JOB_DETAILS_FAIL';

@@ -1,11 +1,15 @@
 import superagent from 'superagent';
 import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
-import { saveCandidatesByJobResult } from '../candidates';
+import { saveCandidatesResult } from '../candidates';
 import { saveLocationResult } from '../locations';
 import Schemas from '../../utils/schemas';
-
-
+import { saveContactResult } from '../contacts';
+import { getContactsByIdsIfNeeded } from '../contacts';
+import { getNotesByIdsIfNeeded } from '../notes';
+import { getLocationsByIdsIfNeeded } from '../locations';
+import { getCompaniesByIdsIfNeeded } from '../companies';
+import { getFavoritesByUserId } from '../favorites';
 export function getJobsByCompany(companyId){
 
   let include = [
@@ -60,15 +64,21 @@ export function createJob(job, category){
     .set('description',category.get('description'))
     .set('title',category.get('title'));
   }
-
-  return {
-    id,
-    job,
-    types: [constants.CREATE_JOB, constants.CREATE_JOB_SUCCESS, constants.CREATE_JOB_FAIL],
-    promise: (client, auth) => client.api.post('/jobs', {
-      authToken: auth.authToken,
-      data:job,
-    }),
+  return (dispatch) => {
+    return dispatch({
+      id,
+      job,
+      types: [constants.CREATE_JOB, constants.CREATE_JOB_SUCCESS, constants.CREATE_JOB_FAIL],
+      promise: (client, auth) => client.api.post('/jobs', {
+        authToken: auth.authToken,
+        data:job,
+      }).then(result =>{
+        if(auth && auth.authToken && auth.authToken.userId){
+          dispatch(getFavoritesByUserId(auth.authToken.userId));
+        }
+        return result;
+      }),
+    });
   };
 }
 
@@ -167,12 +177,65 @@ export function saveJob(job, category){
   };
 }
 
-export function getMyJobs(){
-  return {
-    types: [constants.GET_MY_JOBS, constants.GET_MY_JOBS_SUCCESS, constants.GET_MY_JOBS_FAIL],
-    promise: (client, auth) => client.api.get('/jobs/myJobs', {
-      authToken: auth.authToken,
-    }),
+// export function getMyJobs(){
+//   return {
+//     types: [constants.GET_MY_JOBS, constants.GET_MY_JOBS_SUCCESS, constants.GET_MY_JOBS_FAIL],
+//     promise: (client, auth) => client.api.get('/jobs/myJobs', {
+//       authToken: auth.authToken,
+//     }),
+//   };
+// }
+
+export function getMyJobs() {
+  let filter = {
+    include:[
+      {
+        relation:'candidates',
+      },
+    ],
+  };
+
+  let filterString = encodeURIComponent(JSON.stringify(filter));
+
+  return (dispatch) => {
+    dispatch({
+      types: [constants.GET_MY_JOBS, constants.GET_MY_JOBS_SUCCESS, constants.GET_MY_JOBS_FAIL],
+      promise: (client, auth) => client.api.get(`/jobs?filter=${filterString}`, {
+        authToken: auth.authToken,
+      }).then((jobs)=> {
+        let companyIds = [];
+        let locationIds = [];
+        let contactIds = [];
+
+        jobs.forEach(job => {
+          if (job.companyId) {
+            companyIds.push(job.companyId);
+          }
+
+          if (job.locationId) {
+            locationIds.push(job.locationId);
+          }
+
+          if (job.talentAdvocateId) {
+            contactIds.push(job.talentAdvocateId);
+          }
+
+          if (job.candidates) {
+            job.candidates.map((candidate => {
+              contactIds.push(candidate.contactId);
+            }));
+
+            dispatch(saveCandidatesResult(job.candidates));
+          }
+        });
+
+        dispatch(getCompaniesByIdsIfNeeded(companyIds));
+        dispatch(getLocationsByIdsIfNeeded(locationIds));
+        dispatch(getContactsByIdsIfNeeded(contactIds));
+
+        return jobs;
+      }),
+    });
   };
 }
 
@@ -208,7 +271,7 @@ export function deleteJob(id) {
     }).then(response =>{
       return {
         response,
-        id
+        id,
       };
     }),
   };
@@ -244,15 +307,95 @@ export function saveJobsByContactResult(jobs, contactId){
   };
 }
 
+export function getJobDetails(jobIds, include) {
+  return (dispatch, getState) => {
+    let filter = {
+      where: {
+        id: {inq:jobIds},
+      },
+      include:[
+        {
+          relation:'candidates',
+        },
+        {
+          relation:'notes',
+          scope:{
+            order: 'updated DESC',
+            where: { or: [
+              {and: [{privacyValue: 0}, {userId: getState().auth.get('user').get('id')}]},
+              {privacyValue: 1},
+            ]},
+            fields: ['id'],
+          },
+        },
+      ],
+    };
+
+    let filterString = encodeURIComponent(JSON.stringify(filter));
+
+    dispatch({
+      types: [constants.GET_JOB_DETAILS, constants.GET_JOB_DETAILS_SUCCESS, constants.GET_JOB_DETAILS_FAIL],
+      promise: (client, auth) => client.api.get(`/jobs?filter=${filterString}`, {
+        authToken: auth.authToken,
+      }).then((jobs)=> {
+        let companyIds = [];
+        let locationIds = [];
+        let contactIds = [];
+        let noteIds = [];
+
+        jobs.forEach(job => {
+          if (job.companyId) {
+            companyIds.push(job.companyId);
+          }
+
+          if (job.locationId) {
+            locationIds.push(job.locationId);
+          }
+
+          if (job.talentAdvocateId) {
+            contactIds.push(job.talentAdvocateId);
+          }
+
+          if (include && include.indexOf('candidates') > -1 && job.candidates) {
+            job.candidates.map((candidate => {
+              contactIds.push(candidate.contactId);
+            }));
+
+            dispatch(saveCandidatesResult(job.candidates));
+          }
+
+          if (include && include.indexOf('notes') > -1 && job.notes) {
+            job.notes.map((note => {
+              noteIds.push(note.id);
+            }));
+          }
+        });
+
+        dispatch(getCompaniesByIdsIfNeeded(companyIds));
+        dispatch(getLocationsByIdsIfNeeded(locationIds));
+        dispatch(getContactsByIdsIfNeeded(contactIds));
+        dispatch(getNotesByIdsIfNeeded(noteIds));
+
+        return jobs;
+      }),
+    });
+  };
+}
+
 export function getJobDetail(id) {
   return (dispatch) => {
     dispatch({
+      id,
       types: [constants.GET_JOB_DETAIL, constants.GET_JOB_DETAIL_SUCCESS, constants.GET_JOB_DETAIL_FAIL],
-      promise: (client, auth) => client.api.get(`/jobs/detail?id=${id}`, {
+      promise: (client, auth) => client.api.get(`/jobs/${id}/detail`, {
         authToken: auth.authToken,
       }).then((job)=> {
         if (job.location) {
           dispatch(saveLocationResult(job.location));
+        }
+
+        if (job.talentAdvocate) {
+          dispatch(saveContactResult(job.talentAdvocate));
         }
 
         if (job.notes && job.notes.length > 0) {
@@ -260,7 +403,7 @@ export function getJobDetail(id) {
         }
 
         if (job.candidates && job.candidates.length > 0) {
-          dispatch(saveCandidatesByJobResult(job.candidates));
+          dispatch(saveCandidatesResult(job.candidates));
         }
         return job;
       }),
@@ -293,7 +436,7 @@ export function getJobsByIds(jobIds, include){
 
 export function getJobsByIdsIfNeeded(jobIds, include){
   return (dispatch, getState) => {
-    var newJobIds =[];
+    let newJobIds =[];
     jobIds.map((jobId => {
       if(!getState().companies.get('list').get(jobId)){
         newJobIds.push(jobId);
@@ -324,7 +467,7 @@ export function setCategoryLocal(jobId, jobCategory){
       jobCategory = jobCategory.toJSON();
     }
     if(!jobCategory.id){
-      jobCategory.id = 'tmp_' + guid();
+      jobCategory.id = `tmp_${guid()}`;
     }
   }
   return {

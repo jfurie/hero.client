@@ -9,8 +9,9 @@ import { getContactsByCompany } from '../../../modules/contacts';
 import { getAllCategories } from '../../../modules/categories';
 import { JobCreate } from '../../../components/web';
 import getCompanyDataFromState from '../../../dataHelpers/company';
+import Config from '../../../utils/config';
 
-const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
+const HEROCOMPANYID = Config.get('heroCompanyId');
 
 let getData = (state, props) => {
   let job = state.jobs.get('list').get(props.params.jobId);
@@ -134,7 +135,7 @@ export default class JobCreateContainer extends React.Component {
     this._handleChange(job);
 
     if (companyId) {
-      this.props.getCompanyDetails(companyId);
+      this.props.getCompanyDetails([companyId]);
     }
   }
 

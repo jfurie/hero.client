@@ -300,6 +300,16 @@ export default class ClientsCreateModal extends React.Component {
                     />
                   </div>
                   <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={(company.get('errors') && company.get('errors').indeedId) || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'indeedId')}
+                        value={company.get('indeedId')}
+                        floatingLabelText="Indeed Id"
+                    />
+                  </div>
+                  <div className="col-xs-10 ">
                     <TagsInput value={tags} onChange={this._handleTagsChange.bind(this)} title="Tags" />
                   </div>
                   <div className="col-xs-12">
@@ -353,9 +363,19 @@ export default class ClientsCreateModal extends React.Component {
                         floatingLabelText="Twitter Handle (optional)"
                     />
                   </div>
+                  <div className="col-xs-10 ">
+                    <TextField
+                        style={style.textField}
+                        errorText={company.get('errors') && company.get('errors').instagramHandle || ''}
+                        errorStyle={style.error}
+                        onChange={(e) => this._handleChange.bind(this)(e, 'instagramHandle')}
+                        value={company.get('instagramHandle')}
+                        floatingLabelText="Instagram Handle (optional)"
+                    />
+                  </div>
                   <div className="col-xs-12">
                     <Divider style={style.divider} />
-                    <div style={style.subheader}>Jobs</div>
+                    <div style={style.subheader}>Job Boards</div>
                   </div>
                   <div className="col-xs-10">
                     <TextField
@@ -415,7 +435,7 @@ export default class ClientsCreateModal extends React.Component {
                         onChange={(e) => this._handleChange.bind(this)(e, 'productSolution')}
                         value={company.get('productSolution')}
                         floatingLabelStyle={{left:'0px'}}
-                        floatingLabelText="What problem are you addressing and how are you addressing it?"
+                        floatingLabelText="Company Mission"
                     />
                   </div>
                   <div className="col-xs-10 ">

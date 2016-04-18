@@ -315,6 +315,7 @@ export default function reducer(state = initialState, action = {}) {
   }
   case constants.GET_JOB_DETAIL_SUCCESS: {
     let jobMap = {};
+    action.result.show404 = false;
     jobMap[action.result.id] = action.result;
     jobMap = Immutable.fromJS(jobMap);
     jobMap.map(job =>{
@@ -328,7 +329,24 @@ export default function reducer(state = initialState, action = {}) {
     return state.set('list', state.get('list').mergeDeep(jobMap));
   }
   case constants.GET_JOB_DETAIL_FAIL: {
-    return state.set('err', action.err);
+    let jobsMap = {};
+    let job = {
+      show404:true,
+      id:action.id,
+    };
+    jobsMap[action.id] = job;
+    return state.withMutations(ctx=> {
+      ctx
+      .set('list', state.get('list').mergeDeep(Immutable.fromJS(jobsMap)));
+    });
+  }
+  case constants.GET_JOB_DETAILS_SUCCESS: {
+    let jobsMap = {};
+    action.result.map((c) => {
+      jobsMap[c.id] = c;
+    });
+
+    return state.set('list', state.get('list').mergeDeep(jobsMap));
   }
   case constants.SET_EXPERIENCE:{
     let jobCategory = action.result;

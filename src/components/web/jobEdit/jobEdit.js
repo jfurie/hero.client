@@ -5,7 +5,7 @@ import {
   FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles,
   Card, CardMedia, CardText, LinearProgress, DatePicker,
 } from 'material-ui';
-import { FileInput, TagsInput, Dialog } from '../';
+import { FileInput, Dialog } from '../';
 import {
  Location,
 } from '../';
@@ -81,7 +81,12 @@ const style = {
     color: 'rgba(0, 0, 0, 0.298039)',
     fontSize: '12px',
     transform: 'none',
+    left:'0',
   },
+  datePicker:{
+    width:'100%',
+    marginTop:'16px',
+  }
 };
 
 export default class JobEdit extends React.Component {
@@ -399,10 +404,6 @@ export default class JobEdit extends React.Component {
                         type="number"
                         value={job.get('fee')}
                     />
-                  </div>
-
-                  <div className="col-xs-10 ">
-                    <TagsInput value={job.get('skills')} onChange={this._handleSkillsChange.bind(this)} title="Skills" />
                   </div>
 
                   <div className="col-xs-10 ">

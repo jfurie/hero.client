@@ -1,8 +1,9 @@
 import { createCandidateFavorite, deleteCandidateFavorite, saveCandidateByContactResult } from '../candidates';
 import { saveJobsByContactResult } from '../jobs';
-import { saveCompaniesResult } from '../companies';
-import { saveLocationResult } from '../locations';
+import { getCompaniesByIdsIfNeeded, saveCompaniesResult } from '../companies';
+import { getLocationsByIdsIfNeeded, saveLocationResult } from '../locations';
 import * as constants from './constants';
+import s3Uploader from '../../utils/s3Uploader';
 
 export function getAllContacts() {
   return {
@@ -176,18 +177,107 @@ export function saveContactsByCompanyResult(contacts){
 export function getContactDetail(id) {
   return (dispatch) => {
     dispatch({
+      id,
       types: [constants.GET_CONTACT_DETAIL, constants.GET_CONTACT_DETAIL_SUCCESS, constants.GET_CONTACT_DETAIL_FAIL],
       promise: (client, auth) => client.api.get(`/contacts/detail?id=${id}`, {
         authToken: auth.authToken,
       }).then((contact)=> {
         if (contact.jobs && contact.jobs.length > 0) {
           dispatch(saveJobsByContactResult(contact.jobs, contact.id));
+        }
+        if (contact.companies && contact.companies.length > 0) {
           dispatch(saveCompaniesResult(contact.companies));
-          if (contact.location) {
-            dispatch(saveLocationResult(contact.location));
-          }
+        }
+        if (contact.location) {
+          dispatch(saveLocationResult(contact.location));
         }
         return contact;
+      }),
+    });
+  };
+}
+
+export function updateCoverImage(id, file) {
+  return (dispatch) => {
+    dispatch({
+      id,
+      types:[constants.UPDATE_COVER_IMAGE, constants.UPDATE_COVER_IMAGE_SUCCESS, constants.UPDATE_COVER_IMAGE_FAIL],
+      promise: (client, auth) => {
+        return s3Uploader(client,auth,'image',file,function(percent){
+          dispatch({
+            id,
+            type: constants.UPDATE_COVER_IMAGE_PROGRESS,
+            result: percent,
+          });
+        });
+      },
+    });
+  };
+}
+
+export function updateAvatarImage(id, file) {
+  return (dispatch) => {
+    dispatch({
+      id,
+      types:[constants.UPDATE_AVATAR_IMAGE, constants.UPDATE_AVATAR_IMAGE_SUCCESS, constants.UPDATE_AVATAR_IMAGE_FAIL],
+      promise: (client, auth) => {
+        return s3Uploader(client,auth,'image',file,function(percent){
+          dispatch({
+            id,
+            type: constants.UPDATE_AVATAR_IMAGE_PROGRESS,
+            result: percent,
+          });
+        });
+      },
+    });
+  };
+}
+
+export function getContactDetails(contactIds, include) {
+  return (dispatch) => {
+    let filter = {
+      where: {
+        id: {inq:contactIds},
+      },
+      include:[
+        {
+          relation:'companies',
+          scope: {
+            fields: ['id'],
+          },
+        },
+        {
+          relation:'coverImage',
+        },
+      ],
+    };
+
+    let filterString = encodeURIComponent(JSON.stringify(filter));
+
+    dispatch({
+      types: [constants.GET_CONTACT_DETAILS, constants.GET_CONTACT_DETAILS_SUCCESS, constants.GET_CONTACT_DETAILS_FAIL],
+      promise: (client, auth) => client.api.get(`/contacts?filter=${filterString}`, {
+        authToken: auth.authToken,
+      }).then((contacts)=> {
+        let companyIds = [];
+        let locationIds = [];
+
+        contacts.forEach(contact => {
+          if (contact.locationId) {
+            locationIds.push(contact.locationId);
+          }
+
+          if (include && include.indexOf('companies') > -1 && contact.companies) {
+            contact.companies.map((company => {
+              companyIds.push(company.id);
+            }));
+          }
+        });
+
+        dispatch(getCompaniesByIdsIfNeeded(companyIds));
+        dispatch(getLocationsByIdsIfNeeded(locationIds));
+
+        return contacts;
       }),
     });
   };
@@ -355,4 +445,18 @@ export function setExperience(contactId,contactCategory, category){
     });
   };
 
+}
+
+export function saveContactResult(contact){
+  return {
+    type: constants.GET_ONE_CONTACT_SUCCESS,
+    result: contact,
+  };
+}
+
+export function saveContactsResult(contacts){
+  return {
+    type: constants.GET_CONTACTS_SUCCESS,
+    result: contacts,
+  };
 }

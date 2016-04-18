@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import categoryLinkSort from '../../../utils/categoryLinkSort';
 import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar } from 'material-ui';
-import { CompanyAvatar, Gravatar, Tag, FindButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
+import { ShareLinkModal, CompanyAvatar, Gravatar, Tag, FindButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
 let style = {
   layout:{
     display:'flex',
@@ -76,6 +76,7 @@ let style = {
     display: 'inline',
     width: '20px',
     height: '20px',
+    cursor:'pointer',
     container: {
       display: 'inline',
       position: 'relative',
@@ -93,11 +94,13 @@ let style = {
     marginLeft: '7px',
     top: '-8px',
     lineHeight: 0,
+    cursor:'pointer',
   },
   accountOwnerGravatar:{
     display: 'inline',
     width: '25px',
     height: '25px',
+    cursor:'pointer',
     container:{
       top:'9px',
       display: 'inline',
@@ -108,6 +111,10 @@ let style = {
   },
 };
 
+function cleanTitle(title){
+  return title.replace(/[^A-Za-z0-9_\.~]+/gm, '-');
+}
+
 @connect((state) =>
 {
   return {categories: state.categories.list};
@@ -115,6 +122,9 @@ let style = {
 export default class JobListItem extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      openShareLinkModal: false,
+    };
   }
   clickJob(){
     let {job} = this.props;
@@ -137,9 +147,27 @@ export default class JobListItem extends React.Component {
   }
 
   _onTouchTapShare() {
-    let subject = `Check out ${this.props.job.get('name')} on HERO`;
-    let body = `${encodeURIComponent(this.props.job.get('name'))}%0A${encodeURIComponent(window.location.href)}`;
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
+    let {job} = this.props;
+
+    let title = job.get('title');
+
+    if (job.get('public')) {
+      title = `${job.get('company').get('name')} ${title}`;
+    }
+
+    title = cleanTitle(title);
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${title}`;
+
+    this.setState({
+      openShareLinkModal: true,
+      shareUrl: url,
+    });
+  }
+
+  _onCloseShareLinkModal() {
+    this.setState({
+      openShareLinkModal: false,
+    });
   }
 
   _onTouchTapSave() {
@@ -168,11 +196,11 @@ export default class JobListItem extends React.Component {
     }
 
     candidates.forEach(function(c, key) {
-      if (key < limit) {
+      if ((key < limit) && c.get('contact')) {
         peopleList.push(
         <Gravatar
           style={style.gravatar}
-          key={key} email={c.get('email')}
+          key={key} email={c.get('contact').get('email')}
           status={'notset'}
           label={c.get('contact').get('displayName')}
           tooltipPosition="right"
@@ -227,8 +255,6 @@ export default class JobListItem extends React.Component {
       }
     }
 
-
-
     let isHot = false;
     let isInterviewing = false;
 
@@ -237,6 +263,7 @@ export default class JobListItem extends React.Component {
       isInterviewing = job.get('tags').indexOf('Interviewing') > -1;
     }
     return (
+      <div>
       <Card
           style={{
             height: type !=='mini'?'auto':'80px',
@@ -270,14 +297,21 @@ export default class JobListItem extends React.Component {
             </div>
           </div>):(<div></div>)}
             <CardBasic
-                image={<CompanyAvatar style={{width:'40px'}} url={job.get('company')&&job.get('company').get('website')} />}
-                title= {<div style={{fontWeight: 'bold'}}>{job.get('title')}</div>}
-                subtitle1={job.get('company')&&job.get('company').get('name')}
-                subtitle2={<span>{job.get('department')?job.get('department'):'Tech'} Department</span>}
+                image={<CompanyAvatar style={{width:'40px', cursor:'pointer'}} url={job.get('company')&&job.get('company').get('website')} />}
+                title= {<div style={{fontWeight: 'bold', cursor:'pointer'}}>{job.get('title')}</div>}
+                subtitle1={<span style={{cursor:'pointer'}} >{job.get('company')&&job.get('company').get('name')}</span>}
+                subtitle2={<span style={{cursor:'pointer'}} >{job.get('department')?job.get('department'):'Tech'} Department</span>}
                 onTouchTap={this.clickJob.bind(this)}
                 rightContent={
                   job.get('talentAdvocate')?(<div onClick={this.clickTalentAdvocate.bind(this)}>
-                    <Gravatar url={job.get('talentAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{job.get('talentAdvocate').get('displayName')}</div>
+                    <Gravatar
+                        email={job.get('talentAdvocate').get('email')}
+                        status={'notset'}
+                        style={style.accountOwnerGravatar}
+                        label={job.get('talentAdvocate').get('displayName')}
+                        tooltipPosition="right"
+                    />
+
                   </div>):(<div></div>)
                 }
             />
@@ -330,11 +364,13 @@ export default class JobListItem extends React.Component {
           >
             <FindButton />
             <FavoriteButton isFavorited={job.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
-            <ShareButton />
+            <ShareButton onTouchTap={this._onTouchTapShare.bind(this)} />
           </CardActions>
         </div>):(<div></div>)}
 
       </Card>
+      <ShareLinkModal url={this.state.shareUrl} open={this.state.openShareLinkModal} onClose={this._onCloseShareLinkModal.bind(this)} />
+      </div>
     );
   }
 }

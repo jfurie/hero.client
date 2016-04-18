@@ -4,8 +4,9 @@ import Immutable from 'immutable';
 import {ClientsCreate} from '../../../components/web';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { editCompany, createCompany, getMyCompanies, getOneCompany, updateCompanyImage } from '../../../modules/companies';
+import Config from '../../../utils/config';
 
-const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
+const HEROCOMPANYID = Config.get('heroCompanyId');
 
 let getData = (state, props) => {
   let company = null;
@@ -71,10 +72,7 @@ export default class ClientCreateContainer extends React.Component {
             self.props.history.replaceState(null, `/clients/${id}`);
           }
         }, 500);
-
-        this.props.getMyCompanies();
       }
-
     }
 
     if(newProps.params.companyId != this.props.params.companyId && newProps.params.companyId.indexOf('tmp')<=-1 ){

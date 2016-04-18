@@ -40,7 +40,7 @@ export default function reducer(state = initialState, action = {}) {
     action.result.map((c) => {
       contactsMap[c.id] = c;
     });
-    return state.set('list',state.get('list').merge(contactsMap));
+    return state.set('list',state.get('list').mergeDeep(contactsMap));
   }
   case constants.GET_CONTACTS:
     return state;
@@ -219,7 +219,7 @@ export default function reducer(state = initialState, action = {}) {
     let companyId = action.result.companyId;
     let byCompanyMapNew = {};
 
-    byCompanyMapNew[companyId] = state.byCompanyId.get(companyId) || new Immutable.List();
+    byCompanyMapNew[companyId] = state.get('byCompanyId').get(companyId) || new Immutable.List();
     byCompanyMapNew[companyId] = byCompanyMapNew[companyId].push(action.result.id);
     return state.withMutations(ctx=> {
       ctx
@@ -275,19 +275,19 @@ export default function reducer(state = initialState, action = {}) {
       .set('list', state.get('list').merge(contactsMap));
     });
   }
-  case jobConstants.GET_MY_JOBS_SUCCESS:
-    {
-      let contactList =  {};
-      action.result.map(job =>{
-        job.candidates.map(candidate=>{
-          contactList[candidate.contact.id] = candidate.contact;
-        });
-      });
-      return state.withMutations(ctx=> {
-        ctx
-        .set('list', state.get('list').mergeDeep(contactList));
-      });
-    }
+  // case jobConstants.GET_MY_JOBS_SUCCESS:
+  //   {
+  //     let contactList =  {};
+  //     action.result.map(job =>{
+  //       job.candidates.map(candidate=>{
+  //         contactList[candidate.contact.id] = candidate.contact;
+  //       });
+  //     });
+  //     return state.withMutations(ctx=> {
+  //       ctx
+  //       .set('list', state.get('list').mergeDeep(contactList));
+  //     });
+  //   }
   case constants.SEARCH_CONTACTS_SUCCESS: {
     let query = action.result.query;
 
@@ -307,15 +307,33 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_CONTACT_DETAIL_SUCCESS: {
     let contactsMap = {};
     let id = action.result.id;
-    contactsMap[id] = action.result;
+    action.result.show404 = false;
 
+    contactsMap[id] = Immutable.fromJS(action.result).delete('coverImage').delete('avatarImage');
     return state.withMutations(ctx=> {
       ctx
       .set('list', state.get('list').mergeDeep(contactsMap));
     });
   }
   case constants.GET_CONTACT_DETAIL_FAIL: {
-    return state;
+    let contactsMap = {};
+    let contact = {
+      show404:true,
+      id:action.id,
+    };
+    contactsMap[action.id] = contact;
+    return state.withMutations(ctx=> {
+      ctx
+      .set('list', state.get('list').mergeDeep(Immutable.fromJS(contactsMap)));
+    });
+  }
+  case constants.GET_CONTACT_DETAILS_SUCCESS: {
+    let contactsMap = {};
+    action.result.map((c) => {
+      contactsMap[c.id] = c;
+    });
+
+    return state.set('list', state.get('list').mergeDeep(contactsMap));
   }
   case constants.GET_MY_CONTACTS_SUCCESS: {
     let contactsMap = {};
@@ -484,6 +502,63 @@ export default function reducer(state = initialState, action = {}) {
     }
     contacts = Immutable.fromJS(contacts);
     return state.mergeDeepIn(['list'],contacts);
+  }
+
+  case constants.UPDATE_COVER_IMAGE:{
+    let contact = {};
+    contact[action.id] = {
+      isUploadingCover:true,
+      percentUploadedCover:0,
+    };
+    return state.set('list', state.get('list').mergeDeep(contact));
+  }
+  case constants.UPDATE_COVER_IMAGE_SUCCESS:{
+    let contact = {};
+    let image = {
+      coverImageId:action.result.id,
+      isUploadingCover:false,
+      percentUploadedCover:100,
+    };
+    contact[action.id] = image;
+
+    return state.set('list', state.get('list').mergeDeep(contact));
+  }
+  case constants.UPDATE_COVER_IMAGE_PROGRESS:{
+    let contact = {};
+    let image = {
+      isUploadingCover:true,
+      percentUploadedCover:action.result,
+    };
+    contact[action.id] = image;
+    return state.set('list', state.get('list').mergeDeep(contact));
+  }
+  case constants.UPDATE_AVATAR_IMAGE:{
+    let contact = {};
+    contact[action.id] = {
+      isUploadingAvatar:true,
+      percentUploadedAvatar:0,
+    };
+    return state.set('list', state.get('list').mergeDeep(contact));
+  }
+  case constants.UPDATE_AVATAR_IMAGE_SUCCESS:{
+    let contact = {};
+    let image = {
+      avatarImageId:action.result.id,
+      isUploadingAvatar:false,
+      percentUploadedAvatar:100,
+    };
+    contact[action.id] = image;
+
+    return state.set('list', state.get('list').mergeDeep(contact));
+  }
+  case constants.UPDATE_AVATAR_IMAGE_PROGRESS:{
+    let contact = {};
+    let image = {
+      isUploadingAvatar:true,
+      percentUploadedAvatar:action.result,
+    };
+    contact[action.id] = image;
+    return state.set('list', state.get('list').mergeDeep(contact));
   }
   default:
     return state;

@@ -7,7 +7,6 @@ import { getContactDetail } from '../../../modules/contacts';
 import { createContactFavorite, deleteContactFavorite } from '../../../modules/favorites';
 import { replaceNoteLocal, deleteNote } from '../../../modules/notes/index';
 import { createJobFavorite, deleteJobFavorite } from '../../../modules/favorites';
-//const HEROCOMPANYID = '568f0ea89faa7b2c74c18080';
 import getContactDataFromState from '../../../dataHelpers/contact';
 
 function getData(state, props) {
@@ -15,6 +14,7 @@ function getData(state, props) {
 
   return {
     tab,
+    isHero: state.auth.get('isHero'),
     contact: getContactDataFromState(state, props.params.contactId),
   };
 }
@@ -52,14 +52,14 @@ class ContactDetailsPage extends React.Component {
   addNoteModalOpen(note){
     if (!note) {
       note = new Immutable.Map({
-        id: 'tmp_' + this._guid(),
+        id: `tmp_${this._guid()}`,
         privacyValue: 0,
       });
     }
 
     this.props.replaceNoteLocal(note);
 
-    this.props.pushState({}, `/contact/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+    this.props.pushState({}, `/contact/${this.props.params.companyId}/notes/${note.get('id')}/create?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
   }
 
   _handleDeleteNote(note) {
@@ -92,16 +92,18 @@ class ContactDetailsPage extends React.Component {
     return (
       <div>
         <ContactDetails
-        favoriteContact={this.favoriteContact.bind(this)}
-        unfavoriteContact={this.unfavoriteContact.bind(this)}
-        favoriteJob={this.favoriteJob.bind(this)}
-        unfavoriteJob={this.unfavoriteJob.bind(this)}
-        deleteNote={this._handleDeleteNote.bind(this)}
-        location={this.props.location}
-        onContactDetailsClose={this.onContactDetailsClose.bind(this)}
-        open={true}
-        tab={this.props.tab}
-        contact={contact} />
+            {...this.props}
+            favoriteContact={this.favoriteContact.bind(this)}
+            unfavoriteContact={this.unfavoriteContact.bind(this)}
+            favoriteJob={this.favoriteJob.bind(this)}
+            unfavoriteJob={this.unfavoriteJob.bind(this)}
+            deleteNote={this._handleDeleteNote.bind(this)}
+            location={this.props.location}
+            onContactDetailsClose={this.onContactDetailsClose.bind(this)}
+            open
+            tab={this.props.tab}
+            contact={contact}
+        />
       </div>
     );
   }

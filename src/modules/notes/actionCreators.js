@@ -1,4 +1,5 @@
 import * as constants from './constants';
+import { saveContactsResult } from '../contacts';
 export function getNotesByCompany(companyId, userId){
   let filter = {
     where: { or: [
@@ -169,24 +170,61 @@ export function saveNotesByJobResult(notes){
   };
 }
 
-export function getNotesByIds(noteIds){
+// export function getNotesByIds(noteIds){
+//   return (dispatch) => {
+//     return dispatch({
+//       types:[constants.GET_NOTES_BY_IDS, constants.GET_NOTES_BY_IDS_SUCCESS, constants.GET_NOTES_BY_IDS_FAIL],
+//       promise:(client,auth) => {
+//         let filter= {where:{id:{inq:noteIds}}};
+//         let filterString = encodeURIComponent(JSON.stringify(filter));
+//         return client.api.get(`/notes?filter=${filterString}`,{
+//           authToken: auth.authToken,
+//         });
+//       }
+//     });
+//   };
+// }
+
+export function getNotesByIds(noteIds) {
   return (dispatch) => {
-    return dispatch({
+    let filter = {
+      where: {
+        id: {inq:noteIds},
+      },
+      include:[
+        {
+          relation:'contact',
+        },
+      ],
+    };
+
+    let filterString = encodeURIComponent(JSON.stringify(filter));
+
+    dispatch({
       types:[constants.GET_NOTES_BY_IDS, constants.GET_NOTES_BY_IDS_SUCCESS, constants.GET_NOTES_BY_IDS_FAIL],
-      promise:(client,auth) => {
-        let filter= {where:{id:{inq:noteIds}}};
-        let filterString = encodeURIComponent(JSON.stringify(filter));
-        return client.api.get(`/notes?filter=${filterString}`,{
-          authToken: auth.authToken,
+      promise: (client, auth) => client.api.get(`/notes?filter=${filterString}`, {
+        authToken: auth.authToken,
+      }).then((notes)=> {
+
+        let contacts = [];
+
+        notes.forEach(note => {
+          if (note.contact) {
+            contacts.push(note.contact);
+          }
         });
-      }
+
+        dispatch(saveContactsResult(contacts));
+
+        return notes;
+      }),
     });
   };
 }
 
 export function getNotesByIdsIfNeeded(noteIds){
   return (dispatch, getState) => {
-    var newNoteIds =[];
+    let newNoteIds =[];
     noteIds.map((noteId => {
       if(!getState().companies.get('list').get(noteId)){
         newNoteIds.push(noteId);

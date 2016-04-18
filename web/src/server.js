@@ -23,9 +23,9 @@ function startApp() {
     cache: false
   });
   app.get('*',function(req,res,next){
-    // if(req.headers['x-forwarded-proto']!='https')
-    //   res.redirect('https://'+req.get('host') + req.originalUrl);
-    // else
+    if(req.headers['x-forwarded-proto']!='https' && config.env !== 'local')
+      res.redirect('https://'+req.get('host') + req.originalUrl);
+    else
       next(); /* Continue to other routes if we're not redirecting */
   });
   app.use(express.static(config.root + '/public'));
@@ -40,7 +40,7 @@ function startApp() {
         let data = JSON.parse(body);
         console.log(data);
         meta.title = data.title;
-        if(data.company){
+        if(data.public && data.company){
           meta.title = meta.title +  ' at ' + data.company.name;
         }
         if(data.city && data.state){
@@ -62,9 +62,15 @@ function startApp() {
         if (data.image) {
           meta.image = data.image;
         }
+        console.log(meta);
+
+        res.render('main', {meta});
+      }
+      else {
+        res.status(404);
+        res.render('404');
       }
 
-      res.render('main', {meta});
     });
   });
   app.get('*', function(req, res) {

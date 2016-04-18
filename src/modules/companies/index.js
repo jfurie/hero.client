@@ -3,15 +3,15 @@ import Immutable from 'immutable';
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 import * as authConstants from '../auth/constants';
-import { getJobsByIdsIfNeeded } from '../jobs';
-import { getContactsByIdsIfNeeded } from '../contacts';
-import { getNotesByIdsIfNeeded } from '../notes';
-import { getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
+import { getJobsByIds, getJobsByIdsIfNeeded } from '../jobs';
+import { getContactsByIds, getContactsByIdsIfNeeded } from '../contacts';
+import { getNotesByIds, getNotesByIdsIfNeeded } from '../notes';
+import { getLocationsByIds, getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
 import { getFavoriteByType } from '../favorites';
 
 import superagent from 'superagent';
 import {actionTypes} from 'redux-localstorage';
-
+import s3Uploader from '../../utils/s3Uploader';
 const initialState = new Immutable.Map({
   list: new Immutable.Map(),
   myCompanyIds: new Immutable.Map(),
@@ -40,16 +40,32 @@ export default function reducer(state = initialState, action = {}) {
       companiesMap[c.id] = c;
     });
 
-    return state.set('list', state.get('list').merge(companiesMap));
+    return state.set('list', state.get('list').mergeDeep(companiesMap));
   }
   case constants.GET_COMPANY_DETAILS_SUCCESS: {
     let companiesMap = {};
-    action.result.map((c) => {
-      companiesMap[c.id] = c;
+    action.companyIds.map((c) => {
+      let result = action.result.find(x => {
+        return x.id == c;
+      });
+      if(result){
+        companiesMap[c] = result;
+      } else {
+        companiesMap[c] = {id:c, show404:true};
+      }
     });
 
     return state.set('list', state.get('list').mergeDeep(companiesMap));
   }
+  case constants.GET_COMPANY_DETAILS_FAIL: {
+    let companiesMap = {};
+    action.companyIds.map((c) => {
+      companiesMap[c] = {id:c, show404:true};
+    });
+
+    return state.set('list', state.get('list').mergeDeep(companiesMap));
+  }
+
   case constants.GET_COMPANIES: {
     return state;
   }
@@ -148,16 +164,16 @@ export default function reducer(state = initialState, action = {}) {
       state.set('searches', state.get('searches').mergeDeep(action.result)).set('currentSearch', action.query);
     });
   }
-  case jobConstants.GET_MY_JOBS_SUCCESS: {
-    let companyList =  {};
-    action.result.map(job =>{
-      if(job.company){
-        companyList[job.company.id] = job.company;
-      }
-    });
-
-    return state.set('list', state.get('list').mergeDeep(companyList));
-  }
+  // case jobConstants.GET_MY_JOBS_SUCCESS: {
+  //   let companyList =  {};
+  //   action.result.map(job =>{
+  //     if(job.company){
+  //       companyList[job.company.id] = job.company;
+  //     }
+  //   });
+  //
+  //   return state.set('list', state.get('list').mergeDeep(companyList));
+  // }
   case jobConstants.GET_JOB_SUCCESS: {
     let companyList =  {};
     companyList[action.result.company.id] = action.result;
@@ -464,7 +480,7 @@ export function saveCompaniesResult(companies){
   };
 }
 
-export function getCompanyDetails(companyIds, include) {
+export function getCompanyDetails(companyIds, include, latest) {
   return (dispatch, getState) => {
     let filter = {
       where: {
@@ -500,6 +516,7 @@ export function getCompanyDetails(companyIds, include) {
     let filterString = encodeURIComponent(JSON.stringify(filter));
 
     dispatch({
+      companyIds,
       types: [constants.GET_COMPANY_DETAILS, constants.GET_COMPANY_DETAILS_SUCCESS, constants.GET_COMPANY_DETAILS_FAIL],
       promise: (client, auth) => client.api.get(`/companies?filter=${filterString}`, {
         authToken: auth.authToken,
@@ -537,18 +554,42 @@ export function getCompanyDetails(companyIds, include) {
           }
         });
 
-        dispatch(getLocationsByIdsIfNeeded(locationIds));
-        dispatch(getContactsByIdsIfNeeded(contactIds));
-        dispatch(getJobsByIdsIfNeeded(jobIds));
-        dispatch(getNotesByIdsIfNeeded(noteIds));
+        if (latest) {
+          dispatch(getLocationsByIds(locationIds));
+          dispatch(getContactsByIds(contactIds));
+          dispatch(getJobsByIds(jobIds));
+          dispatch(getNotesByIds(noteIds));
+        }
+        else {
+          dispatch(getLocationsByIdsIfNeeded(locationIds));
+          dispatch(getContactsByIdsIfNeeded(contactIds));
+          dispatch(getJobsByIdsIfNeeded(jobIds));
+          dispatch(getNotesByIdsIfNeeded(noteIds));
+        }
 
         return companies;
       }),
     });
   };
 }
-
-export function updateCompanyImage(id,file) {
+export function updateCompanyImage(id, file) {
+  return (dispatch) => {
+    dispatch({
+      id,
+      types:[constants.UPDATE_COMPANY_IMAGE, constants.UPDATE_COMPANY_IMAGE_SUCCESS, constants.UPDATE_COMPANY_IMAGE_FAIL],
+      promise: (client, auth) => {
+        return s3Uploader(client,auth,'image',file,function(percent){
+          dispatch({
+            id,
+            type: constants.UPDATE_COMPANY_IMAGE_PROGRESS,
+            result: percent,
+          });
+        });
+      },
+    });
+  };
+}
+export function updateCompanyImageold(id,file) {
   return (dispatch) => {
     dispatch({
       id,

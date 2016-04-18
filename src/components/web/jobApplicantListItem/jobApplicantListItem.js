@@ -10,6 +10,7 @@ let style = {
     avatar: {
       border: '2px solid',
       borderColor: Styles.Colors.grey500,
+      cursor:'pointer',
     },
     layout:{
       display:'flex',
@@ -33,12 +34,14 @@ let style = {
       lineHeight: '16px',
       fontWeight: 'bold',
       textAlign: 'left',
+      cursor:'pointer',
     },
     subtitle:{
       color: 'rgba(0, 0, 0, 0.54)',
       fontSize: '14px',
       lineHeight: '18px',
       textAlign: 'left',
+      cursor:'pointer',
     },
   },
   layout:{
@@ -60,11 +63,13 @@ let style = {
     color: 'rgba(0, 0, 0, 0.870588)',
     fontSize: '16px',
     lineHeight: '16px',
+    cursor: 'pointer',
   },
   subtitle:{
     color: 'rgba(0, 0, 0, 0.54)',
     fontSize: '14px',
     lineHeight: '18px',
+    cursor: 'pointer',
   },
   icon:{
     fontSize:'14px',
@@ -111,6 +116,7 @@ let style = {
     display: 'inline',
     width: '30px',
     height: '30px',
+    cursor: 'pointer',
   },
   plusAvatar: {
     display: 'inline',
@@ -120,6 +126,7 @@ let style = {
     fontSize: '16px',
     position: 'relative',
     top: '-11px',
+    cursor: 'pointer',
   },
   badgeWrap:{
     position: 'relative',
@@ -130,6 +137,7 @@ let style = {
     display: 'inline',
     width: '25px',
     height: '25px',
+    cursor: 'pointer',
     container:{
       top:'9px',
       display: 'inline',
@@ -216,7 +224,9 @@ export default class JobApplicantListItem extends React.Component {
     }
 
     let avatarSrc = `https://www.gravatar.com/avatar/${emailHash}?d=mm`;
-
+    if(contact && contact.get('avatarImage')){
+      avatarSrc = contact.get('avatarImage').get('item');
+    }
     return (
       <div style={style.cardBasic.layout}>
         <div onClick={this.clickAvatar.bind(this)} style={style.cardBasic.imageLayout}>
@@ -286,7 +296,11 @@ export default class JobApplicantListItem extends React.Component {
 
   render(){
     let self = this;
-    let {contact,type} = this.props;
+    let {contact,type,selectedApplicantStateOption,applicantStateOptions} = this.props;
+
+    if (!contact) {
+      return (null);
+    }
 
     function kFormatter(num) {
       return num > 999 ? `${(num/1000).toFixed(0)}k` : num;
@@ -350,10 +364,10 @@ export default class JobApplicantListItem extends React.Component {
         }}>
         <ListItem
             onTouchTap={this._onTouchTapState.bind(this)}
-            leftIcon={<FontIcon className="material-icons" style={{color: '#fff'}}>{this.props.selectedApplicantStateOption ? this.props.selectedApplicantStateOption.icon : ''}</FontIcon>}
+            leftIcon={<FontIcon className="material-icons" style={{color: '#fff'}}>{selectedApplicantStateOption ? selectedApplicantStateOption.icon : ''}</FontIcon>}
             style={{
               color: '#fff',
-              backgroundColor: this.props.selectedApplicantStateOption && this.props.selectedApplicantStateOption.color ? this.props.selectedApplicantStateOption.color : Styles.Colors.grey600,
+              backgroundColor: selectedApplicantStateOption && selectedApplicantStateOption.color ? selectedApplicantStateOption.color : Styles.Colors.grey600,
             }}
           >
           {this.props.applicantState || 'New'}
@@ -405,9 +419,37 @@ export default class JobApplicantListItem extends React.Component {
             <FavoriteButton isFavorited={contact.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
           </div>
           <div style={{marginRight: 0}}>
-          <IconButton iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="More">
-            <FontIcon className="material-icons">more_vert</FontIcon>
-          </IconButton>
+            {
+              selectedApplicantStateOption && selectedApplicantStateOption.nextStates ?
+              selectedApplicantStateOption.nextStates.map(x => {
+                let option = applicantStateOptions.filter(y => {
+                  return y.selectable && y.value == x;
+                });
+
+                option = option ? option[0] : null;
+
+                return (
+                  option ?
+                  <IconButton
+                      iconStyle={{color:Styles.Colors.grey600}}
+                      tooltipPosition="top-center"
+                      tooltip={option.value}
+                      onTouchTap={this.props.editApplicantState.bind(this, contact, option.value)}
+                  >
+                    <FontIcon className="material-icons">{option.icon}</FontIcon>
+                  </IconButton>
+                  : (null)
+                );
+              })
+              : (null)
+            }
+            {
+              /*
+              <IconButton iconStyle={{color:Styles.Colors.grey600}} tooltipPosition="top-center" tooltip="More">
+                <FontIcon className="material-icons">more_vert</FontIcon>
+              </IconButton>
+              */
+            }
           </div>
         </CardActions>
       </Card>

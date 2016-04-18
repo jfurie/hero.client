@@ -66,6 +66,9 @@ export Giffer from './giffer/giffer';
 export DialogNew from './dialogNew/dialogNew';
 export Confirm from './confirm/confirm';
 export MarkedViewer from './markedViewer/markedViewer';
+export ShareLinkModal from './shareLinkModal/shareLinkModal';
+export NotFound from './errors/notFound';
+export NoResultsCard from './noResultsCard/noResultsCard';
 /* all the web modals components */
 
 export ClientContactsCreateModal from './clientContactsCreateModal/clientContactsCreateModal';

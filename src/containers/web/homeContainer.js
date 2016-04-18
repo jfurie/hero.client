@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { pushState, replaceState } from 'redux-router';
-import { Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
+import { NoResultsCard, Header, JobsList, CustomTabsSwipe, ContactsList, ClientsList, ActionButton, ActionButtonItem } from '../../components/web';
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
@@ -202,7 +202,7 @@ class HomePage extends React.Component {
 
     setTimeout(function () {
       //self.props.history.replaceState(null,`/clients/${job.companyId}/jobs/${job.id}/create`);
-      self.props.history.replaceState(null,`/jobs/${job.id}/create`);
+      self.props.history.pushState(null,`/jobs/${job.id}/create`);
 
     }, 500);
 
@@ -246,6 +246,10 @@ class HomePage extends React.Component {
     this.props.replaceState({}, `?tab=${tab}`);
   }
 
+  goToPage(page) {
+    this.props.pushState(null,page);
+  }
+
   render () {
 
     let { favoriteContacts, favoriteCompanies, favoriteJobs } = this.props;
@@ -267,26 +271,41 @@ class HomePage extends React.Component {
         <Header title="Dashboard" />
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={this.props.tab} onChange={this.tabChange.bind(this)}>
           <div style={style.slide}>
+          {
+            favoriteCompanies && favoriteCompanies.size > 0 ?
             <ClientsList
                 clients={favoriteCompanies}
                 favoriteCompany={this.favoriteCompany.bind(this)}
                 unfavoriteCompany={this.unfavoriteCompany.bind(this)}
             />
+            :
+            <NoResultsCard title="No Clients" text={'You don\'t have any saved clients.'} actionLabel="View All Clients" action={this.goToPage.bind(this, '/clients')} />
+          }
           </div>
           <div>
+          {
+            favoriteJobs && favoriteJobs.size > 0 ?
             <JobsList
                 onJobClick={this._handleJobClick.bind(this)}
                 jobs={favoriteJobs}
                 favoriteJob={this.favoriteJob.bind(this)}
                 unfavoriteJob={this.unfavoriteJob.bind(this)}
             />
+            :
+            <NoResultsCard title="No Jobs" text={'You don\'t have any saved jobs.'} actionLabel="View All Jobs" action={this.goToPage.bind(this, '/jobs')} />
+          }
           </div>
           <div style={style.slide}>
+          {
+            favoriteContacts && favoriteContacts.size > 0 ?
             <ContactsList
                 contacts={favoriteContacts}
                 favoriteContact={this.favoriteContact.bind(this)}
                 unfavoriteContact={this.unfavoriteContact.bind(this)}
             />
+            :
+            <NoResultsCard title="No Candidates" text={'You don\'t have any saved candidates.'} actionLabel="View All Candidates" action={this.goToPage.bind(this, '/candidates')} />
+          }
           </div>
         </CustomTabsSwipe>
         <ActionButton ref="actionButtons" actions={actions}/>

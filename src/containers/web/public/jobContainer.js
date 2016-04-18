@@ -28,6 +28,7 @@ class PublicJobContainer extends React.Component {
     super(props);
     this.state = {
       openSignUpModal: false,
+      openShareLinkModal: false,
     };
   }
 
@@ -92,8 +93,6 @@ class PublicJobContainer extends React.Component {
   share() {
     let {job} = this.props;
 
-    let subject = `Check out ${this.props.job.get('title')} on HERO`;
-
     let title = job.get('title');
 
     if (job.get('public')) {
@@ -103,9 +102,16 @@ class PublicJobContainer extends React.Component {
     title = cleanTitle(title);
 
     let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/j/${job.get('shortId')}/${title}`;
+    this.setState({
+      openShareLinkModal: true,
+      shareUrl: url,
+    });
+  }
 
-    let body = `${encodeURIComponent(job.get('title'))}%0A${encodeURIComponent(url)}`;
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
+  closeShare() {
+    this.setState({
+      openShareLinkModal: false,
+    });
   }
 
   render() {
@@ -119,6 +125,9 @@ class PublicJobContainer extends React.Component {
             job={job}
             apply={this.openSignUpModal.bind(this)}
             share={this.share.bind(this)}
+            closeShare={this.closeShare.bind(this)}
+            shareUrl={this.state.shareUrl}
+            openShareLinkModal={this.state.openShareLinkModal}
             token={this.props.token}
         />
         <PublicSignUp

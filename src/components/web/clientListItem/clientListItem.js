@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Card, CardText, FontIcon, Divider, CardActions, Styles,Avatar } from 'material-ui';
-import { CompanyAvatar, Gravatar, Tag, PhoneButton, EmailButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
+import { ShareLinkModal, CompanyAvatar, Gravatar, Tag, PhoneButton, EmailButton, FavoriteButton, ShareButton, CardBasic } from '../../../components/web';
 let style = {
   layout:{
     display:'flex',
@@ -75,6 +75,7 @@ let style = {
     display: 'inline',
     width: '20px',
     height: '20px',
+    cursor:'pointer',
   },
   plusAvatar: {
     display: 'inline',
@@ -86,11 +87,13 @@ let style = {
     marginRight: '7px',
     top: '-8px',
     lineHeight: 0,
+    cursor:'pointer',
   },
   accountOwnerGravatar:{
     display: 'inline',
     width: '25px',
     height: '25px',
+    cursor:'pointer',
     container:{
       top:'9px',
       display: 'inline',
@@ -106,6 +109,9 @@ let style = {
 export default class ClientListItem extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      openShareLinkModal: false,
+    };
   }
   clickClient(){
     let {company} = this.props;
@@ -128,9 +134,17 @@ export default class ClientListItem extends React.Component {
   }
 
   _onTouchTapShare() {
-    let subject = `Check out ${this.props.company.get('name')} on HERO`;
-    let body = encodeURIComponent(this.props.company.get('name')) +'%0A' + encodeURIComponent(window.location.href);
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/clients/${this.props.company.get('id')}`;
+    this.setState({
+      openShareLinkModal: true,
+      shareUrl: url,
+    });
+  }
+
+  _onCloseShareLinkModal() {
+    this.setState({
+      openShareLinkModal: false,
+    });
   }
 
   _onTouchTapSave() {
@@ -157,14 +171,20 @@ export default class ClientListItem extends React.Component {
 
     return (
       <CardBasic
-          image={<CompanyAvatar style={{width:'40px'}} url={company && company.get('website')} />}
-          title={company && company.get('name')}
-          subtitle1={company.get('businessType') || 'Software Company'}
-          subtitle2={location}
+          image={<CompanyAvatar style={{width:'40px',cursor:'pointer'}} url={company && company.get('website')} />}
+          title={<span style={{cursor:'pointer'}}>{company && company.get('name')}</span>}
+          subtitle1={<span style={{cursor:'pointer'}}>{company.get('businessType') || 'Software Company'}</span>}
+          subtitle2={<span style={{cursor:'pointer'}}>{location}</span>}
           onTouchTap={this.clickClient.bind(this)}
           rightContent={
-            !this.props.hideRecruiter && company.get('clientAdvocate')?(<div onClick={this.clickClientAdvocate.bind(this)}>
-              <Gravatar url={company.get('clientAdvocate').get('email')} status={'notset'} style={style.accountOwnerGravatar}/> <div style={{display:'inline-block',lineHeight:'25px'}}>{company.get('clientAdvocate').get('displayName')}</div>
+            !this.props.hideRecruiter && company.get('clientAdvocate')?
+            (<div onClick={this.clickClientAdvocate.bind(this)}>
+              <Gravatar
+                  email={company.get('clientAdvocate').get('email')}
+                  status={'notset'} style={style.accountOwnerGravatar}
+                  label={company.get('clientAdvocate').get('displayName')}
+                  tooltipPosition="right"
+              />
             </div>):(<div></div>)
           }
       />
@@ -206,14 +226,15 @@ export default class ClientListItem extends React.Component {
 
       contacts.forEach(function(c, key) {
         if (key < limit) {
-          peopleList.push(<Gravatar
-            style={style.gravatar}
-            key={key}
-            email={c.get('email')}
-            status={'notset'}
-            label={c.get('displayName')}
-            tooltipPosition="left"
-          />);
+          peopleList.push(
+            <Gravatar
+                style={style.gravatar}
+                key={key}
+                email={c.get('email')}
+                status={'notset'}
+                label={c.get('displayName')}
+                tooltipPosition="left"
+            />);
         }
       });
 
@@ -230,6 +251,7 @@ export default class ClientListItem extends React.Component {
 
       return (
         type == 'tiny' ? (<div>{this.renderTags()}{this.renderBasic()}</div>) :
+        <div>
         <Card
             style={{
               height: type !=='mini'?'auto':'80px',
@@ -272,15 +294,18 @@ export default class ClientListItem extends React.Component {
             <CardActions style={{
               backgroundColor:'rgba(100,100,100,0.2)',
               padding: 0,
-            }}>
+            }}
+            >
               <PhoneButton phone={this.props.company && this.props.company.get('phone')} />
               <EmailButton email={this.props.company && this.props.company.get('email')} />
               <FavoriteButton isFavorited={company.get('isFavorited')} onTouchTap={this._onTouchTapSave.bind(this)} />
-              <ShareButton />
+              <ShareButton onTouchTap={this._onTouchTapShare.bind(this)} />
             </CardActions>
           </div>):(<div></div>)}
 
         </Card>
+        <ShareLinkModal url={this.state.shareUrl} open={this.state.openShareLinkModal} onClose={this._onCloseShareLinkModal.bind(this)} />
+        </div>
       );
     } else {
       return (<div></div>);

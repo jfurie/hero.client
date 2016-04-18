@@ -1,13 +1,26 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { connect } from 'react-redux';
-import { Header, CandidatesList } from '../../../components/web';
+import { Header, ContactsList , ActionButton, ActionButtonItem } from '../../../components/web';
 import { getMyCandidates } from '../../../modules/candidates';
-import { createContactFavorite, deleteContactFavorite } from '../../../modules/favorites';
+import { Styles } from 'material-ui';
+import ContentAdd from 'material-ui/lib/svg-icons/content/add';
+import getContactDataFromState from '../../../dataHelpers/contact';
 
-@connect(state => ({
-  candidates: state.candidates,
-  auth: state.auth,
-}), { getMyCandidates, createContactFavorite, deleteContactFavorite })
+@connect((state) => {
+  let contacts = new Immutable.Map();
+  let contactsMap = {};
+  state.candidates.list.forEach(candidate => {
+    let contact = getContactDataFromState(state, candidate.get('contactId'));
+    if (contact) {
+      contactsMap[contact.get('id')] = contact;
+    }
+  });
+
+  return {
+    contacts: contacts.merge(contactsMap),
+  };
+}, { getMyCandidates })
 class MyCandidatesPage extends React.Component {
 
   constructor() {
@@ -17,27 +30,25 @@ class MyCandidatesPage extends React.Component {
   componentDidMount() {
     this.props.getMyCandidates();
   }
-
-  favoriteContact(contact) {
-    this.props.createContactFavorite(contact.get('id'));
-  }
-
-  unfavoriteContact(contact) {
-    this.props.deleteContactFavorite(contact.get('id'));
+  onContactSearchOpen() {
+    this.refs.actionButtons.close();
+    this.props.history.pushState(null,`/contacts/search`);
   }
 
   render() {
-
-    let {candidates} = this.props;
-
+    let {contacts} = this.props;
+    let actions = [
+      <ActionButtonItem title={'Contact'} color={Styles.Colors.green500} itemTapped={this.onContactSearchOpen.bind(this)}>
+        <ContentAdd />
+      </ActionButtonItem>,
+    ];
     return (
       <div>
         <Header title={'Candidates'}/>
-        <CandidatesList
-            candidates={candidates.myCandidateIds}
-            favoriteContact={this.favoriteContact.bind(this)}
-            unfavoriteContact={this.unfavoriteContact.bind(this)}
+        <ContactsList
+            contacts={contacts}
         />
+        <ActionButton ref="actionButtons" actions={actions}/>
       </div>);
   }
 }

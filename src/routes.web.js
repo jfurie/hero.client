@@ -245,12 +245,11 @@ export default(store) => {
           </Route>
 
         </Route>
-
         <Route path="invited" component={InvitedPage}/>
         {/* Catch all route */}
         <Route path="*" component={ErrorPage} status={404} />
-
       </Route>
+
     </Route>
   );
 };

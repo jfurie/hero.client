@@ -75,6 +75,7 @@ let style = {
     display: 'inline',
     width: '30px',
     height: '30px',
+    cursor:'pointer',
   },
   plusAvatar: {
     display: 'inline',
@@ -84,6 +85,7 @@ let style = {
     fontSize: '16px',
     position: 'relative',
     top: '-11px',
+    cursor:'pointer',
   },
   badgeWrap:{
     position: 'relative',
@@ -93,6 +95,7 @@ let style = {
     display: 'inline',
     width: '25px',
     height: '25px',
+    cursor:'pointer',
     container:{
       top:'9px',
       display: 'inline',
@@ -144,12 +147,13 @@ export default class ContactListItem extends React.Component {
   renderBasic(companies) {
     let {contact, company} = this.props;
 
+    console.log('avatar:',contact.get('avatarImage')&& contact.get('avatarImage').get('item'));
     return (
       <CardBasic
-          image={<Gravatar style={{width:'40px'}} email={contact.get('email')} status={contact.get('status')} />}
-          title= {<div style={{fontWeight: 'bold'}}>{contact.get('displayName')}</div>}
-          subtitle1={company?company.get('name'):companies}
-          subtitle2={contact.get('title')}
+          image={<Gravatar style={{width:'40px', cursor:'pointer',}} url={contact.get('avatarImage')&& contact.get('avatarImage').get('item')} email={contact.get('email')} status={contact.get('status')} />}
+          title= {<div style={{fontWeight: 'bold', cursor:'pointer'}}>{contact.get('displayName')}</div>}
+          subtitle1={<span style={{cursor:'pointer'}}>{company?company.get('name'):companies}</span>}
+          subtitle2={<span style={{cursor:'pointer'}}>{contact.get('title')}</span>}
           onTouchTap={this.clickContact.bind(this)}
         ></CardBasic>
     );

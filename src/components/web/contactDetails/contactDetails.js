@@ -6,9 +6,9 @@ import { invite } from '../../../modules/users';
 import md5 from 'md5';
 import Immutable from 'immutable';
 import categoryLinkSort from '../../../utils/categoryLinkSort';
-import {SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
+import { ShareLinkModal, NoResultsCard, NotFound,SkillsCard, LocationCard, Header, DetailsCard, CustomTabsSwipe, JobListItem, CompanyNotesList, CompanyAvatar, InviteSuccessModal, MarkedViewer } from '../../../components/web';
 import {
-  CardTitle, IconButton, List, FontIcon, Avatar,
+  ListItem, CardTitle, IconButton, List, FontIcon, Avatar,
   Styles, IconMenu, MenuItem, CardText, Card,
 } from 'material-ui';
 import image from './image';
@@ -65,6 +65,7 @@ export default class ContactDetails extends React.Component {
       confirmOpen: false,
       isCandidateContext: context.isCandidate,
       isContactContext: context.isContact,
+      openShareLinkModal: false,
     };
   }
 
@@ -102,7 +103,7 @@ export default class ContactDetails extends React.Component {
   }
 
   inviteToHero() {
-    this.props.invite(this.props.contact.get('email'), window.location.origin + '/invited');
+    this.props.invite(this.props.contact.get('email'), `${window.location.origin}/invited`);
     this.setState({confirmOpen: true});
     this.handleConfirmInviteGo();
   }
@@ -118,15 +119,15 @@ export default class ContactDetails extends React.Component {
   addNote(note){
     if (!note) {
       note = new Immutable.Map({
-        id: 'tmp_' + this._guid(),
+        id: `tmp_${this._guid()}`,
         privacyValue: 0,
       });
     }
     this.props.replaceNoteLocal(note);
     if(this.state.isContactContext){
-      this.props.pushState({}, `/contacts/${this.props.contact.get('id')}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+      this.props.pushState({}, `/contacts/${this.props.contact.get('id')}/notes/${note.get('id')}/create?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
     } else {
-      this.props.pushState({}, `/candidates/${this.props.candidate.get('id')}/notes/${note.get('id')}/create?returnUrl=`+encodeURIComponent(window.location.pathname + window.location.search));
+      this.props.pushState({}, `/candidates/${this.props.candidate.get('id')}/notes/${note.get('id')}/create?returnUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`);
     }
   }
   deleteNote(note){
@@ -193,17 +194,17 @@ export default class ContactDetails extends React.Component {
   }
 
   _onTouchTapShare() {
-    let contact = null;
+    let url = `${window.location.href.split('/')[0]}//${window.location.href.split('/')[2]}/contacts/${this.props.contact.get('id')}`;
+    this.setState({
+      openShareLinkModal: true,
+      shareUrl: url,
+    });
+  }
 
-    if (this.state.isContactContext && !this.state.isCandidateContext) { /* contact context */
-      contact = this.props.contact;
-    } else if (this.state.isCandidateContext && !this.state.isContactContext) { /* candidate context */
-      contact = this.props.candidate.get('contact');
-    }
-
-    let subject = `Check out ${contact.get('displayName')} on HERO`;
-    let body = `${encodeURIComponent(contact.get('displayName'))}%0A${encodeURIComponent(window.location.href)}`;
-    window.location.href=`mailto:?Subject=${encodeURIComponent(subject)}&Body=${body}`;
+  _onCloseShareLinkModal() {
+    this.setState({
+      openShareLinkModal: false,
+    });
   }
 
   _handleTapOnChat() {
@@ -225,6 +226,11 @@ export default class ContactDetails extends React.Component {
   editSkills(){
     this.props.pushState(null, `/contacts/${this.props.contact.get('id')}/categories/edit`);
   }
+
+  openInNewTab(url) {
+    window.open(url);
+  }
+
   getCommonDetailsCard(contact) {
 
     // build cover from gravatar
@@ -279,11 +285,13 @@ export default class ContactDetails extends React.Component {
       desiredSalary = `$${~~(contact.get('desiredSalary')) / 1000}k`;
     }
 
+    let coverImage = ((contact.get('coverImage')) ? (contact.get('coverImage').get('item')) : (image));
+    let avatarImage = ((contact.get('avatarImage')) ? (contact.get('avatarImage').get('item')) : (`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`));
     return {
-      cover: image, //`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      cover: coverImage, //`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       city,
       displayName,
-      avatarUrl: `https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      avatarUrl: avatarImage,
       companyName,
       title,
       subtitleAvatar,
@@ -303,7 +311,6 @@ export default class ContactDetails extends React.Component {
     }
 
     let common = this.getCommonDetailsCard(contact);
-
     let actions = [{
       materialIcon: 'phone',
       text: 'Call',
@@ -388,7 +395,8 @@ export default class ContactDetails extends React.Component {
       if(currentCategory.get('experience') > 0){
         let found = self.props.categories.find(x=>x.get('id') == currentCategory.get('categoryId'));
         if(found){
-          skillImg = <img style={{
+          skillImg =
+          <img style={{
             width: '35px',
             height:'35px',
             borderRadius:'0px',
@@ -399,7 +407,8 @@ export default class ContactDetails extends React.Component {
             border: '2px solid white',
             borderBottom: 'none',
             borderRight: 'none',
-          }} src={found.get('imageUrl')} />;
+          }} src={found.get('imageUrl')}
+          />;
         }
       }
     }
@@ -423,7 +432,7 @@ export default class ContactDetails extends React.Component {
           cover={common.cover}
           actions={actions}
           avatar={avatar}
-          floatActionOnTap={this._handleTapOnChat.bind(this)}
+          floatActionOnTap={this._onTouchTapShare.bind(this)}
           floatActionContent={<FontIcon className="material-icons">share</FontIcon>}
           floatActionLabel={'Share'}
       />
@@ -451,6 +460,60 @@ export default class ContactDetails extends React.Component {
       </div>
     );
   }
+  renderAvailabilityDetails(title, availabilityDetails,notes, avatar){
+    let daysOfTheWeek = [];
+    if(availabilityDetails){
+      if(availabilityDetails.getIn('daysOfTheWeek','Monday')){
+        daysOfTheWeek.push('Monday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Tuesday')){
+        daysOfTheWeek.push('Tuesday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Wednesday')){
+        daysOfTheWeek.push('Wednesday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Thursday')){
+        daysOfTheWeek.push('Thursday');
+      }
+      if(availabilityDetails.getIn('daysOfTheWeek','Friday')){
+        daysOfTheWeek.push('Friday');
+      }
+    }
+
+
+    let timeOfDayArr = [];
+    if(availabilityDetails){
+      if(availabilityDetails.getIn('timeOfDay','Morning')){
+        timeOfDayArr.push('Morning');
+      }
+      if(availabilityDetails.getIn('timeOfDay','Lunchtime')){
+        timeOfDayArr.push('Lunchtime');
+      }
+      if(availabilityDetails.getIn('timeOfDay','Evening')){
+        timeOfDayArr.push('Evening');
+      }
+    }
+    return (
+      <div style={{display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        {
+          <div style={{display: 'inline-block'}}>
+            <div style={style.title}>{title}</div>
+            <div style={style.content}>
+              <div>
+                <div>Days: {daysOfTheWeek.join(', ')}</div>
+                <div>Times: {timeOfDayArr.join(', ')}</div>
+                <div>{notes}</div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    );
+
+  }
 
   renderSmallListItem(content,avatar){
     return (
@@ -461,6 +524,20 @@ export default class ContactDetails extends React.Component {
         <div style={{display: 'flex', alignItems: 'center'}}>
           <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px'}}>{content}</div>
         </div>
+      </div>
+    );
+  }
+
+  renderSmallListLink(content,avatar){
+    return (
+      <div style={{position: 'relative', display:'flex'}}>
+        <div style={{flex:'0 0 56px'}}>
+          {avatar}
+        </div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{color:'rgba(0, 0, 0, 0.87)', fontSize:'15px', maxWidth: '240px', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}}>{content}</div>
+        </div>
+        <FontIcon style={{position: 'absolute', display: 'flex', alignItems: 'center', top: 0, bottom: 0, right: 0, color: Styles.Colors.grey700}} className="material-icons">keyboard_arrow_right</FontIcon>
       </div>
     );
   }
@@ -489,14 +566,44 @@ export default class ContactDetails extends React.Component {
     let addressLine = null;
     let source = null;
     let website = null;
+    let website2 = null;
+    let website3 = null;
     let resume = null;
+    let facebook = null;
+    let twitter = null;
+    let github = null;
+    let linkedin = null;
+    let indeed = null;
+    let stackoverflow = null;
+    let google = null;
     if (contact) {
       resume = contact.get('resume')|| null;
       email = contact.get('email') || null;
       phone = contact.get('phone') || null;
       website = contact.get('website') || null;
+      website2 = contact.get('website2') || null;
+      website3 = contact.get('website3') || null;
+      facebook = contact.get('facebookHandle') || null;
+      twitter = contact.get('twitterHandle') || null;
+      github = contact.get('githubHandle') || null;
+      linkedin = contact.get('linkedinHandle') || null;
+      indeed = contact.get('indeedUrl') || null;
+      google = contact.get('googleHandle') || null;
+      stackoverflow = contact.get('stackoverflowUrl') || null;
       if (contact.get('sourceInfo') && contact.get('sourceInfo').get('referrer')) {
         source = contact.get('sourceInfo').get('referrer');
+      }
+
+      if (website && !website.startsWith('http')) {
+        website = `http://${website}`;
+      }
+
+      if (website2 && !website2.startsWith('http')) {
+        website2 = `http://${website2}`;
+      }
+
+      if (website3 && !website3.startsWith('http')) {
+        website3 = `http://${website3}`;
       }
 
       // location stuff
@@ -541,11 +648,18 @@ export default class ContactDetails extends React.Component {
         description += summary;
       }
       let categoryLinks = contact.get('_categoryLinks');
-      return (
 
+      let tabs = ['Details'];
+
+      if (this.props.isHero) {
+        tabs.push('Jobs');
+        tabs.push('Notes');
+      }
+
+      return (
         <div>
           {this.renderCandidateDetailsCard(contact)}
-          <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={['Details', 'Jobs', 'Notes']}>
+          <CustomTabsSwipe startingTab={this.props.tab} onChange={this.tabChange.bind(this)} isLight isInline tabs={tabs}>
             <div style={{minHeight:'800px'}}>
               <Card>
                 <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
@@ -562,8 +676,9 @@ export default class ContactDetails extends React.Component {
 
                 {(resume) ? (
                   <CardText
-                    style={style.smallListItem}
-                    onTouchTap={this.clickResume.bind(this)}>
+                      style={style.smallListItem}
+                      onTouchTap={this.clickResume.bind(this)}
+                  >
                     {this.renderSmallListItem('Resume',
                     <Avatar
                         icon={<FontIcon className="material-icons">description</FontIcon>}
@@ -607,14 +722,48 @@ export default class ContactDetails extends React.Component {
                 ) : (null)}
 
                 {(website) ? (
-                  <CardText style={style.smallListItem}>
-                    {this.renderSmallListItem(website,
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, website)}
+                  >
+                    {this.renderSmallListLink(website,
                     <Avatar
                         icon={<FontIcon className="material-icons">public</FontIcon>}
                         color={Styles.Colors.grey600}
                         backgroundColor={Styles.Colors.white}
                     />)}
                   </CardText>
+                  </ListItem>
+                ) : (null)}
+
+                {(website2) ? (
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, website2)}
+                  >
+                    {this.renderSmallListLink(website2,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                  </ListItem>
+                ) : (null)}
+
+                {(website3) ? (
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, website3)}
+                  >
+                    {this.renderSmallListLink(website3,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                  </ListItem>
                 ) : (null)}
               </Card>
 
@@ -653,8 +802,8 @@ export default class ContactDetails extends React.Component {
                       backgroundColor={Styles.Colors.white}
                   />)}
                 </CardText>
-                <CardText>
-                  {this.renderBigListItem('Availability', contact.get('availability'),
+                 <CardText>
+                  {this.renderAvailabilityDetails('Availability',  contact.get('availabilityDetails'), contact.get('availability'),
                   <Avatar
                       icon={<FontIcon className="material-icons">insert_invitation</FontIcon>}
                       color={Styles.Colors.grey600}
@@ -686,28 +835,154 @@ export default class ContactDetails extends React.Component {
                   />)}
                 </CardText>
               </Card>
+              <Card>
+              <CardTitle title="Social" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
+              {(linkedin) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `https://linkedin.com/in/${linkedin}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>LinkedIn: @{linkedin}</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-linkedin-square" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+                ) : (null)}
+              {(indeed) ? (
+                  <ListItem>
+                  <CardText style={{padding: 0}}
+                      onTouchTap={this.openInNewTab.bind(this, `${indeed}`)}
+                  >
+                    {this.renderSmallListLink(
+                    <span>Indeed</span>,
+                    <Avatar
+                        icon={<FontIcon className="material-icons">public</FontIcon>}
+                        color={Styles.Colors.grey600}
+                        backgroundColor={Styles.Colors.white}
+                    />)}
+                  </CardText>
+                  </ListItem>
+                ) : (null)}
+              {(github) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `https://github.com/${github}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>GitHub: @{github}</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-github-square" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+              ) : (null)}
+              {(stackoverflow) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `${stackoverflow}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>Stack Overflow</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-stack-overflow" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+              ) : (null)}
+              {(twitter) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `https://twitter.com/${twitter}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>Twitter: @{twitter}</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-twitter-square" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+              ) : (null)}
+              {(facebook) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `https://facebook.com/${facebook}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>Facebook: @{facebook}</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-facebook-square" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+              ) : (null)}
+              {(google) ? (
+                <ListItem>
+                <CardText style={{padding: 0}}
+                    onTouchTap={this.openInNewTab.bind(this, `https://plus.google.com/${google}`)}
+                >
+                  {this.renderSmallListLink(
+                  <span>Google Plus: @{google}</span>,
+                  <Avatar
+                      icon={<FontIcon className="fa fa-google-plus-square" />}
+                      color={Styles.Colors.grey600}
+                      backgroundColor={Styles.Colors.white}
+                  />)}
+                </CardText>
+                </ListItem>
+              ) : (null)}
+              </Card>
             </div>
-            <div style={{minHeight:'800px'}}>
-              <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
-                {contact.get('jobs') && contact.get('jobs').map((job, key) => {
-                  return (
-                    <div key={key}>
-                      <JobListItem
-                          onJobClick={this._showJobDetails.bind(this)}
-                          job={job}
-                          favoriteJob={this.props.favoriteJob.bind(this)}
-                          unfavoriteJob={this.props.unfavoriteJob.bind(this)}
-                      />
-                    </div>
-                  );
-                })}
-              </List>
-            </div>
-            <div style={{minHeight:'800px'}}>
-              <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
-                <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
-              </List>
-            </div>
+            {
+              tabs.indexOf('Jobs') > -1 ?
+              <div style={{minHeight:'400px'}}>
+              {
+                contact.get('jobs') && contact.get('jobs').size > 0 ?
+                <List style={style.list} subheader={`${contact.get('jobs') ? contact.get('jobs').size : 0} Job`}>
+                  {contact.get('jobs') && contact.get('jobs').map((job, key) => {
+                    return (
+                      <div key={key}>
+                        <JobListItem
+                            onJobClick={this._showJobDetails.bind(this)}
+                            job={job}
+                            favoriteJob={this.props.favoriteJob.bind(this)}
+                            unfavoriteJob={this.props.unfavoriteJob.bind(this)}
+                        />
+                      </div>
+                    );
+                  })}
+                </List>
+                :
+                <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Jobs" text={'You don\'t have any jobs for this contact.'} />
+              }
+              </div>
+              : (null)
+            }
+            {
+              tabs.indexOf('Notes') > -1 ?
+              <div style={{minHeight:'400px'}}>
+              {
+                contact.get('notes') && contact.get('notes').size > 0 ?
+                  <List subheader={`${contact.get('notes') && contact.get('notes').count()} Note${((contact.get('notes') && contact.get('notes').count() !== 1) ? ('s') : (''))}`}>
+                    <CompanyNotesList editNote={this.addNote.bind(this)} deleteNote={this.deleteNote.bind(this)} notes={contact.get('notes')}/>
+                  </List>
+                :
+                <NoResultsCard style={{margin: '8px', marginTop: '11px'}} title="No Notes" text={'You don\'t have any notes for this contact.'} actionLabel="Add Note" action={this.addNoteModalOpen.bind(this)} />
+              }
+              </div>
+            : (null)
+            }
           </CustomTabsSwipe>
         </div>
       );
@@ -747,9 +1022,14 @@ export default class ContactDetails extends React.Component {
       email = contact.get('email') || null;
     }
 
+    if(contact && contact.get('show404')){
+      return <NotFound />;
+    }
+
     return (
       <div>
-        <Header showHome={true} transparent goBack={this.goBack.bind(this)} iconRight={
+        <Header showHome={this.props.isHero} hideSearch={!this.props.isHero} transparent goBack={this.goBack.bind(this)} iconRight={
+          this.props.isHero ?
           <IconMenu iconButtonElement={<IconButton iconStyle={{color: Styles.Colors.white}} iconClassName="material-icons">more_vert</IconButton>}>
             <MenuItem index={0} onTouchTap={this.editContactModalOpen.bind(this)} primaryText={`Edit ${contextRessourceName}`} />
             {(this.state.isContactContext && !invited && !this.state.justInvited && email) ? (
@@ -758,10 +1038,12 @@ export default class ContactDetails extends React.Component {
             <MenuItem index={0} onTouchTap={this.addNoteModalOpen.bind(this)} primaryText={`Create Note`} />
             <MenuItem index={0} onTouchTap={this.editSkills.bind(this)} primaryText={`Edit Skills`} />
           </IconMenu>
+          : (null)
         }
         />
         {this.renderContent(contact)}
-        <InviteSuccessModal email={this.props.contact && this.props.contact.get('email')} ref={'inviteSuccessModal'}></InviteSuccessModal>
+        <InviteSuccessModal email={this.props.contact && this.props.contact.get('email')} ref={'inviteSuccessModal'} />
+        <ShareLinkModal url={this.state.shareUrl} open={this.state.openShareLinkModal} onClose={this._onCloseShareLinkModal.bind(this)} />
       </div>
 
     );
