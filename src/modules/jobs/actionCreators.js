@@ -316,6 +316,27 @@ export function getJobDetails(jobIds, include) {
       include:[
         {
           relation:'candidates',
+          scope:{
+            include:[{
+              relation:'contact',
+              scope:{
+                include:[{
+                  relation:'avatarImage',
+                }],
+              }
+              ,
+            }],
+          },
+
+        },
+        {
+          relation:'company',
+        },
+        {
+          relation:'location',
+        },
+        {
+          relation:'talentAdvocate',
         },
         {
           relation:'notes',
@@ -337,46 +358,10 @@ export function getJobDetails(jobIds, include) {
       types: [constants.GET_JOB_DETAILS, constants.GET_JOB_DETAILS_SUCCESS, constants.GET_JOB_DETAILS_FAIL],
       promise: (client, auth) => client.api.get(`/jobs?filter=${filterString}`, {
         authToken: auth.authToken,
-      }).then((jobs)=> {
-        let companyIds = [];
-        let locationIds = [];
-        let contactIds = [];
-        let noteIds = [];
+      },
+      Schemas.JOB_ARRAY).then((result)=> {
 
-        jobs.forEach(job => {
-          if (job.companyId) {
-            companyIds.push(job.companyId);
-          }
-
-          if (job.locationId) {
-            locationIds.push(job.locationId);
-          }
-
-          if (job.talentAdvocateId) {
-            contactIds.push(job.talentAdvocateId);
-          }
-
-          if (include && include.indexOf('candidates') > -1 && job.candidates) {
-            job.candidates.map((candidate => {
-              contactIds.push(candidate.contactId);
-            }));
-
-            dispatch(saveCandidatesResult(job.candidates));
-          }
-
-          if (include && include.indexOf('notes') > -1 && job.notes) {
-            job.notes.map((note => {
-              noteIds.push(note.id);
-            }));
-          }
-        });
-
-        dispatch(getCompaniesByIdsIfNeeded(companyIds));
-        dispatch(getLocationsByIdsIfNeeded(locationIds));
-        dispatch(getContactsByIdsIfNeeded(contactIds));
-        dispatch(getNotesByIdsIfNeeded(noteIds));
-
-        return jobs;
+        return result;
       }),
     });
   };

@@ -2,15 +2,10 @@ import * as constants from './constants';
 import { getFavoritesByUserId } from '../favorites';
 import { getContactDetails } from '../contacts';
 import { getCompanyDetails } from '../companies';
-<<<<<<< HEAD
-import { getJobsByIds } from '../jobs';
-=======
 import { getJobDetails } from '../jobs';
-
 import Config from '../../utils/config';
 
 const HEROACCOUNTID = Config.get('heroAccountId');
->>>>>>> uploader
 
 export function isLoaded(globalState) {
   return globalState.auth && globalState.auth.loaded;
@@ -109,13 +104,8 @@ function postLogin(auth, client, state, dispatch){
         }
       });
     }
-<<<<<<< HEAD
-    dispatch(getContactsByIdsIfNeeded(contactIds));
-    dispatch(getJobsByIds(jobIds,['talentAdvocate']));
-=======
     dispatch(getContactDetails(contactIds, ['companies']));
-    dispatch(getJobDetails(jobIds, ['candidates']));
->>>>>>> uploader
+    dispatch(getJobDetails(jobIds, ['candidates','talentAdvocate']));
     dispatch(getCompanyDetails(companyIds, ['contacts']));
   });
   return getDataBasedOnUserId(context).then((context)=>{

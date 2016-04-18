@@ -9,6 +9,17 @@ let account  = new Schema('accounts');
 let job = new Schema('jobs');
 let location = new Schema('locations');
 let note = new Schema('notes');
+
+contact.define({
+  avatarImage: resource,
+  coverImage:resource,
+});
+
+candidate.define({
+  contact,
+  job,
+});
+
 job.define({
   user,
   company,
@@ -24,4 +35,4 @@ job.define({
 export default {
   JOB:job,
   JOB_ARRAY:arrayOf(job)
-}
+};
