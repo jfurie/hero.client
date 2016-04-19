@@ -64,7 +64,13 @@ function getResourcesFromJobs(jobs, resources ={}){
   return resources;
 }
 export default function reducer(state = initialState, action = {}) {
-
+  if(action && action.result && action.result.entities && action.result.entities.resources){
+    let resources = Immutable.fromJS(action.result.entities.resources);
+    state = {
+      ...state,
+      list:state.list.mergeDeep(resources),
+    };
+  }
   switch (action.type) {
   case jobConstants.UPDATE_JOB_IMAGE_SUCCESS: {
     let newMap ={};
@@ -144,13 +150,6 @@ export default function reducer(state = initialState, action = {}) {
   }
   case jobConstants.GET_JOB_DETAIL_SUCCESS:{
     let resources = getResourcesFromJobs([action.result]);
-    return {
-      ...state,
-      list: state.list.mergeDeep(resources)
-    };
-  }
-  case jobConstants.GET_JOB_DETAILS_SUCCESS:{
-    let resources = getResourcesFromJobs(action.result);
     return {
       ...state,
       list: state.list.mergeDeep(resources)

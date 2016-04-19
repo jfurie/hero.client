@@ -360,7 +360,7 @@ export function getJobDetails(jobIds, include) {
         authToken: auth.authToken,
       },
       Schemas.JOB_ARRAY).then((result)=> {
-
+        console.log('jobNormal',result);
         return result;
       }),
     });

@@ -22,6 +22,10 @@ const initialState = new Immutable.Map({
 });
 
 export default function reducer(state = initialState, action = {}) {
+  if(action && action.result && action.result.entities && action.result.entities.companies){
+    let companies = Immutable.fromJS(action.result.entities.companies);
+    state = state.mergeDeepIn(['list'],companies);
+  }
   switch (action.type) {
   case actionTypes.INIT:{
     const persistedState = action.payload && action.payload['companies'];
