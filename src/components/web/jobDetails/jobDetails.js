@@ -449,7 +449,7 @@ export default class JobDetails extends React.Component {
                             backgroundColor={Styles.Colors.white}
                         />
                       </div>
-                      <div style={{width: '100%', marginRight: '8px'}}>
+                      <div style={{flex:'1', overflow:'hidden'}}>
                         <div style={style.title}>{'Job Description'}</div>
                         <div className="description">
                           <div dangerouslySetInnerHTML={{__html: description}} />
