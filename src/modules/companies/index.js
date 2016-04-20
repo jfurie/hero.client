@@ -442,6 +442,9 @@ export function getMyCompanies() {
   let filter = {
     include:[
       {
+        relation:'location',
+      },
+      {
         relation:'clientAdvocate',
       },
       {
