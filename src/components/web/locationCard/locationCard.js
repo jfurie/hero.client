@@ -122,7 +122,7 @@ class LocationCard extends React.Component {
       externalLink = 'http://maps.google.com';
     }
 
-    name = location.get('name') || address;
+    name = (location && location.get('name')) || address;
 
     return (
       <div>
