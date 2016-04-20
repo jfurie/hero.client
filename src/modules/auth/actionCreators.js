@@ -1,7 +1,7 @@
 import * as constants from './constants';
 import { getFavoritesByUserId } from '../favorites';
 import { getContactDetails } from '../contacts';
-import { getCompanyDetails } from '../companies';
+import { getCompaniesByIds } from '../companies';
 import { getJobDetails } from '../jobs';
 
 import Config from '../../utils/config';
@@ -107,7 +107,7 @@ function postLogin(auth, client, state, dispatch){
     }
     dispatch(getContactDetails(contactIds, ['companies']));
     dispatch(getJobDetails(jobIds, ['candidates']));
-    dispatch(getCompanyDetails(companyIds, ['contacts']));
+    dispatch(getCompaniesByIds(companyIds, ['contacts']));
   });
   return getDataBasedOnUserId(context).then((context)=>{
     return context.response;

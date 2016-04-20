@@ -5,7 +5,7 @@ import { NoResultsCard, Header, JobsList, CustomTabsSwipe, ContactsList, Clients
 import { toggleNav } from '../../modules/leftNav';
 import { getAllJobs, getMyJobs, createTempJob, getMyFavoriteJobs } from '../../modules/jobs/index';
 import { getAllAccountCandidates } from '../../modules/candidates';
-import { getCompanyDetails, getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
+import { getAllCompanies, getMyCompanies, createTempCompany, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite } from '../../modules/companies';
 import { createTempContact, getMyFavoriteContacts} from '../../modules/contacts';
 import { createContactFavorite, deleteContactFavorite, createJobFavorite, deleteJobFavorite } from '../../modules/favorites';
 import { Styles } from 'material-ui';
@@ -56,7 +56,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData, {pushState, getCompanyDetails, replaceState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs, createContactFavorite, deleteContactFavorite})
+@connect(getData, {pushState, replaceState, toggleNav, getAllJobs, getAllAccountCandidates, getMyFavoriteContacts, getAllCompanies, getMyJobs, createJobFavorite, deleteJobFavorite, getMyCompanies, createTempCompany, createTempContact, createTempJob, getMyFavoriteCompanies, createCompanyFavorite, deleteCompanyFavorite, getMyFavoriteJobs, createContactFavorite, deleteContactFavorite})
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -71,17 +71,7 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    //this.props.getMyFavoriteJobs();
-    //this.props.getMyFavoriteCompanies();
-    //this.props.getMyFavoriteContacts();
-    // let self = this;
-    //
-    // setTimeout(() => {
-    //   if(self.props.favoriteCompanyIds){
-    //
-    //     self.props.getCompanyDetails(self.props.favoriteCompanyIds, ['contacts']);
-    //   }
-    // }, 500);
+    
   }
 
   _handleJobClick(job){

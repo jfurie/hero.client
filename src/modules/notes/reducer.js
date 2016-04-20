@@ -20,7 +20,7 @@ export default function reducer(state = initialState, action = {}) {
 
     return {
       ...state,
-      list: state.list.merge(notesMap),
+      list: state.list.mergeDeep(notesMap),
     };
   }
   case constants.GET_NOTES: {
@@ -29,11 +29,15 @@ export default function reducer(state = initialState, action = {}) {
     };
   }
   case constants.GET_NOTES_SUCCESS: {
-    return state;
-    // return {
-    //   ...state,
-    //   list: state.list.mergeDeep(FAKENOTES),
-    // };
+    let notesMap = {};
+    action.result.map((c) => {
+      notesMap[c.id] = c;
+    });
+
+    return {
+      ...state,
+      list: state.list.mergeDeep(notesMap),
+    };
   }
   case constants.GET_NOTES_FAIL: {
     return {

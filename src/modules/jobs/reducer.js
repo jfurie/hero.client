@@ -32,13 +32,18 @@ export default function reducer(state = initialState, action = {}) {
       jobsMap[c.id] = c;
     });
 
-    return state.set('list', state.get('list').merge(jobsMap));
+    return state.set('list', state.get('list').mergeDeep(jobsMap));
   }
   case constants.GET_JOBS: {
     return state;
   }
   case constants.GET_JOBS_SUCCESS: {
-    return state;
+    let jobsMap = {};
+    action.result.map((c) => {
+      jobsMap[c.id] = c;
+    });
+
+    return state.set('list', state.get('list').mergeDeep(jobsMap));
   }
   case constants.GET_JOBS_FAIL: {
     return state.set('err', action.err);

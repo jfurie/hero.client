@@ -2,12 +2,12 @@ import superagent from 'superagent';
 import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
 import { saveCandidatesResult } from '../candidates';
-import { saveLocationResult } from '../locations';
+import { createCompanyLocation, editLocation, deleteLocation, saveLocationResult } from '../locations';
 import { saveContactResult } from '../contacts';
 import { getContactsByIdsIfNeeded } from '../contacts';
 import { getNotesByIdsIfNeeded } from '../notes';
 import { getLocationsByIdsIfNeeded } from '../locations';
-import { getCompaniesByIdsIfNeeded } from '../companies';
+import { getCompaniesByIds, getCompaniesByIdsIfNeeded } from '../companies';
 import { getFavoritesByUserId } from '../favorites';
 export function getJobsByCompany(companyId){
 
@@ -83,14 +83,85 @@ export function createJob(job, category){
 
 export function editJob(job){
   let id = job.get('id');
-  return {
-    id,
-    job,
-    types: [constants.EDIT_JOB, constants.EDIT_JOB_SUCCESS, constants.EDIT_JOB_FAIL],
-    promise: (client, auth) => client.api.put(`/jobs/${job.get('id')}`, {
-      authToken: auth.authToken,
-      data:job,
-    }),
+  return dispatch => {
+    return dispatch({
+      id,
+      job,
+      types: [constants.EDIT_JOB, constants.EDIT_JOB_SUCCESS, constants.EDIT_JOB_FAIL],
+      promise: (client, auth) => client.api.put(`/jobs/${job.get('id')}`, {
+        authToken: auth.authToken,
+        data:job,
+      }).then(function (result) {
+        let locationPromises = [];
+        job.get('locationsPendingSave').forEach(location => {
+          if (location.has('id')) {
+            locationPromises.push(dispatch(editLocation(location)));
+          }
+          else {
+            locationPromises.push(dispatch(createCompanyLocation(result.companyId, location)));
+          }
+        });
+        job.get('locationsPendingDelete').forEach(location => {
+          locationPromises.push(dispatch(deleteLocation(location.get('id'))));
+        });
+
+        return Promise.all(locationPromises).then(() => {
+          return dispatch(setJobPrimaryLocation(result.id, result.companyId, job.get('pendingPrimaryLocation'))).then(action => {
+            return action.result;
+          });
+        });
+      }),
+    });
+  };
+}
+
+function combineStrings(strings) {
+  let output = [];
+
+  strings.forEach(x => {
+    if (x) {
+      output.push(x);
+    }
+  });
+
+  output = output.join();
+  return output;
+}
+
+export function setJobPrimaryLocation(jobId, companyId, pendingPrimaryLocation) {
+  // set to first location for now
+  return dispatch => {
+    return dispatch(getJobsByIds([jobId])).then(action => {
+      let job = action.result[0];
+
+      return dispatch(getCompaniesByIds([companyId])).then(action => {
+        let company = action.result[0];
+
+        if (company.locations && company.locations.length > 0) {
+          let ppl = pendingPrimaryLocation;
+
+          let primaryLocation = company.locations.filter(x => {
+            return ppl.get('id') == x.id
+            || (combineStrings([ppl.get('name'), ppl.get('addressLine'), ppl.get('city'), ppl.get('countrySubDivisionCode'), ppl.get('postalCode'), ppl.get('countryCode')])
+            == combineStrings([x.name, x.addressLine, x.city, x.countrySubDivisionCode, x.postalCode, x.countryCode]));
+          });
+
+          job.locationId = primaryLocation.length > 0 ? primaryLocation[0].id : company.locations[0].id;
+          return dispatch({
+            types: [constants.SET_JOB_PRIMARY_LOCATION, constants.SET_JOB_PRIMARY_LOCATION_SUCCESS, constants.SET_JOB_PRIMARY_LOCATION_FAIL],
+            promise: (client, auth) => client.api.put(`/jobs/${jobId}`, {
+              authToken: auth.authToken,
+              data: job,
+            }).then(function (result) {
+              return result;
+            }),
+          });
+        }
+        else {
+          return job;
+        }
+      });
+    });
   };
 }
 
@@ -580,5 +651,12 @@ export function toggleTag(jobId, tag){
         return job;
       }),
     });
+  };
+}
+
+export function saveJobsResult(jobs){
+  return {
+    type: constants.GET_JOBS_SUCCESS,
+    result: jobs,
   };
 }
