@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import { pushState /*, replaceState */ } from 'redux-router';
 import { Snackbar } from 'material-ui';
-import { getMyCompanies, getCompanyDetails } from '../../../modules/companies/index';
+import { getMyCompanies, getCompaniesByIds } from '../../../modules/companies/index';
 import { getJobsByCompany, updateJob, updateJobImage, saveJob, replaceJob, getOneJob, getMyJobs, createTempJob } from '../../../modules/jobs/index';
 import { getContactsByCompany } from '../../../modules/contacts';
 import { getAllCategories } from '../../../modules/categories';
@@ -43,7 +43,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, getCompanyDetails, replaceJob, getOneJob, getContactsByCompany, getMyJobs, getAllCategories, getMyCompanies, createTempJob })
+@connect(getData, { pushState, getJobsByCompany, updateJob, updateJobImage, saveJob, getCompaniesByIds, replaceJob, getOneJob, getContactsByCompany, getMyJobs, getAllCategories, getMyCompanies, createTempJob })
 export default class JobCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -59,7 +59,7 @@ export default class JobCreateContainer extends React.Component {
 
     if (this.props.params.companyId) {
       this.props.getContactsByCompany(this.props.params.companyId);
-      this.props.getCompanyDetails(this.props.params.companyId);
+      this.props.getCompaniesByIds([this.props.params.companyId]);
     }
 
     this.props.getMyCompanies();
@@ -81,7 +81,7 @@ export default class JobCreateContainer extends React.Component {
   componentWillReceiveProps(newProps){
     if(newProps.params.companyId && newProps.params.companyId != this.props.params.companyId ){
       this.props.getContactsByCompany(newProps.params.companyId);
-      this.props.getCompanyDetails(newProps.params.companyId);
+      this.props.getCompaniesByIds([newProps.params.companyId]);
     }
     if( newProps.job && newProps.job.get('saving') == false
     && this.props.job && this.props.job.get('saving') == true
@@ -135,7 +135,7 @@ export default class JobCreateContainer extends React.Component {
     this._handleChange(job);
 
     if (companyId) {
-      this.props.getCompanyDetails([companyId]);
+      this.props.getCompaniesByIds([companyId]);
     }
   }
 
@@ -209,8 +209,8 @@ export default class JobCreateContainer extends React.Component {
     let contacts = [];
 
     if (company) {
-      if (company.get('location')) {
-        locations.push(company.get('location'));
+      if (company.has('locations')) {
+        locations = company.get('locations');
       }
 
       contacts = company.get('contacts');

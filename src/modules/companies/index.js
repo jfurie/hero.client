@@ -3,8 +3,12 @@ import Immutable from 'immutable';
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 import * as authConstants from '../auth/constants';
+
 import { getContactsByIdsIfNeeded } from '../contacts';
-import { getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
+import { saveJobsResult } from '../jobs';
+import { saveContactsResult } from '../contacts';
+import { saveNotesResult } from '../notes';
+import { createCompanyLocation, editLocation, deleteLocation, saveLocationsResult, getOneLocation } from '../locations';
 import { getFavoriteByType } from '../favorites';
 import Schemas from '../../utils/schemas';
 import superagent from 'superagent';
@@ -165,16 +169,6 @@ export default function reducer(state = initialState, action = {}) {
       state.set('searches', state.get('searches').mergeDeep(action.result)).set('currentSearch', action.query);
     });
   }
-  // case jobConstants.GET_MY_JOBS_SUCCESS: {
-  //   let companyList =  {};
-  //   action.result.map(job =>{
-  //     if(job.company){
-  //       companyList[job.company.id] = job.company;
-  //     }
-  //   });
-  //
-  //   return state.set('list', state.get('list').mergeDeep(companyList));
-  // }
   case jobConstants.GET_JOB_SUCCESS: {
     let companyList =  {};
     companyList[action.result.company.id] = action.result;
@@ -353,8 +347,17 @@ export function createCompany(company) {
         authToken: auth.authToken,
         data: company,
       }).then(function (result) {
-        dispatch(getFavoriteByType('company', result.id));
-        return result;
+        let promises = [];
+        promises.push(dispatch(getFavoriteByType('company', result.id)));
+        company.get('locationsPendingSave').forEach(location => {
+          promises.push(dispatch(createCompanyLocation(result.id, location)));
+        });
+
+        return Promise.all(promises).then(() => {
+          return dispatch(setCompanyPrimaryLocation(result.id, company.get('pendingPrimaryLocation'))).then(action => {
+            return action.result;
+          });
+        });
       }),
     });
   };
@@ -365,34 +368,96 @@ export function editCompany(company) {
   if(!company.id){
     id = company.get('id');
   }
-  return {
-    id,
-    company,
-    types: [constants.EDIT_COMPANY, constants.EDIT_COMPANY_SUCCESS, constants.EDIT_COMPANY_FAIL],
-    promise: (client, auth) => client.api.put(`/companies/${id}`, {
-      authToken: auth.authToken,
-      data: company,
-    }),
+  return (dispatch) => {
+    return dispatch({
+      id,
+      company,
+      types: [constants.EDIT_COMPANY, constants.EDIT_COMPANY_SUCCESS, constants.EDIT_COMPANY_FAIL],
+      promise: (client, auth) => client.api.put(`/companies/${id}`, {
+        authToken: auth.authToken,
+        data: company,
+      }).then(function (result) {
+        let locationPromises = [];
+        company.get('locationsPendingSave').forEach(location => {
+          if (location.has('id')) {
+            locationPromises.push(dispatch(editLocation(location)));
+          }
+          else {
+            locationPromises.push(dispatch(createCompanyLocation(result.id, location)));
+          }
+        });
+        company.get('locationsPendingDelete').forEach(location => {
+          locationPromises.push(dispatch(deleteLocation(location.get('id'))));
+        });
+
+        return Promise.all(locationPromises).then(() => {
+          return dispatch(setCompanyPrimaryLocation(result.id, company.get('pendingPrimaryLocation'))).then(action => {
+            return action.result;
+          });
+        });
+      }),
+    });
   };
 }
 
-// export function getMyCompanies() {
-//   return {
-//     types: [constants.GET_MY_COMPANIES, constants.GET_MY_COMPANIES_SUCCESS, constants.GET_MY_COMPANIES_FAIL],
-//     promise: (client, auth) => client.api.get('/companies/myCompanies', {
-//       authToken: auth.authToken,
-//     }),
-//   };
-// }
+function combineStrings(strings) {
+  let output = [];
+
+  strings.forEach(x => {
+    if (x) {
+      output.push(x);
+    }
+  });
+
+  output = output.join();
+  return output;
+}
+
+export function setCompanyPrimaryLocation(companyId, pendingPrimaryLocation) {
+  // set to first location for now
+  return dispatch => {
+    return dispatch(getCompaniesByIds([companyId])).then(action => {
+      let company = action.result.entities.companies[companyId];
+      if (company.locations && company.locations.length > 0) {
+        let ppl = pendingPrimaryLocation;
+        let locations = company.locations.map(locationId => {
+          return action.result.entities.locations[locationId];
+        });
+        let primaryLocation = locations.filter(x => {
+          return ppl.get('id') == x.id
+          || (combineStrings([ppl.get('name'), ppl.get('addressLine'), ppl.get('city'), ppl.get('countrySubDivisionCode'), ppl.get('postalCode'), ppl.get('countryCode')])
+          == combineStrings([x.name, x.addressLine, x.city, x.countrySubDivisionCode, x.postalCode, x.countryCode]));
+        });
+
+        company.locationId = primaryLocation.length > 0 ? primaryLocation[0].id : locations[0].id;
+        return dispatch({
+          types: [constants.SET_COMPANY_PRIMARY_LOCATION, constants.SET_COMPANY_PRIMARY_LOCATION_SUCCESS, constants.SET_COMPANY_PRIMARY_LOCATION_FAIL],
+          promise: (client, auth) => client.api.put(`/companies/${companyId}`, {
+            authToken: auth.authToken,
+            data: company,
+          }).then(function (result) {
+            return result;
+          }),
+        });
+      }
+      else {
+        return company;
+      }
+    });
+  };
+}
 
 export function getMyCompanies() {
   let filter = {
     include:[
       {
+        relation:'clientAdvocate',
+      },
+      {
+        relation:'locations',
+      },
+      {
         relation:'contacts',
-        scope:{
-          fields: ['id'],
-        },
       },
     ],
   };
@@ -405,27 +470,34 @@ export function getMyCompanies() {
       promise: (client, auth) => client.api.get(`/companies?filter=${filterString}`, {
         authToken: auth.authToken,
       }).then((companies)=> {
-        let locationIds = [];
-        let contactIds = [];
+        let locations = [];
+        let contacts = [];
 
         companies.forEach(company => {
-          if (company.locationId) {
-            locationIds.push(company.locationId);
+          if (company.clientAdvocate) {
+            contacts.push(company.clientAdvocate);
           }
 
-          if (company.clientAdvocateId) {
-            contactIds.push(company.clientAdvocateId);
+          if (company.locations) {
+            company.locations.map((location => {
+              locations.push(location);
+            }));
           }
 
           if (company.contacts) {
             company.contacts.map((contact => {
-              contactIds.push(contact.id);
+              contacts.push(contact);
             }));
           }
         });
 
-        dispatch(getLocationsByIdsIfNeeded(locationIds));
-        dispatch(getContactsByIdsIfNeeded(contactIds));
+        if (locations.length > 0) {
+          dispatch(saveLocationsResult(locations));
+        }
+
+        if (contacts.length > 0) {
+          dispatch(saveContactsResult(contacts));
+        }
 
         return companies;
       }),
@@ -483,7 +555,29 @@ export function saveCompaniesResult(companies){
   };
 }
 
-export function getCompanyDetails(companyIds) {
+
+// export function getCompaniesByIds(companyIds){
+//   return (dispatch) => {
+//     return dispatch({
+//       types:[constants.GET_COMPANIES_BY_IDS, constants.GET_COMPANIES_BY_IDS_SUCCESS, constants.GET_COMPANIES_BY_IDS_FAIL],
+//       promise:(client,auth) => {
+//         if(companyIds && companyIds.length >0){
+//           let filter= {where:{id:{inq:companyIds}}};
+//           let filterString = encodeURIComponent(JSON.stringify(filter));
+//           return client.api.get(`/companies?filter=${filterString}`,{
+//             authToken: auth.authToken,
+//           });
+//         } else {
+//           return Promise.resolve([]);
+//         }
+//       },
+//     });
+//   };
+// }
+export function getCompaniesByIds(companyIds){
+  return getCompanyDetails(companyIds);
+}
+export function getCompanyDetails(companyIds, include) {
   return (dispatch, getState) => {
     let filter = {
       where: {
@@ -516,11 +610,29 @@ export function getCompanyDetails(companyIds) {
           },
         },
         {
-          relation:'location',
-          scope:{
-          },
+          relation:'image',
         },
         {
+          relation:'locations',
+        },
+      ],
+    };
+
+    if (include) {
+      if (include.indexOf('contacts') > -1) {
+        filter.include.push({
+          relation:'contacts',
+        });
+      }
+
+      if (include.indexOf('jobs') > -1) {
+        filter.include.push({
+          relation:'jobs',
+        });
+      }
+
+      if (include.indexOf('notes') > -1) {
+        filter.include.push({
           relation:'notes',
           scope:{
             order: 'updated DESC',
@@ -528,14 +640,17 @@ export function getCompanyDetails(companyIds) {
               {and: [{privacyValue: 0}, {userId: getState().auth.get('user').get('id')}]},
               {privacyValue: 1},
             ]},
+            include:{
+              relation:'contact',
+            },
           },
-        },
-      ],
-    };
+        });
+      }
+    }
 
     let filterString = encodeURIComponent(JSON.stringify(filter));
 
-    dispatch({
+    return dispatch({
       companyIds,
       types: [constants.GET_COMPANY_DETAILS, constants.GET_COMPANY_DETAILS_SUCCESS, constants.GET_COMPANY_DETAILS_FAIL],
       promise: (client, auth) => client.api.get(`/companies?filter=${filterString}`, {
@@ -650,25 +765,6 @@ export function updateCompanyImageold(id,file) {
           },
         });
       }),
-    });
-  };
-}
-
-export function getCompaniesByIds(companyIds){
-  return (dispatch) => {
-    return dispatch({
-      types:[constants.GET_COMPANIES_BY_IDS, constants.GET_COMPANIES_BY_IDS_SUCCESS, constants.GET_COMPANIES_BY_IDS_FAIL],
-      promise:(client,auth) => {
-        if(companyIds && companyIds.length >0){
-          let filter= {where:{id:{inq:companyIds}}};
-          let filterString = encodeURIComponent(JSON.stringify(filter));
-          return client.api.get(`/companies?filter=${filterString}`,{
-            authToken: auth.authToken,
-          });
-        } else {
-          return Promise.resolve([]);
-        }
-      },
     });
   };
 }

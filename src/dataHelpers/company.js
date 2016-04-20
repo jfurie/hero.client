@@ -1,3 +1,4 @@
+
 import Immutable from 'immutable';
 import getContactDataFromState from './contact';
 
@@ -89,10 +90,13 @@ export default function getCompanyDataFromState(state, companyId) {
       clientAdvocate = clientAdvocate.set('avatarImage', avatarImage);
     }
     company = company.set('clientAdvocate', clientAdvocate);
+    let locations = state.locations.list.filter(x => {
+      return x.get('locatableType') == 'company' && x.get('locatableId') == company.get('id');
+    });
 
-    // location
-    let location = state.locations.list.get(company.get('locationId'));
-    company = company.set('location', location);
+    let locationDefault = state.locations.list.get(company.get('locationId'));
+    company = company.set('location', locationDefault);
+    company = company.set('locations', locations);
   }
 
   return company;

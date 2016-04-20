@@ -32,19 +32,16 @@ export default function reducer(state = initialState, action = {}) {
   case authConstants.LOGOUT:{
     return initialState;
   }
-  case constants.GET_JOBS_BY_IDS_SUCCESS: {
+  case constants.GET_JOBS: {
+    return state;
+  }
+  case constants.GET_JOBS_SUCCESS: {
     let jobsMap = {};
     action.result.map((c) => {
       jobsMap[c.id] = c;
     });
 
-    return state.set('list', state.get('list').merge(jobsMap));
-  }
-  case constants.GET_JOBS: {
-    return state;
-  }
-  case constants.GET_JOBS_SUCCESS: {
-    return state;
+    return state.set('list', state.get('list').mergeDeep(jobsMap));
   }
   case constants.GET_JOBS_FAIL: {
     return state.set('err', action.err);

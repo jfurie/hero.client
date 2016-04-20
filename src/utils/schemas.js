@@ -28,7 +28,7 @@ company.define({
   image:resource,
   jobs: arrayOf(job),
   candidates:arrayOf(candidate),
-  location,
+  locations: arrayOf(location),
   user,
   clientAdvocate:contact,
   contacts:arrayOf(contact),
