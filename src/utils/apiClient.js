@@ -1,3 +1,4 @@
+import {normalize } from 'normalizr';
 import superagent from 'superagent';
 const methods = ['get', 'post', 'put', 'patch', 'del'];
 
@@ -23,7 +24,7 @@ class _ApiClient {
     methods.forEach((method) =>
       this[method] = (path, {
         params, data, authToken,
-      } = {}) => new Promise((resolve, reject) => {
+      } = {}, schema) => new Promise((resolve, reject) => {
         const request = superagent[method](formatUrl(self.baseUrl, path));
         request.set('Accept', 'application/json');
         if (params) {
@@ -44,6 +45,9 @@ class _ApiClient {
           if (err) {
             return reject(body || err);
           } else {
+            if(schema){
+              body = normalize(body,schema);
+            }
             return resolve(body);
           }
         });

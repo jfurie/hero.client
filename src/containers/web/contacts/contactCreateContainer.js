@@ -4,7 +4,7 @@ import Immutable from 'immutable';
 import { pushState } from 'redux-router';
 
 import { createCandidate } from '../../../modules/candidates';
-import { createContact, getContactDetail, getContactsByCompany, editContact } from '../../../modules/contacts';
+import { createContact, getContactDetail, getContactsByCompany, editContact, updateCoverImage, updateAvatarImage } from '../../../modules/contacts';
 import {createCompanyContact} from '../../../modules/companyContacts';
 import { ContactCreate } from '../../../components/web';
 import { getMyCompanies } from '../../../modules/companies/index';
@@ -27,9 +27,25 @@ let getData = (state, props) => {
       company =companies.first();
     }
   }
+  let coverImage = null;
+  if(contact){
+    let coverImageId = contact.get('coverImageId');
+    if (coverImageId) {
+      coverImage = state.resources.list.get(coverImageId);
+    }
+  }
+  let avatarImage = null;
+  if(contact){
+    let avatarImageId = contact.get('avatarImageId');
+    if (avatarImageId) {
+      avatarImage = state.resources.list.get(avatarImageId);
+    }
+  }
 
   return {
     contact,
+    coverImage,
+    avatarImage,
     company,
     companies: state.companies.get('myCompanyIds'),
     candidates: state.candidates,
@@ -37,7 +53,7 @@ let getData = (state, props) => {
   };
 };
 
-@connect(getData, { pushState, getMyCompanies, createContact, createCandidate, createCompanyContact, getContactDetail, getContactsByCompany, editContact, getAllCategories })
+@connect(getData, { pushState, getMyCompanies, createContact, createCandidate, createCompanyContact, getContactDetail, getContactsByCompany, editContact, getAllCategories, updateCoverImage, updateAvatarImage })
 export default class ContactCreateContainer extends React.Component {
   constructor(props){
     super(props);
@@ -156,6 +172,13 @@ export default class ContactCreateContainer extends React.Component {
       this.props.history.goBack();
     }
   }
+  updateCoverImage(imageArray){
+    this.props.updateCoverImage(this.props.params.contactId,imageArray);
+  }
+
+  updateAvatarImage(imageArray){
+    this.props.updateAvatarImage(this.props.params.contactId,imageArray);
+  }
 
   render(){
     return (
@@ -166,6 +189,8 @@ export default class ContactCreateContainer extends React.Component {
           onSubmit={this._handleSave.bind(this)}
           currentCompanyId={this.state.currentCompanyId}
           onContactChange={this._handleChange.bind(this)}
+          updateCoverImage={this.updateCoverImage.bind(this)}
+          updateAvatarImage={this.updateAvatarImage.bind(this)}
           onCompanyChange={this._handleCompanyChange.bind(this)}
           categories={this.props.categories}
           open={this.state.open}

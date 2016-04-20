@@ -32,7 +32,6 @@ let getData = (state, props) => {
 
   let jobImage = null;
   let company = null;
-  let locations = null;
   if(job){
     let imageId = job.get('imageId');
     if (imageId) {
@@ -40,18 +39,18 @@ let getData = (state, props) => {
     }
     company = state.companies.get('list').get(job.get('companyId'));
 
-    if (company) {
-      locations = state.locations.list.filter(x => {
-        return x.get('locatableType') == 'company' && x.get('locatableId') == company.get('id');
-      });
-    }
+  }
+
+  let companyLocations = null;
+  if(company && company.get('locations')){
+    companyLocations = company.get('locations').map(locationId => state.locations.list.get(locationId)).toList();
   }
 
   return {
     job,
     jobImage,
     company,
-    locations,
+    companyLocations,
     heroContacts: heroContacts ? heroContacts : new Immutable.Map(),
     contacts: contacts ? contacts : new Immutable.Map(),
   };
@@ -108,7 +107,7 @@ export default class JobEditContainer extends React.Component {
       this.props.getOneJob(newProps.params.jobId);
     }
 
-    this.prepareLocations(newProps.job, newProps.locations);
+    this.prepareLocations(newProps.job, newProps.companyLocations);
   }
 
   prepareLocations(jobProp, locationsProp) {

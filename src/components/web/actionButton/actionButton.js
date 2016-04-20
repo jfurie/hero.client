@@ -81,7 +81,7 @@ class ActionButton extends React.Component {
   // );
 
     return (
-      <div className="actionButtonWrap">
+      <div style={{zIndex:'1600'}} className="actionButtonWrap">
         <div style={margedStyle.overlay} className="overlay" onTouchTap={this._closeActions.bind(this)}></div>
           <div className='floatingActionButtonWrap'>
             <div className="actions" style={margedStyle.actions}>

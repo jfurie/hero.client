@@ -567,10 +567,10 @@ export default class JobDetails extends React.Component {
                         />
                       </div>
                       {
-                        <div style={{width: '100%', marginRight: '8px'}}>
+                        <div style={{width: '100%', marginRight: '8px', cursor:'pointer'}}>
                           <CardBasic
                               onTouchTap={this.openHiringContact.bind(this)}
-                              image={<Gravatar email={talentAdvocate.get('email')} status={'notset'} style={{width: '40px'}}/>}
+                              image={<Gravatar url={talentAdvocate.get('avatarImage') && talentAdvocate.get('avatarImage').get('item')} email={talentAdvocate.get('email')} status={'notset'} style={{width: '40px'}}/>}
                               title= {<div style={{fontWeight: 'bold'}}>{talentAdvocate.get('displayName')}</div>}
                               subtitle1={talentAdvocateCompany && talentAdvocateCompany.get('name')}
                               subtitle2={talentAdvocate.get('title')}

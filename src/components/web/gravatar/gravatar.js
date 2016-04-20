@@ -25,7 +25,7 @@ class Gravatar extends React.Component {
 
   render() {
 
-    let { email, status, style } = this.props;
+    let { email, status, style, url } = this.props;
 
     //style = style || {};
 
@@ -70,6 +70,9 @@ class Gravatar extends React.Component {
     }
 
     let imgSrc = `https://www.gravatar.com/avatar/${email}?d=mm`;
+    if(url){
+      imgSrc = url;
+    }
     let tooltipStyle = {
       boxSizing: 'border-box',
       top: `-${style.picture.width}`,

@@ -134,7 +134,7 @@ export default class ContactSearch extends React.Component {
                     <CardHeader
                       title={contact.get('displayName')}
                       subtitle={contact.get('email')}
-                      avatar={<Gravatar style={style.card.gravatar} email={contact.get('email')} status="notset" />}
+                      avatar={<Gravatar url={contact.get('avatarImage') && contact.get('avatarImage').get('item')} style={style.card.gravatar} email={contact.get('email')} status="notset" />}
                     />
                   </Card>
                   </div>
@@ -161,7 +161,7 @@ export default class ContactSearch extends React.Component {
                     <CardHeader
                       title={contact.get('displayName')}
                       subtitle={contact.get('email')}
-                      avatar={<Gravatar style={style.card.gravatar} email={contact.get('email')} status="notset" />}
+                      avatar={<Gravatar url={contact.get('avatarImage') && contact.get('avatarImage').get('item')} style={style.card.gravatar} email={contact.get('email')} status="notset" />}
                     />
                   </Card>
                   </div>

@@ -1,9 +1,8 @@
 import * as constants from './constants';
 import { getFavoritesByUserId } from '../favorites';
 import { getContactDetails } from '../contacts';
-import { getCompaniesByIds } from '../companies';
+import { getCompanyDetails } from '../companies';
 import { getJobDetails } from '../jobs';
-
 import Config from '../../utils/config';
 
 const HEROACCOUNTID = Config.get('heroAccountId');
@@ -106,8 +105,8 @@ function postLogin(auth, client, state, dispatch){
       });
     }
     dispatch(getContactDetails(contactIds, ['companies']));
-    dispatch(getJobDetails(jobIds, ['candidates']));
-    dispatch(getCompaniesByIds(companyIds, ['contacts']));
+    dispatch(getJobDetails(jobIds, ['candidates','talentAdvocate']));
+    dispatch(getCompanyDetails(companyIds, ['contacts']));
   });
   return getDataBasedOnUserId(context).then((context)=>{
     return context.response;

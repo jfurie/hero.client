@@ -3,15 +3,14 @@ import Immutable from 'immutable';
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 import * as authConstants from '../auth/constants';
-import { saveJobsResult } from '../jobs';
+
 import { saveContactsResult } from '../contacts';
-import { saveNotesResult } from '../notes';
 import { createCompanyLocation, editLocation, deleteLocation, saveLocationsResult, getOneLocation } from '../locations';
 import { getFavoriteByType } from '../favorites';
-
+import Schemas from '../../utils/schemas';
 import superagent from 'superagent';
 import {actionTypes} from 'redux-localstorage';
-
+import s3Uploader from '../../utils/s3Uploader';
 const initialState = new Immutable.Map({
   list: new Immutable.Map(),
   myCompanyIds: new Immutable.Map(),
@@ -22,6 +21,10 @@ const initialState = new Immutable.Map({
 });
 
 export default function reducer(state = initialState, action = {}) {
+  if(action && action.result && action.result.entities && action.result.entities.companies){
+    let companies = Immutable.fromJS(action.result.entities.companies);
+    state = state.mergeDeepIn(['list'],companies);
+  }
   switch (action.type) {
   case actionTypes.INIT:{
     const persistedState = action.payload && action.payload['companies'];
@@ -45,12 +48,11 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_COMPANY_DETAILS_SUCCESS: {
     let companiesMap = {};
     action.companyIds.map((c) => {
-      let result = action.result.find(x => {
-        return x.id == c;
+
+      let result = action.result.result.find(x => {
+        return x == c;
       });
-      if(result){
-        companiesMap[c] = result;
-      } else {
+      if(!result){
         companiesMap[c] = {id:c, show404:true};
       }
     });
@@ -273,8 +275,10 @@ export default function reducer(state = initialState, action = {}) {
 
     return state.set('list', state.get('list').mergeDeep(company));
   }
-  default:
+  default: {
     return state;
+  }
+
   }
 }
 export function searchCompany(query){
@@ -410,17 +414,19 @@ export function setCompanyPrimaryLocation(companyId, pendingPrimaryLocation) {
   // set to first location for now
   return dispatch => {
     return dispatch(getCompaniesByIds([companyId])).then(action => {
-      let company = action.result[0];
+      let company = action.result.entities.companies[companyId];
       if (company.locations && company.locations.length > 0) {
         let ppl = pendingPrimaryLocation;
-
-        let primaryLocation = company.locations.filter(x => {
+        let locations = company.locations.map(locationId => {
+          return action.result.entities.locations[locationId];
+        });
+        let primaryLocation = locations.filter(x => {
           return ppl.get('id') == x.id
           || (combineStrings([ppl.get('name'), ppl.get('addressLine'), ppl.get('city'), ppl.get('countrySubDivisionCode'), ppl.get('postalCode'), ppl.get('countryCode')])
           == combineStrings([x.name, x.addressLine, x.city, x.countrySubDivisionCode, x.postalCode, x.countryCode]));
         });
 
-        company.locationId = primaryLocation.length > 0 ? primaryLocation[0].id : company.locations[0].id;
+        company.locationId = primaryLocation.length > 0 ? primaryLocation[0].id : locations[0].id;
         return dispatch({
           types: [constants.SET_COMPANY_PRIMARY_LOCATION, constants.SET_COMPANY_PRIMARY_LOCATION_SUCCESS, constants.SET_COMPANY_PRIMARY_LOCATION_FAIL],
           promise: (client, auth) => client.api.put(`/companies/${companyId}`, {
@@ -549,50 +555,6 @@ export function saveCompaniesResult(companies){
   };
 }
 
-export function updateCompanyImage(id,file) {
-  return (dispatch) => {
-    dispatch({
-      id,
-      types: [constants.UPDATE_COMPANY_IMAGE, constants.UPDATE_COMPANY_IMAGE_SUCCESS, constants.UPDATE_COMPANY_IMAGE_FAIL],
-      promise: (client, auth) => client.api.post('/resources/signUrl', {
-        authToken: auth.authToken,
-        data: {
-          name: file.name,
-          size: file.size,
-          type: file.type,
-        },
-      }).then((signUrlData) => new Promise((resolve, reject) => {
-        superagent.put(signUrlData.signed_request)
-            .send(file)
-            .on('progress', function(e) {
-              dispatch({
-                id,
-                type: constants.UPDATE_COMPANY_IMAGE_PROGRESS,
-                result: e.percent,
-              });
-            })
-            .end((err, {
-              body,
-            } = {}) => {
-              if (err) {
-                return reject(body || err);
-              } else {
-                return resolve(signUrlData.url);
-              }
-            });
-      })).then((signUrlData) => {
-        console.log(signUrlData);
-        return client.api.post('/resources', {
-          authToken: auth.authToken,
-          data: {
-            resourceType: 'image',
-            item: signUrlData,
-          },
-        });
-      }),
-    });
-  };
-}
 
 // export function getCompaniesByIds(companyIds){
 //   return (dispatch) => {
@@ -612,8 +574,10 @@ export function updateCompanyImage(id,file) {
 //     });
 //   };
 // }
-
-export function getCompaniesByIds(companyIds, include) {
+export function getCompaniesByIds(companyIds){
+  return getCompanyDetails(companyIds);
+}
+export function getCompanyDetails(companyIds, include) {
   return (dispatch, getState) => {
     let filter = {
       where: {
@@ -621,13 +585,32 @@ export function getCompaniesByIds(companyIds, include) {
       },
       include:[
         {
+          relation:'jobs',
+          scope:{
+          },
+        },
+        {
+          relation:'contacts',
+          scope:{
+            include:[
+              {
+                relation:'avatarImage',
+              }
+            ]
+          },
+        },
+        {
           relation:'clientAdvocate',
+          scope:{
+            include:[
+              {
+                relation:'avatarImage',
+              }
+            ]
+          },
         },
         {
           relation:'image',
-        },
-        {
-          relation:'location',
         },
         {
           relation:'locations',
@@ -669,69 +652,118 @@ export function getCompaniesByIds(companyIds, include) {
 
     return dispatch({
       companyIds,
-      types: [constants.GET_COMPANIES_BY_IDS, constants.GET_COMPANIES_BY_IDS_SUCCESS, constants.GET_COMPANIES_BY_IDS_FAIL],
+      types: [constants.GET_COMPANY_DETAILS, constants.GET_COMPANY_DETAILS_SUCCESS, constants.GET_COMPANY_DETAILS_FAIL],
       promise: (client, auth) => client.api.get(`/companies?filter=${filterString}`, {
         authToken: auth.authToken,
-      }).then((companies)=> {
-        let locations = [];
-        let contacts = [];
-        let jobs = [];
-        let notes = [];
-
-        companies.forEach(company => {
-          if (company.clientAdvocate) {
-            contacts.push(company.clientAdvocate);
-          }
-
-          if (company.location) {
-            locations.push(company.location);
-          }
-
-          if (company.locations) {
-            company.locations.map((location => {
-              locations.push(location);
-            }));
-          }
-
-          if (include && include.indexOf('contacts') > -1 && company.contacts) {
-            company.contacts.map((contact => {
-              contacts.push(contact);
-            }));
-          }
-
-          if (include && include.indexOf('jobs') > -1 && company.jobs) {
-            company.jobs.map((job => {
-              jobs.push(job);
-            }));
-          }
-
-          if (include && include.indexOf('notes') > -1 && company.notes) {
-            company.notes.map((note => {
-              notes.push(note);
-              if (note.contact) {
-                contacts.push(note.contact);
-              }
-            }));
-          }
-        });
-
-        if (locations.length > 0) {
-          dispatch(saveLocationsResult(locations));
-        }
-
-        if (contacts.length > 0) {
-          dispatch(saveContactsResult(contacts));
-        }
-
-        if (jobs.length > 0) {
-          dispatch(saveJobsResult(jobs));
-        }
-
-        if (notes.length > 0) {
-          dispatch(saveNotesResult(notes));
-        }
-
+      }, Schemas.COMPANY_ARRAY).then((companies)=> {
         return companies;
+        // let locationIds = [];
+        // let contactIds = [];
+        // let jobIds = [];
+        // let noteIds = [];
+
+        // companies.forEach(company => {
+        //   if (company.locationId) {
+        //     locationIds.push(company.locationId);
+        //   }
+
+        //   if (company.clientAdvocateId) {
+        //     contactIds.push(company.clientAdvocateId);
+        //   }
+
+        //   if (include && include.indexOf('contacts') > -1 && company.contacts) {
+        //     company.contacts.map((contact => {
+        //       contactIds.push(contact.id);
+        //     }));
+        //   }
+
+        //   if (include && include.indexOf('jobs') > -1 && company.jobs) {
+        //     company.jobs.map((job => {
+        //       jobIds.push(job.id);
+        //     }));
+        //   }
+
+        //   if (include && include.indexOf('notes') > -1 && company.notes) {
+        //     company.notes.map((note => {
+        //       noteIds.push(note.id);
+        //     }));
+        //   }
+        // });
+
+        // if (latest) {
+        //   dispatch(getLocationsByIds(locationIds));
+        //   dispatch(getContactsByIds(contactIds));
+        //   dispatch(getJobsByIds(jobIds));
+        //   dispatch(getNotesByIds(noteIds));
+        // }
+        // else {
+        //   dispatch(getLocationsByIdsIfNeeded(locationIds));
+        //   dispatch(getContactsByIdsIfNeeded(contactIds));
+        //   dispatch(getJobsByIdsIfNeeded(jobIds));
+        //   dispatch(getNotesByIdsIfNeeded(noteIds));
+        // }
+
+      }),
+    });
+  };
+}
+export function updateCompanyImage(id, file) {
+  return (dispatch) => {
+    dispatch({
+      id,
+      types:[constants.UPDATE_COMPANY_IMAGE, constants.UPDATE_COMPANY_IMAGE_SUCCESS, constants.UPDATE_COMPANY_IMAGE_FAIL],
+      promise: (client, auth) => {
+        return s3Uploader(client,auth,'image',file,function(percent){
+          dispatch({
+            id,
+            type: constants.UPDATE_COMPANY_IMAGE_PROGRESS,
+            result: percent,
+          });
+        });
+      },
+    });
+  };
+}
+export function updateCompanyImageold(id,file) {
+  return (dispatch) => {
+    dispatch({
+      id,
+      types: [constants.UPDATE_COMPANY_IMAGE, constants.UPDATE_COMPANY_IMAGE_SUCCESS, constants.UPDATE_COMPANY_IMAGE_FAIL],
+      promise: (client, auth) => client.api.post('/resources/signUrl', {
+        authToken: auth.authToken,
+        data: {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+        },
+      }).then((signUrlData) => new Promise((resolve, reject) => {
+        superagent.put(signUrlData.signed_request)
+            .send(file)
+            .on('progress', function(e) {
+              dispatch({
+                id,
+                type: constants.UPDATE_COMPANY_IMAGE_PROGRESS,
+                result: e.percent,
+              });
+            })
+            .end((err, {
+              body,
+            } = {}) => {
+              if (err) {
+                return reject(body || err);
+              } else {
+                return resolve(signUrlData.url);
+              }
+            });
+      })).then((signUrlData) => {
+        console.log(signUrlData);
+        return client.api.post('/resources', {
+          authToken: auth.authToken,
+          data: {
+            resourceType: 'image',
+            item: signUrlData,
+          },
+        });
       }),
     });
   };

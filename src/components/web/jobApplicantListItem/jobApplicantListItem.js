@@ -224,7 +224,9 @@ export default class JobApplicantListItem extends React.Component {
     }
 
     let avatarSrc = `https://www.gravatar.com/avatar/${emailHash}?d=mm`;
-
+    if(contact && contact.get('avatarImage')){
+      avatarSrc = contact.get('avatarImage').get('item');
+    }
     return (
       <div style={style.cardBasic.layout}>
         <div onClick={this.clickAvatar.bind(this)} style={style.cardBasic.imageLayout}>

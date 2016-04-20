@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-
+import getJobDataFromState from './job';
 export default function getContactDataFromState(state, contactId) {
 
   let contact = ((state.contacts.get('list').size > 0) ? (state.contacts.getIn(['list',contactId])) : (null));
@@ -11,7 +11,7 @@ export default function getContactDataFromState(state, contactId) {
     if (contact.has('jobs')) {
       let contactJobIds = [];
       contact.get('jobs').map((job => {
-        contactJobIds.push(job.get('id'));
+        typeof job == 'string'? contactJobIds.push(job):contactJobIds.push(job.get('id'));
       }));
 
       if (contactJobIds) {
@@ -19,6 +19,10 @@ export default function getContactDataFromState(state, contactId) {
           return contactJobIds.indexOf(job.get('id')) > -1;
         }).toList();
       }
+    }
+
+    if(contactJobs && contactJobs.size > 0){
+      contactJobs = contactJobs.map(job => getJobDataFromState(state,job.get('id')));
     }
 
     contact = contact.set('jobs', contactJobs);
@@ -29,7 +33,7 @@ export default function getContactDataFromState(state, contactId) {
     if (contact.has('companies')) {
       let contactCompanyIds = [];
       contact.get('companies').map((company => {
-        contactCompanyIds.push(company.get('id'));
+        typeof company == 'string'? contactCompanyIds.push(company):contactCompanyIds.push(company.get('id'));
       }));
 
       if (contactCompanyIds) {
@@ -38,7 +42,10 @@ export default function getContactDataFromState(state, contactId) {
         }).toList();
       }
     }
-
+    let coverImage = contact ? state.resources.list.get(contact.get('coverImageId')) : new Immutable.Map();
+    contact = contact.set('coverImage', coverImage);
+    let avatarImage = contact ? state.resources.list.get(contact.get('avatarImageId')) : new Immutable.Map();
+    contact = contact.set('avatarImage', avatarImage);
 
     contact = contact.set('companies', contactCompanies);
 

@@ -85,6 +85,7 @@ renderItem(item){
         />
       );
   case 'contact':
+    console.log(item);
     return(
       <ContactListItem
       contact={item}

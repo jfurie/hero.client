@@ -2,10 +2,10 @@ import superagent from 'superagent';
 import * as constants from './constants';
 import { saveNotesByJobResult } from '../notes';
 import { saveCandidatesResult } from '../candidates';
+import Schemas from '../../utils/schemas';
 import { createCompanyLocation, editLocation, deleteLocation, saveLocationResult } from '../locations';
 import { saveContactResult } from '../contacts';
 import { getContactsByIdsIfNeeded } from '../contacts';
-import { getNotesByIdsIfNeeded } from '../notes';
 import { getLocationsByIdsIfNeeded } from '../locations';
 import { getCompaniesByIds, getCompaniesByIdsIfNeeded } from '../companies';
 import { getFavoritesByUserId } from '../favorites';
@@ -132,21 +132,23 @@ export function setJobPrimaryLocation(jobId, companyId, pendingPrimaryLocation) 
   // set to first location for now
   return dispatch => {
     return dispatch(getJobsByIds([jobId])).then(action => {
-      let job = action.result[0];
+      let jobId = action.result.result[0];
+      let job = action.result.entities.jobs[jobId];
 
       return dispatch(getCompaniesByIds([companyId])).then(action => {
-        let company = action.result[0];
-
+        let company = action.result.entities.companies[companyId];
         if (company.locations && company.locations.length > 0) {
           let ppl = pendingPrimaryLocation;
-
-          let primaryLocation = company.locations.filter(x => {
+          let locations = company.locations.map(locationId => {
+            return action.result.entities.locations[locationId];
+          });
+          let primaryLocation = locations.filter(x => {
             return ppl.get('id') == x.id
             || (combineStrings([ppl.get('name'), ppl.get('addressLine'), ppl.get('city'), ppl.get('countrySubDivisionCode'), ppl.get('postalCode'), ppl.get('countryCode')])
             == combineStrings([x.name, x.addressLine, x.city, x.countrySubDivisionCode, x.postalCode, x.countryCode]));
           });
 
-          job.locationId = primaryLocation.length > 0 ? primaryLocation[0].id : company.locations[0].id;
+          job.locationId = primaryLocation.length > 0 ? primaryLocation[0].id : locations[0].id;
           return dispatch({
             types: [constants.SET_JOB_PRIMARY_LOCATION, constants.SET_JOB_PRIMARY_LOCATION_SUCCESS, constants.SET_JOB_PRIMARY_LOCATION_FAIL],
             promise: (client, auth) => client.api.put(`/jobs/${jobId}`, {
@@ -377,7 +379,7 @@ export function saveJobsByContactResult(jobs, contactId){
   };
 }
 
-export function getJobDetails(jobIds, include) {
+export function getJobDetails(jobIds) {
   return (dispatch, getState) => {
     let filter = {
       where: {
@@ -386,6 +388,32 @@ export function getJobDetails(jobIds, include) {
       include:[
         {
           relation:'candidates',
+          scope:{
+            include:[{
+              relation:'contact',
+              scope:{
+                include:[
+                  {
+                    relation:'avatarImage',
+                  },
+                  {
+                    relation:'companies',
+                  },
+                ],
+              }
+              ,
+            }],
+          },
+
+        },
+        {
+          relation:'company',
+        },
+        {
+          relation:'location',
+        },
+        {
+          relation:'talentAdvocate',
         },
         {
           relation:'notes',
@@ -407,46 +435,10 @@ export function getJobDetails(jobIds, include) {
       types: [constants.GET_JOB_DETAILS, constants.GET_JOB_DETAILS_SUCCESS, constants.GET_JOB_DETAILS_FAIL],
       promise: (client, auth) => client.api.get(`/jobs?filter=${filterString}`, {
         authToken: auth.authToken,
-      }).then((jobs)=> {
-        let companyIds = [];
-        let locationIds = [];
-        let contactIds = [];
-        let noteIds = [];
-
-        jobs.forEach(job => {
-          if (job.companyId) {
-            companyIds.push(job.companyId);
-          }
-
-          if (job.locationId) {
-            locationIds.push(job.locationId);
-          }
-
-          if (job.talentAdvocateId) {
-            contactIds.push(job.talentAdvocateId);
-          }
-
-          if (include && include.indexOf('candidates') > -1 && job.candidates) {
-            job.candidates.map((candidate => {
-              contactIds.push(candidate.contactId);
-            }));
-
-            dispatch(saveCandidatesResult(job.candidates));
-          }
-
-          if (include && include.indexOf('notes') > -1 && job.notes) {
-            job.notes.map((note => {
-              noteIds.push(note.id);
-            }));
-          }
-        });
-
-        dispatch(getCompaniesByIdsIfNeeded(companyIds));
-        dispatch(getLocationsByIdsIfNeeded(locationIds));
-        dispatch(getContactsByIdsIfNeeded(contactIds));
-        dispatch(getNotesByIdsIfNeeded(noteIds));
-
-        return jobs;
+      },
+      Schemas.JOB_ARRAY).then((result)=> {
+        console.log('jobNormal',result);
+        return result;
       }),
     });
   };
@@ -481,22 +473,30 @@ export function getJobDetail(id) {
   };
 }
 
-export function getJobsByIds(jobIds){
+export function getJobsByIds(jobIds, include){
   return (dispatch) => {
     return dispatch({
       types:[constants.GET_JOBS_BY_IDS, constants.GET_JOBS_BY_IDS_SUCCESS, constants.GET_JOBS_BY_IDS_FAIL],
       promise:(client,auth) => {
-        let filter= {where:{id:{inq:jobIds}}};
+        let filter= {
+          where:{
+            id:{
+              inq:jobIds
+            }
+          },
+          include
+        };
         let filterString = encodeURIComponent(JSON.stringify(filter));
         return client.api.get(`/jobs?filter=${filterString}`,{
           authToken: auth.authToken,
-        });
-      },
+        },
+        Schemas.JOB_ARRAY);
+      }
     });
   };
 }
 
-export function getJobsByIdsIfNeeded(jobIds){
+export function getJobsByIdsIfNeeded(jobIds, include){
   return (dispatch, getState) => {
     let newJobIds =[];
     jobIds.map((jobId => {
@@ -505,7 +505,7 @@ export function getJobsByIdsIfNeeded(jobIds){
       }
     }));
     if(newJobIds && newJobIds.length > 0){
-      return dispatch(getJobsByIds(newJobIds));
+      return dispatch(getJobsByIds(newJobIds, include));
     } else {
       return Promise.resolve();
     }
