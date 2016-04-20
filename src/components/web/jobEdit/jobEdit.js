@@ -332,8 +332,50 @@ export default class JobEdit extends React.Component {
                     <div style={style.subheader}>Location</div>
                   </div>
 
-                  <div className="col-xs-10" >
-                    <Location location={job.get('location')} onChange={this._handleLocationChange.bind(this,'location')} />
+                  {
+                    this.props.locations ?
+                    <div className="col-xs-10">
+                      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <SelectField
+                            floatingLabelText="Select Location"
+                            floatingLabelStyle={style.floatLabel}
+                            fullWidth
+                            style={style.select}
+                            onChange={this.props.selectLocation.bind(this)}
+                            hintText={''}
+                            value={this.props.selectedLocation}
+                        >
+                          {this.props.locations.map((location) => {
+                            return (
+                              <MenuItem
+                                  value={location}
+                                  primaryText={location.get('name') || location.get('addressLine') || location.get('city') || location.get('countrySubDivisionCode') || location.get('postalCode') || location.get('countryCode') || 'Office'}
+                              />
+                            );
+                          })}
+                        </SelectField>
+                        <IconButton onTouchTap={this.props.addLocation.bind(this)} style={{position: 'relative', right: '-12px', top: '12px'}} iconStyle={{color:Styles.Colors.green500}} tooltip="Add Location" tooltipPosition="top-center" iconClassName="material-icons">add</IconButton>
+                      </div>
+                      {
+                        /*
+                        this.props.locations.size > 1 ?
+                        <Toggle
+                            label="Set as Job Location"
+                            toggled={this.props.primaryLocation == this.props.selectedLocation}
+                            onToggle={this.props.setPrimaryLocation.bind(this)}
+                        />
+                        :(null)
+                        */
+                      }
+                      <Location location={this.props.selectedLocation} onChange={this.props.changeLocation.bind(this)} />
+                      <RaisedButton onTouchTap={this.props.deleteLocation.bind(this)} label="Delete Location" labelColor={Styles.Colors.red500} />
+                    </div>
+                    : (null)
+                  }
+
+                  <div className="col-xs-12">
+                    <Divider style={style.divider} />
+                    <div style={style.subheader}>Details</div>
                   </div>
 
                   <div className="col-xs-10 ">

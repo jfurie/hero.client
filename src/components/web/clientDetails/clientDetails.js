@@ -389,7 +389,7 @@ export default class ClientDetails extends React.Component {
                 ) : (null)}
               </Card>
 
-              <LocationCard location={company.get('location')} />
+              <LocationCard location={company.get('location')} otherLocations={company.get('locations')} />
 
               <Card>
                 <CardTitle title="Details" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
