@@ -62,3 +62,7 @@ export const TOGGLE_TAG_FAIL = 'hero.client/jobs/TOGGLE_TAG_FAIL';
 export const GET_JOB_DETAILS = 'hero.client/jobs/GET_JOB_DETAILS';
 export const GET_JOB_DETAILS_SUCCESS = 'hero.client/jobs/GET_JOB_DETAILS_SUCCESS';
 export const GET_JOB_DETAILS_FAIL = 'hero.client/jobs/GET_JOB_DETAILS_FAIL';
+
+export const SET_JOB_PRIMARY_LOCATION = 'hero.client/clients/SET_JOB_PRIMARY_LOCATION';
+export const SET_JOB_PRIMARY_LOCATION_SUCCESS = 'hero.client/clients/SET_JOB_PRIMARY_LOCATION_SUCCESS';
+export const SET_JOB_PRIMARY_LOCATION_FAIL = 'hero.client/clients/SET_JOB_PRIMARY_LOCATION_FAIL';

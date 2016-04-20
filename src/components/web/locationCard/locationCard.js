@@ -1,12 +1,11 @@
 import React from 'react';
-import { Avatar, FontIcon, Card, CardTitle, CardMedia, CardText, Styles } from 'material-ui';
+import { Avatar, FontIcon, Card, FlatButton, Styles } from 'material-ui';
 import { GoogleMapLoader, GoogleMap, Marker } from 'react-google-maps';
 
 const style = {
   smallListItem: {
     padding: 0,
-    margin: '16px',
-    marginBottom: '0',
+    margin: '0 16px',
   },
 };
 
@@ -14,6 +13,15 @@ class LocationCard extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      showAllLocations: false,
+    };
+  }
+
+  showAllLocations() {
+    this.setState({
+      showAllLocations: true,
+    });
   }
 
   renderSmallListItem(content,avatar){
@@ -29,9 +37,8 @@ class LocationCard extends React.Component {
     );
   }
 
-  render() {
-
-    let {location, maskLocation, zoom} = this.props;
+  renderLocation(location) {
+    let {maskLocation, zoom} = this.props;
 
     let options = {
       mapTypeControl: false,
@@ -115,17 +122,16 @@ class LocationCard extends React.Component {
     }
 
     return (
-      <Card>
-        <CardTitle title="Location" style={{padding: 0, margin: '16px 24px'}} titleStyle={{fontSize: '18px', color: Styles.Colors.grey600}} />
-        <CardText style={style.smallListItem}>
+      <div>
+        <div style={style.smallListItem}>
           {this.renderSmallListItem(address,
           <Avatar
               icon={<FontIcon className="material-icons">place</FontIcon>}
               color={Styles.Colors.grey600}
               backgroundColor={Styles.Colors.white}
           />)}
-        </CardText>
-        <CardMedia style={{padding: '8px'}}>
+        </div>
+        <div style={{padding: '8px'}}>
           <div
               style={{
                 height: '225px',
@@ -175,7 +181,39 @@ class LocationCard extends React.Component {
             />
           </div>
 
-        </CardMedia>
+        </div>
+      </div>
+    );
+  }
+
+  render() {
+    let {location, otherLocations} = this.props;
+    let hasMultipleLocations = otherLocations && otherLocations.size > 1;
+    return (
+      <Card>
+        <div style={{padding: 0, margin: '16px 24px 32px 24px', fontSize: '18px', color: Styles.Colors.grey600}}>
+          {
+            hasMultipleLocations ?
+            <div>
+              Multiple Locations
+              {
+                !this.state.showAllLocations ?
+                <FlatButton label="(Show All)" style={{color: Styles.Colors.blue500, fontSize: '12px'}} onTouchTap={this.showAllLocations.bind(this)} />
+                : (null)
+              }
+
+            </div>
+            : 'Location'
+          }
+        </div>
+        {
+          hasMultipleLocations && this.state.showAllLocations ?
+          otherLocations.map(location => {
+            return this.renderLocation(location);
+          })
+          :
+          this.renderLocation(location)
+        }
       </Card>
     );
   }

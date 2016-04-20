@@ -236,3 +236,10 @@ export function getNotesByIdsIfNeeded(noteIds){
 
   };
 }
+
+export function saveNotesResult(notes){
+  return {
+    type: constants.GET_NOTES_SUCCESS,
+    result: notes,
+  };
+}
