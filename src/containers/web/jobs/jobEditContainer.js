@@ -32,12 +32,19 @@ let getData = (state, props) => {
 
   let jobImage = null;
   let company = null;
+  let locations = null;
   if(job){
     let imageId = job.get('imageId');
     if (imageId) {
       jobImage = state.resources.list.get(imageId);
     }
     company = state.companies.get('list').get(job.get('companyId'));
+
+    if (company) {
+      locations = state.locations.list.filter(x => {
+        return x.get('locatableType') == 'company' && x.get('locatableId') == company.get('id');
+      });
+    }
   }
 
   let companyLocations = null;
@@ -71,6 +78,8 @@ export default class JobEditContainer extends React.Component {
       this.props.getJobDetail(this.props.params.jobId);
       this.props.getCompaniesByIds([this.props.params.companyId]);
     }
+
+    this.prepareLocations(this.props.job, this.props.locations);
   }
 
   componentWillReceiveProps(newProps){
@@ -104,19 +113,21 @@ export default class JobEditContainer extends React.Component {
       this.props.getOneJob(newProps.params.jobId);
     }
 
-    if (newProps.company) {
+    this.prepareLocations(newProps.job, newProps.companyLocations);
+  }
+
+  prepareLocations(jobProp, locationsProp) {
+    if (jobProp && locationsProp) {
       let locations;
       let selectedLocation;
       let selectedLocationIndex = 0;
       let primaryLocation;
 
-
-
-      locations = this.state.locations || newProps.companyLocations || new Immutable.List();
+      locations = this.state.locations || locationsProp.toList() || new Immutable.List();
 
       if (locations.size == 0) {
-        if (newProps.job && newProps.job.has('location')) {
-          primaryLocation = newProps.job.get('location');
+        if (jobProp && jobProp.has('location')) {
+          primaryLocation = jobProp.get('location');
         }
         else {
           primaryLocation = new Immutable.Map({name:'Office'});
@@ -131,10 +142,10 @@ export default class JobEditContainer extends React.Component {
           primaryLocation = this.state.primaryLocation;
         }
         else {
-          if (newProps.job && newProps.job.has('location')) {
+          if (jobProp && jobProp.has('location')) {
             let index = 0;
             locations.forEach(location => {
-              if (newProps.job.get('location').get('id') == location.get('id')) {
+              if (jobProp.get('location').get('id') == location.get('id')) {
                 primaryLocation = location;
                 selectedLocationIndex = index;
               }
@@ -156,7 +167,7 @@ export default class JobEditContainer extends React.Component {
       }
 
       this.setState({
-        company: newProps.company,
+        job: jobProp,
         locations,
         selectedLocation,
         selectedLocationIndex: this.state.selectedLocationIndex || selectedLocationIndex,

@@ -23,11 +23,16 @@ let getData = (state, props) => {
   }
 
   let companyImage = null;
+  let locations = null;
   if(company){
     let imageId = company.get('imageId');
     if (imageId) {
       companyImage = state.resources.list.get(imageId);
     }
+
+    locations = state.locations.list.filter(x => {
+      return x.get('locatableType') == 'company' && x.get('locatableId') == company.get('id');
+    });
   }
   let companyLocations = null;
   if(company && company.get('locations')){
@@ -59,6 +64,8 @@ export default class ClientCreateContainer extends React.Component {
     if(this.props.params.companyId && this.props.params.companyId.indexOf('tmp')<=-1 ){
       this.props.getCompaniesByIds([this.props.params.companyId]);
     }
+
+    this.prepareLocations(this.props.company, this.props.companyLocations);
   }
 
   componentWillReceiveProps(newProps){
@@ -84,17 +91,21 @@ export default class ClientCreateContainer extends React.Component {
       this.props.getCompaniesByIds([newProps.params.companyId]);
     }
 
-    if (newProps.company) {
+    this.prepareLocations(newProps.company, newProps.companyLocations);
+  }
+
+  prepareLocations(companyProp, locationsProp) {
+    if (companyProp && locationsProp) {
       let locations;
       let selectedLocation;
       let selectedLocationIndex = 0;
       let primaryLocation;
 
-      locations = this.state.locations || newProps.companyLocations || new Immutable.List();
+      locations = this.state.locations || locationsProp || new Immutable.List();
 
       if (locations.size == 0) {
-        if (newProps.company && newProps.company.has('location')) {
-          primaryLocation = newProps.company.get('location');
+        if (companyProp && companyProp.has('location')) {
+          primaryLocation = companyProp.get('location');
         }
         else {
           primaryLocation = new Immutable.Map({name:'Office'});
@@ -109,10 +120,10 @@ export default class ClientCreateContainer extends React.Component {
           primaryLocation = this.state.primaryLocation;
         }
         else {
-          if (newProps.company && newProps.company.has('location')) {
+          if (companyProp && companyProp.has('location')) {
             let index = 0;
             locations.forEach(location => {
-              if (newProps.company.get('location').get('id') == location.get('id')) {
+              if (companyProp.get('location').get('id') == location.get('id')) {
                 primaryLocation = location;
                 selectedLocationIndex = index;
               }
@@ -134,7 +145,7 @@ export default class ClientCreateContainer extends React.Component {
       }
 
       this.setState({
-        company: newProps.company,
+        company: companyProp,
         locations,
         selectedLocation,
         selectedLocationIndex: this.state.selectedLocationIndex || selectedLocationIndex,
@@ -143,6 +154,7 @@ export default class ClientCreateContainer extends React.Component {
       });
     }
   }
+
   _handleChange(company){
     this.setState({company});
   }
