@@ -305,7 +305,7 @@ export default class JobListItem extends React.Component {
                 subtitle2={<span style={{cursor:'pointer'}} >{job.get('department')?job.get('department'):'Tech'} Department</span>}
                 onTouchTap={this.clickJob.bind(this)}
                 rightContent={
-                  job.get('talentAdvocate')?(<div style={{zIndex:100, position:'relative'}} onClick={this.clickTalentAdvocate.bind(this)}>
+                  job.get('talentAdvocate')?(<div style={{zIndex:1, position:'relative'}} onClick={this.clickTalentAdvocate.bind(this)}>
                     <Gravatar
                         email={job.get('talentAdvocate').get('email')}
                         status={'notset'}
@@ -335,7 +335,7 @@ export default class JobListItem extends React.Component {
                     </div>
                   </div>
                   <div>
-                  <div onClick={this.clickApplicants.bind(this)} style={{marginTop:'0px', zIndex:100, position:'absolute', bottom: 0, right: 0, textAlign: 'right'}}>
+                  <div onClick={this.clickApplicants.bind(this)} style={{marginTop:'0px', zIndex:1, position:'absolute', bottom: 0, right: 0, textAlign: 'right'}}>
                       <div>{candidatesElm}</div>
                       <div>
                         <FontIcon style={style.status} className="material-icons">assignment</FontIcon>

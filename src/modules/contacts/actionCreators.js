@@ -1,7 +1,7 @@
 import { createCandidateFavorite, deleteCandidateFavorite, saveCandidateByContactResult } from '../candidates';
 import { saveJobsByContactResult } from '../jobs';
-import { getCompaniesByIdsIfNeeded, saveCompaniesResult } from '../companies';
-import { getLocationsByIdsIfNeeded, saveLocationResult } from '../locations';
+import { saveCompaniesResult } from '../companies';
+import { saveLocationResult } from '../locations';
 import * as constants from './constants';
 import s3Uploader from '../../utils/s3Uploader';
 import Schemas from '../../utils/schemas';
@@ -233,7 +233,7 @@ export function updateAvatarImage(id, file) {
   };
 }
 
-export function getContactDetails(contactIds, include) {
+export function getContactDetails(contactIds) {
   return (dispatch) => {
     let filter = {
       where: {

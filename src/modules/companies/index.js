@@ -3,10 +3,8 @@ import Immutable from 'immutable';
 import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 import * as authConstants from '../auth/constants';
-import { getJobsByIds, getJobsByIdsIfNeeded } from '../jobs';
-import { getContactsByIds, getContactsByIdsIfNeeded } from '../contacts';
-import { getNotesByIds, getNotesByIdsIfNeeded } from '../notes';
-import { getLocationsByIds, getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
+import { getContactsByIdsIfNeeded } from '../contacts';
+import { getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
 import { getFavoriteByType } from '../favorites';
 import Schemas from '../../utils/schemas';
 import superagent from 'superagent';
@@ -485,7 +483,7 @@ export function saveCompaniesResult(companies){
   };
 }
 
-export function getCompanyDetails(companyIds, include, latest) {
+export function getCompanyDetails(companyIds) {
   return (dispatch, getState) => {
     let filter = {
       where: {

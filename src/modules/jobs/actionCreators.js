@@ -6,7 +6,6 @@ import { saveLocationResult } from '../locations';
 import Schemas from '../../utils/schemas';
 import { saveContactResult } from '../contacts';
 import { getContactsByIdsIfNeeded } from '../contacts';
-import { getNotesByIdsIfNeeded } from '../notes';
 import { getLocationsByIdsIfNeeded } from '../locations';
 import { getCompaniesByIdsIfNeeded } from '../companies';
 import { getFavoritesByUserId } from '../favorites';
@@ -307,7 +306,7 @@ export function saveJobsByContactResult(jobs, contactId){
   };
 }
 
-export function getJobDetails(jobIds, include) {
+export function getJobDetails(jobIds) {
   return (dispatch, getState) => {
     let filter = {
       where: {

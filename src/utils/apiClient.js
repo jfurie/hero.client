@@ -1,4 +1,4 @@
-import {normalize } from 'normalizr'
+import {normalize } from 'normalizr';
 import superagent from 'superagent';
 const methods = ['get', 'post', 'put', 'patch', 'del'];
 
