@@ -13,9 +13,9 @@ import { createJobFavorite, deleteJobFavorite } from '../../../modules/favorites
 function getData(state, props) {
 
   let jobId = props.jobId;
-
+  let job = getJobDataFromState(state,jobId);
   return {
-    job: getJobDataFromState(state, jobId),
+    job,
   };
 }
 
@@ -61,12 +61,11 @@ class JobCardContainer extends React.Component {
   }
 
   render() {
-    let {job} = this.props;
 
     return (
       <JobListItem
+          {...this.props}
           onJobClick={this.openDetails.bind(this)}
-          job={job}
           favoriteJob={this.favoriteJob.bind(this)}
           unfavoriteJob={this.unfavoriteJob.bind(this)}
       />

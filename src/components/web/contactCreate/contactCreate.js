@@ -1,10 +1,12 @@
 import React from 'react';
 import Immutable from 'immutable';
+import md5 from 'md5';
 import {
+  LinearProgress, Card, CardText, CardMedia,
    IconButton, ToolbarGroup, Toolbar, Toggle, SelectField, MenuItem,
   FlatButton, TextField, ToolbarTitle, RaisedButton, Divider, Styles, Snackbar, Checkbox,
 } from 'material-ui';
-import { Location, TagsInput } from '../';
+import { Location, TagsInput, FileInput } from '../';
 
 import validateContact from '../../../validators/contact';
 
@@ -265,6 +267,15 @@ export default class ContactCreate extends React.Component {
     // <option value="Requires New Sponsorship">Requires New Sponsorship</option>
     // <option value="C2C Only - through an employer">C2C Only - through an employer</option>
     // </select>
+    let email = contact.get('email') || null;
+    let cover = null;
+
+    if (email) {
+      cover = md5(email);
+    } else {
+      cover = '00000000000000000000000000000000';
+    }
+    let avatarDefault =`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`;
     return (
       <div className="row center-xs">
           <div className="col-xs-12">
@@ -306,6 +317,43 @@ export default class ContactCreate extends React.Component {
                         );
                       })}
                     </SelectField>
+                  </div>
+                    <div className='col-xs-10'>
+                      <Card style={{marginBottom:'16px'}}>
+                        <div style={style.subheader}>Avatar</div>
+                        <CardMedia>
+                          {(() => {
+                            if(this.props.avatarImage){
+                              return (<div><img style={{maxWidth:'100%', maxHeight:'300px'}} src={this.props.avatarImage.get('item')}></img></div>);
+                            } else {
+                              return (<div><img style={{maxWidth:'100%', maxHeight:'300px'}} src={avatarDefault}></img></div>);
+                            }
+                          })()}
+                        </CardMedia>
+                        <CardText>
+                          <LinearProgress mode="determinate" value={contact.get('percentUploadedAvatar')} />
+                          <FileInput label={this.props.avatarImage|| cover != '00000000000000000000000000000000' ?'Change Photo':'Add Photo'} onFileChanged={this.props.updateAvatarImage.bind(this)} />
+                        </CardText>
+                      </Card>
+                  </div>
+
+                  <div className='col-xs-10'>
+                      <Card>
+                        <div style={style.subheader}>Cover Image</div>
+                        <CardMedia>
+                          {(() => {
+                            if(this.props.coverImage){
+                              return (<div><img style={{maxWidth:'100%', maxHeight:'300px'}} src={this.props.coverImage.get('item')}></img></div>);
+                            } else {
+                              return (<div></div>);
+                            }
+                          })()}
+                        </CardMedia>
+                        <CardText>
+                          <LinearProgress mode="determinate" value={contact.get('percentUploadedCover')} />
+                          <FileInput label={this.props.coverImage?'Change Photo':'Add Photo'} onFileChanged={this.props.updateCoverImage.bind(this)} />
+                        </CardText>
+                      </Card>
                   </div>
 
                   <div className="col-xs-10 ">

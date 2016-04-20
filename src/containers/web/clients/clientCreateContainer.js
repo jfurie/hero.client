@@ -23,23 +23,22 @@ let getData = (state, props) => {
   }
 
   let companyImage = null;
-  let locations = null;
   if(company){
     let imageId = company.get('imageId');
     if (imageId) {
       companyImage = state.resources.list.get(imageId);
     }
-
-    locations = state.locations.list.filter(x => {
-      return x.get('locatableType') == 'company' && x.get('locatableId') == company.get('id');
-    });
+  }
+  let companyLocations = null;
+  if(company && company.get('locations')){
+    companyLocations = company.get('locations').map(locationId => state.locations.list.get(locationId)).toList();
   }
 
   return {
     companyImage,
     heroContacts,
     company,
-    locations,
+    companyLocations,
     id: props.params.companyId,
   };
 };
@@ -61,7 +60,7 @@ export default class ClientCreateContainer extends React.Component {
       this.props.getCompaniesByIds([this.props.params.companyId]);
     }
 
-    this.prepareLocations(this.props.company, this.props.locations);
+    this.prepareLocations(this.props.company, this.props.companyLocations);
   }
 
   componentWillReceiveProps(newProps){
@@ -87,7 +86,7 @@ export default class ClientCreateContainer extends React.Component {
       this.props.getCompaniesByIds([newProps.params.companyId]);
     }
 
-    this.prepareLocations(newProps.company, newProps.locations);
+    this.prepareLocations(newProps.company, newProps.companyLocations);
   }
 
   prepareLocations(companyProp, locationsProp) {
@@ -97,7 +96,7 @@ export default class ClientCreateContainer extends React.Component {
       let selectedLocationIndex = 0;
       let primaryLocation;
 
-      locations = this.state.locations || locationsProp.toList() || new Immutable.List();
+      locations = this.state.locations || locationsProp || new Immutable.List();
 
       if (locations.size == 0) {
         if (companyProp && companyProp.has('location')) {

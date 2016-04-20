@@ -14,6 +14,12 @@ const initialState = new Immutable.Map({
 });
 
 export default function reducer(state = initialState, action = {}) {
+
+  if(action && action.result && action.result.entities && action.result.entities.jobs){
+    let jobs = Immutable.fromJS(action.result.entities.jobs);
+    state = state.mergeDeepIn(['list'],jobs);
+  }
+
   switch (action.type) {
   case actionTypes.INIT:{
     const persistedState = action.payload && action.payload['jobs'];
@@ -25,14 +31,6 @@ export default function reducer(state = initialState, action = {}) {
   }
   case authConstants.LOGOUT:{
     return initialState;
-  }
-  case constants.GET_JOBS_BY_IDS_SUCCESS: {
-    let jobsMap = {};
-    action.result.map((c) => {
-      jobsMap[c.id] = c;
-    });
-
-    return state.set('list', state.get('list').mergeDeep(jobsMap));
   }
   case constants.GET_JOBS: {
     return state;
@@ -344,14 +342,6 @@ export default function reducer(state = initialState, action = {}) {
       ctx
       .set('list', state.get('list').mergeDeep(Immutable.fromJS(jobsMap)));
     });
-  }
-  case constants.GET_JOB_DETAILS_SUCCESS: {
-    let jobsMap = {};
-    action.result.map((c) => {
-      jobsMap[c.id] = c;
-    });
-
-    return state.set('list', state.get('list').mergeDeep(jobsMap));
   }
   case constants.SET_EXPERIENCE:{
     let jobCategory = action.result;

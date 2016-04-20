@@ -180,6 +180,7 @@ export default class ClientListItem extends React.Component {
             !this.props.hideRecruiter && company.get('clientAdvocate')?
             (<div onClick={this.clickClientAdvocate.bind(this)}>
               <Gravatar
+                  url={company.get('clientAdvocate').get('avatarImage') && company.get('clientAdvocate').get('avatarImage').get('item')}
                   email={company.get('clientAdvocate').get('email')}
                   status={'notset'} style={style.accountOwnerGravatar}
                   label={company.get('clientAdvocate').get('displayName')}
@@ -231,6 +232,7 @@ export default class ClientListItem extends React.Component {
                 style={style.gravatar}
                 key={key}
                 email={c.get('email')}
+                url={c.get('avatarImage') && c.get('avatarImage').get('item')}
                 status={'notset'}
                 label={c.get('displayName')}
                 tooltipPosition="left"

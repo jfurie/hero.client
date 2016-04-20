@@ -285,11 +285,13 @@ export default class ContactDetails extends React.Component {
       desiredSalary = `$${~~(contact.get('desiredSalary')) / 1000}k`;
     }
 
+    let coverImage = ((contact.get('coverImage')) ? (contact.get('coverImage').get('item')) : (image));
+    let avatarImage = ((contact.get('avatarImage')) ? (contact.get('avatarImage').get('item')) : (`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`));
     return {
-      cover: image, //`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      cover: coverImage, //`https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
       city,
       displayName,
-      avatarUrl: `https://www.gravatar.com/avatar/${cover}?d=mm&s=500`,
+      avatarUrl: avatarImage,
       companyName,
       title,
       subtitleAvatar,
@@ -309,7 +311,6 @@ export default class ContactDetails extends React.Component {
     }
 
     let common = this.getCommonDetailsCard(contact);
-
     let actions = [{
       materialIcon: 'phone',
       text: 'Call',

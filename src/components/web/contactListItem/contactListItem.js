@@ -147,9 +147,10 @@ export default class ContactListItem extends React.Component {
   renderBasic(companies) {
     let {contact, company} = this.props;
 
+    console.log('avatar:',contact.get('avatarImage')&& contact.get('avatarImage').get('item'));
     return (
       <CardBasic
-          image={<Gravatar style={{width:'40px', cursor:'pointer',}} email={contact.get('email')} status={contact.get('status')} />}
+          image={<Gravatar style={{width:'40px', cursor:'pointer',}} url={contact.get('avatarImage')&& contact.get('avatarImage').get('item')} email={contact.get('email')} status={contact.get('status')} />}
           title= {<div style={{fontWeight: 'bold', cursor:'pointer'}}>{contact.get('displayName')}</div>}
           subtitle1={<span style={{cursor:'pointer'}}>{company?company.get('name'):companies}</span>}
           subtitle2={<span style={{cursor:'pointer'}}>{contact.get('title')}</span>}

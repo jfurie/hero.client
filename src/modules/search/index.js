@@ -1,8 +1,6 @@
 import Immutable from 'immutable';
 
-const GET_SEARCH = 'hero.client/search/GET_SEARCH';
-const GET_SEARCH_SUCCESS = 'hero.client/search/GET_SEARCH_SUCCESS';
-const GET_SEARCH_FAIL = 'hero.client/search/GET_SEARCH_FAIL';
+import * as constants from './constants';
 
 const initialState = {
   bySearchQuery: new Immutable.Map(),
@@ -10,10 +8,10 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-  case GET_SEARCH:{
+  case constants.GET_SEARCH:{
     return {...state};
   }
-  case GET_SEARCH_SUCCESS:{
+  case constants.GET_SEARCH_SUCCESS:{
     let bySearchQueryMap = {};
     bySearchQueryMap[action.result.query] = action.result.results;
     return {
@@ -21,7 +19,7 @@ export default function reducer(state = initialState, action = {}) {
       bySearchQuery: state.bySearchQuery.mergeDeep(bySearchQueryMap),
     };
   }
-  case GET_SEARCH_FAIL:{
+  case constants.GET_SEARCH_FAIL:{
     return {...state};
   }
   default:{
@@ -32,7 +30,7 @@ export default function reducer(state = initialState, action = {}) {
 
 export function search(query,offset, limit) {
   return {
-    types: [GET_SEARCH, GET_SEARCH_SUCCESS, GET_SEARCH_FAIL],
+    types: [constants.GET_SEARCH, constants.GET_SEARCH_SUCCESS, constants.GET_SEARCH_FAIL],
     promise: (client, auth) => new Promise((resolve,reject) => {
       let filter = {
         where:{
