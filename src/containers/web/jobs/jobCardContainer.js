@@ -13,7 +13,7 @@ import { createJobFavorite, deleteJobFavorite } from '../../../modules/favorites
 function getData(state, props) {
 
   let jobId = props.jobId;
-  let job = state.jobs.list.get(jobId);
+  let job = getJobDataFromState(state,jobId);
   return {
     job,
   };

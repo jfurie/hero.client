@@ -8,7 +8,7 @@ import { getContactsByIds, getContactsByIdsIfNeeded } from '../contacts';
 import { getNotesByIds, getNotesByIdsIfNeeded } from '../notes';
 import { getLocationsByIds, getLocationsByIdsIfNeeded, getOneLocation } from '../locations';
 import { getFavoriteByType } from '../favorites';
-
+import Schemas from '../../utils/schemas';
 import superagent from 'superagent';
 import {actionTypes} from 'redux-localstorage';
 import s3Uploader from '../../utils/s3Uploader';
@@ -49,12 +49,11 @@ export default function reducer(state = initialState, action = {}) {
   case constants.GET_COMPANY_DETAILS_SUCCESS: {
     let companiesMap = {};
     action.companyIds.map((c) => {
-      let result = action.result.find(x => {
-        return x.id == c;
+
+      let result = action.result.result.find(x => {
+        return x == c;
       });
-      if(result){
-        companiesMap[c] = result;
-      } else {
+      if(!result){
         companiesMap[c] = {id:c, show404:true};
       }
     });
@@ -287,8 +286,10 @@ export default function reducer(state = initialState, action = {}) {
 
     return state.set('list', state.get('list').mergeDeep(company));
   }
-  default:
+  default: {
     return state;
+  }
+
   }
 }
 export function searchCompany(query){
@@ -494,13 +495,31 @@ export function getCompanyDetails(companyIds, include, latest) {
         {
           relation:'jobs',
           scope:{
-            fields: ['id'],
           },
         },
         {
           relation:'contacts',
           scope:{
-            fields: ['id'],
+            include:[
+              {
+                relation:'avatarImage',
+              }
+            ]
+          },
+        },
+        {
+          relation:'clientAdvocate',
+          scope:{
+            include:[
+              {
+                relation:'avatarImage',
+              }
+            ]
+          },
+        },
+        {
+          relation:'location',
+          scope:{
           },
         },
         {
@@ -511,7 +530,6 @@ export function getCompanyDetails(companyIds, include, latest) {
               {and: [{privacyValue: 0}, {userId: getState().auth.get('user').get('id')}]},
               {privacyValue: 1},
             ]},
-            fields: ['id'],
           },
         },
       ],
@@ -524,54 +542,54 @@ export function getCompanyDetails(companyIds, include, latest) {
       types: [constants.GET_COMPANY_DETAILS, constants.GET_COMPANY_DETAILS_SUCCESS, constants.GET_COMPANY_DETAILS_FAIL],
       promise: (client, auth) => client.api.get(`/companies?filter=${filterString}`, {
         authToken: auth.authToken,
-      }).then((companies)=> {
-        let locationIds = [];
-        let contactIds = [];
-        let jobIds = [];
-        let noteIds = [];
-
-        companies.forEach(company => {
-          if (company.locationId) {
-            locationIds.push(company.locationId);
-          }
-
-          if (company.clientAdvocateId) {
-            contactIds.push(company.clientAdvocateId);
-          }
-
-          if (include && include.indexOf('contacts') > -1 && company.contacts) {
-            company.contacts.map((contact => {
-              contactIds.push(contact.id);
-            }));
-          }
-
-          if (include && include.indexOf('jobs') > -1 && company.jobs) {
-            company.jobs.map((job => {
-              jobIds.push(job.id);
-            }));
-          }
-
-          if (include && include.indexOf('notes') > -1 && company.notes) {
-            company.notes.map((note => {
-              noteIds.push(note.id);
-            }));
-          }
-        });
-
-        if (latest) {
-          dispatch(getLocationsByIds(locationIds));
-          dispatch(getContactsByIds(contactIds));
-          dispatch(getJobsByIds(jobIds));
-          dispatch(getNotesByIds(noteIds));
-        }
-        else {
-          dispatch(getLocationsByIdsIfNeeded(locationIds));
-          dispatch(getContactsByIdsIfNeeded(contactIds));
-          dispatch(getJobsByIdsIfNeeded(jobIds));
-          dispatch(getNotesByIdsIfNeeded(noteIds));
-        }
-
+      }, Schemas.COMPANY_ARRAY).then((companies)=> {
         return companies;
+        // let locationIds = [];
+        // let contactIds = [];
+        // let jobIds = [];
+        // let noteIds = [];
+
+        // companies.forEach(company => {
+        //   if (company.locationId) {
+        //     locationIds.push(company.locationId);
+        //   }
+
+        //   if (company.clientAdvocateId) {
+        //     contactIds.push(company.clientAdvocateId);
+        //   }
+
+        //   if (include && include.indexOf('contacts') > -1 && company.contacts) {
+        //     company.contacts.map((contact => {
+        //       contactIds.push(contact.id);
+        //     }));
+        //   }
+
+        //   if (include && include.indexOf('jobs') > -1 && company.jobs) {
+        //     company.jobs.map((job => {
+        //       jobIds.push(job.id);
+        //     }));
+        //   }
+
+        //   if (include && include.indexOf('notes') > -1 && company.notes) {
+        //     company.notes.map((note => {
+        //       noteIds.push(note.id);
+        //     }));
+        //   }
+        // });
+
+        // if (latest) {
+        //   dispatch(getLocationsByIds(locationIds));
+        //   dispatch(getContactsByIds(contactIds));
+        //   dispatch(getJobsByIds(jobIds));
+        //   dispatch(getNotesByIds(noteIds));
+        // }
+        // else {
+        //   dispatch(getLocationsByIdsIfNeeded(locationIds));
+        //   dispatch(getContactsByIdsIfNeeded(contactIds));
+        //   dispatch(getJobsByIdsIfNeeded(jobIds));
+        //   dispatch(getNotesByIdsIfNeeded(noteIds));
+        // }
+
       }),
     });
   };

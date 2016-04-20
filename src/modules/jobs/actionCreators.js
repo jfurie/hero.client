@@ -320,9 +320,14 @@ export function getJobDetails(jobIds, include) {
             include:[{
               relation:'contact',
               scope:{
-                include:[{
-                  relation:'avatarImage',
-                }],
+                include:[
+                  {
+                    relation:'avatarImage',
+                  },
+                  {
+                    relation:'companies',
+                  },
+                ],
               }
               ,
             }],

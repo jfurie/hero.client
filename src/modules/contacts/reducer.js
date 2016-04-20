@@ -23,6 +23,11 @@ let ContactCategory = new Immutable.Record({
 });
 
 export default function reducer(state = initialState, action = {}) {
+  if(action && action.result && action.result.entities && action.result.entities.contacts){
+    let contacts = Immutable.fromJS(action.result.entities.contacts);
+    state = state.mergeDeepIn(['list'],contacts);
+  }
+
   switch (action.type) {
   case actionTypes.INIT:{
     const persistedState = action.payload && action.payload['contacts'];
@@ -326,14 +331,6 @@ export default function reducer(state = initialState, action = {}) {
       ctx
       .set('list', state.get('list').mergeDeep(Immutable.fromJS(contactsMap)));
     });
-  }
-  case constants.GET_CONTACT_DETAILS_SUCCESS: {
-    let contactsMap = {};
-    action.result.map((c) => {
-      contactsMap[c.id] = c;
-    });
-
-    return state.set('list', state.get('list').mergeDeep(contactsMap));
   }
   case constants.GET_MY_CONTACTS_SUCCESS: {
     let contactsMap = {};

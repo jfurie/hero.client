@@ -95,6 +95,7 @@ let style = {
     top: '-8px',
     lineHeight: 0,
     cursor:'pointer',
+    zIndex:100,
   },
   accountOwnerGravatar:{
     display: 'inline',
@@ -201,6 +202,7 @@ export default class JobListItem extends React.Component {
         <Gravatar
           style={style.gravatar}
           key={key} email={c.get('contact').get('email')}
+          url={c.get('contact').get('avatarImage') && c.get('contact').get('avatarImage').get('item')}
           status={'notset'}
           label={c.get('contact').get('displayName')}
           tooltipPosition="right"
@@ -303,10 +305,11 @@ export default class JobListItem extends React.Component {
                 subtitle2={<span style={{cursor:'pointer'}} >{job.get('department')?job.get('department'):'Tech'} Department</span>}
                 onTouchTap={this.clickJob.bind(this)}
                 rightContent={
-                  job.get('talentAdvocate')?(<div onClick={this.clickTalentAdvocate.bind(this)}>
+                  job.get('talentAdvocate')?(<div style={{zIndex:100, position:'relative'}} onClick={this.clickTalentAdvocate.bind(this)}>
                     <Gravatar
                         email={job.get('talentAdvocate').get('email')}
                         status={'notset'}
+                        url={job.get('talentAdvocate').get('avatarImage') && job.get('talentAdvocate').get('avatarImage').get('item')}
                         style={style.accountOwnerGravatar}
                         label={job.get('talentAdvocate').get('displayName')}
                         tooltipPosition="right"
@@ -332,7 +335,7 @@ export default class JobListItem extends React.Component {
                     </div>
                   </div>
                   <div>
-                  <div onClick={this.clickApplicants.bind(this)} style={{marginTop:'0px', position:'absolute', bottom: 0, right: 0, textAlign: 'right'}}>
+                  <div onClick={this.clickApplicants.bind(this)} style={{marginTop:'0px', zIndex:100, position:'absolute', bottom: 0, right: 0, textAlign: 'right'}}>
                       <div>{candidatesElm}</div>
                       <div>
                         <FontIcon style={style.status} className="material-icons">assignment</FontIcon>

@@ -135,7 +135,7 @@ export default function reducer(state = initialState, action = {}) {
   }
 
   case contactConstants.SEARCH_CONTACTS_SUCCESS:{
-    let newMap = getResourcesFromContacts(action.result);
+    let newMap = getResourcesFromContacts(action.result.results);
     return {
       ...state,
       list: state.list.mergeDeep(newMap),

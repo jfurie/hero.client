@@ -4,7 +4,7 @@ import { getCompaniesByIdsIfNeeded, saveCompaniesResult } from '../companies';
 import { getLocationsByIdsIfNeeded, saveLocationResult } from '../locations';
 import * as constants from './constants';
 import s3Uploader from '../../utils/s3Uploader';
-
+import Schemas from '../../utils/schemas';
 export function getAllContacts() {
   return {
     types: [constants.GET_CONTACTS, constants.GET_CONTACTS_SUCCESS, constants.GET_CONTACTS_FAIL],
@@ -243,11 +243,16 @@ export function getContactDetails(contactIds, include) {
         {
           relation:'companies',
           scope: {
-            fields: ['id'],
           },
         },
         {
+          relation:'jobs',
+        },
+        {
           relation:'coverImage',
+        },
+        {
+          relation:'avatarImage',
         },
       ],
     };
@@ -258,24 +263,24 @@ export function getContactDetails(contactIds, include) {
       types: [constants.GET_CONTACT_DETAILS, constants.GET_CONTACT_DETAILS_SUCCESS, constants.GET_CONTACT_DETAILS_FAIL],
       promise: (client, auth) => client.api.get(`/contacts?filter=${filterString}`, {
         authToken: auth.authToken,
-      }).then((contacts)=> {
-        let companyIds = [];
-        let locationIds = [];
+      }, Schemas.CONTACT_ARRAY).then((contacts)=> {
+        // let companyIds = [];
+        // let locationIds = [];
 
-        contacts.forEach(contact => {
-          if (contact.locationId) {
-            locationIds.push(contact.locationId);
-          }
+        // contacts.forEach(contact => {
+        //   if (contact.locationId) {
+        //     locationIds.push(contact.locationId);
+        //   }
 
-          if (include && include.indexOf('companies') > -1 && contact.companies) {
-            contact.companies.map((company => {
-              companyIds.push(company.id);
-            }));
-          }
-        });
+        //   if (include && include.indexOf('companies') > -1 && contact.companies) {
+        //     contact.companies.map((company => {
+        //       companyIds.push(company.id);
+        //     }));
+        //   }
+        // });
 
-        dispatch(getCompaniesByIdsIfNeeded(companyIds));
-        dispatch(getLocationsByIdsIfNeeded(locationIds));
+        // dispatch(getCompaniesByIdsIfNeeded(companyIds));
+        // dispatch(getLocationsByIdsIfNeeded(locationIds));
 
         return contacts;
       }),

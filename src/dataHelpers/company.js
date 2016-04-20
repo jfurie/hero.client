@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import getContactDataFromState from './contact';
 
 export default function getCompanyDataFromState(state, companyId) {
 
@@ -24,7 +25,7 @@ export default function getCompanyDataFromState(state, companyId) {
     if (company.has('jobs')) {
       let companyJobIds = [];
       company.get('jobs').map((job => {
-        companyJobIds.push(job.get('id'));
+        companyJobIds.push(job);
       }));
 
       if (companyJobIds) {
@@ -42,7 +43,7 @@ export default function getCompanyDataFromState(state, companyId) {
     if (company.has('notes')) {
       let companyNoteIds = [];
       company.get('notes').map((note => {
-        companyNoteIds.push(note.get('id'));
+        companyNoteIds.push(note);
       }));
 
       if (companyNoteIds) {
@@ -64,13 +65,18 @@ export default function getCompanyDataFromState(state, companyId) {
     if (company.has('contacts')) {
       let companyContactIds = [];
       company.get('contacts').map((contact => {
-        companyContactIds.push(contact.get('id'));
+        companyContactIds.push(contact);
       }));
 
       if (companyContactIds) {
         companyContacts = state.contacts.get('list').filter(contact => {
           return companyContactIds.indexOf(contact.get('id')) > -1;
         }).toList();
+        if(companyContacts){
+          companyContacts = companyContacts.map(contact =>{
+            return getContactDataFromState(state, contact.get('id'));
+          });
+        }
       }
     }
 
@@ -78,6 +84,10 @@ export default function getCompanyDataFromState(state, companyId) {
 
     // clientAdvocateId
     let clientAdvocate = state.contacts.get('list').get(company.get('clientAdvocateId'));
+    if(clientAdvocate){
+      let avatarImage = clientAdvocate ? state.resources.list.get(clientAdvocate.get('avatarImageId')) : new Immutable.Map();
+      clientAdvocate = clientAdvocate.set('avatarImage', avatarImage);
+    }
     company = company.set('clientAdvocate', clientAdvocate);
 
     // location

@@ -45,6 +45,13 @@ const initialState = {
 };
 
 export default function reducer(state = initialState, action = {}) {
+  if(action && action.result && action.result.entities && action.result.entities.candidates){
+    let candidates = Immutable.fromJS(action.result.entities.candidates);
+    state = {
+      ...state,
+      list: state.list.mergeDeep(candidates),
+    };
+  }
   switch (action.type) {
   case GET_CANDIDATES_BY_IDS_SUCCESS: {
     let candidatesMap = {};

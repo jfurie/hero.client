@@ -72,7 +72,7 @@ export default(store) => {
       console.log('checkAuth');
       if (authToken) {
         store.dispatch(authActions.checkAuthServer(authToken.get('id')));
-        store.dispatch(authActions.logginWithAuthLocalStorage());
+        //store.dispatch(authActions.logginWithAuthLocalStorage());
         cb();
       } else {
         replaceState(null, `/login?redirect=${nextState.location.pathname}`);
