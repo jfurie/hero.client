@@ -4,10 +4,7 @@ import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 import * as authConstants from '../auth/constants';
 
-import { getContactsByIdsIfNeeded } from '../contacts';
-import { saveJobsResult } from '../jobs';
 import { saveContactsResult } from '../contacts';
-import { saveNotesResult } from '../notes';
 import { createCompanyLocation, editLocation, deleteLocation, saveLocationsResult, getOneLocation } from '../locations';
 import { getFavoriteByType } from '../favorites';
 import Schemas from '../../utils/schemas';

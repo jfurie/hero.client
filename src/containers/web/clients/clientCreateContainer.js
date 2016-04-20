@@ -23,16 +23,11 @@ let getData = (state, props) => {
   }
 
   let companyImage = null;
-  let locations = null;
   if(company){
     let imageId = company.get('imageId');
     if (imageId) {
       companyImage = state.resources.list.get(imageId);
     }
-
-    locations = state.locations.list.filter(x => {
-      return x.get('locatableType') == 'company' && x.get('locatableId') == company.get('id');
-    });
   }
   let companyLocations = null;
   if(company && company.get('locations')){

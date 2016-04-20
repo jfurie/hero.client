@@ -32,7 +32,6 @@ let getData = (state, props) => {
 
   let jobImage = null;
   let company = null;
-  let locations = null;
   if(job){
     let imageId = job.get('imageId');
     if (imageId) {
@@ -40,11 +39,6 @@ let getData = (state, props) => {
     }
     company = state.companies.get('list').get(job.get('companyId'));
 
-    if (company) {
-      locations = state.locations.list.filter(x => {
-        return x.get('locatableType') == 'company' && x.get('locatableId') == company.get('id');
-      });
-    }
   }
 
   let companyLocations = null;
