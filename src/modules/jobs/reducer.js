@@ -32,6 +32,43 @@ export default function reducer(state = initialState, action = {}) {
   case authConstants.LOGOUT:{
     return initialState;
   }
+  case constants.GET_JOB_DETAILS: {
+    return state.set('loading', true);
+  }
+  case constants.GET_JOB_DETAILS_SUCCESS: {
+    let jobsMap = {};
+    action.result.result.map((c) => {
+
+      let result = action.result.result.find(x => {
+        return x == c;
+      });
+      if(!result){
+        jobsMap[c] = {id:c, show404:true};
+      }
+    });
+
+    return state.withMutations((state) => {
+      state.set('list', state.get('list').mergeDeep(jobsMap))
+      .set('loading', false);
+    });
+  }
+  case constants.GET_JOB_DETAILS_FAIL: {
+    let jobsMap = {};
+    action.result.result.map((c) => {
+
+      let result = action.result.result.find(x => {
+        return x == c;
+      });
+      if(!result){
+        jobsMap[c] = {id:c, show404:true};
+      }
+    });
+
+    return state.withMutations((state) => {
+      state.set('list', state.get('list').mergeDeep(jobsMap))
+      .set('loading', false);
+    });
+  }
   case constants.GET_JOBS: {
     return state;
   }
