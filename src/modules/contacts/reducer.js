@@ -40,6 +40,43 @@ export default function reducer(state = initialState, action = {}) {
   case authConstants.LOGOUT:{
     return initialState;
   }
+  case constants.GET_CONTACT_DETAILS: {
+    return state.set('loading', true);
+  }
+  case constants.GET_CONTACT_DETAILS_SUCCESS: {
+    let contactsMap = {};
+    action.result.result.map((c) => {
+
+      let result = action.result.result.find(x => {
+        return x == c;
+      });
+      if(!result){
+        contactsMap[c] = {id:c, show404:true};
+      }
+    });
+
+    return state.withMutations((state) => {
+      state.set('list', state.get('list').mergeDeep(contactsMap))
+      .set('loading', false);
+    });
+  }
+  case constants.GET_CONTACT_DETAILS_FAIL: {
+    let contactsMap = {};
+    action.result.result.map((c) => {
+
+      let result = action.result.result.find(x => {
+        return x == c;
+      });
+      if(!result){
+        contactsMap[c] = {id:c, show404:true};
+      }
+    });
+
+    return state.withMutations((state) => {
+      state.set('list', state.get('list').mergeDeep(contactsMap))
+      .set('loading', false);
+    });
+  }
   case constants.GET_CONTACTS_BY_IDS_SUCCESS:{
     let contactsMap = {};
     action.result.map((c) => {

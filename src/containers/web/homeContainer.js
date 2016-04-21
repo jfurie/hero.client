@@ -23,6 +23,10 @@ const style = {
   overlay: {
     zIndex: '1400',
   },
+  loading: {
+    margin: '16px',
+    color: Styles.Colors.grey700,
+  },
 };
 
 let getData = (state, props) => {
@@ -31,13 +35,10 @@ let getData = (state, props) => {
   let currentFavorites = state.favorites.get('list');
   let favoriteMap = {};
 
-  let favoriteCompanyIds = [];
   currentFavorites.map(function(favorite){
     favoriteMap[favorite.get('favorableId')] = 1;
-    if (favorite.get('favorableType') == 'company') {
-      favoriteCompanyIds.push(favorite.get('favorableId'));
-    }
   });
+
   let favoriteContacts = state.contacts.get('list').filter(x=>favoriteMap[x.get('id')]);
   let favoriteJobs = state.jobs.get('list').filter(x=>favoriteMap[x.get('id')]);
   let favoriteCompanies = state.companies.get('list').filter(x=>favoriteMap[x.get('id')]);
@@ -52,7 +53,9 @@ let getData = (state, props) => {
     favoriteContacts,
     favoriteCompanies,
     favoriteJobs,
-    favoriteCompanyIds,
+    loadingCompanies: state.companies.get('loading'),
+    loadingJobs: state.companies.get('loading'),
+    loadingContacts: state.companies.get('loading'),
   };
 };
 
@@ -71,7 +74,7 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    
+
   }
 
   _handleJobClick(job){
@@ -262,7 +265,8 @@ class HomePage extends React.Component {
         <CustomTabsSwipe tabs={['Clients', 'Active Jobs', 'Candidates']} startingTab={this.props.tab} onChange={this.tabChange.bind(this)}>
           <div style={style.slide}>
           {
-            favoriteCompanies && favoriteCompanies.size > 0 ?
+            !this.props.loadingCompanies ?
+            favoriteCompanies.size > 0 ?
             <ClientsList
                 clients={favoriteCompanies}
                 favoriteCompany={this.favoriteCompany.bind(this)}
@@ -270,10 +274,13 @@ class HomePage extends React.Component {
             />
             :
             <NoResultsCard title="No Clients" text={'You don\'t have any saved clients.'} actionLabel="View All Clients" action={this.goToPage.bind(this, '/clients')} />
+            :
+            <div style={style.loading}>Loading clients...</div>
           }
           </div>
           <div>
           {
+            !this.props.loadingJobs ?
             favoriteJobs && favoriteJobs.size > 0 ?
             <JobsList
                 onJobClick={this._handleJobClick.bind(this)}
@@ -283,10 +290,13 @@ class HomePage extends React.Component {
             />
             :
             <NoResultsCard title="No Jobs" text={'You don\'t have any saved jobs.'} actionLabel="View All Jobs" action={this.goToPage.bind(this, '/jobs')} />
+            :
+            <div style={style.loading}>Loading jobs...</div>
           }
           </div>
           <div style={style.slide}>
           {
+            !this.props.loadingContacts ?
             favoriteContacts && favoriteContacts.size > 0 ?
             <ContactsList
                 contacts={favoriteContacts}
@@ -295,6 +305,8 @@ class HomePage extends React.Component {
             />
             :
             <NoResultsCard title="No Candidates" text={'You don\'t have any saved candidates.'} actionLabel="View All Candidates" action={this.goToPage.bind(this, '/candidates')} />
+            :
+            <div style={style.loading}>Loading candidates...</div>
           }
           </div>
         </CustomTabsSwipe>

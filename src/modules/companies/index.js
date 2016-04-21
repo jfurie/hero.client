@@ -44,6 +44,9 @@ export default function reducer(state = initialState, action = {}) {
 
     return state.set('list', state.get('list').mergeDeep(companiesMap));
   }
+  case constants.GET_COMPANY_DETAILS: {
+    return state.set('loading', true);
+  }
   case constants.GET_COMPANY_DETAILS_SUCCESS: {
     let companiesMap = {};
     action.companyIds.map((c) => {
@@ -56,15 +59,27 @@ export default function reducer(state = initialState, action = {}) {
       }
     });
 
-    return state.set('list', state.get('list').mergeDeep(companiesMap));
+    return state.withMutations((state) => {
+      state.set('list', state.get('list').mergeDeep(companiesMap))
+      .set('loading', false);
+    });
   }
   case constants.GET_COMPANY_DETAILS_FAIL: {
     let companiesMap = {};
     action.companyIds.map((c) => {
-      companiesMap[c] = {id:c, show404:true};
+
+      let result = action.result.result.find(x => {
+        return x == c;
+      });
+      if(!result){
+        companiesMap[c] = {id:c, show404:true};
+      }
     });
 
-    return state.set('list', state.get('list').mergeDeep(companiesMap));
+    return state.withMutations((state) => {
+      state.set('list', state.get('list').mergeDeep(companiesMap))
+      .set('loading', false);
+    });
   }
 
   case constants.GET_COMPANIES: {
