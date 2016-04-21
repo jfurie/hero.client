@@ -4,8 +4,7 @@ import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 import * as authConstants from '../auth/constants';
 
-import { saveContactsResult } from '../contacts';
-import { createCompanyLocation, editLocation, deleteLocation, saveLocationsResult, getOneLocation } from '../locations';
+import { createCompanyLocation, editLocation, deleteLocation, getOneLocation } from '../locations';
 import { getFavoriteByType } from '../favorites';
 import Schemas from '../../utils/schemas';
 import superagent from 'superagent';
@@ -182,10 +181,15 @@ export default function reducer(state = initialState, action = {}) {
     }
   }
   case constants.GET_MY_COMPANIES_SUCCESS: {
-
     let companiesMap = {};
-    action.result.map((c) => {
-      companiesMap[c.id] = c;
+    action.result.result.map((c) => {
+
+      let result = action.result.result.find(x => {
+        return x == c;
+      });
+      if(!result){
+        companiesMap[c] = {id:c, show404:true};
+      }
     });
 
     return state.withMutations((state) => {
@@ -448,6 +452,9 @@ export function getMyCompanies() {
   let filter = {
     include:[
       {
+        relation:'location',
+      },
+      {
         relation:'clientAdvocate',
       },
       {
@@ -466,35 +473,35 @@ export function getMyCompanies() {
       types: [constants.GET_MY_COMPANIES, constants.GET_MY_COMPANIES_SUCCESS, constants.GET_MY_COMPANIES_FAIL],
       promise: (client, auth) => client.api.get(`/companies?filter=${filterString}`, {
         authToken: auth.authToken,
-      }).then((companies)=> {
-        let locations = [];
-        let contacts = [];
-
-        companies.forEach(company => {
-          if (company.clientAdvocate) {
-            contacts.push(company.clientAdvocate);
-          }
-
-          if (company.locations) {
-            company.locations.map((location => {
-              locations.push(location);
-            }));
-          }
-
-          if (company.contacts) {
-            company.contacts.map((contact => {
-              contacts.push(contact);
-            }));
-          }
-        });
-
-        if (locations.length > 0) {
-          dispatch(saveLocationsResult(locations));
-        }
-
-        if (contacts.length > 0) {
-          dispatch(saveContactsResult(contacts));
-        }
+      }, Schemas.COMPANY_ARRAY).then((companies)=> {
+        // let locations = [];
+        // let contacts = [];
+        //
+        // companies.forEach(company => {
+        //   if (company.clientAdvocate) {
+        //     contacts.push(company.clientAdvocate);
+        //   }
+        //
+        //   if (company.locations) {
+        //     company.locations.map((location => {
+        //       locations.push(location);
+        //     }));
+        //   }
+        //
+        //   if (company.contacts) {
+        //     company.contacts.map((contact => {
+        //       contacts.push(contact);
+        //     }));
+        //   }
+        // });
+        //
+        // if (locations.length > 0) {
+        //   dispatch(saveLocationsResult(locations));
+        // }
+        //
+        // if (contacts.length > 0) {
+        //   dispatch(saveContactsResult(contacts));
+        // }
 
         return companies;
       }),
@@ -592,8 +599,8 @@ export function getCompanyDetails(companyIds, include) {
             include:[
               {
                 relation:'avatarImage',
-              }
-            ]
+              },
+            ],
           },
         },
         {
@@ -602,8 +609,8 @@ export function getCompanyDetails(companyIds, include) {
             include:[
               {
                 relation:'avatarImage',
-              }
-            ]
+              },
+            ],
           },
         },
         {

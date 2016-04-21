@@ -32,11 +32,15 @@ let getData = (state, props) => {
     }
   }
 
+  let companies = state.companies.get('list').map(company => {
+    return getCompanyDataFromState(state,company.get('id'));
+  });
+
   return {
     job,
     company,
     categories,
-    companies: state.companies.get('myCompanyIds'),
+    companies,
     jobImage,
     //heroContacts: heroContacts ? heroContacts : new Immutable.Map(),
     //contacts: company ? company.get('contacts') : new Immutable.Map(),

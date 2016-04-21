@@ -10,6 +10,8 @@ import { ContactCreate } from '../../../components/web';
 import { getMyCompanies } from '../../../modules/companies/index';
 import { getAllCategories } from '../../../modules/categories';
 
+import getCompanyDataFromState from '../../../dataHelpers/company';
+
 let getData = (state, props) => {
   let contact = null;
   let company = null;
@@ -42,12 +44,16 @@ let getData = (state, props) => {
     }
   }
 
+  let companies = state.companies.get('list').map(company => {
+    return getCompanyDataFromState(state,company.get('id'));
+  });
+
   return {
     contact,
     coverImage,
     avatarImage,
     company,
-    companies: state.companies.get('myCompanyIds'),
+    companies,
     candidates: state.candidates,
     categories,
   };
