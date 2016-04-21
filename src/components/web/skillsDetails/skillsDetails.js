@@ -76,7 +76,7 @@ export default class ContactCategoryToggle extends React.Component {
         })
       );
     } else {
-      contactCategory = contactCategory.setIn(['frameworkInclude',contactCategory.get('frameworkInclude').length],framework);
+      contactCategory = contactCategory.setIn(['frameworkInclude',contactCategory.get('frameworkInclude').size],framework);
     }
     this.props.setFrameworks(this.props.item.get('id'),contactCategory);
   }
