@@ -131,7 +131,7 @@ render(){
       ></Snackbar>
 
       {
-        searchResults && searchResults.get('results') &&searchResults.get('results').length > 0 ?
+        searchResults && searchResults.get('results') &&searchResults.get('results').size > 0 ?
           <div>
             <div style={style.heading.container}>
               <span style={style.heading.label}>Search Results: </span>{`${searchResults.get('count')}`}
