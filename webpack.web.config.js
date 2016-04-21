@@ -40,8 +40,12 @@ var original = {
         exclude: /node_modules/,
         loader: 'babel',
         query: {
-          optional: ['runtime'],
-          stage: 0,
+          plugins: [
+            'transform-decorators-legacy',
+            'transform-class-properties',
+            'transform-react-inline-elements',
+          ],
+          presets: ['react','es2015', 'stage-0'],
         },
       },
       {
@@ -69,7 +73,11 @@ var original = {
         'NODE_ENV': '"production"'
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({minimize: true}),
+    new webpack.optimize.UglifyJsPlugin({
+      minimize: true,
+      compress: {
+        warnings: false
+      }}),
     new ExtractTextPlugin('../css/components.css', {
       allChunks: true,
     }),
@@ -82,3 +90,9 @@ cordova.output =  {
   filename: '[name].js',
 };
 module.exports = web;
+/*       plugins: [
+            'transform-decorators-legacy',
+            'transform-runtime',
+            'transform-react-constant-elements',
+            'transform-react-inline-elements',
+          ], */
