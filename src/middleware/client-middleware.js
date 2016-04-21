@@ -1,4 +1,4 @@
-/*eslint-disable no-alert, no-console */
+/*eslint-disable no-alert, no-undef, no-console */
 export default function clientMiddleware(client) {
   return ({dispatch, getState}) => {
     return next => action => {
