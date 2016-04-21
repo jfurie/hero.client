@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, ClientsCreateModal, ClientsList, ActionButtonItem, ActionButton } from '../../../components/web';

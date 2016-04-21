@@ -4,8 +4,7 @@ import * as constants from './constants';
 import * as jobConstants from '../jobs/constants';
 import * as authConstants from '../auth/constants';
 
-import { saveContactsResult } from '../contacts';
-import { createCompanyLocation, editLocation, deleteLocation, saveLocationsResult, getOneLocation } from '../locations';
+import { createCompanyLocation, editLocation, deleteLocation, getOneLocation } from '../locations';
 import { getFavoriteByType } from '../favorites';
 import Schemas from '../../utils/schemas';
 import superagent from 'superagent';
@@ -600,8 +599,8 @@ export function getCompanyDetails(companyIds, include) {
             include:[
               {
                 relation:'avatarImage',
-              }
-            ]
+              },
+            ],
           },
         },
         {
@@ -610,8 +609,8 @@ export function getCompanyDetails(companyIds, include) {
             include:[
               {
                 relation:'avatarImage',
-              }
-            ]
+              },
+            ],
           },
         },
         {
