@@ -148,12 +148,15 @@ export default class Location extends React.Component {
       let name = place.name;
 
       let location = self.props.location.withMutations((state) => {
-        state.set('name', name)
-        .set('addressLine', street_number ? `${street_number} ${route}` : route)
+        state.set('addressLine', street_number ? `${street_number} ${route}` : route)
         .set('city', locality)
         .set('countrySubDivisionCode', administrative_area_level_1)
         .set('countryCode', country)
         .set('postalCode', postal_code);
+
+        if (!state.get('name')) {
+          state.set('name', name);
+        }
       });
 
       self.props.onChange(location);
