@@ -36,7 +36,7 @@ function convertToJS(paths) {
 }
 const storage = compose(
   convertToJS(['auth','myProfile','favorites','companies','contacts','jobs','publik']),
-  filter(['auth','myProfile','favorites']),
+  filter(['auth','myProfile','favorites','companies','contacts','jobs']),
 )(adapter(window.localStorage));
 
 export default function createStore(reduxReactRouter, getRoutes, createHistory, client, data, isDev) {
