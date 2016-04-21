@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { pushState } from 'redux-router';
 import { Header, ClientsCreateModal, ClientsList, ActionButtonItem, ActionButton } from '../../../components/web';
@@ -13,22 +12,6 @@ const HEROCOMPANYID = Config.get('heroCompanyId');
 
 
 @connect((state) => {
-  let visibleCompanies = new Immutable.Map();
-  if (state.companies.get('currentSearch') != '') {
-    let current = state.companies.get('searches').get(state.companies.get('currentSearch'));
-    visibleCompanies = state.companies.get('myCompanyIds').filter((x) => {
-      return current.indexOf(x.get('id')) > -1;
-    });
-  } else {
-    visibleCompanies = state.companies.get('myCompanyIds');
-  }
-
-  let myCompanyIds = [];
-
-  visibleCompanies.map(x => {
-    myCompanyIds.push(x.get('id'));
-  });
-
   //filter hero contacts
   let heroContactIds = state.contacts.get('byCompanyId').get(HEROCOMPANYID);
   let heroContacts = null;
@@ -40,9 +23,7 @@ const HEROCOMPANYID = Config.get('heroCompanyId');
 
   return({
     type: state.router.location.query.type,
-    companies: state.companies,
-    myCompanyIds,
-    visibleCompanies,
+    companies: state.companies.get('list'),
     currentAccount: state.currentAccount,
     heroContacts,
   });
@@ -122,7 +103,7 @@ class ClientPage extends React.Component {
 
   render() {
 
-    let { visibleCompanies, heroContacts } = this.props;
+    let { heroContacts } = this.props;
     let actions = [
       <ActionButtonItem title={'Client'} color={Styles.Colors.deepPurple500} itemTapped={this.onClientSearchOpen.bind(this)}>
         <ContentAdd />
@@ -133,7 +114,7 @@ class ClientPage extends React.Component {
         <ClientsCreateModal heroContacts={heroContacts} onSubmit={this.saveCompany.bind(this)} closeModal={this.closeModal.bind(this)} open={this.state.createModalOpen} />
         <Header title={'Clients'} />
         <ClientsList
-            clients={visibleCompanies}
+            clients={this.props.companies}
             favoriteCompany={this.favoriteCompany.bind(this)}
             unfavoriteCompany={this.unfavoriteCompany.bind(this)}
         />

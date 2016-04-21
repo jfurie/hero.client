@@ -54,6 +54,7 @@ class LocationCard extends React.Component {
     let address;
     let geoField;
     let defaultZoom;
+    let name;
 
     if (location && location.get('geoField')) {
       // location fields
@@ -121,10 +122,12 @@ class LocationCard extends React.Component {
       externalLink = 'http://maps.google.com';
     }
 
+    name = (location && location.get('name')) || address;
+
     return (
       <div>
         <div style={style.smallListItem}>
-          {this.renderSmallListItem(address,
+          {this.renderSmallListItem(name,
           <Avatar
               icon={<FontIcon className="material-icons">place</FontIcon>}
               color={Styles.Colors.grey600}

@@ -21,6 +21,13 @@ const initialState = {
   list: new Immutable.Map(),
 };
 export default function reducer(state = initialState, action = {}) {
+  if(action && action.result && action.result.entities && action.result.entities.locations){
+    let locations = Immutable.fromJS(action.result.entities.locations);
+    state = {
+      ...state,
+      list:state.list.mergeDeep(locations),
+    };
+  }
   switch (action.type) {
   case GET_LOCATIONS_BY_IDS_SUCCESS: {
     let locationsMap = {};

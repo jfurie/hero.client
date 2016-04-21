@@ -1,7 +1,10 @@
 import Immutable from 'immutable';
 import * as jobConstants from './jobs/constants';
 import * as companyConstants from './companies/constants';
+import * as contactConstants from './contacts/constants';
 import superagent from 'superagent';
+//GET_SEARCH_SUCCESS
+const GET_SEARCH_SUCCESS = 'hero.client/search/GET_SEARCH_SUCCESS';
 
 const GET_IMAGE_BY_JOB = 'hero.client/resources/GET_LOCATION';
 const GET_IMAGE_BY_JOB_SUCCESS = 'hero.client/resources/GET_IMAGE_BY_JOB_SUCCESS';
@@ -21,8 +24,53 @@ const initialState = {
   byCompanyId: new Immutable.Map(),
 };
 
-export default function reducer(state = initialState, action = {}) {
+function getResourcesFromContacts(contacts, newMap ={}){
+  contacts && contacts.map((contact)=>{
+    if(contact.coverImage){
+      newMap[contact.coverImage.id] = contact.coverImage;
+    }
+    if(contact.avatarImage){
+      newMap[contact.avatarImage.id] = contact.avatarImage;
+    }
+  });
+  return newMap;
+}
 
+function getResourcesFromJobs(jobs, resources ={}){
+  let contacts = [];
+  jobs && jobs.map((job)=>{
+    if(job){
+      if(job.candidates){
+        job.candidates.map(candidate =>{
+          if(candidate.contact){
+            contacts.push(candidate.contact);
+          }
+        });
+
+      }
+      if(job.company && job.company.talentAdvocate){
+        var talentAdvocate = job.company.talentAdvocate;
+        contacts.push(talentAdvocate);
+      }
+      if(job.image){
+        resources[job.image.id] = job.image;
+      }
+    }
+
+  });
+  if(contacts && contacts.length > 0){
+    resources = getResourcesFromContacts(contacts, resources);
+  }
+  return resources;
+}
+export default function reducer(state = initialState, action = {}) {
+  if(action && action.result && action.result.entities && action.result.entities.resources){
+    let resources = Immutable.fromJS(action.result.entities.resources);
+    state = {
+      ...state,
+      list:state.list.mergeDeep(resources),
+    };
+  }
   switch (action.type) {
   case jobConstants.UPDATE_JOB_IMAGE_SUCCESS: {
     let newMap ={};
@@ -61,6 +109,55 @@ export default function reducer(state = initialState, action = {}) {
       list: state.list.mergeDeep(newMap),
       byCompanyId: state.list.mergeDeep(companyIdMap),
     };
+  }
+  case contactConstants.UPDATE_COVER_IMAGE_SUCCESS:{
+    let newMap ={};
+    newMap[action.result.id] = action.result;
+    return {
+      ...state,
+      list: state.list.mergeDeep(newMap),
+    };
+  }
+  case contactConstants.UPDATE_AVATAR_IMAGE_SUCCESS:{
+    let newMap ={};
+    newMap[action.result.id] = action.result;
+    return {
+      ...state,
+      list: state.list.mergeDeep(newMap),
+    };
+  }
+  case contactConstants.GET_CONTACT_DETAIL_SUCCESS:{
+    let newMap = getResourcesFromContacts([action.result]);
+    return {
+      ...state,
+      list: state.list.mergeDeep(newMap),
+    };
+  }
+
+  case contactConstants.SEARCH_CONTACTS_SUCCESS:{
+    let newMap = getResourcesFromContacts(action.result.results);
+    return {
+      ...state,
+      list: state.list.mergeDeep(newMap),
+    };
+  }
+  case GET_SEARCH_SUCCESS:{
+    let newMap = getResourcesFromContacts(action.result.results.results);
+    return {
+      ...state,
+      list: state.list.mergeDeep(newMap),
+    };
+  }
+  case jobConstants.GET_JOB_DETAIL_SUCCESS:{
+    let resources = getResourcesFromJobs([action.result]);
+    return {
+      ...state,
+      list: state.list.mergeDeep(resources)
+    };
+  }
+  case CREATE_RESOURCE:{
+    let newMap ={};
+    newMap[action.id] = {};
   }
   default:
     return state;

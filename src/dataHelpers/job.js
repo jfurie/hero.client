@@ -1,26 +1,30 @@
 import Immutable from 'immutable';
 import getCandidateDataFromState from './candidate';
 
+export function getJobCandidates(state, job){
+  let jobCandidateIds = [];
+  let jobCandidates = new Immutable.List();
+
+  jobCandidateIds = state.candidates.list.filter(candidate =>{
+    return candidate.get('jobId') == job.get('id');
+  }).map(candidate => {
+    return candidate.get('id');
+  });
+
+  jobCandidateIds.forEach(candidateId => {
+    jobCandidates = jobCandidates.push(getCandidateDataFromState(state, candidateId));
+  });
+
+  return jobCandidates;
+}
+
 export default function getJobDataFromState(state, jobId) {
   let job = ((state.jobs.get('list').size > 0) ? (state.jobs.get('list').get(jobId)) : (null));
 
   if (job) {
 
-    // candidates
-    let jobCandidateIds = [];
-    let jobCandidates = new Immutable.List();
 
-    jobCandidateIds = state.candidates.list.filter(candidate =>{
-      return candidate.get('jobId') == job.get('id');
-    }).map(candidate => {
-      return candidate.get('id');
-    });
-
-    jobCandidateIds.forEach(candidateId => {
-      jobCandidates = jobCandidates.push(getCandidateDataFromState(state, candidateId));
-    });
-
-    job = job.set('candidates', jobCandidates);
+    job = job.set('candidates', getJobCandidates(state,job));
 
 
     //company
@@ -52,6 +56,20 @@ export default function getJobDataFromState(state, jobId) {
 
     // talentAdvocate
     let talentAdvocate = state.contacts.get('list').get(job.get('talentAdvocateId'));
+    if(talentAdvocate && talentAdvocate.get('avatarImageId')){
+      let avatarImage = state.resources.list.get(talentAdvocate.get('avatarImageId'));
+      talentAdvocate = talentAdvocate.set('avatarImage',avatarImage);
+    }
+    if(talentAdvocate && talentAdvocate.get('companies')){
+      let talentAdvocateCompanies = talentAdvocate.get('companies').map(function(company){
+        if(typeof company == 'string'){
+          return state.companies.get('list').get(company);
+        } else{
+          return state.companies.get('list').get(company.get('id'));
+        }
+      }).toList();
+      talentAdvocate = talentAdvocate.set('companies',talentAdvocateCompanies);
+    }
     job = job.set('talentAdvocate', talentAdvocate);
 
     // location

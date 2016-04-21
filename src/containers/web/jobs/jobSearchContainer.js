@@ -5,13 +5,21 @@ import { JobSearch } from '../../../components/web';
 
 import { searchJobs, createTempJob } from '../../../modules/jobs';
 
+import getCompanyDataFromState from '../../../dataHelpers/company';
+
 //let debounce = require('debounce');
 import _ from 'lodash';
 
-@connect(state => ({
-  jobs: state.jobs,
-  companies: state.companies.get('myCompanyIds'),
-}), { searchJobs, createTempJob }, null, { withRef: true })
+@connect(state => {
+  let companies = state.companies.get('list').map(company => {
+    return getCompanyDataFromState(state,company.get('id'));
+  });
+
+  return {
+    jobs: state.jobs,
+    companies,
+  };
+}, { searchJobs, createTempJob }, null, { withRef: true })
 class JobSearchContainer extends React.Component {
 
   constructor(props) {
