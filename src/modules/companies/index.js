@@ -182,10 +182,15 @@ export default function reducer(state = initialState, action = {}) {
     }
   }
   case constants.GET_MY_COMPANIES_SUCCESS: {
-
     let companiesMap = {};
-    action.result.map((c) => {
-      companiesMap[c.id] = c;
+    action.result.result.map((c) => {
+
+      let result = action.result.result.find(x => {
+        return x == c;
+      });
+      if(!result){
+        companiesMap[c] = {id:c, show404:true};
+      }
     });
 
     return state.withMutations((state) => {
@@ -469,35 +474,35 @@ export function getMyCompanies() {
       types: [constants.GET_MY_COMPANIES, constants.GET_MY_COMPANIES_SUCCESS, constants.GET_MY_COMPANIES_FAIL],
       promise: (client, auth) => client.api.get(`/companies?filter=${filterString}`, {
         authToken: auth.authToken,
-      }).then((companies)=> {
-        let locations = [];
-        let contacts = [];
-
-        companies.forEach(company => {
-          if (company.clientAdvocate) {
-            contacts.push(company.clientAdvocate);
-          }
-
-          if (company.locations) {
-            company.locations.map((location => {
-              locations.push(location);
-            }));
-          }
-
-          if (company.contacts) {
-            company.contacts.map((contact => {
-              contacts.push(contact);
-            }));
-          }
-        });
-
-        if (locations.length > 0) {
-          dispatch(saveLocationsResult(locations));
-        }
-
-        if (contacts.length > 0) {
-          dispatch(saveContactsResult(contacts));
-        }
+      }, Schemas.COMPANY_ARRAY).then((companies)=> {
+        // let locations = [];
+        // let contacts = [];
+        //
+        // companies.forEach(company => {
+        //   if (company.clientAdvocate) {
+        //     contacts.push(company.clientAdvocate);
+        //   }
+        //
+        //   if (company.locations) {
+        //     company.locations.map((location => {
+        //       locations.push(location);
+        //     }));
+        //   }
+        //
+        //   if (company.contacts) {
+        //     company.contacts.map((contact => {
+        //       contacts.push(contact);
+        //     }));
+        //   }
+        // });
+        //
+        // if (locations.length > 0) {
+        //   dispatch(saveLocationsResult(locations));
+        // }
+        //
+        // if (contacts.length > 0) {
+        //   dispatch(saveContactsResult(contacts));
+        // }
 
         return companies;
       }),
