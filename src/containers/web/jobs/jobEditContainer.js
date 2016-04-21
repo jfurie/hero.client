@@ -98,8 +98,6 @@ export default class JobEditContainer extends React.Component {
             //self.props.history.replaceState(null, `/clients/${newProps.job.get('companyId')}/jobs/${newProps.job.get('newId')}`);
           }
         }, 500);
-
-        this.props.getMyJobs();
       }
     }
 
